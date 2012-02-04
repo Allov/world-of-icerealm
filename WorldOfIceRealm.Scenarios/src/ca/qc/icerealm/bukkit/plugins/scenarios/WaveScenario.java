@@ -1,5 +1,7 @@
 package ca.qc.icerealm.bukkit.plugins.scenarios;
 
+import ca.qc.icerealm.bukkit.plugins.scenarios.core.Scenario;
+
 public class WaveScenario extends Scenario {
 
 	@Override

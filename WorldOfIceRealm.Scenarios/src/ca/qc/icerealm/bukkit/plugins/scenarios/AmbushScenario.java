@@ -25,6 +25,9 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
+import ca.qc.icerealm.bukkit.plugins.scenarios.core.Scenario;
+import ca.qc.icerealm.bukkit.plugins.scenarios.core.*;
+
 
 public class AmbushScenario extends Scenario {
 
@@ -75,7 +78,7 @@ public class AmbushScenario extends Scenario {
 		
 	}
 	
-	private List<Location> getRandomLocation(ScenarioZone z, int qty) {
+	private List<Location> getRandomLocation(ScenarioZone scenarioZone, int qty) {
 		List<Location> list = new ArrayList<Location>();
 		double topLeftX = 0;
 		double topLeftZ = 0;

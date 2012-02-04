@@ -3,6 +3,8 @@ package ca.qc.icerealm.bukkit.plugins.scenarios;
 import org.bukkit.Location;
 import org.bukkit.Server;
 
+import ca.qc.icerealm.bukkit.plugins.scenarios.core.Scenario;
+
 public class WalkingScenario extends Scenario {
 		
 	private boolean _active = false;
