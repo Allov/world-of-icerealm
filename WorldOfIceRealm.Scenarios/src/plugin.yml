@@ -1,0 +1,8 @@
+name: WoI
+main: ca.qc.icerealm.bukkit.plugins.scenarios.ScenarioPlugin
+version: 0.0.0
+description: World Of Icerealm Adventure class
+
+commands:
+  sc:
+    description: Enable the scenario mode
