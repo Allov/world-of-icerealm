@@ -24,6 +24,6 @@
    name: Monster Ambush
    zone: 142,-116,179,-67
    qty: 10
-   monster: zombie
-   radius: 20
+   monster: zombie,skeleton
+   immune_day_light: true
    

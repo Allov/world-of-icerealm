@@ -14,6 +14,7 @@ import org.bukkit.craftbukkit.block.CraftChest;
 import org.bukkit.craftbukkit.block.CraftCreatureSpawner;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
@@ -96,5 +97,12 @@ public class ScenarioEngine {
 			_scenarios = new ArrayList<Scenario>();
 		}
 		return _scenarios;
+	}
+	
+	public void killAllMonsters() {
+		for (Entity e : _normalWorld.getEntities()) {
+			e.remove();
+		}
+		
 	}
 }

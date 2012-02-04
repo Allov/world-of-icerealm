@@ -1,7 +1,8 @@
 name: WoI
 main: ca.qc.icerealm.bukkit.plugins.scenarios.ScenarioPlugin
 version: 0.0.0
-description: World Of Icerealm Adventure class
+description: World Of Icerealm Scenarios!
+author: punihser_malade
 
 commands:
   sc:

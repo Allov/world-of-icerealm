@@ -21,8 +21,8 @@ public class ScenarioFactory {
 			FileConfiguration config = ScenarioBuilder.getScenarioConfiguration();
 			int qty = config.getInt(id + ".qty");
 			String monster = config.getString(id + ".monster");
-			double radius = config.getDouble(id + ".radius");
-			return new AmbushScenario(qty, monster, radius);
+			boolean immune = config.getBoolean(id + ".immune_day_light");
+			return new AmbushScenario(qty, monster, immune);
 		}
 			
 		

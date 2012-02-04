@@ -54,6 +54,9 @@ public class ScenarioCommander implements CommandExecutor {
 			}
 			
 		}
+		else if (arg3.length > 0 && arg3[0].contains("killall")) {
+			_engine.killAllMonsters();
+		}
 		
 		return false;
 	}

@@ -1,6 +1,7 @@
 package ca.qc.icerealm.bukkit.plugins.scenarios;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
@@ -11,6 +12,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.Fireball;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
@@ -18,27 +20,32 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
+
+import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 
 public class AmbushScenario extends Scenario {
 
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private boolean _isActive = false;
 	private boolean _isComplete = false;
-	private double _radius;
+	private boolean _immune;
 	private int _quantity;
 	private String _monster;
 	List<LivingEntity> monsters;
+	private Date _lastRun;
 	
-	public AmbushScenario(int qty, String monster, double radius) {
-		_radius = radius;
+	public AmbushScenario(int qty, String monster, boolean immune) {
+		_immune = immune;
 		_quantity = qty;
 		_monster = monster;
-		this.logger.info(_radius + "RADIUS IS!!!");
 	}
 	
 	@Override
 	public boolean abortWhenLeaving() {
+		_isActive = false;
 		return true;
 	}
 
@@ -50,22 +57,9 @@ public class AmbushScenario extends Scenario {
 	@Override
 	public void triggerScenario() {
 		
-		getServer().broadcastMessage("Icerealm fighters has been ambushed by monsters!!!!");
+		getServer().broadcastMessage(ChatColor.RED + "Icerealm fighters has been ambushed by monsters!!!!");
 		
-		Random r = new Random();
-		Location loc = null;
-		
-		// on pogne un joueur au hasard!
-		if (getPlayers().size() == 1) {
-			loc = this.getPlayers().get(0).getLocation();
-		}
-		else if (getPlayers().size() > 1) {
-			int index = r.nextInt(this.getPlayers().size() - 1);
-			loc = this.getPlayers().get(index).getLocation();
-		}
-
 		int i = 0;
-		
 		List<Location> locations = getRandomLocation(getZone(), _quantity);
 		monsters = new ArrayList<LivingEntity>();
 		while (i < _quantity) {
@@ -75,8 +69,10 @@ public class AmbushScenario extends Scenario {
 			i++;
 		}
 		
-		Listener deathListener = new AmbushScenarioListener(this, monsters);
+		Listener deathListener = new AmbushScenarioListener(this, monsters, _immune);
 		getServer().getPluginManager().registerEvents(deathListener, getPlugin());
+		_isActive = true;	
+		
 	}
 	
 	private List<Location> getRandomLocation(ScenarioZone z, int qty) {
@@ -89,8 +85,8 @@ public class AmbushScenario extends Scenario {
 			
 			double tlX = RandomUtil.getRandomDouble(topLeftX, bottomRightX);
 			double tlZ = RandomUtil.getRandomDouble(topLeftZ, bottomRightZ);
-			
-			this.logger.info("X: " + tlX + " Z: " + tlZ);
+			tlX += getZone().getTopLeft().getX();
+			tlZ += getZone().getTopLeft().getZ();
 			list.add(new Location(getWorld(), tlX, 70, tlZ));
 		}
 		return list;
@@ -103,6 +99,7 @@ public class AmbushScenario extends Scenario {
 	
 	public void setComplete(boolean c) {
 		_isComplete = c;
+		_isActive = false;
 	}
 
 	@Override
@@ -116,50 +113,65 @@ public class AmbushScenario extends Scenario {
 
 	@Override
 	public boolean canBeTriggered() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 }
 
 class AmbushScenarioListener implements Listener {
-	
+	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private AmbushScenario _scenario;
 	private List<LivingEntity> _list;
+	private boolean _immune;
 	
-	public AmbushScenarioListener(AmbushScenario s, List<LivingEntity> list) {
+	public AmbushScenarioListener(AmbushScenario s, List<LivingEntity> list, boolean immune) {
 		_scenario = s;
 		_list = list;
+		_immune = immune;
+	}
+	
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onFireDamage(EntityDamageEvent event) {
+		
+		if (!_immune) {
+			LivingEntity l = getEntity(event.getEntity().getEntityId());
+			if (event.getCause() == DamageCause.FIRE_TICK) {
+				event.setCancelled(true);
+			}
+		}
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onMonsterDeath(EntityDeathEvent event) {
 		
 		int id = event.getEntity().getEntityId();
-		
-		for (LivingEntity l : _list) {
-			if (id == l.getEntityId()) {
-				_list.remove(l);
-				displayKill();
-				break;
-			}
-		}
+		_list.remove(getEntity(id));
+		displayKill();
 		
 		if (_list.size() == 0) {
-			_scenario.getServer().broadcastMessage(ChatColor.GOLD + "Icerealm fighers fought to defend their freedom. The monsters has been defeated!!!");
+			_scenario.getServer().broadcastMessage(ChatColor.GOLD + "Icerealm fighters defeated the monsters!");
 		}
 	
 	}
 	
 	private void displayKill() {
-
-		for (Player p : _scenario.getPlayers()) {
-			if (_list.size() == 0) {
-				p.sendMessage(ChatColor.GOLD + "No monsters left, good job!");
-			}
-			else {
-				p.sendMessage(ChatColor.GREEN + "Kill confirmed, " + _list.size() + " left");	
+		Player p = _scenario.getPlayers().get(0);
+		//p.sendMessage()
+	}
+	
+	private LivingEntity getEntity(int id) {
+		
+		for (LivingEntity l : _list) {
+			if (id == l.getEntityId()) {
+				return l;				
 			}
 		}
+		return null;
 	}
+	
+}
+
+class MonsterOnFire implements Listener {
+	
 }
