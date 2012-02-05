@@ -34,6 +34,7 @@ class ScenarioEngine {
 	private List<Scenario> _scenarios;
 	private World _normalWorld;
 	private ProbingWorker _probing;
+	private ScenarioBuilder _builder;
 	
 	private static ScenarioEngine _instance = null;
 	public ScenarioEngine() {
@@ -86,8 +87,8 @@ class ScenarioEngine {
 			plugin.getCommand(CMD_IDENTIFIER).setExecutor(new ScenarioCommander(this, _currentServer));
 			_normalWorld = _currentServer.getWorld(NORMAL_WORLD_IDENTIFIER);
 			
-			ScenarioBuilder builder = new ScenarioBuilder(plugin.getDataFolder() + "scenarios.yml", _currentServer, _normalWorld, plugin);
-			_scenarios = builder.getScenariosFromConfigFile();			
+			_builder = new ScenarioBuilder(plugin.getDataFolder() + "scenarios.yml", _currentServer, _normalWorld, plugin);
+			_scenarios = _builder.getScenariosFromConfigFile();			
 			
 			// starting the prober
 			_probing = new ProbingWorker(_currentServer, this, PROBING_INTERVAL);
@@ -97,6 +98,10 @@ class ScenarioEngine {
 			// the scenario engine is now functional!
 			_isInitialized = true;
 		}
+	}
+	
+	public ScenarioBuilder getBuilder() {
+		return _builder;
 	}
 	
 	public void shutdownScenarioEngine() {

@@ -8,10 +8,12 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
+
 
 public abstract class Scenario {
 	
-	private ScenarioZone _zone;
+	private WorldZone _zone;
 	private List<Player> _players;
 	private String _name;
 	private Server _server;
@@ -58,12 +60,12 @@ public abstract class Scenario {
 		_name = name;
 	}
 	
-	public ScenarioZone getZone()
+	public WorldZone getZone()
 	{
 		return _zone;
 	}
 	
-	public void setZone(ScenarioZone zone) {
+	public void setZone(WorldZone zone) {
 		_zone = zone;
 	}
 	

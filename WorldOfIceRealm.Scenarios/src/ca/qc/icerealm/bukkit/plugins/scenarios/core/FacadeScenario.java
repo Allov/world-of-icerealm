@@ -9,4 +9,10 @@ public class FacadeScenario {
 		}
 	}
 	
+	public void initializeScenario(Scenario s) {
+		if (s != null) {
+			ScenarioEngine.getInstance().getBuilder().initializeScenario(s);
+		}
+	}
+	
 }

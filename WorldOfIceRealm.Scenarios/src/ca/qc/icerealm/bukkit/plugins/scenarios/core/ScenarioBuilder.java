@@ -13,6 +13,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
+
 
 class ScenarioBuilder {
 
@@ -34,12 +36,14 @@ class ScenarioBuilder {
 	        _scenarioConfig.options().copyDefaults(true);
 	    }
 		_server = s;
-		
-		if (w == null) {
-			this.logger.info("world is nul;l in the builder");
-		}
 		_world = w;	
 		_plugin = plugin;
+	}
+	
+	public void initializeScenario(Scenario s) {
+		s.setPlugin(_plugin);
+		s.setWorld(_world);
+		s.setServer(_server);
 	}
 	
 	public List<Scenario> getScenariosFromConfigFile() {
@@ -76,14 +80,14 @@ class ScenarioBuilder {
 		return ScenarioFactory.getInstanceOf(type);
 	}
 	
-	private ScenarioZone translateFromString(String zone) {
+	private WorldZone translateFromString(String zone) {
 		String[] coords = zone.split(",");
 		double[] coordsDouble = new double[] { Double.parseDouble(coords[0]), Double.parseDouble(coords[1]), 
 											   Double.parseDouble(coords[2]), Double.parseDouble(coords[3]) };
 		
 		Location lt = new Location(_world, coordsDouble[0], 20, coordsDouble[1]);
 		Location rb = new Location(_world, coordsDouble[2], 20, coordsDouble[3]);
-		return new ScenarioZone(lt, rb);
+		return new WorldZone(lt, rb);
 	}
 	
 }
