@@ -118,16 +118,4 @@ class ScenarioEngine {
 		}
 		return _scenarios;
 	}
-	
-	public void killAllMonsters() {
-		for (LivingEntity e : _normalWorld.getLivingEntities()) {
-			
-			if (e instanceof EnderDragon) {
-				e.remove();
-				_currentServer.broadcastMessage("An EnderDragon has been removed by an admin");
-			}
-			
-		}
-		
-	}
 }

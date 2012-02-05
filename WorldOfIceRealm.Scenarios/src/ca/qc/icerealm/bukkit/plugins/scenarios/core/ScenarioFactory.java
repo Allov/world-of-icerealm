@@ -34,9 +34,11 @@ class ScenarioFactory {
 		}
 		
 		if (typeOfScenario.equalsIgnoreCase("dragon_fury")) {
-			return new DragonFury();
-			
-			
+			String id = "0";
+			FileConfiguration config = ScenarioBuilder.getScenarioConfiguration();
+			int ghastSpawn = config.getInt(id + ".ghast_prob");
+			int ghastMax = config.getInt(id + ".ghast_max");
+			return new DragonFury(ghastSpawn, ghastMax);
 		}
 
 		return null;

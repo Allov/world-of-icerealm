@@ -8,6 +8,9 @@ import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EnderDragon;
+import org.bukkit.entity.Ghast;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 
@@ -33,7 +36,6 @@ class ScenarioCommander implements CommandExecutor {
 			Scenario s = _engine.findScenarioByPlayer(p);
 			if (s != null) {
 				p.sendMessage(ChatColor.GREEN + "You are in the " + s.getName());
-				p.sendMessage(ChatColor.GREEN + "Zone: " + s.getZone().toString());
 			}
 			else {
 				p.sendMessage(ChatColor.RED +"You are not in a scenario");
@@ -51,12 +53,24 @@ class ScenarioCommander implements CommandExecutor {
 			
 			}
 			for (Scenario s : list) {
-				p.sendMessage(ChatColor.GOLD + s.getName() + "at: " + s.getZone().toString());
+				p.sendMessage(ChatColor.GOLD + s.getName() + " at: " + s.getZone().getCentralPointAt(100));
 			}
 			
 		}
-		else if (arg3.length > 0 && arg3[0].contains("killall") && arg0.isOp()) {
-			_engine.killAllMonsters();
+		else if (arg3.length > 0 && arg3[0].contains("killhard") && arg0.isOp()) {
+			for (LivingEntity e : _server.getWorld("world").getLivingEntities()) {
+				
+				if (e instanceof EnderDragon) {
+					e.remove();
+					_server.broadcastMessage("An EnderDragon has been removed by an admin");
+				}
+				
+				if (e instanceof Ghast) {
+					e.remove();
+					_server.broadcastMessage("A Ghast has been removed by an admin");
+				}
+				
+			}
 		}
 		
 		return false;
