@@ -14,6 +14,7 @@ import org.bukkit.craftbukkit.block.CraftChest;
 import org.bukkit.craftbukkit.block.CraftCreatureSpawner;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -95,6 +96,9 @@ class ScenarioEngine {
 			Thread t = new Thread(_probing);
 			t.start();
 			
+			// creating a listener to detect player disconnecting
+			_currentServer.getPluginManager().registerEvents(new PlayerListener(this), plugin);
+			
 			// the scenario engine is now functional!
 			_isInitialized = true;
 		}
@@ -116,8 +120,13 @@ class ScenarioEngine {
 	}
 	
 	public void killAllMonsters() {
-		for (Entity e : _normalWorld.getEntities()) {
-			e.remove();
+		for (LivingEntity e : _normalWorld.getLivingEntities()) {
+			
+			if (e instanceof EnderDragon) {
+				e.remove();
+				_currentServer.broadcastMessage("An EnderDragon has been removed by an admin");
+			}
+			
 		}
 		
 	}

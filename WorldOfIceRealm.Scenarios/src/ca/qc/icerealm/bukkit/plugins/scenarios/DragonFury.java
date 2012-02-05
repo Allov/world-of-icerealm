@@ -3,6 +3,10 @@ package ca.qc.icerealm.bukkit.plugins.scenarios;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
 
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.Scenario;
@@ -26,6 +30,7 @@ public class DragonFury extends Scenario {
 		WorldZone zone = this.getZone();
 		_theDragon = getWorld().spawnCreature(zone.getCentralPointAt(80), dragon);
 		getServer().broadcastMessage(ChatColor.RED + "The Dragon has been awaken!");
+		isActive = true;
 	}
 
 	@Override
@@ -41,6 +46,7 @@ public class DragonFury extends Scenario {
 			_theDragon.remove();
 			getServer().broadcastMessage("The Dragon retreated to his hideout!");
 		}
+		isActive = false;
 	}
 
 	@Override
@@ -55,4 +61,23 @@ public class DragonFury extends Scenario {
 		return true;
 	}
 
+}
+
+class DragonDeathListener implements Listener {
+	
+	private LivingEntity _dragon;
+	private Scenario _scenario;
+	
+	public DragonDeathListener(LivingEntity d, Scenario s) {
+		_dragon = d;
+		_scenario = s;
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onDragonDeath(EntityDeathEvent event) {
+		if (event.getEntity().getEntityId() == _dragon.getEntityId()) {
+			_scenario.getServer().broadcastMessage(ChatColor.YELLOW + "The Dragon has been defeated!");
+		}
+	}
+	
 }
