@@ -1,4 +1,5 @@
 name: WoI.MoneyDrops
-main: ca.qc.icerealm.bukkit.plugins.moneydrops.MonsterMoney
+main: ca.qc.icerealm.bukkit.plugins.moneydrops.MoneyDrops
 version: 0.1.0
 description: World Of IceRealm Money drops on Monster kill
+author: Allov

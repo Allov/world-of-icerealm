@@ -30,59 +30,71 @@ public class EntityUtilities
 	
 	public static int getEntityId(Entity entity)
     {
-        if(entity instanceof Player) return Player;
+		// Friendly
+		if(entity instanceof Player) return Player;
         if(entity instanceof Sheep) return Sheep;
-        if(entity instanceof Cow) return Cow;
         if(entity instanceof Pig) return Pig;
-        if(entity instanceof Creeper) return Creeper;
+        if(entity instanceof Cow) return Cow;
+        if(entity instanceof MushroomCow) return MushroomCow;
+        if(entity instanceof Chicken) return Chicken;
+        if(entity instanceof Squid) return Squid;
+        if(entity instanceof Snowman) return Snowman;
+
+        // Neutral
+        if(entity instanceof Wolf) return Wolf;
+        if(entity instanceof Enderman) return Enderman;
+        if(entity instanceof Giant) return Giant;
         if(entity instanceof PigZombie) return PigZombie;
+
+        // Aggressive
+        if(entity instanceof Creeper) return Creeper;
         if(entity instanceof Skeleton)return Skeleton;
         if(entity instanceof Spider) return Spider;
-        if(entity instanceof Squid) return Squid;
         if(entity instanceof Zombie) return Zombie;
-        if(entity instanceof Ghast) return Ghast;
         if(entity instanceof Slime) return Slime;
-        if(entity instanceof Giant) return Giant;
+        if(entity instanceof Ghast) return Ghast;
         if(entity instanceof Blaze) return Blaze;
-        if(entity instanceof CaveSpider) return CaveSpider;
-        if(entity instanceof Chicken) return Chicken;
-        if(entity instanceof Enderman) return Enderman;
         if(entity instanceof MagmaCube) return MagmaCube;
-        if(entity instanceof MushroomCow) return MushroomCow;
-        if(entity instanceof Wolf) return Wolf;
+        if(entity instanceof CaveSpider) return CaveSpider;
         if(entity instanceof Silverfish) return Silverfish;
         if(entity instanceof EnderDragon) return EnderDragon;
-        if(entity instanceof Snowman) return Snowman;
+        
         return -1;
     }
 	
-	public static String getEntityName(Entity entity)
-    {
-        if(entity instanceof Player) return "Player";
-        if(entity instanceof Sheep) return "Sheep";
-        if(entity instanceof Cow) return "Cow";
-        if(entity instanceof Pig) return "Pig";
-        if(entity instanceof Creeper) return "Creeper";
-        if(entity instanceof PigZombie) return "PigZombie";
-        if(entity instanceof Skeleton)return "Skeleton";
-        if(entity instanceof Spider) return "Spider";
-        if(entity instanceof Squid) return "Squid";
-        if(entity instanceof Zombie) return "Zombie";
-        if(entity instanceof Ghast) return "Ghast";
-        if(entity instanceof Slime) return "Slime";
-        if(entity instanceof Giant) return "Giant";
-        if(entity instanceof Blaze) return "Blaze";
-        if(entity instanceof CaveSpider) return "CaveSpider";
-        if(entity instanceof Chicken) return "Chicken";
-        if(entity instanceof Enderman) return "Enderman";
-        if(entity instanceof MagmaCube) return "MagmaCube";
-        if(entity instanceof MushroomCow) return "MushroomCow";
-        if(entity instanceof Snowman) return "Snowman";
-        if(entity instanceof Wolf) return "Wolf";
-        if(entity instanceof Silverfish) return "Silverfish";
-        if(entity instanceof EnderDragon) return "EnderDragon";
+	public static CreatureType getEntityCreatureType(Entity entity)
+	{
+		// Friendly
+        if(entity instanceof Sheep) return CreatureType.SHEEP;
+        if(entity instanceof Cow) return CreatureType.COW;
+        if(entity instanceof Pig) return CreatureType.PIG;
+        if(entity instanceof MushroomCow) return CreatureType.MUSHROOM_COW;
+        if(entity instanceof Chicken) return CreatureType.CHICKEN;
+        if(entity instanceof Squid) return CreatureType.SQUID;
+        if(entity instanceof Snowman) return CreatureType.SNOWMAN;
+        
+        // Neutral
+        if(entity instanceof Wolf) return CreatureType.WOLF;
+        if(entity instanceof Enderman) return CreatureType.ENDERMAN;
+        if(entity instanceof Giant) return CreatureType.GIANT;
+        if(entity instanceof PigZombie) return CreatureType.PIG_ZOMBIE;
+
+        // Aggressive
+        if(entity instanceof Creeper) return CreatureType.CREEPER;
+        if(entity instanceof Skeleton)return CreatureType.SKELETON;
+        if(entity instanceof Spider) return CreatureType.SPIDER;
+        if(entity instanceof Zombie) return CreatureType.ZOMBIE;
+        if(entity instanceof Slime) return CreatureType.SLIME;
+        if(entity instanceof Ghast) return CreatureType.GHAST;
+        if(entity instanceof Blaze) return CreatureType.BLAZE;
+        if(entity instanceof MagmaCube) return CreatureType.MAGMA_CUBE;
+        if(entity instanceof CaveSpider) return CreatureType.CAVE_SPIDER;
+        if(entity instanceof Silverfish) return CreatureType.SILVERFISH;
+        if(entity instanceof EnderDragon) return CreatureType.ENDER_DRAGON;
+
         return null;
-    }
+	}
+
 
 	public static CreatureType getCreatureType(String s) {
 		if (s.equalsIgnoreCase("sheep")) { return CreatureType.SHEEP; }
@@ -109,4 +121,73 @@ public class EntityUtilities
 		if (s.equalsIgnoreCase("Snowman")) { return CreatureType.SNOWMAN; }
 		return CreatureType.VILLAGER;
 	}
+	public static String getEntityName(Entity entity)
+    {
+        if(entity instanceof Player) return "Player";
+
+        // Friendly
+        if(entity instanceof Sheep) return "Sheep";
+        if(entity instanceof Cow) return "Cow";
+        if(entity instanceof Pig) return "Pig";
+        if(entity instanceof MushroomCow) return "Mushroom Cow";
+        if(entity instanceof Chicken) return "Chicken";
+        if(entity instanceof Squid) return "Squid";
+        if(entity instanceof Snowman) return "Snowman";
+
+        // Neutral
+        if(entity instanceof Wolf) return "Wolf";
+        if(entity instanceof Enderman) return "Enderman";
+        if(entity instanceof Giant) return "Giant";
+        if(entity instanceof PigZombie) return "Pig Zombie";
+
+        // Aggressive
+        if(entity instanceof Creeper) return "Creeper";
+        if(entity instanceof Skeleton)return "Skeleton";
+        if(entity instanceof Spider) return "Spider";
+        if(entity instanceof Zombie) return "Zombie";
+        if(entity instanceof Slime) return "Slime";
+        if(entity instanceof Ghast) return "Ghast";
+        if(entity instanceof Blaze) return "Blaze";
+        if(entity instanceof MagmaCube) return "MagmaCube";
+        if(entity instanceof CaveSpider) return "Cave Spider";
+        if(entity instanceof Silverfish) return "Silverfish";
+        if(entity instanceof EnderDragon) return "Ender Dragon";
+
+        return null;
+    }
+
+	public static String getEntityName(int id)
+    {
+        if(id == Player) return "Player";
+
+        // Friendly
+        if(id == Sheep) return "Sheep";
+        if(id == Cow) return "Cow";
+        if(id == Pig) return "Pig";
+        if(id == MushroomCow) return "Mushroom Cow";
+        if(id == Chicken) return "Chicken";
+        if(id == Squid) return "Squid";
+        if(id == Snowman) return "Snowman";
+
+        // Neutral
+        if(id == Wolf) return "Wolf";
+        if(id == Enderman) return "Enderman";
+        if(id == Giant) return "Giant";
+        if(id == PigZombie) return "Pig Zombie";
+
+        // Aggressive
+        if(id == Creeper) return "Creeper";
+        if(id == Skeleton)return "Skeleton";
+        if(id == Spider) return "Spider";
+        if(id == Zombie) return "Zombie";
+        if(id == Slime) return "Slime";
+        if(id == Ghast) return "Ghast";
+        if(id == Blaze) return "Blaze";
+        if(id == MagmaCube) return "MagmaCube";
+        if(id == CaveSpider) return "Cave Spider";
+        if(id == Silverfish) return "Silverfish";
+        if(id == EnderDragon) return "Ender Dragon";
+
+        return null;
+    }
 }

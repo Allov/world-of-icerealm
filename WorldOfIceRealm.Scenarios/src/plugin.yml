@@ -1,7 +1,7 @@
-name: WoI
+name: WoI.Scenarios
 main: ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioPlugin
-version: 0.0.0
-description: World Of Icerealm Scenarios!
+version: 0.1.0
+description: World Of IceRealm Scenarios!
 author: punihser_malade
 
 commands:
