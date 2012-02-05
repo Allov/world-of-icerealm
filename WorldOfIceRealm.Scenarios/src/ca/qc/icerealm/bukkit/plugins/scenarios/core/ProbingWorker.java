@@ -30,7 +30,7 @@ class ProbingWorker implements Runnable {
 				
 				Scenario s = _engine.findScenarioAtLocation(p.getLocation());			
 				
-				if (s != null && !s.getPlayers().contains(p)) { // le joueur est a l'interieur d'une zone
+				if (s != null && !s.getPlayers().contains(p) && s.canBeTriggered()) { // le joueur est a l'interieur d'une zone
 					s.addPlayer(p);
 					
 					if (!s.isTriggered() && s.canBeTriggered()) {

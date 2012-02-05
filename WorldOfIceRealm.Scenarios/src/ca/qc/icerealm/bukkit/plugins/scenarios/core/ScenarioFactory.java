@@ -38,7 +38,8 @@ class ScenarioFactory {
 			FileConfiguration config = ScenarioBuilder.getScenarioConfiguration();
 			int ghastSpawn = config.getInt(id + ".ghast_prob");
 			int ghastMax = config.getInt(id + ".ghast_max");
-			return new DragonFury(ghastSpawn, ghastMax);
+			long coolDown = config.getLong(id + ".cooldown");
+			return new DragonFury(ghastSpawn, ghastMax, coolDown);
 		}
 
 		return null;

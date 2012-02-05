@@ -100,6 +100,10 @@ public class AmbushScenario extends Scenario {
 		_isComplete = c;
 		_isActive = false;
 	}
+	
+	public boolean isComplete() {
+		return _isComplete;
+	}
 
 	@Override
 	public void abortScenario() {

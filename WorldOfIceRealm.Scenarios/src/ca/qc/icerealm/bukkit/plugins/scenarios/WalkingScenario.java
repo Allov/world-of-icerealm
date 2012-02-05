@@ -22,6 +22,11 @@ public class WalkingScenario extends Scenario {
 	public boolean isTriggered() {
 		return _active;
 	}
+	
+	@Override 
+	public boolean isComplete() {
+		return false;
+	}
 
 	@Override
 	public void abortScenario() {

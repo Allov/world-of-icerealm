@@ -21,6 +21,11 @@ public class WaveScenario extends Scenario {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public boolean isComplete() {
+		return false;
+	}
 
 	@Override
 	public boolean abortWhenLeaving() {

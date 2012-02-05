@@ -7,6 +7,7 @@
    zone: 142,-116,179,-67
    ghast_prob: 4
    ghast_max: 5
+   cooldown: 30000
 
    #zone: -227,-890,135,-580
 #0: 

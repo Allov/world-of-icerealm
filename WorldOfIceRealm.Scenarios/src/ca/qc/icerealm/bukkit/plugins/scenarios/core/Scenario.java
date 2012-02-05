@@ -59,6 +59,8 @@ public abstract class Scenario {
 	 */
 	public abstract boolean canBeTriggered();
 	
+	public abstract boolean isComplete();
+	
 	public World getWorld() {
 		return _world;
 	}
