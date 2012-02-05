@@ -18,4 +18,9 @@ public class RandomUtil {
 		return random.doubleValue();
 	}
 	
+	public static int getRandomInt(int max) {
+		Random r = new Random();
+		return r.nextInt(max);
+	}
+	
 }
