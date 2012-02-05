@@ -20,12 +20,46 @@ public abstract class Scenario {
 	private JavaPlugin _plugin;
 	private World _world;
 	
-	
+	/*
+	 *	Indique à l'engine que le scénario est démarré 
+	 */
 	public abstract boolean isTriggered();
+	
+	/*
+	 * Cette méthode est appellé lorsque l'engine détermine que le scénario
+	 * doit être démarré. Constitue le coeur du scénario.
+	 */
 	public abstract void triggerScenario();
+	
+	/*
+	 * Indique si le scénario est complété. Peut être pour différente raison.
+	 */
 	public abstract boolean isComplete();
+	
+	/*
+	 * Cette méthode est appellé lorsque le scénario se termine. Un scénario peut se terminer
+	 * pour différente raison: les joueurs quittent la zone, les joueurs se disconnect. 
+	 * Il faut faire un cleanup des objets et mettre le scénario dans l'état dans lequel il 
+	 * doit se trouver lorsqu'il sera redémarré plus tard.
+	 * <br><br>
+	 * Exemple: si un paquet de monstre sont spawné, il est idéal de les enlever dans cette
+	 * méthode.
+	 */
 	public abstract void abortScenario();
+	
+	/*
+	 * Détermine si le scénario s'arrête si le dernier joueur quitte la zone d'activation. 
+	 * Il n'est pas recommendé de laisser un scénario qui demande beaucoup de ressource se
+	 * déroulé s'il n'y a pas de joueur dans la zone.
+	 */
 	public abstract boolean abortWhenLeaving();
+	
+	/*
+	 * Indique que le scénario peut être démarré. Utile pour vérifier une condition précise
+	 * afin de démarrer le scénario correctement.
+	 *<br><br>
+	 * Par exemple, vérifiez si le nombre de joueurs requis est atteint!
+	 */
 	public abstract boolean canBeTriggered();
 	
 	public World getWorld() {
