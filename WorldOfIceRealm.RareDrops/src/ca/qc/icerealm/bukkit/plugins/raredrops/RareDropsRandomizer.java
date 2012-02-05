@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import org.bukkit.inventory.ItemStack;
+import ca.qc.icerealm.bukkit.plugins.raredrops.*;
 
 public class RareDropsRandomizer 
 {
@@ -36,7 +37,7 @@ public class RareDropsRandomizer
 				RareDropsOddsItem item = odds.getOddsItems().get(i);			
 				double result = Math.random() * 100;
 				
-				this.logger.info(String.valueOf(result) + " <= " + String.valueOf(item.getPercentage());
+				//this.logger.info(String.valueOf(result) + " <= " + String.valueOf(item.getPercentage()));
 				
 				if (result <= item.getPercentage())
 				{

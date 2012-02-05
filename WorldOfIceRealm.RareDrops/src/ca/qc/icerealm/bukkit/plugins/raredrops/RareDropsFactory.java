@@ -184,7 +184,6 @@ public class RareDropsFactory
 				odds.addOddsItem(new RareDropsOddsItem(7.50 * oddsMultiplier, Material.IRON_HOE));
 				odds.addOddsItem(new RareDropsOddsItem(7.50 * oddsMultiplier, Material.IRON_SPADE));
 				break;
-				break;
 			}
 			default:
 			{

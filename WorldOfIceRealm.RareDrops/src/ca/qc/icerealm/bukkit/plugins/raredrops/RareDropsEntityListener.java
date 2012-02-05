@@ -10,7 +10,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import ca.qc.icerealm.bukkit.plugins.common;
+
+import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 
 public class RareDropsEntityListener implements Listener
 {

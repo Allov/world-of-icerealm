@@ -1,4 +1,4 @@
 name: WoI.RareDrops
-main: ca.qc.icerealm.bukkit.plugins.moneydrops.MonsterMoney
+main: ca.qc.icerealm.bukkit.plugins.raredrops.RareDrops
 version: 0.1.0
 description: World Of IceRealm rare drops on Monster kill
