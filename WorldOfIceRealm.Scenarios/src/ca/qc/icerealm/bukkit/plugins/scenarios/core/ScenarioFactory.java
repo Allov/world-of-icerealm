@@ -1,5 +1,7 @@
 package ca.qc.icerealm.bukkit.plugins.scenarios.core;
 
+import java.util.logging.Logger;
+
 import org.bukkit.configuration.file.FileConfiguration;
 
 import ca.qc.icerealm.bukkit.plugins.scenarios.AmbushScenario;
@@ -8,6 +10,7 @@ import ca.qc.icerealm.bukkit.plugins.scenarios.WalkingScenario;
 import ca.qc.icerealm.bukkit.plugins.scenarios.WaveScenario;
 
 class ScenarioFactory {
+	public static final Logger logger = Logger.getLogger(("Minecraft"));
 	
 	public static Scenario getInstanceOf(String typeOfScenario) {
 		
@@ -31,6 +34,7 @@ class ScenarioFactory {
 		}
 		
 		if (typeOfScenario.equalsIgnoreCase("dragon_fury")) {
+			logger.info("DRAGHON_FUTY");
 			return new DragonFury();
 			
 			

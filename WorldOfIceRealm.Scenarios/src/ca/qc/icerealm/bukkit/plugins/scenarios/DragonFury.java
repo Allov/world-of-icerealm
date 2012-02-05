@@ -12,6 +12,8 @@ public class DragonFury extends Scenario {
 	private boolean isActive = false;
 	private LivingEntity _theDragon;
 	
+	public DragonFury() {}
+	
 	@Override
 	public boolean isTriggered() {
 		return isActive;
@@ -22,7 +24,7 @@ public class DragonFury extends Scenario {
 		// on spawn le dragon dans le milieu de la zone!
 		CreatureType dragon = CreatureType.ENDER_DRAGON;
 		WorldZone zone = this.getZone();
-		_theDragon = getWorld().spawnCreature(zone.getCentralPointAt(100), dragon);
+		_theDragon = getWorld().spawnCreature(zone.getCentralPointAt(80), dragon);
 		getServer().broadcastMessage(ChatColor.RED + "The Dragon has been awaken!");
 	}
 
