@@ -3,6 +3,7 @@ package ca.qc.icerealm.bukkit.plugins.scenarios.core;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import ca.qc.icerealm.bukkit.plugins.scenarios.AmbushScenario;
+import ca.qc.icerealm.bukkit.plugins.scenarios.DragonFury;
 import ca.qc.icerealm.bukkit.plugins.scenarios.WalkingScenario;
 import ca.qc.icerealm.bukkit.plugins.scenarios.WaveScenario;
 
@@ -27,6 +28,12 @@ class ScenarioFactory {
 			String monster = config.getString(id + ".monster");
 			boolean immune = config.getBoolean(id + ".immune_day_light");
 			return new AmbushScenario(qty, monster, immune);
+		}
+		
+		if (typeOfScenario.equalsIgnoreCase("dragon_fury")) {
+			return new DragonFury();
+			
+			
 		}
 
 		return null;
