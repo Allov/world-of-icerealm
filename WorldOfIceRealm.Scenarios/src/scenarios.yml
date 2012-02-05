@@ -1,10 +1,10 @@
 # scenario custom fourni par le scenario API
-
 0:
    author: punisher
    type: dragon_fury
    name: Dragon Fury
    zone: -227,-890,135,-580
+
 
 #0: 
 #  author: punisher
