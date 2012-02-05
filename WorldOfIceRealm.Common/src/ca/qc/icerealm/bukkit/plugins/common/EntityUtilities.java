@@ -55,4 +55,30 @@ public class EntityUtilities
         if(entity instanceof Snowman) return Snowman;
         return -1;
     }
+	
+	public static CreatureType getCreatureType(String s) {
+		if (s.equalsIgnoreCase("sheep")) { return CreatureType.SHEEP; }
+		if (s.equalsIgnoreCase("Cow")) { return CreatureType.COW; }
+		if (s.equalsIgnoreCase("Pig")) { return CreatureType.PIG; }
+		if (s.equalsIgnoreCase("Creeper")) { return CreatureType.CREEPER; }
+		if (s.equalsIgnoreCase("PigZombie")) { return CreatureType.PIG_ZOMBIE; }
+		if (s.equalsIgnoreCase("Skeleton")) { return CreatureType.SKELETON; }
+		if (s.equalsIgnoreCase("Spider")) { return CreatureType.SPIDER; }
+		if (s.equalsIgnoreCase("Squid")) { return CreatureType.SQUID; }
+		if (s.equalsIgnoreCase("Zombie")) { return CreatureType.ZOMBIE; }
+		if (s.equalsIgnoreCase("Ghast")) { return CreatureType.GHAST; }
+		if (s.equalsIgnoreCase("Slime")) { return CreatureType.SLIME; }
+		if (s.equalsIgnoreCase("Giant")) { return CreatureType.GIANT; }
+		if (s.equalsIgnoreCase("Blaze")) { return CreatureType.BLAZE; }
+		if (s.equalsIgnoreCase("CaveSpider")) { return CreatureType.CAVE_SPIDER; }
+		if (s.equalsIgnoreCase("Chicken")) { return CreatureType.CHICKEN; }
+		if (s.equalsIgnoreCase("Enderman")) { return CreatureType.ENDERMAN; }
+		if (s.equalsIgnoreCase("MagmaCube")) { return CreatureType.MAGMA_CUBE; }
+		if (s.equalsIgnoreCase("MushroomCow")) { return CreatureType.MUSHROOM_COW; }
+		if (s.equalsIgnoreCase("Wolf")) { return CreatureType.WOLF; }
+		if (s.equalsIgnoreCase("Silverfish")) { return CreatureType.SILVERFISH; }
+		if (s.equalsIgnoreCase("EnderDragon")) { return CreatureType.ENDER_DRAGON; }
+		if (s.equalsIgnoreCase("Snowman")) { return CreatureType.SNOWMAN; }
+		return CreatureType.VILLAGER;
+	}
 }
