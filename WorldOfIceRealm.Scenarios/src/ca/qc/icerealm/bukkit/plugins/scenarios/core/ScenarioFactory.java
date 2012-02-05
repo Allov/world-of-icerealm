@@ -34,7 +34,6 @@ class ScenarioFactory {
 		}
 		
 		if (typeOfScenario.equalsIgnoreCase("dragon_fury")) {
-			logger.info("DRAGHON_FUTY");
 			return new DragonFury();
 			
 			
