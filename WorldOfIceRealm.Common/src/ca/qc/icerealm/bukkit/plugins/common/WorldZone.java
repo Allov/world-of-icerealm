@@ -57,8 +57,8 @@ public class WorldZone {
 	}
 	
 	public Location getCentralPointAt(double height) {
-		double x = (this._leftTop.getX() + this._rightBottom.getZ()) / 2;
-		double z = (this._leftTop.getX() + this._rightBottom.getZ()) / 2;
+		double x = (this._leftTop.getX() + this._rightBottom.getX()) / 2;
+		double z = (this._leftTop.getZ() + this._rightBottom.getZ()) / 2;
 		return new Location(_leftTop.getWorld(), x, height, z);
 	}
 	
