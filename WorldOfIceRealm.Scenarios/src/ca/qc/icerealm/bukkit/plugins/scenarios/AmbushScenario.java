@@ -96,12 +96,6 @@ public class AmbushScenario extends Scenario {
 	}
 	
 	
-
-	@Override
-	public boolean isComplete() {
-		return _isComplete;
-	}
-	
 	public void setComplete(boolean c) {
 		_isComplete = c;
 		_isActive = false;

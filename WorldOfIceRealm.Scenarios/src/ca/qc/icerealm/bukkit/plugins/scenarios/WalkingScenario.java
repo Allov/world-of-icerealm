@@ -24,12 +24,6 @@ public class WalkingScenario extends Scenario {
 	}
 
 	@Override
-	public boolean isComplete() {
-		_active = false;
-		return true;	
-	}
-
-	@Override
 	public void abortScenario() {
 		_active = false;
 		getServer().broadcastMessage("The Walking scenario has been abort");	

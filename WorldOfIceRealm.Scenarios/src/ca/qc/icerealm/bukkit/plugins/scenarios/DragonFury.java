@@ -63,12 +63,6 @@ public class DragonFury extends Scenario {
 	}
 
 	@Override
-	public boolean isComplete() {
-		// quand le dragon creve!
-		return false;
-	}
-
-	@Override
 	public void abortScenario() {
 		// si les joueurs quittent, on annule le tout!
 		if (_theDragon != null) {

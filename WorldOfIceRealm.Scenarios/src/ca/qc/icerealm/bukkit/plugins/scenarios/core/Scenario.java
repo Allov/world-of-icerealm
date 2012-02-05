@@ -21,20 +21,17 @@ public abstract class Scenario {
 	private World _world;
 	
 	/*
-	 *	Indique à l'engine que le scénario est démarré 
+	 *	Indique à l'engine que le scénario est démarré. L'engin vérifie si un joueur se trouve dans la zone,
+	 *  et s'il n'est pas dans la liste des joueurs, il y est ajouté. Par la suite, cette méthode est 
+	 *  appellé afin de déterminer si on doit démarrer le scénario ou non.
 	 */
 	public abstract boolean isTriggered();
 	
 	/*
 	 * Cette méthode est appellé lorsque l'engine détermine que le scénario
-	 * doit être démarré. Constitue le coeur du scénario.
+	 * doit être démarré. Constitue le coeur du scénario. Initiliser vos objets ici. 
 	 */
 	public abstract void triggerScenario();
-	
-	/*
-	 * Indique si le scénario est complété. Peut être pour différente raison.
-	 */
-	public abstract boolean isComplete();
 	
 	/*
 	 * Cette méthode est appellé lorsque le scénario se termine. Un scénario peut se terminer

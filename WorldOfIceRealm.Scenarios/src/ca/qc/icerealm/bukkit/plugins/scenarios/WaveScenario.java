@@ -17,12 +17,6 @@ public class WaveScenario extends Scenario {
 	}
 
 	@Override
-	public boolean isComplete() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public void abortScenario() {
 		// TODO Auto-generated method stub
 		
