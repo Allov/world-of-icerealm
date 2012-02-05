@@ -10,6 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import ca.qc.icerealm.bukkit.plugins.common;
 
 public class RareDropsEntityListener implements Listener
 {
@@ -33,7 +34,7 @@ public class RareDropsEntityListener implements Listener
 	
 	        	for (int i = 0; i < items.size(); i++)
 	        	{
-	        		entity.getKiller().sendMessage("Monster dropped a " + items.get(i).getType().name());
+	        		entity.getKiller().sendMessage(EntityUtilities.getEntityName(entity) + " dropped a " + items.get(i).getType().name());
 	        	}	    
 	        	
 	        	event.getDrops().addAll(items);

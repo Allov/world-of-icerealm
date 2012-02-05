@@ -56,6 +56,34 @@ public class EntityUtilities
         return -1;
     }
 	
+	public static String getEntityName(Entity entity)
+    {
+        if(entity instanceof Player) return "Player";
+        if(entity instanceof Sheep) return "Sheep";
+        if(entity instanceof Cow) return "Cow";
+        if(entity instanceof Pig) return "Pig";
+        if(entity instanceof Creeper) return "Creeper";
+        if(entity instanceof PigZombie) return "PigZombie";
+        if(entity instanceof Skeleton)return "Skeleton";
+        if(entity instanceof Spider) return "Spider";
+        if(entity instanceof Squid) return "Squid";
+        if(entity instanceof Zombie) return "Zombie";
+        if(entity instanceof Ghast) return "Ghast";
+        if(entity instanceof Slime) return "Slime";
+        if(entity instanceof Giant) return "Giant";
+        if(entity instanceof Blaze) return "Blaze";
+        if(entity instanceof CaveSpider) return "CaveSpider";
+        if(entity instanceof Chicken) return "Chicken";
+        if(entity instanceof Enderman) return "Enderman";
+        if(entity instanceof MagmaCube) return "MagmaCube";
+        if(entity instanceof MushroomCow) return "MushroomCow";
+        if(entity instanceof Snowman) return "Snowman";
+        if(entity instanceof Wolf) return "Wolf";
+        if(entity instanceof Silverfish) return "Silverfish";
+        if(entity instanceof EnderDragon) return "EnderDragon";
+        return null;
+    }
+
 	public static CreatureType getCreatureType(String s) {
 		if (s.equalsIgnoreCase("sheep")) { return CreatureType.SHEEP; }
 		if (s.equalsIgnoreCase("Cow")) { return CreatureType.COW; }

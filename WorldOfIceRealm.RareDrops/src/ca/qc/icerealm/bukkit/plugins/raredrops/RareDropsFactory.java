@@ -153,7 +153,7 @@ public class RareDropsFactory
 			}
 			case EntityUtilities.CaveSpider:
 			{
-				this.logger.info("Killed Spider");
+				this.logger.info("Killed Cave Spider");
 				odds.addOddsItem(new RareDropsOddsItem(6.00 * oddsMultiplier, Material.BREAD));
 				odds.addOddsItem(new RareDropsOddsItem(3.00 * oddsMultiplier, Material.COOKIE));
 				odds.addOddsItem(new RareDropsOddsItem(2.00 * oddsMultiplier, Material.LAPIS_ORE));

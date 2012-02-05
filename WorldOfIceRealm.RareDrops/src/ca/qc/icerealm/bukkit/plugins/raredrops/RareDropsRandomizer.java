@@ -36,10 +36,11 @@ public class RareDropsRandomizer
 				RareDropsOddsItem item = odds.getOddsItems().get(i);			
 				double result = Math.random() * 100;
 				
+				this.logger.info(String.valueOf(result) + " <= " + String.valueOf(item.getPercentage());
+				
 				if (result <= item.getPercentage())
 				{
-					stackList.add(new ItemStack(item.getItem(), 1));
-					
+					stackList.add(new ItemStack(item.getItem(), 1));	
 				}
 			}
 		}
