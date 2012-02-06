@@ -1,0 +1,86 @@
+quests:
+    -   group: easy
+        name: Zombies!
+        messageStart: Kill 10 zombies!
+        messageEnd: Thanks!
+        daily: false
+        objectives:
+            -   type: kill
+                what: 54
+                amount: 10
+        joinFee:
+            -   money: 0
+            -   level: 0
+        dropFee:
+            -   money: 50
+            -   level: 0
+        rewards:
+            -   money: 100
+            -   level: 1
+    -   group: easy
+        name: Creepers!
+        messageStart: Kill 10 creepers!
+        messageEnd: Thanks!
+        daily: false
+        objectives:
+            -   type: kill
+                what: 50
+                amount: 10
+        joinFee:
+            -   money: 0
+            -   level: 0
+        dropFee:
+            -   money: 50
+            -   level: 0
+        rewards:
+            -   money: 200
+            -   level: 2
+    -   group: average
+        name: Creepers 'n bits!
+        messageStart: Kill 10 creepers and collect 10 rotten flesh!
+        messageEnd: Thanks!
+        daily: true
+        objectives:
+            -   type: kill
+                what: 50
+                amount: 10
+            -   type: collect 
+                what: 367
+                amount: 10
+        joinFee:
+            -   money: 0
+            -   level: 0
+        dropFee:
+            -   money: 50
+            -   level: 0
+        rewards:
+            -   money: 200
+            -   level: 2
+            -   items:
+                -   id: 267
+                    amount: 1
+    -   group: hard
+        name: Castle under siege!
+        messageStart: Kill 30 zombies at the Castle!
+        messageEnd: Thanks!
+        zone: -57,756,127,1108
+        daily: true
+        objectives:
+            -   type: kill
+                what: 50
+                amount: 10
+            -   type: collect 
+                what: 367
+                amount: 10
+        joinFee:
+            -   money: 0
+            -   level: 0
+        dropFee:
+            -   money: 50
+            -   level: 0
+        rewards:
+            -   money: 200
+            -   level: 2
+            -   items:
+                -   id: 322
+                    amount: 5

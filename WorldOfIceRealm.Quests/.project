@@ -3,6 +3,7 @@
 	<name>WorldOfIceRealm.Quests</name>
 	<comment></comment>
 	<projects>
+		<project>WorldOfIceRealm.Common</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
