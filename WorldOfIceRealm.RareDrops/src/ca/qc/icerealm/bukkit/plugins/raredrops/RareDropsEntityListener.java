@@ -26,7 +26,7 @@ public class RareDropsEntityListener implements Listener
         	
         	if (entity.getKiller() instanceof Player)
         	{   	
-	        	RareDropsFactory factory = new RareDropsFactory(1);
+	        	RareDropsFactory factory = new RareDropsFactory(25);
 	        	RareDropsOdds odds = factory.createEntityOdds(entity);
 	        	
 	        	RareDropsRandomizer randomizer = new RareDropsRandomizer(odds);
@@ -35,7 +35,7 @@ public class RareDropsEntityListener implements Listener
 	
 	        	for (int i = 0; i < items.size(); i++)
 	        	{
-	        		entity.getKiller().sendMessage(EntityUtilities.getEntityName(entity) + " dropped a " + items.get(i).getType().name());
+	        		entity.getKiller().sendMessage(EntityUtilities.getEntityName(entity) + " dropped a " + items.get(i).getType().name() + (items.get(i).getEnchantments().size() != 0 ? " (enchanted)":""));
 	        	}	    
 	        	
 	        	event.getDrops().addAll(items);
