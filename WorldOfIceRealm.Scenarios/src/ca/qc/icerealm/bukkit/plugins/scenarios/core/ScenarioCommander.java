@@ -57,20 +57,28 @@ class ScenarioCommander implements CommandExecutor {
 			}
 			
 		}
-		else if (arg3.length > 0 && arg3[0].contains("killhard") && arg0.isOp()) {
-			for (LivingEntity e : _server.getWorld("world").getLivingEntities()) {
-				
-				if (e instanceof EnderDragon) {
-					e.remove();
-					_server.broadcastMessage("An EnderDragon has been removed by an admin");
+		else if (arg3.length > 0 && arg3[0].contains("killhard")) {
+			
+			if (arg0.isOp()) {
+				for (LivingEntity e : _server.getWorld("world").getLivingEntities()) {
+					
+					if (e instanceof EnderDragon) {
+						e.remove();
+						_server.broadcastMessage("An EnderDragon has been removed by an admin");
+					}
+					
+					if (e instanceof Ghast) {
+						e.remove();
+						_server.broadcastMessage("A Ghast has been removed by an admin");
+					}
+					
 				}
-				
-				if (e instanceof Ghast) {
-					e.remove();
-					_server.broadcastMessage("A Ghast has been removed by an admin");
-				}
-				
 			}
+			else {
+				arg0.sendMessage("You are not an operator. This will be reported.");
+			}
+				
+			
 		}
 		
 		return false;

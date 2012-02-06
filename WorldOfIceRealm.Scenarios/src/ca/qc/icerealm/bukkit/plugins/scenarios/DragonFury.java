@@ -4,15 +4,19 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.EnderDragon;
+import org.bukkit.entity.Ghast;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
@@ -122,7 +126,7 @@ public class DragonFury extends Scenario {
 }
 
 class DragonDeathListener implements Listener {
-	
+	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private LivingEntity _dragon;
 	private DragonFury _scenario;
 	private List<LivingEntity> _ghasts;
@@ -139,7 +143,7 @@ class DragonDeathListener implements Listener {
 			_scenario.getServer().broadcastMessage(ChatColor.GREEN + "The Dragon has been defeated!");
 			_scenario.setLastDragonDefeat(System.currentTimeMillis());
 		}
-		else {
+		else/* if (event.getEntity() instanceof Ghast)*/{
 			for (int i = 0; i < _ghasts.size(); i++) {
 				if (event.getEntity().getEntityId() == _ghasts.get(i).getEntityId()) {
 					_ghasts.remove(i);
@@ -147,6 +151,13 @@ class DragonDeathListener implements Listener {
 				}
 			}
 		}		
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void dragonExplodeBlocks(EntityExplodeEvent event) {
+		if (event.getEntity().getEntityId() == _dragon.getEntityId()){
+			event.setCancelled(true);
+		}
 	}
 	
 }

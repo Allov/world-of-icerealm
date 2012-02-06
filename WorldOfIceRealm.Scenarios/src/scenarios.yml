@@ -4,12 +4,19 @@
    author: punisher
    type: dragon_fury
    name: Dragon Fury
-   zone: 142,-116,179,-67
+   zone: -227,-890,135,-580
    ghast_prob: 4
    ghast_max: 5
+   
+   #
+   # le cooldown est en millisecond. 360000 = 1h
+   #
    cooldown: 30000
-
-   #zone: -227,-890,135,-580
+   
+   # differente zone de test
+   #zone: 176,40,194,66
+   #zone: 142,-116,179,-67
+   
 #0: 
 #  author: punisher
 #   type: walking
