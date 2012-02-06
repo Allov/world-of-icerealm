@@ -69,7 +69,6 @@ public class DragonFury extends Scenario {
 		WorldZone zone = this.getZone();
 		_theDragon = getWorld().spawnCreature(zone.getCentralPointAt(80), dragon);
 		getServer().broadcastMessage(ChatColor.RED + "The Dragon has been awaken!");
-		_theDragon.setHealth(1);
 		
 		if (RandomUtil.getDrawResult(_ghastSpawningProb)) {
 			CreatureType ghast = CreatureType.GHAST;
@@ -87,7 +86,6 @@ public class DragonFury extends Scenario {
 		
 		// register le onDeathListener
 		getServer().getPluginManager().registerEvents(new DragonDeathListener(_theDragon, this, _ghasts), getPlugin());
-			
 		isActive = true;
 	}
 
@@ -155,7 +153,7 @@ class DragonDeathListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void dragonExplodeBlocks(EntityExplodeEvent event) {
-		if (event.getEntity().getEntityId() == _dragon.getEntityId()){
+		if (_dragon != null && event.getEntity().getEntityId() == _dragon.getEntityId()){
 			event.setCancelled(true);
 		}
 	}
