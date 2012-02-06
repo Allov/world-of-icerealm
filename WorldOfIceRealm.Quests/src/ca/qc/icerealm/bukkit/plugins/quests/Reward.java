@@ -11,12 +11,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import ca.qc.icerealm.bukkit.plugins.quests.builder.ItemRewardDefinition;
-
 public class Reward {
 	private int level;
 	private int money;
-	private List<ItemRewardDefinition> items;
+	private List<ItemReward> items;
 	private final Economy economy;
 	
 	public Reward(int level, int money) {
@@ -31,9 +29,9 @@ public class Reward {
 		this.economy = economy;		
 	}
 	
-	public List<ItemRewardDefinition> getItems() {
+	public List<ItemReward> getItems() {
 		if (items == null) {
-			items = new ArrayList<ItemRewardDefinition>();
+			items = new ArrayList<ItemReward>();
 		}
 		
 		return items;
@@ -47,7 +45,7 @@ public class Reward {
 				this.economy.depositPlayer(player.getName(), this.money);
 			}
 			
-			for (ItemRewardDefinition item : getItems()) {
+			for (ItemReward item : getItems()) {
 				PlayerInventory inventory = player.getInventory();
 				
 				Material material = Material.getMaterial(item.getId());
@@ -78,7 +76,7 @@ public class Reward {
 			if (addAnd)
 				message = message + " and";
 			
-			for (ItemRewardDefinition item : getItems()) {
+			for (ItemReward item : getItems()) {
 				Material material = Material.getMaterial(item.getId());
 				message = message + ChatColor.GREEN + item.getAmount() + material.name() + ChatColor.DARK_PURPLE + ", ";  
 			}

@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 
 import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 import ca.qc.icerealm.bukkit.plugins.quests.Fees;
+import ca.qc.icerealm.bukkit.plugins.quests.ItemReward;
 import ca.qc.icerealm.bukkit.plugins.quests.KillObjective;
 import ca.qc.icerealm.bukkit.plugins.quests.Quest;
 import ca.qc.icerealm.bukkit.plugins.quests.Reward;
@@ -18,26 +19,10 @@ import ca.qc.icerealm.bukkit.plugins.quests.Quests;
 
 public class BasicQuestService implements QuestService {
 
-	private List<QuestDefinition> quests;
 	private final int[] Creatures = new int[] { EntityUtilities.Zombie, EntityUtilities.Creeper, EntityUtilities.Spider, EntityUtilities.Skeleton, EntityUtilities.Enderman };
 	private final int MaxObjective = 3;
 	private final int MaxKillCount = 1;
 	private final ca.qc.icerealm.bukkit.plugins.quests.Quests questsPlugin;
-	
-	protected List<QuestDefinition> Quests() {
-		if (quests == null) {
-			quests = new ArrayList<QuestDefinition>();
-		}
-		
-		return quests;
-	}
-	
-	private Quest BuildQuestFromDefinition(Player player, QuestDefinition qdef) {
-		if (qdef == null) 
-			return null;
-		
-		return null;
-	}
 	
 	public BasicQuestService(Quests questsPlugin) {
 		this.questsPlugin = questsPlugin;
@@ -67,7 +52,7 @@ public class BasicQuestService implements QuestService {
 		}
 		
 		Reward reward = new Reward(10, 10000, this.questsPlugin.getEconomyProvider().getProvider());
-		reward.getItems().add(new ItemRewardDefinition(276, 2));
+		reward.getItems().add(new ItemReward(276, 2));
 		
 		Quest quest = new Quest(player, 
 				questName, 

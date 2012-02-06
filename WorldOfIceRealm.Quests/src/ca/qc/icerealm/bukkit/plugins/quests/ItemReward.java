@@ -1,12 +1,12 @@
-package ca.qc.icerealm.bukkit.plugins.quests.builder;
+package ca.qc.icerealm.bukkit.plugins.quests;
 
-public class ItemRewardDefinition {
+public class ItemReward {
 	private int id;
 	private int amount;
 	
-	public ItemRewardDefinition(int id, int amount) {
-		this.id = id;
-		this.amount = amount;		
+	public ItemReward(int id, int amout) {
+		this.setId(id);
+		setAmount(amout);			
 	}
 
 	public int getId() {
