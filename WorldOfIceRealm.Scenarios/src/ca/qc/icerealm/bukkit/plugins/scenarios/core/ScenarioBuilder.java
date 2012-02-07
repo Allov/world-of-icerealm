@@ -82,12 +82,26 @@ class ScenarioBuilder {
 	
 	private WorldZone translateFromString(String zone) {
 		String[] coords = zone.split(",");
-		double[] coordsDouble = new double[] { Double.parseDouble(coords[0]), Double.parseDouble(coords[1]), 
-											   Double.parseDouble(coords[2]), Double.parseDouble(coords[3]) };
+		double[] coordsDouble = null;
 		
-		Location lt = new Location(_world, coordsDouble[0], 20, coordsDouble[1]);
-		Location rb = new Location(_world, coordsDouble[2], 20, coordsDouble[3]);
-		return new WorldZone(lt, rb);
+		if (coords.length == 4) {
+			coordsDouble = new double[] { Double.parseDouble(coords[0]), Double.parseDouble(coords[1]), 
+					   Double.parseDouble(coords[2]), Double.parseDouble(coords[3])};
+		}
+		else if (coords.length == 6) {
+			coordsDouble = new double[] { Double.parseDouble(coords[0]), Double.parseDouble(coords[1]), 
+					   Double.parseDouble(coords[2]), Double.parseDouble(coords[3]),
+					   Double.parseDouble(coords[4]), Double.parseDouble(coords[5])};
+		}
+		
+		if (coordsDouble != null) {
+			Location lt = new Location(_world, coordsDouble[0], 20, coordsDouble[1]);
+			Location rb = new Location(_world, coordsDouble[2], 20, coordsDouble[3]);
+			return new WorldZone(lt, rb, coordsDouble[4], coordsDouble[5]);
+		}
+		
+		return null;
+		
 	}
 	
 }
