@@ -35,6 +35,9 @@ class ProbingWorker implements Runnable {
 				else if (s.isTriggered() && s.mustBeStop()) {
 					s.terminateScenario();
 				}
+				else if (s.isTriggered()) {
+					s.scenarioProgressHandler();
+				}
 			}
 			
 			for (Player p : _server.getOnlinePlayers()){
