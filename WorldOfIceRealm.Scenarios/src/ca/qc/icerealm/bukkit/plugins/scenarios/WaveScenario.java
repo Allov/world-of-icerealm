@@ -39,4 +39,16 @@ public class WaveScenario extends Scenario {
 		return false;
 	}
 
+	@Override
+	public boolean mustBeStop() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void terminateScenario() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

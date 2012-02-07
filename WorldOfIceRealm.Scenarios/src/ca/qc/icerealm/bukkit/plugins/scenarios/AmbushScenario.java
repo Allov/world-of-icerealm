@@ -101,6 +101,18 @@ public class AmbushScenario extends Scenario {
 	public boolean canBeTriggered() {
 		return true;
 	}
+
+	@Override
+	public boolean mustBeStop() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void terminateScenario() {
+		// TODO Auto-generated method stub
+		
+	}
 }
 
 class AmbushScenarioListener implements Listener {

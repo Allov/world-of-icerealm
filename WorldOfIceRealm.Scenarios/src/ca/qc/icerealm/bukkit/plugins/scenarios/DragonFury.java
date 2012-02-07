@@ -106,7 +106,7 @@ public class DragonFury extends Scenario {
 		getServer().broadcastMessage(ChatColor.RED + _nbDragon.toString() + " dragons have been awaken!");
 		
 		for (int i = 0; i < _maxNumberOfGhast; i++) {
-			LivingEntity l = getWorld().spawnCreature(zone.getCentralPointAt(100), CreatureType.GHAST);
+			LivingEntity l = getWorld().spawnCreature(zone.getCentralPointAt(100), CreatureType.GHAST);		
 			_ghasts.add(l);
 		}
 		
@@ -118,6 +118,7 @@ public class DragonFury extends Scenario {
 		for (int i = 0; i < _monsterMax; i++) {
 			CreatureType type = EntityUtilities.getCreatureType(MONSTERS[RandomUtil.getRandomInt(MONSTERS.length)]);
 			LivingEntity m = getWorld().spawnCreature(locations.get(i), type);
+			this.logger.info("Monster spawned at " + m.getLocation().getX() + "," + m.getLocation().getY() + "," + m.getLocation().getZ());
 			m.setFireTicks(0);
 			_monsters.add(m);
 		}
@@ -164,13 +165,25 @@ public class DragonFury extends Scenario {
 	@Override
 	public boolean abortWhenLeaving() {
 		// on désactive le tout quand y reste pu personne
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean canBeTriggered() {
 		// vérification du cool down
 		return (_lastDragonDefeat + _coolDown) <= System.currentTimeMillis();
+	}
+
+	@Override
+	public boolean mustBeStop() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void terminateScenario() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
