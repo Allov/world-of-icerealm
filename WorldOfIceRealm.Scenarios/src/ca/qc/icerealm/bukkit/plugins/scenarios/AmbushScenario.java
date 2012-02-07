@@ -63,7 +63,7 @@ public class AmbushScenario extends Scenario {
 		getServer().broadcastMessage(ChatColor.RED + "Icerealm fighters has been ambushed by monsters!!!!");
 		
 		int i = 0;
-		List<Location> locations = getRandomLocation(getZone(), _quantity);
+		List<Location> locations = getZone().getRandomLocation(getWorld(), _quantity);
 		monsters = new ArrayList<LivingEntity>();
 		while (i < _quantity) {
 			CreatureType creature = EntityUtilities.getCreatureType(_monstersType[RandomUtil.getRandomInt(_monstersType.length - 1)]);			
@@ -77,24 +77,6 @@ public class AmbushScenario extends Scenario {
 		_isActive = true;	
 		
 	}
-	
-	private List<Location> getRandomLocation(WorldZone scenarioZone, int qty) {
-		List<Location> list = new ArrayList<Location>();
-		double topLeftX = 0;
-		double topLeftZ = 0;
-		double bottomRightX = getZone().getRelativeBottomRight().getX();
-		double bottomRightZ = getZone().getRelativeBottomRight().getZ();
-		for (int i = 0; i < qty; i++) {
-			
-			double tlX = RandomUtil.getRandomDouble(topLeftX, bottomRightX);
-			double tlZ = RandomUtil.getRandomDouble(topLeftZ, bottomRightZ);
-			tlX += getZone().getTopLeft().getX();
-			tlZ += getZone().getTopLeft().getZ();
-			list.add(new Location(getWorld(), tlX, 70, tlZ));
-		}
-		return list;
-	}
-	
 	
 	public void setComplete(boolean c) {
 		_isComplete = c;

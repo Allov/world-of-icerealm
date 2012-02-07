@@ -26,6 +26,9 @@ class ProbingWorker implements Runnable {
 		
 		while (!_stop) {
 			
+			
+			
+			
 			for (Player p : _server.getOnlinePlayers()){
 				
 				Scenario s = _engine.findScenarioAtLocation(p.getLocation());			
