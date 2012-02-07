@@ -26,8 +26,16 @@ class ProbingWorker implements Runnable {
 		
 		while (!_stop) {
 			
-			
-			
+			for (Scenario s : _engine.getTimedScenarios()) {
+				if (!s.isTriggered() && s.canBeTriggered()) {
+					// faut ajouté les joueurs ici! mais peut etre fait dans le scénario
+					// getCurrentServer().getOnlinePlayers()
+					s.triggerScenario();
+				}
+				else if (s.isTriggered() && s.mustBeStop()) {
+					s.terminateScenario();
+				}
+			}
 			
 			for (Player p : _server.getOnlinePlayers()){
 				

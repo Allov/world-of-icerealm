@@ -47,7 +47,8 @@ public abstract class Scenario {
 	/*
 	 * Détermine si le scénario s'arrête si le dernier joueur quitte la zone d'activation. 
 	 * Il n'est pas recommendé de laisser un scénario qui demande beaucoup de ressource se
-	 * déroulé s'il n'y a pas de joueur dans la zone.
+	 * déroulé s'il n'y a pas de joueur dans la zone. Cette méthode est utilisé pour une
+	 * fin non prévue au scénario
 	 */
 	public abstract boolean abortWhenLeaving();
 	
@@ -58,6 +59,21 @@ public abstract class Scenario {
 	 * Par exemple, vérifiez si le nombre de joueurs requis est atteint!
 	 */
 	public abstract boolean canBeTriggered();
+	
+	/*
+	 * Indique au working prober s'il doit arrêter le scénario selon la condition codée
+	 * dans l'implémentation du scénario. Si cette condition est vrai, le probing va 
+	 * appellé la méthode terminateScenario.
+	 */
+	public abstract boolean mustBeStop();
+	
+	/*
+	 * Le prober appelle cette méthode si le scénario doit s'arrêté de manière normale.
+	 * Cette méthode est utilisé pour que le scénario se termine normalement. Ne pas 
+	 * confondre avec abortScenario qui lui est codé afin de prévoir une fin imprévue
+	 * au scénario.
+	 */
+	public abstract void terminateScenario();
 	
 	public abstract boolean isComplete();
 	

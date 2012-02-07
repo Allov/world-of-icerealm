@@ -33,6 +33,7 @@ class ScenarioEngine {
 	private Server _currentServer;
 	private boolean _isInitialized = false;
 	private List<Scenario> _scenarios;
+	private List<Scenario> _timedScenarios;
 	private World _normalWorld;
 	private ProbingWorker _probing;
 	private ScenarioBuilder _builder;
@@ -40,6 +41,7 @@ class ScenarioEngine {
 	private static ScenarioEngine _instance = null;
 	public ScenarioEngine() {
 		_scenarios = new ArrayList<Scenario>();
+		_timedScenarios = new ArrayList<Scenario>();
 	}
 	
 	public static ScenarioEngine getInstance() {
@@ -117,5 +119,12 @@ class ScenarioEngine {
 			_scenarios = new ArrayList<Scenario>();
 		}
 		return _scenarios;
+	}
+	
+	public List<Scenario> getTimedScenarios() {
+		if (_timedScenarios == null) {
+			_timedScenarios = new ArrayList<Scenario>();
+		}
+		return _timedScenarios;
 	}
 }

@@ -9,6 +9,12 @@ public class FacadeScenario {
 		}
 	}
 	
+	public void addTimedScenario(Scenario s) {
+		if (s != null) {
+			ScenarioEngine.getInstance().getTimedScenarios().add(s);	
+		}
+	}
+	
 	public void initializeScenario(Scenario s) {
 		if (s != null) {
 			ScenarioEngine.getInstance().getBuilder().initializeScenario(s);
