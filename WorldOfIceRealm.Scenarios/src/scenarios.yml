@@ -4,12 +4,14 @@
    author: punisher
    type: dragon_fury
    name: Dragon Fury
+   ghast_max: 10
+   dragons: 0
    zone: 142,-116,179,-67,80,100
    ghast_max: 3
    dragons: 2
    max_health: 200
    experience: 100
-   monster_max: 50   
+   monster_max: 0
    monsters: zombie,skeleton,pigzombie,enderman
 
    # le cooldown est en millisecond. 360000 = 1h, 4320000 = 12h
