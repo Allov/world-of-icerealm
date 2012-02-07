@@ -4,36 +4,18 @@
    author: punisher
    type: dragon_fury
    name: Dragon Fury
-   zone: -227,-890,135,-580
-   ghast_prob: 4
+   zone: 142,-116,179,-67
    ghast_max: 5
-   
-   #
-   # le cooldown est en millisecond. 360000 = 1h
-   #
+   dragons: 5
+   max_health: 200
+   experience: 100
+   monster_max: 75   
+   monsters: zombie,skeleton,pigzombie,enderman
+
+   # le cooldown est en millisecond. 360000 = 1h, 4320000 = 12h
    cooldown: 30000
    
    # differente zone de test
    #zone: 176,40,194,66
    #zone: 142,-116,179,-67
-   
-#0: 
-#  author: punisher
-#   type: walking
-#   name: Walking Around!
-#   zone: 1100,1100,2000,2000
-#1:
-#   author: shw
-#   type: wave
-#   name: Monster Wave
-#   zone: 1000,1000,2000,2000
-
-#2:
-#   author: punisher
-#   type: ambush
-#   name: Monster Ambush
-#   zone: 142,-116,179,-67
-#   qty: 2
-#   monster: zombie,skeleton,creeper,PigZombie
-#   immune_day_light: true
-   
+   #zone: -227,-890,135,-580   

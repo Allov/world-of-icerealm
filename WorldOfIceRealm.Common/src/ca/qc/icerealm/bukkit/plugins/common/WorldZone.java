@@ -1,6 +1,10 @@
 package ca.qc.icerealm.bukkit.plugins.common;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Location;
+import org.bukkit.World;
 
 /**
  * Permet de définir une zone dans le monde.
@@ -60,6 +64,26 @@ public class WorldZone {
 		double x = (this._leftTop.getX() + this._rightBottom.getX()) / 2;
 		double z = (this._leftTop.getZ() + this._rightBottom.getZ()) / 2;
 		return new Location(_leftTop.getWorld(), x, height, z);
+	}
+	
+	public List<Location> getRandomLocation(World w, int qty) {
+		List<Location> list = new ArrayList<Location>();
+		double topLeftX = 0;
+		double topLeftZ = 0;
+		double bottomRightX = getRelativeBottomRight().getX();
+		double bottomRightZ = getRelativeBottomRight().getZ();
+		for (int i = 0; i < qty; i++) {
+			double tlX = RandomUtil.getRandomDouble(topLeftX, bottomRightX);
+			double tlZ = RandomUtil.getRandomDouble(topLeftZ, bottomRightZ);
+			tlX += getTopLeft().getX();
+			tlZ += getTopLeft().getZ();
+			
+			Location loc = new Location(w, tlX, 120, tlZ);
+			double y = w.getHighestBlockYAt(loc);
+			loc.setY(y);
+			list.add(loc);
+		}
+		return list;
 	}
 	
 	@Override 

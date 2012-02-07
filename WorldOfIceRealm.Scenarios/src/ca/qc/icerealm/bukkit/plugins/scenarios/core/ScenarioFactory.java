@@ -25,7 +25,7 @@ class ScenarioFactory {
 		}
 		
 		if (typeOfScenario.equalsIgnoreCase("ambush")) {
-			String id = "2";
+			String id = "0";
 			FileConfiguration config = ScenarioBuilder.getScenarioConfiguration();
 			int qty = config.getInt(id + ".qty");
 			String monster = config.getString(id + ".monster");
@@ -39,7 +39,12 @@ class ScenarioFactory {
 			int ghastSpawn = config.getInt(id + ".ghast_prob");
 			int ghastMax = config.getInt(id + ".ghast_max");
 			long coolDown = config.getLong(id + ".cooldown");
-			return new DragonFury(ghastSpawn, ghastMax, coolDown);
+			int nbDragon = config.getInt(id + ".dragons");
+			int max_health = config.getInt(id + ".max_health");
+			int experienceDrop = config.getInt(id + ".experience");
+			int monsterMax = config.getInt(id + ".monster_max");
+			String monsters = config.getString(id + ".monsters");
+			return new DragonFury(ghastSpawn, ghastMax, coolDown, nbDragon, max_health, experienceDrop, monsterMax, monsters);
 		}
 
 		return null;

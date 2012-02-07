@@ -27,9 +27,10 @@ class PlayerListener implements Listener {
 			
 			if (s.getPlayers().size() == 0) {
 				s.abortScenario();
+				this.logger.info("The player disconnected and the scenario has been abort");
 			}
 			
-			this.logger.info("The player disconnected and the scenario has been abort");
+			
 		}
 		
 	}

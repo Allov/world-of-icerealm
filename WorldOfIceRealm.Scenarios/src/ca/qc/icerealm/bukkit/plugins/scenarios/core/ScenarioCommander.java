@@ -61,6 +61,7 @@ class ScenarioCommander implements CommandExecutor {
 			
 			if (arg0.isOp()) {
 				for (LivingEntity e : _server.getWorld("world").getLivingEntities()) {
+					e.remove();
 					
 					if (e instanceof EnderDragon) {
 						e.remove();
