@@ -190,4 +190,8 @@ public class EntityUtilities
 
         return null;
     }
+
+	public static String getMaterialFriendName(String name) {
+		return name.replace('_', ' ').toLowerCase();		
+	}
 }

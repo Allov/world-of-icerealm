@@ -1,5 +1,6 @@
 package ca.qc.icerealm.bukkit.plugins.quests;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,7 +19,11 @@ public class QuestCommandExecutor implements CommandExecutor {
 		if (sender instanceof Player) {
 			Player player = (Player)sender;
 			Quest quest = this.quests.getQuestService().getQuest(player);
-			quest.start();
+			if (quest != null) {
+				quest.start();
+			} else {
+				player.sendMessage(ChatColor.RED + "You're already on a random quest.");
+			}
 			
 			return true;
 		} else {

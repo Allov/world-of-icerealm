@@ -11,6 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
+
 public class Reward {
 	private int level;
 	private int money;
@@ -39,7 +41,7 @@ public class Reward {
 	
 	public void giveTo(Player player) {
 		if (player != null) {
-			player.giveExp(this.level);
+			player.setLevel(player.getLevel() + this.level);
 			
 			if (this.economy != null) {
 				this.economy.depositPlayer(player.getName(), this.money);
@@ -62,23 +64,23 @@ public class Reward {
 		boolean addAnd = true;
 		
 		if (this.level > 0) {
-			message = message + ChatColor.YELLOW + this.level + ChatColor.DARK_PURPLE + " experience";
+			message = message + ChatColor.YELLOW + this.level + ChatColor.DARK_GREEN + " level";
 		}
 		
 		if (this.money > 0) {
 			if (addAnd)
-				message = message + " and";
+				message = message + " and ";
 			
-			message = message + ChatColor.YELLOW + this.money + ChatColor.DARK_PURPLE + " gold";
+			message = message + ChatColor.YELLOW + this.money + ChatColor.DARK_GREEN + " gold";
 		}
 		
 		if (this.getItems().size() > 0) {
 			if (addAnd)
-				message = message + " and";
+				message = message + " and ";
 			
 			for (ItemReward item : getItems()) {
 				Material material = Material.getMaterial(item.getId());
-				message = message + ChatColor.GREEN + item.getAmount() + material.name() + ChatColor.DARK_PURPLE + ", ";  
+				message = message + ChatColor.GREEN + item.getAmount() + " " + EntityUtilities.getMaterialFriendName(material.name()) + ChatColor.DARK_GREEN + ", ";  
 			}
 			
 			message = message.substring(0, message.length() - 2);

@@ -1,40 +1,66 @@
 package ca.qc.icerealm.bukkit.plugins.quests;
 
-import org.bukkit.entity.Entity;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
-import ca.qc.icerealm.bukkit.plugins.common.Zone;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+
+import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 
 public abstract class Objective {
-	private Zone zone;
+	private WorldZone zone;
 	private int entityId;	
 	private int amount;
 	private int current;
 	private boolean requirementsFulfilled;
-	private final Quest quest;
+	private List<ObjectiveListener> listeners;
+	private Player player;
 	
-	public Objective(Quest quest, Zone zone, int amount, int entityId) {
-		this.quest = quest;
+	public Objective(Player player, WorldZone zone, int amount, int entityId) {
+		this.player = player;
 		this.zone = zone;
 		this.amount = amount;
-		this.entityId = entityId;		
+		this.entityId = entityId;
+		
+		this.listeners = new CopyOnWriteArrayList<ObjectiveListener>();
 	}
 	
 	public boolean advance(Entity entity) {
 		if (!requirementsFulfilled) {
 			current++;
 			
-			getQuest().objectiveProgressed(this, entity);
+			objectiveProgressed(entity);
 			
 			if (current == amount) {
 				requirementsFulfilled = true;
-				getQuest().objectiveFulfilled(this, entity);
+				objectiveDone();
 			}
 		}
 		
 		return requirementsFulfilled;
 	}
 	
+	public void register(ObjectiveListener listener) {
+		this.listeners.add(listener);
+	}
+	
+	public void unregister(ObjectiveListener listener) {
+		this.listeners.remove(listener);
+	}
+	
+	private void objectiveProgressed(Entity entity) {
+		for (ObjectiveListener listener : this.listeners) {
+			listener.objectiveProgressed(this, entity);
+		}
+	}	
+
+	private void objectiveDone() {
+		for (ObjectiveListener listener : this.listeners) {
+			listener.objectiveDone(this);
+		}
+	}
+
 	public boolean isDone() {
 		return requirementsFulfilled;
 	}
@@ -43,7 +69,7 @@ public abstract class Objective {
 		return entityId;
 	}
 	
-	public Zone getZone() {
+	public WorldZone getZone() {
 		return zone;
 	}
 	
@@ -55,7 +81,7 @@ public abstract class Objective {
 		return current;
 	}
 
-	public Quest getQuest() {
-		return quest;
+	public Player getPlayer() {
+		return player;
 	}
 }
