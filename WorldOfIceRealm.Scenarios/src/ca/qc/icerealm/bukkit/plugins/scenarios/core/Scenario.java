@@ -75,6 +75,13 @@ public abstract class Scenario {
 	 */
 	public abstract void terminateScenario();
 	
+	/*
+	 * Le prober appelle cette méthode si le scénario est démarré et qu'il ne doit pas
+	 * être arrêté. Utile lorsque l'on veut indiquer quelque chose à tous les participants.
+	 * Nécessaire de l'overridé explicitement dans une classe spécialisé.
+	 */
+	public void scenarioProgressHandler() {}
+	
 	public abstract boolean isComplete();
 	
 	public World getWorld() {
