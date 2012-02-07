@@ -88,7 +88,7 @@ public class DragonFury extends Scenario {
 
 	@Override
 	public void triggerScenario() {
-		
+		this.logger.info(String.valueOf(getWorld().getFullTime()));
 		isComplete = false;
 		showRetreatMessage = true;
 		
@@ -138,9 +138,7 @@ public class DragonFury extends Scenario {
 				d.remove();	
 			}
 			
-			if (showRetreatMessage) {
-				getServer().broadcastMessage("The dragons retreated to his hideout!");
-			}
+			
 		}
 		
 		if (_ghasts != null && _ghasts.size() > 0) {
@@ -154,6 +152,10 @@ public class DragonFury extends Scenario {
 			for (LivingEntity m : _monsters) {
 				m.remove();
 			}
+		}
+		
+		if (showRetreatMessage) {
+			getServer().broadcastMessage("The monsters retreated!");
 		}
 		
 		isActive = false;
