@@ -42,6 +42,7 @@ public class WorldZone {
 		return inside;
 	}
 	
+	@Deprecated
 	public boolean isInside(double x1, double y1, double x2, double y2) {
 		boolean inside = false;
 		
@@ -60,15 +61,7 @@ public class WorldZone {
 		return _rightBottom;
 	}
 	
-	public Location getRelativeBottomRight() {
-		Location relativeBottomRight = new Location(_rightBottom.getWorld(), 
-													_rightBottom.getX() - _leftTop.getX(), 
-													_rightBottom.getY(), 
-													_rightBottom.getZ() - _leftTop.getZ());
-		return relativeBottomRight;
-		
-		
-	}
+	
 	
 	public Location getCentralPointAt(double height) {
 		double x = (this._leftTop.getX() + this._rightBottom.getX()) / 2;
@@ -107,4 +100,13 @@ public class WorldZone {
 		return "Top Left (" + _leftTop.getX() + "," + _leftTop.getZ() + " Right Bottom (" + _rightBottom.getX() + "," + _rightBottom.getZ();
 	}
 	
+	private Location getRelativeBottomRight() {
+		Location relativeBottomRight = new Location(_rightBottom.getWorld(), 
+													_rightBottom.getX() - _leftTop.getX(), 
+													_rightBottom.getY(), 
+													_rightBottom.getZ() - _leftTop.getZ());
+		return relativeBottomRight;
+		
+		
+	}
 }
