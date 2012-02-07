@@ -88,9 +88,15 @@ public class WorldZone {
 			tlX += getTopLeft().getX();
 			tlZ += getTopLeft().getZ();
 			
-			Location loc = new Location(w, tlX, 120, tlZ);
+			Location loc = new Location(w, tlX, _rightBottom.getY(), tlZ);
 			double y = w.getHighestBlockYAt(loc);
-			loc.setY(y);
+			if (y >= _rightBottom.getY() && y <= _leftTop.getY()) {
+				loc.setY(y);	
+			}
+			else {
+				loc.setY(_rightBottom.getY());
+			}
+			
 			list.add(loc);
 		}
 		return list;
