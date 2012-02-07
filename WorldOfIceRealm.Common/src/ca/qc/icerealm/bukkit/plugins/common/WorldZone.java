@@ -19,6 +19,15 @@ public class WorldZone {
 	public WorldZone(Location lt, Location rb) {
 		_leftTop = lt;
 		_rightBottom = rb;
+		_leftTop.setY(128);
+		_rightBottom.setY(0);
+	}
+	
+	public WorldZone(Location lt, Location rb, double min, double max) {
+		_leftTop = lt;
+		_rightBottom = rb;
+		_leftTop.setY(max);
+		_rightBottom.setY(min);
 	}
 	
 	public boolean isInside(Location position) {
@@ -26,7 +35,8 @@ public class WorldZone {
 		boolean inside = false;
 		
 		if (_leftTop.getX() < position.getX() && _leftTop.getZ() < position.getZ() &&
-			_rightBottom.getX() > position.getX() && _rightBottom.getZ() > position.getZ()) {
+			_rightBottom.getX() > position.getX() && _rightBottom.getZ() > position.getZ() &&
+			_leftTop.getY() > position.getY() && _rightBottom.getY() < position.getY() ) {
 			inside = true;
 		}
 		return inside;
