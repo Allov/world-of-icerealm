@@ -5,7 +5,6 @@ import java.util.logging.Logger;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.enchantments.EnchantmentWrapper;
 
 import ca.qc.icerealm.bukkit.plugins.common.MaterialUtil;
 

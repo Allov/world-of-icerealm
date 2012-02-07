@@ -44,27 +44,27 @@ public class RareDropsFactory
 			{
 				this.logger.info("Killed Zombie");
 				odds.addOddsItem(new RareDropsOddsItem(3.00 * oddsMultiplier, Material.LEATHER));
-				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_PICKAXE));
-				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_AXE));
-				odds.addOddsItem(new RareDropsOddsItem(0.25 * oddsMultiplier, Material.IRON_SWORD));
+				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_PICKAXE, new EnchantmentsOdds (EnchantmentsOdds.LOW_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_AXE, new EnchantmentsOdds (EnchantmentsOdds.LOW_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.25 * oddsMultiplier, Material.IRON_SWORD, new EnchantmentsOdds (EnchantmentsOdds.LOW_ODDS)));
 				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_HOE));
-				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_SPADE));
+				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_SPADE, new EnchantmentsOdds (EnchantmentsOdds.LOW_ODDS)));
 				odds.addOddsItem(new RareDropsOddsItem(2.00 * oddsMultiplier, Material.FLINT));
-				odds.addOddsItem(new RareDropsOddsItem(2.00 * oddsMultiplier, Material.APPLE));
-				odds.addOddsItem(new RareDropsOddsItem(2.00 * oddsMultiplier, Material.RAW_BEEF));
-				odds.addOddsItem(new RareDropsOddsItem(2.00 * oddsMultiplier, Material.RAW_CHICKEN));
-				odds.addOddsItem(new RareDropsOddsItem(2.00 * oddsMultiplier, Material.RAW_FISH));
-				odds.addOddsItem(new RareDropsOddsItem(0.10 * oddsMultiplier, Material.IRON_BOOTS));
-				odds.addOddsItem(new RareDropsOddsItem(0.10 * oddsMultiplier, Material.IRON_CHESTPLATE));
-				odds.addOddsItem(new RareDropsOddsItem(0.10 * oddsMultiplier, Material.IRON_HELMET));
-				odds.addOddsItem(new RareDropsOddsItem(0.10 * oddsMultiplier, Material.IRON_LEGGINGS));			
+				odds.addOddsItem(new RareDropsOddsItem(4.00 * oddsMultiplier, Material.APPLE));
+				odds.addOddsItem(new RareDropsOddsItem(3.00 * oddsMultiplier, Material.RAW_BEEF));
+				odds.addOddsItem(new RareDropsOddsItem(3.00 * oddsMultiplier, Material.RAW_CHICKEN));
+				odds.addOddsItem(new RareDropsOddsItem(3.00 * oddsMultiplier, Material.RAW_FISH));
+				odds.addOddsItem(new RareDropsOddsItem(0.10 * oddsMultiplier, Material.IRON_BOOTS, new EnchantmentsOdds (EnchantmentsOdds.LOW_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.10 * oddsMultiplier, Material.IRON_CHESTPLATE, new EnchantmentsOdds (EnchantmentsOdds.LOW_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.10 * oddsMultiplier, Material.IRON_HELMET, new EnchantmentsOdds (EnchantmentsOdds.LOW_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.10 * oddsMultiplier, Material.IRON_LEGGINGS, new EnchantmentsOdds (EnchantmentsOdds.LOW_ODDS)));			
 				break;
 			}
 			case EntityUtilities.Spider:
 			{
 				this.logger.info("Killed Spider");
-				odds.addOddsItem(new RareDropsOddsItem(3.00 * oddsMultiplier, Material.BREAD));
-				odds.addOddsItem(new RareDropsOddsItem(2.00 * oddsMultiplier, Material.COOKIE));
+				odds.addOddsItem(new RareDropsOddsItem(6.00 * oddsMultiplier, Material.BREAD));
+				odds.addOddsItem(new RareDropsOddsItem(4.00 * oddsMultiplier, Material.COOKIE));
 				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.POTION));
 				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.INK_SACK));
 				break;
@@ -72,38 +72,39 @@ public class RareDropsFactory
 			case EntityUtilities.Skeleton:
 			{
 				this.logger.info("Killed Skeleton");
-				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_PICKAXE, new EnchantmentsOdds (new double[]{30.00, 15.00, 5.00})));
-				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_AXE, new EnchantmentsOdds (new double[]{30.00, 15.00, 5.00})));
-				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_SWORD, new EnchantmentsOdds (new double[]{30.00, 15.00, 5.00})));
-				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_HOE, new EnchantmentsOdds (new double[]{30.00, 15.00, 5.00})));
-				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_SPADE, new EnchantmentsOdds (new double[]{30.00, 15.00, 5.00})));	
-				odds.addOddsItem(new RareDropsOddsItem(0.25 * oddsMultiplier, Material.DIAMOND_PICKAXE, new EnchantmentsOdds (new double[]{75.00, 75.00, 5.00})));
-				odds.addOddsItem(new RareDropsOddsItem(0.25 * oddsMultiplier, Material.DIAMOND_SPADE, new EnchantmentsOdds (new double[]{75.00, 75.00, 5.00})));
-				odds.addOddsItem(new RareDropsOddsItem(0.25 * oddsMultiplier, Material.DIAMOND_AXE, new EnchantmentsOdds (new double[]{75.00, 75.00, 5.00})));
-				odds.addOddsItem(new RareDropsOddsItem(0.25 * oddsMultiplier, Material.DIAMOND_HOE, new EnchantmentsOdds (new double[]{75.00, 75.00, 5.00})));
-				odds.addOddsItem(new RareDropsOddsItem(0.25 * oddsMultiplier, Material.DIAMOND_SWORD, new EnchantmentsOdds (new double[]{75.00, 75.00, 5.00})));
-				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.BOW, new EnchantmentsOdds (new double[]{30.00, 15.00, 5.00})));	
-				odds.addOddsItem(new RareDropsOddsItem(0.15 * oddsMultiplier, Material.IRON_BOOTS, new EnchantmentsOdds (new double[]{75.00, 75.00, 5.00})));
-				odds.addOddsItem(new RareDropsOddsItem(0.15 * oddsMultiplier, Material.IRON_CHESTPLATE, new EnchantmentsOdds (new double[]{75.00, 75.00, 5.00})));
-				odds.addOddsItem(new RareDropsOddsItem(0.15 * oddsMultiplier, Material.IRON_HELMET, new EnchantmentsOdds (new double[]{75.00, 75.00, 5.00})));
-				odds.addOddsItem(new RareDropsOddsItem(0.15 * oddsMultiplier, Material.IRON_LEGGINGS, new EnchantmentsOdds (new double[]{75.00, 75.00, 5.00})));	
+				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_PICKAXE, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_AXE, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_SWORD, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_HOE));
+				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_SPADE, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));	
+				odds.addOddsItem(new RareDropsOddsItem(0.20 * oddsMultiplier, Material.DIAMOND_PICKAXE, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.20 * oddsMultiplier, Material.DIAMOND_SPADE, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.20 * oddsMultiplier, Material.DIAMOND_AXE, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.20 * oddsMultiplier, Material.DIAMOND_HOE));
+				odds.addOddsItem(new RareDropsOddsItem(0.15 * oddsMultiplier, Material.DIAMOND_SWORD, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(1.50 * oddsMultiplier, Material.BOW, new EnchantmentsOdds (EnchantmentsOdds.LOW_ODDS)));	
+				odds.addOddsItem(new RareDropsOddsItem(0.15 * oddsMultiplier, Material.IRON_BOOTS, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.15 * oddsMultiplier, Material.IRON_CHESTPLATE, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.15 * oddsMultiplier, Material.IRON_HELMET, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.15 * oddsMultiplier, Material.IRON_LEGGINGS, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));	
 				break;
 			}
 			case EntityUtilities.Creeper:
 			{
 				this.logger.info("Killed Creeper");
+				odds.addOddsItem(new RareDropsOddsItem(2.00 * oddsMultiplier, Material.CAKE));
 				odds.addOddsItem(new RareDropsOddsItem(2.00 * oddsMultiplier, Material.FLINT_AND_STEEL));
 				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.REDSTONE_ORE));
 				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.BLAZE_POWDER));
-				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.GOLDEN_APPLE));
-				odds.addOddsItem(new RareDropsOddsItem(0.75 * oddsMultiplier, Material.IRON_BOOTS));
-				odds.addOddsItem(new RareDropsOddsItem(0.75 * oddsMultiplier, Material.IRON_CHESTPLATE));
-				odds.addOddsItem(new RareDropsOddsItem(0.75 * oddsMultiplier, Material.IRON_HELMET));
-				odds.addOddsItem(new RareDropsOddsItem(0.75 * oddsMultiplier, Material.IRON_LEGGINGS));
-				odds.addOddsItem(new RareDropsOddsItem(0.03 * oddsMultiplier, Material.DIAMOND_CHESTPLATE));
-				odds.addOddsItem(new RareDropsOddsItem(0.03 * oddsMultiplier, Material.DIAMOND_HELMET));
-				odds.addOddsItem(new RareDropsOddsItem(0.03 * oddsMultiplier, Material.DIAMOND_LEGGINGS));
-				odds.addOddsItem(new RareDropsOddsItem(0.03 * oddsMultiplier, Material.DIAMOND_BOOTS));
+				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.GOLDEN_APPLE));
+				odds.addOddsItem(new RareDropsOddsItem(0.75 * oddsMultiplier, Material.IRON_BOOTS, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.75 * oddsMultiplier, Material.IRON_CHESTPLATE, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.75 * oddsMultiplier, Material.IRON_HELMET, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.75 * oddsMultiplier, Material.IRON_LEGGINGS, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.03 * oddsMultiplier, Material.DIAMOND_CHESTPLATE,  new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.03 * oddsMultiplier, Material.DIAMOND_HELMET,  new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.03 * oddsMultiplier, Material.DIAMOND_LEGGINGS,  new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.03 * oddsMultiplier, Material.DIAMOND_BOOTS,  new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
 				odds.addOddsItem(new RareDropsOddsItem(0.01 * oddsMultiplier, Material.RECORD_3));
 				odds.addOddsItem(new RareDropsOddsItem(0.01 * oddsMultiplier, Material.RECORD_4));
 				odds.addOddsItem(new RareDropsOddsItem(0.01 * oddsMultiplier, Material.RECORD_5));
@@ -122,25 +123,25 @@ public class RareDropsFactory
 				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.STONE));
 				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.BLAZE_POWDER));
 				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.GOLDEN_APPLE));
-				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_BOOTS));
-				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_CHESTPLATE));
-				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_HELMET));
-				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_LEGGINGS));
-				odds.addOddsItem(new RareDropsOddsItem(0.05 * oddsMultiplier, Material.DIAMOND_CHESTPLATE));
-				odds.addOddsItem(new RareDropsOddsItem(0.05 * oddsMultiplier, Material.DIAMOND_HELMET));
-				odds.addOddsItem(new RareDropsOddsItem(0.05 * oddsMultiplier, Material.DIAMOND_LEGGINGS));
-				odds.addOddsItem(new RareDropsOddsItem(0.05 * oddsMultiplier, Material.DIAMOND_BOOTS));
-				odds.addOddsItem(new RareDropsOddsItem(0.25 * oddsMultiplier, Material.DIAMOND_SWORD));
-				odds.addOddsItem(new RareDropsOddsItem(5.00 * oddsMultiplier, Material.MELON));
+				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_BOOTS, new EnchantmentsOdds (EnchantmentsOdds.HIGH_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_CHESTPLATE, new EnchantmentsOdds (EnchantmentsOdds.HIGH_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_HELMET, new EnchantmentsOdds (EnchantmentsOdds.HIGH_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_LEGGINGS, new EnchantmentsOdds (EnchantmentsOdds.HIGH_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.05 * oddsMultiplier, Material.DIAMOND_CHESTPLATE, new EnchantmentsOdds (EnchantmentsOdds.HIGH_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.05 * oddsMultiplier, Material.DIAMOND_HELMET, new EnchantmentsOdds (EnchantmentsOdds.HIGH_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.05 * oddsMultiplier, Material.DIAMOND_LEGGINGS, new EnchantmentsOdds (EnchantmentsOdds.HIGH_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.05 * oddsMultiplier, Material.DIAMOND_BOOTS, new EnchantmentsOdds (EnchantmentsOdds.HIGH_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.25 * oddsMultiplier, Material.DIAMOND_SWORD, new EnchantmentsOdds (EnchantmentsOdds.HIGH_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(10.00 * oddsMultiplier, Material.MELON));
 				break;	
 			}
 			case EntityUtilities.Slime:
 			{
 				this.logger.info("Killed Slime");
-				odds.addOddsItem(new RareDropsOddsItem(0.25 * oddsMultiplier, Material.CAKE));
+				odds.addOddsItem(new RareDropsOddsItem(2.00 * oddsMultiplier, Material.CAKE));
 				odds.addOddsItem(new RareDropsOddsItem(5.00 * oddsMultiplier, Material.CLAY));
 				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.MAP));
-				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.GOLDEN_APPLE));
+				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.GOLDEN_APPLE));
 				odds.addOddsItem(new RareDropsOddsItem(0.01 * oddsMultiplier, Material.RECORD_3));
 				odds.addOddsItem(new RareDropsOddsItem(0.01 * oddsMultiplier, Material.RECORD_4));
 				odds.addOddsItem(new RareDropsOddsItem(0.01 * oddsMultiplier, Material.RECORD_5));
@@ -155,35 +156,65 @@ public class RareDropsFactory
 			case EntityUtilities.CaveSpider:
 			{
 				this.logger.info("Killed Cave Spider");
-				odds.addOddsItem(new RareDropsOddsItem(6.00 * oddsMultiplier, Material.BREAD));
-				odds.addOddsItem(new RareDropsOddsItem(3.00 * oddsMultiplier, Material.COOKIE));
+				odds.addOddsItem(new RareDropsOddsItem(7.00 * oddsMultiplier, Material.BREAD));
+				odds.addOddsItem(new RareDropsOddsItem(4.00 * oddsMultiplier, Material.COOKIE));
 				odds.addOddsItem(new RareDropsOddsItem(2.00 * oddsMultiplier, Material.LAPIS_ORE));
 				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.INK_SACK));
 				odds.addOddsItem(new RareDropsOddsItem(3.00 * oddsMultiplier, Material.RAILS));
 				break;
 			}
+			case EntityUtilities.PigZombie:
+			{
+				this.logger.info("Killed Pig Zombie");
+				odds.addOddsItem(new RareDropsOddsItem(3.00 * oddsMultiplier, Material.FLINT));
+				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.LAVA_BUCKET));
+				odds.addOddsItem(new RareDropsOddsItem(0.10 * oddsMultiplier, Material.DIAMOND_BOOTS, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.10 * oddsMultiplier, Material.DIAMOND_CHESTPLATE, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.10 * oddsMultiplier, Material.DIAMOND_HELMET, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.10 * oddsMultiplier, Material.DIAMOND_LEGGINGS, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));	
+				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.GOLD_BOOTS, new EnchantmentsOdds (EnchantmentsOdds.HIGH_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.GOLD_CHESTPLATE, new EnchantmentsOdds (EnchantmentsOdds.HIGH_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.GOLD_HELMET, new EnchantmentsOdds (EnchantmentsOdds.HIGH_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.GOLD_LEGGINGS, new EnchantmentsOdds (EnchantmentsOdds.HIGH_ODDS)));	
+				odds.addOddsItem(new RareDropsOddsItem(0.10 * oddsMultiplier, Material.DIAMOND_SWORD, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(2.00 * oddsMultiplier, Material.GOLD_SWORD, new EnchantmentsOdds (EnchantmentsOdds.HIGH_ODDS)));
+			}
+			case EntityUtilities.Ghast:
+			{
+				this.logger.info("Killed Pig Ghast");
+				odds.addOddsItem(new RareDropsOddsItem(5.00 * oddsMultiplier, Material.GLOWSTONE_DUST));
+				odds.addOddsItem(new RareDropsOddsItem(2.00 * oddsMultiplier, Material.FEATHER));
+				odds.addOddsItem(new RareDropsOddsItem(5.00 * oddsMultiplier, Material.POTION));
+			}
+			case EntityUtilities.MagmaCube:
+			{
+				this.logger.info("Killed Pig Ghast");
+				odds.addOddsItem(new RareDropsOddsItem(2.00 * oddsMultiplier, Material.LAPIS_ORE));
+				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.LAVA_BUCKET));
+				odds.addOddsItem(new RareDropsOddsItem(2.00 * oddsMultiplier, Material.MAGMA_CREAM));
+			}
 			case EntityUtilities.EnderDragon:
 			{
 				this.logger.info("Killed Enderdragon");
-				odds.addOddsItem(new RareDropsOddsItem(5.00 * oddsMultiplier, Material.GOLDEN_APPLE));
-				odds.addOddsItem(new RareDropsOddsItem(7.50 * oddsMultiplier, Material.IRON_BOOTS));
-				odds.addOddsItem(new RareDropsOddsItem(7.50 * oddsMultiplier, Material.IRON_CHESTPLATE));
-				odds.addOddsItem(new RareDropsOddsItem(7.50 * oddsMultiplier, Material.IRON_HELMET));
-				odds.addOddsItem(new RareDropsOddsItem(7.50 * oddsMultiplier, Material.IRON_LEGGINGS));
-				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.DIAMOND_CHESTPLATE));
-				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.DIAMOND_HELMET));
-				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.DIAMOND_LEGGINGS));
-				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.DIAMOND_BOOTS));
-				odds.addOddsItem(new RareDropsOddsItem(3.00 * oddsMultiplier, Material.DIAMOND_PICKAXE));
-				odds.addOddsItem(new RareDropsOddsItem(3.00 * oddsMultiplier, Material.DIAMOND_SPADE));
-				odds.addOddsItem(new RareDropsOddsItem(3.00 * oddsMultiplier, Material.DIAMOND_AXE));
+				odds.addOddsItem(new RareDropsOddsItem(10.00 * oddsMultiplier, Material.GOLDEN_APPLE));
+				odds.addOddsItem(new RareDropsOddsItem(7.50 * oddsMultiplier, Material.IRON_BOOTS, new EnchantmentsOdds (EnchantmentsOdds.BOSS_HIGH_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(7.50 * oddsMultiplier, Material.IRON_CHESTPLATE, new EnchantmentsOdds (EnchantmentsOdds.BOSS_HIGH_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(7.50 * oddsMultiplier, Material.IRON_HELMET, new EnchantmentsOdds (EnchantmentsOdds.BOSS_HIGH_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(7.50 * oddsMultiplier, Material.IRON_LEGGINGS, new EnchantmentsOdds (EnchantmentsOdds.BOSS_HIGH_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.DIAMOND_CHESTPLATE, new EnchantmentsOdds (EnchantmentsOdds.BOSS_HIGH_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.DIAMOND_HELMET, new EnchantmentsOdds (EnchantmentsOdds.BOSS_HIGH_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.DIAMOND_LEGGINGS, new EnchantmentsOdds (EnchantmentsOdds.BOSS_HIGH_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.DIAMOND_BOOTS, new EnchantmentsOdds (EnchantmentsOdds.BOSS_HIGH_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(3.00 * oddsMultiplier, Material.DIAMOND_PICKAXE, new EnchantmentsOdds (EnchantmentsOdds.BOSS_HIGH_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(3.00 * oddsMultiplier, Material.DIAMOND_SPADE, new EnchantmentsOdds (EnchantmentsOdds.BOSS_HIGH_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(3.00 * oddsMultiplier, Material.DIAMOND_AXE, new EnchantmentsOdds (EnchantmentsOdds.BOSS_HIGH_ODDS)));
 				odds.addOddsItem(new RareDropsOddsItem(3.00 * oddsMultiplier, Material.DIAMOND_HOE));
-				odds.addOddsItem(new RareDropsOddsItem(3.00 * oddsMultiplier, Material.DIAMOND_SWORD, new EnchantmentsOdds (new double[]{25.00, 25.00, 50.00})));
-				odds.addOddsItem(new RareDropsOddsItem(7.50 * oddsMultiplier, Material.IRON_PICKAXE));
-				odds.addOddsItem(new RareDropsOddsItem(7.50 * oddsMultiplier, Material.IRON_AXE));
-				odds.addOddsItem(new RareDropsOddsItem(7.50 * oddsMultiplier, Material.IRON_SWORD));
+				odds.addOddsItem(new RareDropsOddsItem(3.00 * oddsMultiplier, Material.DIAMOND_SWORD, new EnchantmentsOdds (EnchantmentsOdds.BOSS_HIGH_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(7.50 * oddsMultiplier, Material.IRON_PICKAXE, new EnchantmentsOdds (EnchantmentsOdds.BOSS_HIGH_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(7.50 * oddsMultiplier, Material.IRON_AXE, new EnchantmentsOdds (EnchantmentsOdds.BOSS_HIGH_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(7.50 * oddsMultiplier, Material.IRON_SWORD, new EnchantmentsOdds (EnchantmentsOdds.BOSS_HIGH_ODDS)));
 				odds.addOddsItem(new RareDropsOddsItem(7.50 * oddsMultiplier, Material.IRON_HOE));
-				odds.addOddsItem(new RareDropsOddsItem(7.50 * oddsMultiplier, Material.IRON_SPADE));
+				odds.addOddsItem(new RareDropsOddsItem(7.50 * oddsMultiplier, Material.IRON_SPADE,new EnchantmentsOdds (EnchantmentsOdds.BOSS_HIGH_ODDS)));
 				break;
 			}
 			default:

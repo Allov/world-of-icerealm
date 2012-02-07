@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import net.minecraft.server.EnchantmentManager;
+import net.minecraft.server.PotionBrewer;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -57,7 +58,7 @@ public class RareDropsRandomizer
 						EnchantmentsRandomizer enchRandomizer = new EnchantmentsRandomizer(item.getEnchantmentsOdds(), item.getItem());		
 						ArrayList<EnchantmentResult> enchantments = enchRandomizer.randomize();
 						
-						this.logger.info("enchantment size: " + enchantments.size());
+						//this.logger.info("enchantment size: " + enchantments.size());
 						
 						for (int j = 0; j < enchantments.size(); j++)
 						{	
@@ -66,6 +67,11 @@ public class RareDropsRandomizer
 							stack.addEnchantment(enchantment.getEnchantment(), enchantment.getLevel());
 						}
 					}
+					
+					/*if (item.getItem().equals(Material.POTION))
+					{
+
+					}*/
 				
 					stackList.add(stack);	
 				}

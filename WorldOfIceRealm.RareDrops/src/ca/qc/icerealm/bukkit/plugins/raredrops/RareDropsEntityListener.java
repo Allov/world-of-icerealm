@@ -26,7 +26,7 @@ public class RareDropsEntityListener implements Listener
         	
         	if (entity.getKiller() instanceof Player)
         	{   	
-	        	RareDropsFactory factory = new RareDropsFactory(25);
+	        	RareDropsFactory factory = new RareDropsFactory(1);
 	        	RareDropsOdds odds = factory.createEntityOdds(entity);
 	        	
 	        	RareDropsRandomizer randomizer = new RareDropsRandomizer(odds);
