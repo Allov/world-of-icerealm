@@ -5,6 +5,10 @@ import org.bukkit.enchantments.Enchantment;
 
 public class MaterialUtil 
 {
+	public static String getMaterialFriendName(String name) {
+		return name.replace('_', ' ').toLowerCase();		
+	}
+	
 	public static boolean isSword(Material item)
     {
 		return item.equals(Material.GOLD_SWORD) ||

@@ -121,6 +121,7 @@ public class EntityUtilities
 		if (s.equalsIgnoreCase("Snowman")) { return CreatureType.SNOWMAN; }
 		return CreatureType.VILLAGER;
 	}
+	
 	public static String getEntityName(Entity entity)
     {
         if(entity instanceof Player) return "Player";
@@ -148,7 +149,7 @@ public class EntityUtilities
         if(entity instanceof Slime) return "Slime";
         if(entity instanceof Ghast) return "Ghast";
         if(entity instanceof Blaze) return "Blaze";
-        if(entity instanceof MagmaCube) return "MagmaCube";
+        if(entity instanceof MagmaCube) return "Magma Cube";
         if(entity instanceof CaveSpider) return "Cave Spider";
         if(entity instanceof Silverfish) return "Silverfish";
         if(entity instanceof EnderDragon) return "Ender Dragon";
@@ -191,6 +192,7 @@ public class EntityUtilities
         return null;
     }
 
+	@Deprecated
 	public static String getMaterialFriendName(String name) {
 		return name.replace('_', ' ').toLowerCase();		
 	}
