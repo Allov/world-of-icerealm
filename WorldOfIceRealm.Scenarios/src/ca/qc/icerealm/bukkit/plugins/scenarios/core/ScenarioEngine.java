@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import ca.qc.icerealm.bukkit.plugins.scenarios.BloodMoon;
+import ca.qc.icerealm.bukkit.plugins.scenarios.FishingTournament;
 
 
 class ScenarioEngine {
@@ -85,6 +86,10 @@ class ScenarioEngine {
 			Scenario s = new BloodMoon();
 			_builder.initializeScenario(s);
 			_timedScenarios.add(s);
+			
+			Scenario ft = new FishingTournament();
+			_builder.initializeScenario(ft);
+			_timedScenarios.add(ft);
 			
 			// starting the prober
 			_probing = new ProbingWorker(_currentServer, this, PROBING_INTERVAL);

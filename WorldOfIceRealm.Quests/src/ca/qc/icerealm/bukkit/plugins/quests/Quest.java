@@ -86,4 +86,13 @@ public class Quest implements ObjectiveListener {
 		player.sendMessage(ChatColor.LIGHT_PURPLE + "Quest is " + ChatColor.GREEN + "done" + ChatColor.DARK_GREEN + "!");
 		player.sendMessage(ChatColor.LIGHT_PURPLE + "You received " + this.reward.toString());
 	}
+	
+	@Override
+	public String toString() {
+		return ChatColor.LIGHT_PURPLE + "Quest: "  + ChatColor.YELLOW + this.name;
+	}
+
+	public String getName() {
+		return this.name;
+	}
 }
