@@ -43,6 +43,7 @@ public class RareDropsFactory
 			case EntityUtilities.Zombie:
 			{
 				this.logger.info("Killed Zombie");
+				odds.addOddsItem(new RareDropsOddsItem(5.00 * oddsMultiplier, Material.FEATHER));
 				odds.addOddsItem(new RareDropsOddsItem(3.00 * oddsMultiplier, Material.LEATHER));
 				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_PICKAXE, new EnchantmentsOdds (EnchantmentsOdds.LOW_ODDS)));
 				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_AXE, new EnchantmentsOdds (EnchantmentsOdds.LOW_ODDS)));

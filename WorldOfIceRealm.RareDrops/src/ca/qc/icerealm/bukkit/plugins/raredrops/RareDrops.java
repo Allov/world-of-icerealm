@@ -12,7 +12,7 @@ public class RareDrops extends JavaPlugin
 	@Override
 	public void onEnable() {
 		
-		// Version 1.0
+		// Version 0.2.0
 		getServer().getPluginManager().registerEvents(new RareDropsEntityListener(), this);
 	}
 }
