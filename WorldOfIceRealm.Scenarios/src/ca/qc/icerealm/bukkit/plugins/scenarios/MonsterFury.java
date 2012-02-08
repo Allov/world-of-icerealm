@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Location;
+import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -32,6 +33,8 @@ public class MonsterFury extends Scenario {
 
 	@Override
 	public void triggerScenario() {
+		getServer().broadcastMessage("First wave is coming!!!");
+		_activationZone = getZone();
 		
 		if (_waves != null) {
 			_waves.clear();
@@ -43,11 +46,16 @@ public class MonsterFury extends Scenario {
 		// creation des listeners
 		if (_listener == null) {
 			_listener = new MonsterFuryListener(this);
+			getServer().getPluginManager().registerEvents(_listener, getPlugin());
 		}
 		
 		// creation des waves
 		MonsterWave wave = new MonsterWave(5, 10.0, this, _activationZone);
+		MonsterWave wave1 = new MonsterWave(5, 10.0, this, _activationZone);
+		MonsterWave wave2 = new MonsterWave(5, 10.0, this, _activationZone);
 		_waves.add(wave);
+		_waves.add(wave1);
+		_waves.add(wave2);
 		
 		// on active la premiere wave et le scénario
 		_listener.setMonsterWave(_waves.get(nbWaveDone));		
@@ -57,10 +65,15 @@ public class MonsterFury extends Scenario {
 	@Override
 	public void abortScenario() {
 		// enleve les joueurs du scénario, enleve les waves
+		getServer().broadcastMessage("You retreated into safety");
 		getPlayers().clear();
-		if (_waves != null) {
-			_waves.clear();
+		
+		for (MonsterWave wave : _waves) {
+			wave.removeMonsters();
 		}
+		_waves.clear();
+
+		_active = false;
 	}
 
 	@Override
@@ -71,6 +84,8 @@ public class MonsterFury extends Scenario {
 
 	@Override
 	public boolean canBeTriggered() {
+		return true;
+		/*
 		int count = getPlayers().size();
 		boolean allPlayerInside = true;
 		for (Player p : getPlayers()) {
@@ -79,7 +94,7 @@ public class MonsterFury extends Scenario {
 				break;
 			}
 		}
-		return (count >= _minimumPlayerCount) && allPlayerInside;
+		return (count >= _minimumPlayerCount) && allPlayerInside;*/
 	}
 
 	@Override
@@ -90,7 +105,14 @@ public class MonsterFury extends Scenario {
 	@Override
 	public void terminateScenario() {
 		// donne le XP, du health au joueur
+		getServer().broadcastMessage("The ennemy has defeated!");
 		
+		for (Player p : getPlayers()) {
+			p.giveExp(1000);
+		}
+		
+		nbWaveDone = 0;
+		_active = false;
 	}
 
 	@Override
@@ -108,14 +130,15 @@ public class MonsterFury extends Scenario {
 	public void waveIsDone() {
 		// on load la prochaine wave!
 		nbWaveDone++;
-		try {
-			this.wait(30000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} // trente seconde!!!
 		
-		_listener.setMonsterWave(_waves.get(nbWaveDone));
+		
+		if (nbWaveDone < _waves.size()) {	
+			getServer().broadcastMessage("Another wave is coming!!!");
+			_listener.setMonsterWave(_waves.get(nbWaveDone));
+		}
+		else {
+			terminateScenario();
+		}
 	}
 
 }
@@ -163,7 +186,8 @@ class MonsterWave {
 	private WorldZone _exclude;
 	
 	public MonsterWave(int qty, double healthModifier, MonsterFury s, WorldZone exclude) {
-		
+		_scenario = s;
+		_monstersTable = new HashMap<LivingEntity, Location>();
 	}
 	
 	public void spawnWave() {
@@ -171,6 +195,9 @@ class MonsterWave {
 		// on les place dans le hashmap
 		// lorsqu'ils sont tués, on les enleve du hashmap et on vérifie
 		// combien il en reste
+		List<Location> l = _scenario.getZone().getRandomLocation(_scenario.getWorld(), 1);
+		LivingEntity en = _scenario.getWorld().spawnCreature(l.get(0), CreatureType.ZOMBIE);
+		_monstersTable.put(en, en.getLocation());
 	}
 	
 	public void processEntityDeath(Entity e) {
@@ -180,6 +207,14 @@ class MonsterWave {
 			if (_monstersTable.size() == 0) {
 				_scenario.waveIsDone();
 			}
+		}
+	}
+	
+	public void removeMonsters() {
+		if (_monstersTable.size() > 0) {
+			 for (LivingEntity l : _monstersTable.keySet()) {
+				 l.remove();
+			 }
 		}
 	}
 	
