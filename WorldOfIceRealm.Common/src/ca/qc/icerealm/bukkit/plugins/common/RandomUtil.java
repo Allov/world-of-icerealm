@@ -25,6 +25,7 @@ public class RandomUtil {
 		Random r = new Random();
 		return r.nextInt(max);
 	}
+
 	
 	/*
 	 * Permet d'obtenir le resultat d'un tirage. Un premier nombre est généré

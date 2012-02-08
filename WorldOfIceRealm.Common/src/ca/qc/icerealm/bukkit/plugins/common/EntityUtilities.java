@@ -151,6 +151,7 @@ public class EntityUtilities
         if(entity instanceof Blaze) return "Blaze";
         if(entity instanceof MagmaCube) return "Magma Cube";
         if(entity instanceof CaveSpider) return "Cave Spider";
+        
         if(entity instanceof Silverfish) return "Silverfish";
         if(entity instanceof EnderDragon) return "Ender Dragon";
 
