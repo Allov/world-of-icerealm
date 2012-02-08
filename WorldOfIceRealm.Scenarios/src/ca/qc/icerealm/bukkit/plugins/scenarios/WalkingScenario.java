@@ -70,4 +70,10 @@ public class WalkingScenario extends Scenario {
 		return false;
 	}
 
+	@Override
+	public void progressHandler() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

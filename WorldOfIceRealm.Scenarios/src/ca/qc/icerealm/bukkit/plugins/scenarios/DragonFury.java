@@ -186,6 +186,12 @@ public class DragonFury extends Scenario {
 		
 	}
 
+	@Override
+	public void progressHandler() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
 
 class DragonDeathListener implements Listener {

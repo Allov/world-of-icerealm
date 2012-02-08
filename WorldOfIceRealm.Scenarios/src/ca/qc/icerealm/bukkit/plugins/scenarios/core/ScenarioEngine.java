@@ -3,24 +3,13 @@ package ca.qc.icerealm.bukkit.plugins.scenarios.core;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.CreatureSpawner;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.craftbukkit.block.CraftChest;
-import org.bukkit.craftbukkit.block.CraftCreatureSpawner;
-import org.bukkit.entity.Creature;
-import org.bukkit.entity.CreatureType;
-import org.bukkit.entity.EnderDragon;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Zombie;
-import org.bukkit.material.Furnace;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import ca.qc.icerealm.bukkit.plugins.scenarios.BloodMoon;
 
 
 class ScenarioEngine {
@@ -91,7 +80,11 @@ class ScenarioEngine {
 			_normalWorld = _currentServer.getWorld(NORMAL_WORLD_IDENTIFIER);
 			
 			_builder = new ScenarioBuilder(plugin.getDataFolder() + "scenarios.yml", _currentServer, _normalWorld, plugin);
-			_scenarios = _builder.getScenariosFromConfigFile();			
+			_scenarios = _builder.getScenariosFromConfigFile();	
+			
+			Scenario s = new BloodMoon();
+			_builder.initializeScenario(s);
+			_timedScenarios.add(s);
 			
 			// starting the prober
 			_probing = new ProbingWorker(_currentServer, this, PROBING_INTERVAL);

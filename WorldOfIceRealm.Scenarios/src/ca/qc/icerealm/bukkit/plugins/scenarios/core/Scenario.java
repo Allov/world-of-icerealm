@@ -74,6 +74,11 @@ public abstract class Scenario {
 	 * au scénario.
 	 */
 	public abstract void terminateScenario();
+	
+	/*
+	 * Le prober appelle 
+	 */
+	public abstract void progressHandler();
 		
 	public abstract boolean isComplete();
 	

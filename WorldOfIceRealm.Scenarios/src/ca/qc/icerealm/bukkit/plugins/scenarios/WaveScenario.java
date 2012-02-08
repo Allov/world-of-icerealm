@@ -51,4 +51,10 @@ public class WaveScenario extends Scenario {
 		
 	}
 
+	@Override
+	public void progressHandler() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

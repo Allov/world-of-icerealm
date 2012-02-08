@@ -12,6 +12,7 @@ class ProbingWorker implements Runnable {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private Server _server;
 	private long _interval;
+	
 	private ScenarioEngine _engine;
 	private boolean _stop = false;
 	
@@ -32,6 +33,9 @@ class ProbingWorker implements Runnable {
 				}
 				else if (s.isTriggered() && s.mustBeStop()) {
 					s.terminateScenario();
+				}
+				else if (s.isTriggered()) {
+					s.progressHandler();
 				}
 			}
 			

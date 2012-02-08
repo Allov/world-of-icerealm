@@ -113,6 +113,12 @@ public class AmbushScenario extends Scenario {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void progressHandler() {
+		// TODO Auto-generated method stub
+		
+	}
 }
 
 class AmbushScenarioListener implements Listener {
