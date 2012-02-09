@@ -30,7 +30,7 @@ public class BloodMoon extends Scenario {
 	private long coolDown = 0;
 	private long started = 0; 
 	private int lastTimeChecked = -1;
-	private int probability = 1;
+	private int probability = 10;
 	
 	
 	// 2 = grass
