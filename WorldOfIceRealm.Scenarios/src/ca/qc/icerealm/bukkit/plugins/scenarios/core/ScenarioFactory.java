@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import ca.qc.icerealm.bukkit.plugins.scenarios.AmbushScenario;
 import ca.qc.icerealm.bukkit.plugins.scenarios.DragonFury;
+import ca.qc.icerealm.bukkit.plugins.scenarios.MonsterFury;
 import ca.qc.icerealm.bukkit.plugins.scenarios.WalkingScenario;
 import ca.qc.icerealm.bukkit.plugins.scenarios.WaveScenario;
 
@@ -33,18 +34,18 @@ class ScenarioFactory {
 			return new AmbushScenario(qty, monster, immune);
 		}
 		
-		if (typeOfScenario.equalsIgnoreCase("dragon_fury")) {
+		if (typeOfScenario.equalsIgnoreCase("monster_fury")) {
 			String id = "0";
 			FileConfiguration config = ScenarioBuilder.getScenarioConfiguration();
-			int ghastSpawn = config.getInt(id + ".ghast_prob");
-			int ghastMax = config.getInt(id + ".ghast_max");
+			int minPlayer = config.getInt(id + ".minplayer");
 			long coolDown = config.getLong(id + ".cooldown");
-			int nbDragon = config.getInt(id + ".dragons");
-			int max_health = config.getInt(id + ".max_health");
-			int experienceDrop = config.getInt(id + ".experience");
-			int monsterMax = config.getInt(id + ".monster_max");
-			String monsters = config.getString(id + ".monsters");
-			return new DragonFury(ghastSpawn, ghastMax, coolDown, nbDragon, max_health, experienceDrop, monsterMax, monsters);
+			double protectRadius = config.getDouble(id + ".protectradius");
+			int wave = config.getInt(id + ".wave");
+			int monster = config.getInt(id + ".monster");
+			int exp = config.getInt(id + ".experience");
+			int money = config.getInt(id + ".money");
+			double armor = config.getDouble(id + ".armor");
+			return new MonsterFury(minPlayer, coolDown, protectRadius, wave, monster, exp, money, armor);
 		}
 
 		return null;

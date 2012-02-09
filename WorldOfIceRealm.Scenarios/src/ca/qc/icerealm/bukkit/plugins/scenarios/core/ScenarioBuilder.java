@@ -61,6 +61,7 @@ class ScenarioBuilder {
 			s.setServer(_server);
 			s.setWorld(_world);
 			s.setPlugin(_plugin);
+			s.terminateInit();
 			scenarios.add(s);
 			i++;
 		}

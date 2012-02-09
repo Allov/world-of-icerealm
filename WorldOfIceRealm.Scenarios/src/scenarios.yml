@@ -1,21 +1,19 @@
 # scenario custom fourni par le scenario API
 # NE PAS MODIFIER SVP, POUR UTILISATION INTERNE EXCLUSVIEMENT
 0:
+   type: monster_fury
    author: punisher
-   type: dragon_fury
-   name: Dragon Fury
-   ghast_max: 10
-   dragons: 0
-   zone: 142,-116,179,-67,80,100
-   ghast_max: 3
-   dragons: 2
-   max_health: 200
-   experience: 100
-   monster_max: 0
-   monsters: zombie,skeleton,pigzombie,enderman
+   name: Monster Fury
+   zone: 99,-259,136,-214,0,128
+   minplayer: 1
+   cooldown: 4600000
+   protectradius: 10.0
+   wave: 1
+   monster: 1
+   experience: 50
+   money: 100
+   armor: 0.1
 
-   # le cooldown est en millisecond. 360000 = 1h, 4320000 = 12h
-   cooldown: 4320000
    
    # differente zone de test
    #zone: 176,40,194,66

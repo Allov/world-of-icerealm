@@ -82,6 +82,8 @@ public abstract class Scenario {
 		
 	public abstract boolean isComplete();
 	
+	public void terminateInit() {}
+	
 	public World getWorld() {
 		return _world;
 	}
