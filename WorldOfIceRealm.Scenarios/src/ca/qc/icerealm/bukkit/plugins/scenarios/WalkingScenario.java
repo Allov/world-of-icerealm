@@ -1,15 +1,19 @@
 package ca.qc.icerealm.bukkit.plugins.scenarios;
 
+import java.util.logging.Logger;
+
 import org.bukkit.Location;
 import org.bukkit.Server;
 
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.Scenario;
+import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
+import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 
 public class WalkingScenario extends Scenario {
 		
 	private boolean _active = false;
 	private long _started;
-	private long _elapsed = 30000;
+	private long _elapsed = 20000;
 	private long _created;
 	private boolean _cannotBeStartedEver = false;
 	
@@ -23,6 +27,7 @@ public class WalkingScenario extends Scenario {
 		_started = System.currentTimeMillis();
 		getServer().broadcastMessage("The walking scenario is triggered!!!");
 		
+		TimeServer.getInstance().addListener(new WalkingScenarioObserver(), 1500);
 		
 	}
 
@@ -69,6 +74,10 @@ public class WalkingScenario extends Scenario {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	public void pokeScenario()  {
+		getServer().broadcastMessage("The Walking scenario has been poked!");	
+	}
 
 	@Override
 	public void progressHandler() {
@@ -76,4 +85,30 @@ public class WalkingScenario extends Scenario {
 		
 	}
 
+}
+
+class WalkingScenarioObserver implements TimeObserver {
+
+	public final Logger logger = Logger.getLogger(("Minecraft"));
+	private long _alarm;
+	
+	
+	@Override
+	public void timeHasCome(long time) {
+		// TODO Auto-generated method stub
+		logger.info("Time has come!!");
+	}
+
+	@Override
+	public void setAlaram(long time) {
+		// TODO Auto-generated method stub
+		_alarm = time;
+	}
+
+	@Override
+	public long getAlarm() {
+		// TODO Auto-generated method stub
+		return _alarm;
+	}
+	
 }
