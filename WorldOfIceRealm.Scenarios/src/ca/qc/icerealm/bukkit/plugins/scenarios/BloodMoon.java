@@ -7,6 +7,7 @@ import net.minecraft.server.Block;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -31,6 +32,15 @@ public class BloodMoon extends Scenario {
 	private int lastTimeChecked = -1;
 	private int probability = 1;
 	
+	
+	// 2 = grass
+	// 12 = sand
+	// 3 = dirt
+	// 18 = leaf
+	// 31 = tall grass
+	// 13 = gravel
+	private int[] validBlockRaw = new int[] { 2, 12, 3, 18, 31, 13 };
+	
 	@Override
 	public boolean isTriggered() {
 		return _active;
@@ -39,7 +49,6 @@ public class BloodMoon extends Scenario {
 	@Override
 	public void triggerScenario() {
 		// TODO Auto-generated method stub
-		this.logger.info("blood moon!!!");
 		started = System.currentTimeMillis();
 		
 		for (Player p : getServer().getOnlinePlayers()) {
@@ -95,7 +104,7 @@ public class BloodMoon extends Scenario {
 		}
 			
 		
-		boolean draw = true;//RandomUtil.getDrawResult(probability);
+		boolean draw = RandomUtil.getDrawResult(probability);
 		lastTimeChecked = currentTime;
 		boolean b  = currentTime == 12 && draw;
 		if (b) {
@@ -132,30 +141,30 @@ public class BloodMoon extends Scenario {
 	
 	public void spawnMonsterCloseToPlayer(Location l) {
 		String[] monsters = new String[] { "zombie", "skeleton", "spider" };
-		WorldZone exclusion = new WorldZone(l, 10.0);
-		WorldZone area = new WorldZone(l, 20.0);
+		WorldZone exclusion = new WorldZone(l, 7.0);
+		WorldZone area = new WorldZone(l, 15.0);
 		int maxTry = 0;
 		Location newLoc = area.getRandomLocationOutsideThisZone(l.getWorld(), exclusion);
 		while (maxTry < 3 && !validLocationForMonster(newLoc)) {
 			newLoc = area.getRandomLocationOutsideThisZone(l.getWorld(), exclusion);
 			maxTry++;
-			this.logger.info("trying to find a spot");
 		}
-		this.logger.info("Foudn a spot!");
-		CreatureType type = EntityUtilities.getCreatureType(monsters[RandomUtil.getRandomInt(monsters.length)]);
-		getWorld().spawnCreature(newLoc, type);
+		
+		if (maxTry < 3) {
+			CreatureType type = EntityUtilities.getCreatureType(monsters[RandomUtil.getRandomInt(monsters.length)]);
+			getWorld().spawnCreature(newLoc, type);	
+		}	
 	}
 	
 	private boolean validLocationForMonster(Location l) {
-		org.bukkit.block.Block b = l.getBlock();
-		this.logger.info(String.valueOf(b.getTypeId()));
-		
-		if (b == Block.GRASS || b == Block.DIRT || b == Block.SAND || 
-			b == Block.STONE || b == Block.GRAVEL || b == Block.COBBLESTONE ||
-			b == Block.LEAVES) {
-			return true;
+		Location under = new Location(l.getWorld(), l.getX(), l.getY() - 1.0, l.getZ());
+		org.bukkit.block.Block b = under.getBlock();
+		for (int id : validBlockRaw) {
+			if (b.getTypeId() == id) {
+				return true;
+			}
 		}
-		return true;
+		return false;
 	}
 }
 
@@ -171,7 +180,7 @@ class MonsterSpawnListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onMonsterSpawn(CreatureSpawnEvent event) {
 		boolean draw = RandomUtil.getDrawResult(2);
-		if (_moon.isTriggered() && !_avoid && draw) {
+		if (_moon.isTriggered() && !_avoid && draw && event.getEntity() instanceof Monster) {
 			_avoid = true;
 			_moon.spawnMonsterCloseToPlayer(event.getEntity().getLocation());
 			_avoid = false;
@@ -180,7 +189,7 @@ class MonsterSpawnListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onMonsterDeath(EntityDeathEvent event) {
-		if (_moon.isTriggered()) {
+		if (_moon.isTriggered() && event.getEntity() instanceof Monster) {
 			_moon.spawnMonsterCloseToPlayer(event.getEntity().getLocation());
 		}
 		
