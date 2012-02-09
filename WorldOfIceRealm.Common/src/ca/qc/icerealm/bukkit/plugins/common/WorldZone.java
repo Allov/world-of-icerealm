@@ -88,11 +88,7 @@ public class WorldZone {
 	
 	public Location getRandomLocationOutsideThisZone(World w, WorldZone exclude) {
 		Location loc = getRandomLocation(w);
-		
-		if (exclude == null) {
-			this.logger.info("exclude is nuyll!!");
-		}
-		
+
 		while (exclude.isInside(loc)) {
 			loc = getRandomLocation(w);
 		}
@@ -111,7 +107,6 @@ public class WorldZone {
 		
 		Location loc = new Location(w, tlX, _rightBottom.getY(), tlZ);
 		double y = w.getHighestBlockYAt(loc);
-		this.logger.info("highest block is " + y);
 		if (y >= _rightBottom.getY() && y <= _leftTop.getY()) {
 			loc.setY(y);	
 		}
