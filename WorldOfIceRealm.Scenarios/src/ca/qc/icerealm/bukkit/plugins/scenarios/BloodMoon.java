@@ -2,6 +2,7 @@ package ca.qc.icerealm.bukkit.plugins.scenarios;
 
 import java.util.logging.Logger;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
@@ -15,6 +16,7 @@ import org.bukkit.event.world.SpawnChangeEvent;
 import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.common.WorldClock;
+import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.Scenario;
 
 public class BloodMoon extends Scenario {
@@ -45,7 +47,8 @@ public class BloodMoon extends Scenario {
 		
 		
 		
-		getServer().broadcastMessage("Blood Moon is rising!!!!");
+		getServer().broadcastMessage(ChatColor.RED + "THE BLOOD MOON IS RISING");
+		getServer().broadcastMessage(ChatColor.GREEN + "GET READY FOR A LOT OF MONSTERS");
 		_active = true;
 		
 	}
@@ -65,9 +68,10 @@ public class BloodMoon extends Scenario {
 
 	@Override
 	public boolean canBeTriggered() {
-		if (WorldClock.getHour(getWorld()) < 24 && WorldClock.getHour(getWorld()) > 12) {
-			return true;
-		}
+		/*if (WorldClock.getHour(getWorld()) < 24 && WorldClock.getHour(getWorld()) > 12) {
+			
+			
+		}*/
 		return false;
 	}
 
@@ -79,7 +83,7 @@ public class BloodMoon extends Scenario {
 	@Override
 	public void terminateScenario() {
 		// TODO Auto-generated method stub
-		getServer().broadcastMessage("The light is back!!!!");
+		getServer().broadcastMessage(ChatColor.GREEN + "The light is back!");
 		_active = false;
 	}
 
@@ -94,30 +98,14 @@ public class BloodMoon extends Scenario {
 		// TODO Auto-generated method stub
 		
 	}
-	
-	public Location getRandomLocationAround(Location l, double min, double max) {
-		Location newLoc = new Location(l.getWorld(), l.getX(), l.getY(), l.getZ());
-		double offsetX = 10.0;//RandomUtil.getRandomDouble(15.0, 25.0);
-		double offsetZ = 10.0;//RandomUtil.getRandomDouble(15.0, 25.0);
-		
-		//if (RandomUtil.getDrawResult(1)) { offsetX = offsetX * -1.0; }
-		//if (RandomUtil.getDrawResult(1)) { offsetZ = offsetZ * -1.0; }
-		
-		this.logger.info("offsetX: " + offsetX + " offsetZ: " + offsetZ);
-		newLoc.setX(newLoc.getX() + offsetX);
-		newLoc.setZ(newLoc.getZ() + offsetZ);
-		
-		double height = getWorld().getHighestBlockYAt(newLoc);
-		newLoc.setY(height);
-		
-		this.logger.info("loc: " + newLoc.getX() + "," + newLoc.getY() + "," + newLoc.getZ());
-		
-		return newLoc;
-	}
+
 	
 	public void spawnMonsterCloseToPlayer(Location l) {
 		String[] monsters = new String[] { "zombie", "skeleton", "spider" };
-		Location newLoc = getRandomLocationAround(l, 15.0, 25.0);
+		WorldZone exclusion = new WorldZone(l, 10.0);
+		WorldZone area = new WorldZone(l, 20.0);
+		Location newLoc = area.getRandomLocationOutsideThisZone(l.getWorld(), exclusion);
+		
 		CreatureType type = EntityUtilities.getCreatureType(monsters[RandomUtil.getRandomInt(monsters.length)]);
 		getWorld().spawnCreature(newLoc, type);
 	}
