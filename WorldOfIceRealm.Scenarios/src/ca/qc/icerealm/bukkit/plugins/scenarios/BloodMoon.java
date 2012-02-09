@@ -24,9 +24,9 @@ public class BloodMoon extends Scenario {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private boolean _active;
 	private MonsterSpawnListener listener;	
-	private long coolDown = 86400000;
+	private long coolDown = 0;
 	private long started = 0; 
-	private boolean doneForThisNight = false;
+	private int lastTimeChecked = -1;
 	private int probability = 1;
 	
 	@Override
@@ -72,6 +72,19 @@ public class BloodMoon extends Scenario {
 
 	@Override
 	public boolean canBeTriggered() {
+		if (_active)
+			return false;
+
+		if (started + coolDown > System.currentTimeMillis())
+			return false;			
+		
+		int currentTime = WorldClock.getHour(getWorld());
+		if (lastTimeChecked == currentTime)
+			return false;
+		
+		boolean draw = RandomUtil.getDrawResult(10);
+		lastTimeChecked = currentTime;
+		return currentTime == 12 && draw;
 		
 		/*
 		boolean draw = true;/*RandomUtil.getDrawResult(1);
@@ -83,13 +96,12 @@ public class BloodMoon extends Scenario {
 			return true;
 		}
 		*/
-		return false;
+
 	}
 
 	@Override
 	public boolean mustBeStop() {
-		boolean stop = _active && WorldClock.getHour(getWorld()) >= 0 && WorldClock.getHour(getWorld()) < 12;
-		return stop;
+		return _active && WorldClock.getHour(getWorld()) == 23;
 	}
 
 	@Override

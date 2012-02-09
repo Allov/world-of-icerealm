@@ -50,6 +50,12 @@ class ProbingWorker implements Runnable {
 					if (!s.isTriggered() && s.canBeTriggered()) {
 						s.triggerScenario();
 					}
+					
+				}
+				else if (s != null && s.getPlayers().contains(p)) {
+					if (s.isTriggered()) {
+						s.progressHandler();
+					}
 				}
 				else if (s == null) { // le joueur est a l'exterieur, on check s'il est présent dans un scénario
 					Scenario scenario  = _engine.findScenarioByPlayer(p);

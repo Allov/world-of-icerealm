@@ -35,7 +35,7 @@ class ScenarioCommander implements CommandExecutor {
 
 			Scenario s = _engine.findScenarioByPlayer(p);
 			if (s != null) {
-				p.sendMessage(ChatColor.GREEN + "You are in the " + s.getName());
+				p.sendMessage(ChatColor.GREEN + "You are in the " + s.getName());				
 			}
 			else {
 				p.sendMessage(ChatColor.RED +"You are not in a scenario");

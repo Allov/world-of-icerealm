@@ -187,7 +187,7 @@ class FishingEventListener implements Listener {
 		if (scenario.isTriggered()) {
 			Entity theCatch = event.getCaught();
 			
-			event.
+
 			
 			if (theCatch instanceof CraftItem) {
 				scenario.addCatchToPlayer(event.getPlayer());

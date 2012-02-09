@@ -43,7 +43,12 @@ public class MonsterFury extends Scenario {
 	private int _money = 0;
 	private double _damageModifier = 0.0;
 	private double _armorIncrement = 0.0;
-	private boolean _allPlayerInside = true;
+	private boolean _allPlayerInside = false;
+	private long elapsedDisplayInfo = 30000;
+	private long lastDisplayInfo = 0;
+	private boolean waitForWave = false;
+	private long timeBetweenWave = 10000;
+	private long lastWaveDone = 0;
 
 	public MonsterFury(int minPlayer, long coolDown, double protectRadius, int wave, int monster, int exp, int money, double armor) {
 		_minimumPlayerCount = minPlayer;
@@ -69,6 +74,14 @@ public class MonsterFury extends Scenario {
 
 	@Override
 	public void triggerScenario() {
+		lastDisplayInfo = System.currentTimeMillis();
+		
+		_activationZone = getZone();
+		WorldZone zone = new WorldZone(_activationZone.getCentralPointAt(0), _radius);
+		setZone(zone);
+		
+		
+		
 		if (_waves != null) {
 			_waves.clear();
 		}
@@ -111,7 +124,7 @@ public class MonsterFury extends Scenario {
 			}
 		}
 		
-		
+		setZone(_activationZone);
 		_active = false;
 	}
 
@@ -148,7 +161,19 @@ public class MonsterFury extends Scenario {
 
 	@Override
 	public void progressHandler() {
-		// TODO Auto-generated method stub
+
+		
+		
+		/*
+		if ((lastDisplayInfo + elapsedDisplayInfo) < System.currentTimeMillis()) {
+			List<Entity> list = _waves.get(nbWaveDone).getFirstMonster(0);
+			for (int i = 0; i < list.size(); i++) {
+			
+				//getServer().broadcastMessage("Monster at " + (int)list.get(i).getLocation().getX() + ", " +  (int)list.get(i).getLocation().getY() + ", " + (int)list.get(i).getLocation().getZ());
+			}
+			lastDisplayInfo = System.currentTimeMillis();
+		}
+		*/
 		
 	}
 
@@ -163,8 +188,10 @@ public class MonsterFury extends Scenario {
 		nbWaveDone++;
 				
 		if (nbWaveDone < _waves.size()) {	
+			
 			getServer().broadcastMessage("Another wave is coming!!!");
 			_listener.setMonsterWave(_waves.get(nbWaveDone));
+			
 		}
 		else {
 			terminateScenario();
@@ -245,6 +272,9 @@ class MonsterWave {
 			if (_monstersTable.size() == 0) {
 				_scenario.waveIsDone();
 			}
+			else {
+				_scenario.getServer().broadcastMessage(_monstersTable.size() + " monsters left!");
+			}
 		}
 	}
 	
@@ -264,6 +294,14 @@ class MonsterWave {
 				 l.remove();
 			 }
 		}
+	}
+	
+	public List<Entity> getFirstMonster(int i) {
+		List<Entity> list = new ArrayList<Entity>();
+		for (Entity l : _monstersTable) {
+			list.add(l);
+		}
+		return list;
 	}
 	
 

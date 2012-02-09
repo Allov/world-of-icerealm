@@ -4,11 +4,11 @@
    type: monster_fury
    author: punisher
    name: Monster Fury
-   zone: 99,-259,136,-214,0,128
+   zone: 113,-242,118,-237,0,128
    minplayer: 1
-   cooldown: 4600000
-   protectradius: 10.0
-   wave: 1
+   cooldown: 30000
+   protectradius: 30.0
+   wave: 2
    monster: 1
    experience: 50
    money: 100

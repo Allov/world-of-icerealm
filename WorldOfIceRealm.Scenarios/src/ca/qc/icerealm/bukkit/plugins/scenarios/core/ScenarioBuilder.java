@@ -90,7 +90,7 @@ class ScenarioBuilder {
 		
 		if (coords.length == 4) {
 			coordsDouble = new double[] { Double.parseDouble(coords[0]), Double.parseDouble(coords[1]), 
-					   Double.parseDouble(coords[2]), Double.parseDouble(coords[3]), 0, 128};
+					   Double.parseDouble(coords[2]), Double.parseDouble(coords[3]), 0.0, 128.0};
 		}
 		else if (coords.length == 6) {
 			coordsDouble = new double[] { Double.parseDouble(coords[0]), Double.parseDouble(coords[1]), 

@@ -111,6 +111,7 @@ public class WorldZone {
 		
 		Location loc = new Location(w, tlX, _rightBottom.getY(), tlZ);
 		double y = w.getHighestBlockYAt(loc);
+		this.logger.info("highest block is " + y);
 		if (y >= _rightBottom.getY() && y <= _leftTop.getY()) {
 			loc.setY(y);	
 		}
@@ -119,6 +120,19 @@ public class WorldZone {
 		}
 		
 		return loc;
+	}
+	
+	public List<Location> getPerimeter() {
+		List<Location> locations = new ArrayList<Location>();
+		/*
+		for (double x = _leftTop.getX(); x <= _rightBottom.getX(); x += 1.0) {
+			locations.add(new Location(_leftTop.getWorld(), x, _rightBottom.getY(), _leftTop.getZ()));
+		}
+		
+		for (double y = _leftTop.getX())
+		*/
+		
+		return locations;
 	}
 	
 	@Override 
