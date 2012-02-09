@@ -2,6 +2,7 @@ package ca.qc.icerealm.bukkit.plugins.common;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -12,10 +13,17 @@ import org.bukkit.World;
  * compatible aka, don't break existing code!!!
  */
 public class WorldZone {
-	
+	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private Location _rightBottom;
 	private Location _leftTop;
-
+	
+	public WorldZone(Location l, double radius) {
+		_leftTop = new Location(l.getWorld(), l.getX() - radius, l.getY(), l.getZ() - radius);
+		_rightBottom = new Location(l.getWorld(), l.getX() + radius, l.getY(), l.getZ() + radius);
+		_leftTop.setY(128);
+		_rightBottom.setY(0);
+	}
+	
 	public WorldZone(Location lt, Location rb) {
 		_leftTop = lt;
 		_rightBottom = rb;
@@ -68,31 +76,49 @@ public class WorldZone {
 		double z = (this._leftTop.getZ() + this._rightBottom.getZ()) / 2;
 		return new Location(_leftTop.getWorld(), x, height, z);
 	}
-	
+		
 	public List<Location> getRandomLocation(World w, int qty) {
 		List<Location> list = new ArrayList<Location>();
+		for (int i = 0; i < qty; i++) {
+			Location loc = getRandomLocation(w);
+			list.add(loc);
+		}
+		return list;
+	}
+	
+	public Location getRandomLocationOutsideThisZone(World w, WorldZone exclude) {
+		Location loc = getRandomLocation(w);
+		
+		if (exclude == null) {
+			this.logger.info("exclude is nuyll!!");
+		}
+		
+		while (exclude.isInside(loc)) {
+			loc = getRandomLocation(w);
+		}
+		return loc;
+	}
+	
+	public Location getRandomLocation(World w) {
 		double topLeftX = 0;
 		double topLeftZ = 0;
 		double bottomRightX = getRelativeBottomRight().getX();
 		double bottomRightZ = getRelativeBottomRight().getZ();
-		for (int i = 0; i < qty; i++) {
-			double tlX = RandomUtil.getRandomDouble(topLeftX, bottomRightX);
-			double tlZ = RandomUtil.getRandomDouble(topLeftZ, bottomRightZ);
-			tlX += getTopLeft().getX();
-			tlZ += getTopLeft().getZ();
-			
-			Location loc = new Location(w, tlX, _rightBottom.getY(), tlZ);
-			double y = w.getHighestBlockYAt(loc);
-			if (y >= _rightBottom.getY() && y <= _leftTop.getY()) {
-				loc.setY(y);	
-			}
-			else {
-				loc.setY(_rightBottom.getY());
-			}
-			
-			list.add(loc);
+		double tlX = RandomUtil.getRandomDouble(topLeftX, bottomRightX);
+		double tlZ = RandomUtil.getRandomDouble(topLeftZ, bottomRightZ);
+		tlX += getTopLeft().getX();
+		tlZ += getTopLeft().getZ();
+		
+		Location loc = new Location(w, tlX, _rightBottom.getY(), tlZ);
+		double y = w.getHighestBlockYAt(loc);
+		if (y >= _rightBottom.getY() && y <= _leftTop.getY()) {
+			loc.setY(y);	
 		}
-		return list;
+		else {
+			loc.setY(_rightBottom.getY());
+		}
+		
+		return loc;
 	}
 	
 	@Override 
