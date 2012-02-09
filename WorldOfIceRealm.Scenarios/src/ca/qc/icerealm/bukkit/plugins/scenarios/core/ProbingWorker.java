@@ -36,6 +36,7 @@ class ProbingWorker implements Runnable {
 				}
 				else if (s.isTriggered()) {
 					s.progressHandler();
+					
 				}
 			}
 			

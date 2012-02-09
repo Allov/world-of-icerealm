@@ -24,6 +24,10 @@ public class BloodMoon extends Scenario {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private boolean _active;
 	private MonsterSpawnListener listener;	
+	private long coolDown = 86400000;
+	private long started = 0; 
+	private boolean doneForThisNight = false;
+	private int probability = 1;
 	
 	@Override
 	public boolean isTriggered() {
@@ -33,6 +37,8 @@ public class BloodMoon extends Scenario {
 	@Override
 	public void triggerScenario() {
 		// TODO Auto-generated method stub
+		started = System.currentTimeMillis();
+		
 		for (Player p : getServer().getOnlinePlayers()) {
 			spawnMonsterCloseToPlayer(p.getLocation());
 			spawnMonsterCloseToPlayer(p.getLocation());
@@ -45,10 +51,8 @@ public class BloodMoon extends Scenario {
 		}
 		
 		
-		
-		
 		getServer().broadcastMessage(ChatColor.RED + "THE BLOOD MOON IS RISING");
-		getServer().broadcastMessage(ChatColor.GREEN + "GET READY FOR A LOT OF MONSTERS");
+		getServer().broadcastMessage(ChatColor.RED + "GET READY FOR A LOT OF MONSTERS");
 		_active = true;
 		
 	}
@@ -68,22 +72,31 @@ public class BloodMoon extends Scenario {
 
 	@Override
 	public boolean canBeTriggered() {
-		/*if (WorldClock.getHour(getWorld()) < 24 && WorldClock.getHour(getWorld()) > 12) {
-			
-			
-		}*/
+		
+		/*
+		boolean draw = true;/*RandomUtil.getDrawResult(1);
+		int hour = WorldClock.getHour(getWorld());
+		long timeBeforeStart = started + coolDown;
+
+	
+		if (!_active && draw && hour >= 12 && hour <= 24 && timeBeforeStart <= System.currentTimeMillis()) {
+			return true;
+		}
+		*/
 		return false;
 	}
 
 	@Override
 	public boolean mustBeStop() {
-		return !canBeTriggered();
+		boolean stop = _active && WorldClock.getHour(getWorld()) >= 0 && WorldClock.getHour(getWorld()) < 12;
+		return stop;
 	}
 
 	@Override
 	public void terminateScenario() {
 		// TODO Auto-generated method stub
 		getServer().broadcastMessage(ChatColor.GREEN + "The light is back!");
+		
 		_active = false;
 	}
 
