@@ -44,7 +44,7 @@ public class MoneyDrops extends JavaPlugin {
 	        {
 				Random random = new Random(Calendar.getInstance().getTimeInMillis());
 				
-				int reward = random.nextInt(MaxMoney-2)+2;
+				int reward = random.nextInt(MaxMoney-5)+5;
 				
 	        	economy.depositPlayer(player.getName(), reward);
 	        }

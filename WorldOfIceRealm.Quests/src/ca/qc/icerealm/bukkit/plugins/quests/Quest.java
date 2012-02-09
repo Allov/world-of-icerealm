@@ -72,7 +72,6 @@ public class Quest implements ObjectiveListener {
 	@Override
 	public void objectiveDone(Objective objective) {
 		for (Objective obj : objectives) {
-			this.logger.info("Is it done? " + obj.isDone());
 			if (!obj.isDone()) {
 				return;
 			}
