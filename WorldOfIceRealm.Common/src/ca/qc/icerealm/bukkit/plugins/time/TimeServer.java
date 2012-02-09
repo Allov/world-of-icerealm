@@ -7,12 +7,12 @@ import java.util.List;
 public class TimeServer implements TimeSubject {
 
 	private static TimeServer _instance = null;
-	private HashMap<TimeObserver, Long> _observers;
+	private List<TimeObserver> _observers;
 	
 	
 	protected TimeServer() {
 		// part le thread!
-		_observers = new HashMap<TimeObserver, Long>();
+		_observers = new ArrayList<TimeObserver>();
 	}
 	
 	public static TimeServer getInstance() {
@@ -26,9 +26,24 @@ public class TimeServer implements TimeSubject {
 	@Override
 	public void addListener(TimeObserver obs, long when) {
 		if (_observers != null) {
-			_observers.put(obs, when);
+			long alarm = when + System.currentTimeMillis();
+			obs.setAlaram(alarm);
+			
+		
 		}
 		
+	}
+	
+	public List<TimeObserver> getDueListener(long timeStamp)  {
+		List<TimeObserver> list = new ArrayList<TimeObserver>();
+		
+		
+		
+		return list;
+	}
+	
+	public void removeListener(List<TimeObserver> observer) {
+		_observers.removeAll(observer);
 	}
 
 }
