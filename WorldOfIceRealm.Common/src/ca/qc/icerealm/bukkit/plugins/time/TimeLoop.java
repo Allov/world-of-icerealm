@@ -1,14 +1,13 @@
 package ca.qc.icerealm.bukkit.plugins.time;
 
-import java.util.HashMap;
+import java.util.List;
 
 public class TimeLoop implements Runnable {
 
-	private boolean _stop = true;
+	private boolean _stop = false;
 	private TimeServer _timeServer;
-	
-	
-	public TimeLoop(TimeServer s) {
+
+	public void setTimeServer(TimeServer s) {
 		_timeServer = s;
 	}
 	
@@ -17,20 +16,21 @@ public class TimeLoop implements Runnable {
 		// TODO Auto-generated method stub
 		while (!_stop) {
 			
-			long currentTime = System.currentTimeMillis();
+			List<TimeObserver> observers = _timeServer.getDueListener(System.currentTimeMillis());
 			
-						
+			for (TimeObserver ob : observers) {
+				ob.timeHasCome(System.currentTimeMillis());
+			}
+			
+			_timeServer.removeListener(observers);
 			
 			try {
 				Thread.sleep(100);
 			}
-			catch (Exception ex) {}
+			catch (Exception ex) {
+				_stop = true;
+			}
 		}
 		
 	}
-	
-	public void stop() {
-		_stop = true;
-	}
-
 }

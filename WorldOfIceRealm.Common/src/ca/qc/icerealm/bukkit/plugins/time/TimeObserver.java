@@ -4,6 +4,6 @@ public interface TimeObserver {
 	
 	void timeHasCome(long time);
 	void setAlaram(long time);
-	void getAlarm();
+	long getAlarm();
 	
 }
