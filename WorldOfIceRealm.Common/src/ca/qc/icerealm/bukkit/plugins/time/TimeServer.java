@@ -14,7 +14,6 @@ public class TimeServer implements TimeSubject {
 	
 	
 	protected TimeServer() {
-		// part le thread!
 		_observers = new ArrayList<TimeObserver>();
 		_loop = new TimeLoop();
 	}
@@ -30,8 +29,7 @@ public class TimeServer implements TimeSubject {
 	@Override
 	public void addListener(TimeObserver obs, long when) {
 		if (_observers != null) {
-			long alarm = when + System.currentTimeMillis();
-			obs.setAlaram(alarm);
+			obs.setAlaram(when + System.currentTimeMillis());
 			_observers.add(obs);
 		}
 		
