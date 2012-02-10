@@ -38,6 +38,10 @@ public class WorldZone {
 		_rightBottom.setY(min);
 	}
 	
+	public WorldZone(World w, String data) {
+		buildFromString(w, data);
+	}
+	
 	public boolean isInside(Location position) {
 
 		boolean inside = false;
@@ -69,6 +73,13 @@ public class WorldZone {
 		return _rightBottom;
 	}
 	
+	public double getMinHeight() {
+		return _rightBottom.getY();
+	}
+	
+	public double getMaxHeight() {
+		return _leftTop.getY();
+	}
 	
 	
 	public Location getCentralPointAt(double height) {
@@ -141,7 +152,27 @@ public class WorldZone {
 													_rightBottom.getY(), 
 													_rightBottom.getZ() - _leftTop.getZ());
 		return relativeBottomRight;
-		
-		
 	}
+	
+	private void buildFromString(World w,  String zone) {
+		String[] coords = zone.split(",");
+		double[] coordsDouble = null;
+		
+		if (coords.length == 4) {
+			coordsDouble = new double[] { Double.parseDouble(coords[0]), Double.parseDouble(coords[1]), 
+					   Double.parseDouble(coords[2]), Double.parseDouble(coords[3]), 0.0, 128.0};
+		}
+		else if (coords.length == 6) {
+			coordsDouble = new double[] { Double.parseDouble(coords[0]), Double.parseDouble(coords[1]), 
+					   Double.parseDouble(coords[2]), Double.parseDouble(coords[3]),
+					   Double.parseDouble(coords[4]), Double.parseDouble(coords[5])};
+		}
+		
+		if (coordsDouble != null) {
+			_leftTop = new Location(w, coordsDouble[0], coordsDouble[5], coordsDouble[1]);
+			_rightBottom = new Location(w, coordsDouble[2], coordsDouble[4], coordsDouble[3]);
+		}
+	}
+	
+	
 }
