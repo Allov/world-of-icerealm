@@ -35,6 +35,7 @@ class ScenarioFactory {
 		}
 		
 		if (typeOfScenario.equalsIgnoreCase("monster_fury")) {
+			
 			String id = "0";
 			FileConfiguration config = ScenarioBuilder.getScenarioConfiguration();
 			int minPlayer = config.getInt(id + ".minplayer");
@@ -45,7 +46,9 @@ class ScenarioFactory {
 			int exp = config.getInt(id + ".experience");
 			int money = config.getInt(id + ".money");
 			double armor = config.getDouble(id + ".armor");
-			return new MonsterFury(minPlayer, coolDown, protectRadius, wave, monster, exp, money, armor);
+			String zone = config.getString(id + ".greater_zone");
+			return new MonsterFury(minPlayer, coolDown, protectRadius, wave, monster, exp, money, armor, zone);
+			
 		}
 
 		return null;
