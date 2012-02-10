@@ -25,8 +25,10 @@ import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.Scenario;
+import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
+import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 
-public class MonsterFury extends Scenario {
+public class MonsterFury extends Scenario implements TimeObserver {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private int _minimumPlayerCount = 1;
 	private boolean _active = false;
@@ -35,28 +37,22 @@ public class MonsterFury extends Scenario {
 	private int nbWaveDone = 0;
 	private long _coolDown = 30000;
 	private long _lastRun = 0;
-	private double _radius = 3.0;
 	private int _nbWave = 3;
 	private int _nbMonsters = 3;
 	private int _experience = 0;
-	private int _money = 0;
+	private int _money;
 	private double _damageModifier = 0.0;
 	private double _armorIncrement = 0.0;
-	private boolean _allPlayerInside = false;
-	private long elapsedDisplayInfo = 30000;
-	private long lastDisplayInfo = 0;
-	private boolean waitForWave = false;
-	private long timeBetweenWave = 10000;
-	private long lastWaveDone = 0;
+	private long timeBetweenWave = 15000;
 	private String _greater; 
 	private WorldZone _greaterZone;
 	private WorldZone _activationZone;
-	
+	private long _alarm;
 
 	public MonsterFury(int minPlayer, long coolDown, double protectRadius, int wave, int monster, int exp, int money, double armor, String greater) {
 		_minimumPlayerCount = minPlayer;
 		_coolDown = coolDown;
-		_radius = protectRadius;
+
 		_nbWave = wave;
 		_nbMonsters = monster;
 		_experience = exp;
@@ -78,11 +74,8 @@ public class MonsterFury extends Scenario {
 
 	@Override
 	public void triggerScenario() {
-		lastDisplayInfo = System.currentTimeMillis();
 		
 		setZone(_greaterZone);
-		
-		
 		
 		if (_waves != null) {
 			_waves.clear();
@@ -104,10 +97,17 @@ public class MonsterFury extends Scenario {
 			_waves.add(wave);
 		}
 		
+		getServer().broadcastMessage(ChatColor.RED + "The ennemy is approching!");
+		getServer().broadcastMessage(ChatColor.GREEN + "Get ready to push them back!");
+		getServer().broadcastMessage(ChatColor.YELLOW + String.valueOf(_nbWave) + ChatColor.GREEN + " waves have been spotted!");
 
 		// on active la premiere wave et le scénario
-		getServer().broadcastMessage(ChatColor.RED + "First wave is coming!!!");
-		_listener.setMonsterWave(_waves.get(nbWaveDone));		
+		/*
+		getServer().broadcastMessage(ChatColor.GREEN + "First wave is coming!!!");
+		_listener.setMonsterWave(_waves.get(nbWaveDone));*/
+		
+		TimeServer.getInstance().addListener(this, 10000);
+		
 		_active = true;
 	}
 
@@ -150,16 +150,34 @@ public class MonsterFury extends Scenario {
 	@Override
 	public void terminateScenario() {
 		// donne le XP, du health au joueur
-		getServer().broadcastMessage(ChatColor.RED +"The ennemy has defeated!");
+		getServer().broadcastMessage(ChatColor.GOLD +"The ennemy has been defeated!");
 		int xp = _experience / getPlayers().size();
 		for (Player p : getPlayers()) {
 			p.setLevel(p.getLevel() + xp);
+			p.sendMessage(ChatColor.GREEN + "You received " + ChatColor.GOLD + String.valueOf(xp) + " level of XP!");
 		}
 		
 		_lastRun = System.currentTimeMillis();
 		nbWaveDone = 0;
 		setZone(_activationZone);
 		_active = false;
+	}
+	
+
+	@Override
+	public void timeHasCome(long time) {
+		getServer().broadcastMessage(ChatColor.YELLOW + String.valueOf((nbWaveDone + 1)) + "/" + _waves.size() + ChatColor.GREEN + " wave is coming!!!");
+		_listener.setMonsterWave(_waves.get(nbWaveDone));
+	}
+
+	@Override
+	public void setAlaram(long time) {
+		_alarm = time;		
+	}
+
+	@Override
+	public long getAlarm() {
+		return _alarm;
 	}
 
 	@Override
@@ -178,20 +196,19 @@ public class MonsterFury extends Scenario {
 		nbWaveDone++;
 				
 		if (nbWaveDone < _waves.size()) {	
-			
-			getServer().broadcastMessage("Another wave is coming!!!");
-			_listener.setMonsterWave(_waves.get(nbWaveDone));
-			
+			getServer().broadcastMessage(ChatColor.GOLD + "This wave has been pushed back!");
+			TimeServer.getInstance().addListener(this, timeBetweenWave);			
 		}
 		else {
 			terminateScenario();
 		}
 	}
 
+
 }
 
 class MonsterFuryListener implements Listener {
-	
+	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private MonsterWave _currentWave;
 	private MonsterFury _scenario;
 	
@@ -221,7 +238,13 @@ class MonsterFuryListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityDamage(EntityDamageEvent event) {
-		_currentWave.processDamage(event);
+		try {
+			_currentWave.processDamage(event);	
+		}
+		catch (Exception ex) {
+			this.logger.info("MonsterFury threw an exception on EntityDamageEvent");
+		}
+		
 	}
 	
 }
@@ -256,7 +279,7 @@ class MonsterWave {
 	}
 	
 	public void processEntityDeath(Entity e) {
-		if (_monstersTable.contains(e)) {
+		if (_monstersTable != null && _monstersTable.contains(e)) {
 			_monstersTable.remove(e);
 			
 			if (_monstersTable.size() == 0) {
@@ -269,7 +292,7 @@ class MonsterWave {
 	}
 	
 	public void processDamage(EntityDamageEvent e) {
-		if (_monstersTable.contains(e.getEntity())) {
+		if (_monstersTable != null && _monstersTable.contains(e.getEntity())) {
 			
 			if (e.getCause() == DamageCause.FIRE_TICK) {
 				e.setCancelled(true);
@@ -279,7 +302,7 @@ class MonsterWave {
 	}
 	
 	public void removeMonsters() {
-		if (_monstersTable.size() > 0) {
+		if (_monstersTable != null && _monstersTable.size() > 0) {
 			 for (Entity l : _monstersTable) {
 				 l.remove();
 			 }
