@@ -84,7 +84,7 @@ class ScenarioBuilder {
 		return ScenarioFactory.getInstanceOf(type);
 	}
 	
-	private WorldZone translateFromString(String zone) {
+	public WorldZone translateFromString(String zone) {
 		String[] coords = zone.split(",");
 		double[] coordsDouble = null;
 		

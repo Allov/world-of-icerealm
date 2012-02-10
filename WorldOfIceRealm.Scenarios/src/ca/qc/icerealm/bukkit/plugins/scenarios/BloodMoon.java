@@ -32,7 +32,7 @@ public class BloodMoon extends Scenario implements TimeObserver {
 	private long coolDown = 0;
 	private long started = 0; 
 	private int lastTimeChecked = -1;
-	private int probability = 10;
+	private int probability = 1;
 	private long _alarm = 0;
 
 	// 2 = grass

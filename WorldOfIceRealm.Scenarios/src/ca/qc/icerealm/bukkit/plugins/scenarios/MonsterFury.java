@@ -167,7 +167,10 @@ public class MonsterFury extends Scenario implements TimeObserver {
 	@Override
 	public void timeHasCome(long time) {
 		getServer().broadcastMessage(ChatColor.YELLOW + String.valueOf((nbWaveDone + 1)) + "/" + _waves.size() + ChatColor.GREEN + " wave is coming!!!");
-		_listener.setMonsterWave(_waves.get(nbWaveDone));
+		if (_waves.size() > 0) {
+			_listener.setMonsterWave(_waves.get(nbWaveDone));	
+		}
+		
 	}
 
 	@Override

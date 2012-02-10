@@ -2,8 +2,10 @@ package ca.qc.icerealm.bukkit.plugins.scenarios.core;
 
 import java.util.logging.Logger;
 
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.AmbushScenario;
 import ca.qc.icerealm.bukkit.plugins.scenarios.DragonFury;
 import ca.qc.icerealm.bukkit.plugins.scenarios.MonsterFury;
@@ -48,10 +50,8 @@ class ScenarioFactory {
 			double armor = config.getDouble(id + ".armor");
 			String zone = config.getString(id + ".greater_zone");
 			return new MonsterFury(minPlayer, coolDown, protectRadius, wave, monster, exp, money, armor, zone);
-			
 		}
 
 		return null;
-	}
-	
+	}	
 }
