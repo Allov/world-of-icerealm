@@ -30,7 +30,6 @@ public class MonsterFury extends Scenario {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private int _minimumPlayerCount = 1;
 	private boolean _active = false;
-	private WorldZone _activationZone;
 	private MonsterFuryListener _listener;
 	private List<MonsterWave> _waves;
 	private int nbWaveDone = 0;
@@ -49,8 +48,12 @@ public class MonsterFury extends Scenario {
 	private boolean waitForWave = false;
 	private long timeBetweenWave = 10000;
 	private long lastWaveDone = 0;
+	private String _greater; 
+	private WorldZone _greaterZone;
+	private WorldZone _activationZone;
+	
 
-	public MonsterFury(int minPlayer, long coolDown, double protectRadius, int wave, int monster, int exp, int money, double armor) {
+	public MonsterFury(int minPlayer, long coolDown, double protectRadius, int wave, int monster, int exp, int money, double armor, String greater) {
 		_minimumPlayerCount = minPlayer;
 		_coolDown = coolDown;
 		_radius = protectRadius;
@@ -59,12 +62,13 @@ public class MonsterFury extends Scenario {
 		_experience = exp;
 		_money = money;
 		_armorIncrement = armor;
+		_greater = greater;
 	}
 	
 	@Override
 	public void terminateInit() {
-		Location middle = getZone().getCentralPointAt(getZone().getRightBottom().getY());
-		_activationZone = new WorldZone(middle,_radius);
+		_greaterZone = new WorldZone(getWorld(), _greater);
+		_activationZone = getZone();
 	}
 	
 	@Override
@@ -76,9 +80,7 @@ public class MonsterFury extends Scenario {
 	public void triggerScenario() {
 		lastDisplayInfo = System.currentTimeMillis();
 		
-		_activationZone = getZone();
-		WorldZone zone = new WorldZone(_activationZone.getCentralPointAt(0), _radius);
-		setZone(zone);
+		setZone(_greaterZone);
 		
 		
 		
@@ -156,24 +158,12 @@ public class MonsterFury extends Scenario {
 		
 		_lastRun = System.currentTimeMillis();
 		nbWaveDone = 0;
+		setZone(_activationZone);
 		_active = false;
 	}
 
 	@Override
 	public void progressHandler() {
-
-		
-		
-		/*
-		if ((lastDisplayInfo + elapsedDisplayInfo) < System.currentTimeMillis()) {
-			List<Entity> list = _waves.get(nbWaveDone).getFirstMonster(0);
-			for (int i = 0; i < list.size(); i++) {
-			
-				//getServer().broadcastMessage("Monster at " + (int)list.get(i).getLocation().getX() + ", " +  (int)list.get(i).getLocation().getY() + ", " + (int)list.get(i).getLocation().getZ());
-			}
-			lastDisplayInfo = System.currentTimeMillis();
-		}
-		*/
 		
 	}
 
