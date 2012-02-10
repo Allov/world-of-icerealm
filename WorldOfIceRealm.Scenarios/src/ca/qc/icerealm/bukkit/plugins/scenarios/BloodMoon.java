@@ -21,8 +21,10 @@ import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.common.WorldClock;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.Scenario;
+import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
+import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 
-public class BloodMoon extends Scenario {
+public class BloodMoon extends Scenario implements TimeObserver {
 
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private boolean _active;
@@ -31,8 +33,8 @@ public class BloodMoon extends Scenario {
 	private long started = 0; 
 	private int lastTimeChecked = -1;
 	private int probability = 10;
-	
-	
+	private long _alarm = 0;
+
 	// 2 = grass
 	// 12 = sand
 	// 3 = dirt
@@ -48,31 +50,49 @@ public class BloodMoon extends Scenario {
 
 	@Override
 	public void triggerScenario() {
-		// TODO Auto-generated method stub
+		// envoi un message sur le serveur pour indiquer un blood moon
 		started = System.currentTimeMillis();
+		getServer().broadcastMessage(ChatColor.RED + "THE BLOOD MOON IS RISING");
+		getServer().broadcastMessage(ChatColor.RED + "GET READY FOR A LOT OF MONSTERS");
 		
+		// 20 secondes avant de partir le spawning!
+		TimeServer.getInstance().addListener(this, 20000);
+		
+		_active = true;
+		
+	}
+	
+	private void triggerMonstersSpawning() {
 		for (Player p : getServer().getOnlinePlayers()) {
 			spawnMonsterCloseToPlayer(p.getLocation());
 			spawnMonsterCloseToPlayer(p.getLocation());
-			
 		}
 		
 		if (listener == null) {
 			listener = new MonsterSpawnListener(this);
 			getServer().getPluginManager().registerEvents(listener, getPlugin());
-		}
-		
-		
-		getServer().broadcastMessage(ChatColor.RED + "THE BLOOD MOON IS RISING");
-		getServer().broadcastMessage(ChatColor.RED + "GET READY FOR A LOT OF MONSTERS");
-		_active = true;
-		
+		}		
+	}
+	
+	@Override
+	public void timeHasCome(long time) {
+		triggerMonstersSpawning();
+	}
+
+	@Override
+	public void setAlaram(long time) {
+		_alarm = time;
+	}
+
+	@Override
+	public long getAlarm() {
+		return _alarm;
 	}
 
 	@Override
 	public void abortScenario() {
 		getPlayers().clear();
-		getServer().broadcastMessage("BloodMoon has been cancelled");
+		getServer().broadcastMessage("BloodMoon as been cancelled");
 		
 	}
 
@@ -86,31 +106,21 @@ public class BloodMoon extends Scenario {
 	public boolean canBeTriggered() {
 
 		if (_active) {
-			//this.logger.info("active true");
 			return false;
 		}
 			
-
 		if (started + coolDown > System.currentTimeMillis()) {
-			//this.logger.info("cool down true");
 			return false;
 		}
 						
-		
 		int currentTime = WorldClock.getHour(getWorld());
 		if (lastTimeChecked == currentTime) {
-			//this.logger.info("lsttime check true");
 			return false;
 		}
-			
-		
+
 		boolean draw = RandomUtil.getDrawResult(probability);
 		lastTimeChecked = currentTime;
-		boolean b  = currentTime == 12 && draw;
-		if (b) {
-			//this.logger.info("bloodmoon must be activated");
-		}
-		return b;
+		return currentTime == 12 && draw;
 	}
 
 	@Override
@@ -122,7 +132,6 @@ public class BloodMoon extends Scenario {
 	public void terminateScenario() {
 		// TODO Auto-generated method stub
 		getServer().broadcastMessage(ChatColor.GREEN + "The light is back!");
-		
 		_active = false;
 	}
 
@@ -135,10 +144,8 @@ public class BloodMoon extends Scenario {
 	@Override
 	public void progressHandler() {
 		// TODO Auto-generated method stub
-		
 	}
 
-	
 	public void spawnMonsterCloseToPlayer(Location l) {
 		String[] monsters = new String[] { "zombie", "skeleton", "spider" };
 		WorldZone exclusion = new WorldZone(l, 7.0);
@@ -192,6 +199,5 @@ class MonsterSpawnListener implements Listener {
 		if (_moon.isTriggered() && event.getEntity() instanceof Monster) {
 			_moon.spawnMonsterCloseToPlayer(event.getEntity().getLocation());
 		}
-		
 	}
 }
