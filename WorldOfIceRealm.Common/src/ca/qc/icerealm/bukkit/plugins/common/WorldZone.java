@@ -127,20 +127,7 @@ public class WorldZone {
 		
 		return loc;
 	}
-	
-	public List<Location> getPerimeter() {
-		List<Location> locations = new ArrayList<Location>();
-		/*
-		for (double x = _leftTop.getX(); x <= _rightBottom.getX(); x += 1.0) {
-			locations.add(new Location(_leftTop.getWorld(), x, _rightBottom.getY(), _leftTop.getZ()));
-		}
 		
-		for (double y = _leftTop.getX())
-		*/
-		
-		return locations;
-	}
-	
 	@Override 
 	public String toString() {
 		return "Top Left (" + _leftTop.getX() + "," + _leftTop.getZ() + " Right Bottom (" + _rightBottom.getX() + "," + _rightBottom.getZ();
