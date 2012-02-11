@@ -42,7 +42,6 @@ public class ZoneServer implements ZoneSubject {
 	
 	@Override
 	public void addListener(ZoneObserver obs) {
-		this.logger.info("fdskjldfsjkl");
 		if (obs != null) {
 			_observers.add(obs);	
 		}

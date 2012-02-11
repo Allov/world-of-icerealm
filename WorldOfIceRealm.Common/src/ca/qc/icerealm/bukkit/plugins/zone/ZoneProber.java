@@ -2,10 +2,7 @@ package ca.qc.icerealm.bukkit.plugins.zone;
 
 import java.util.HashMap;
 import java.util.logging.Logger;
-
 import org.bukkit.entity.Player;
-
-import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 
 public class ZoneProber implements Runnable {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
@@ -27,10 +24,10 @@ public class ZoneProber implements Runnable {
 				
 				for (Player p : players) {
 				
+					
 					if (zone.getWorldZone().isInside(p.getLocation()) && !_playersInZone.containsKey(p)) {
 						zone.playerEntered(p);
 						_playersInZone.put(p, zone);
-						this.logger.info(String.valueOf((_playersInZone.size())));
 					}
 				}
 			}
@@ -41,7 +38,6 @@ public class ZoneProber implements Runnable {
 				if (zone != null && !zone.getWorldZone().isInside(p.getLocation())) {
 					zone.playerLeft(p);
 					_playersInZone.remove(p);
-					this.logger.info(String.valueOf((_playersInZone.size())));
 				}
 			}
 			
