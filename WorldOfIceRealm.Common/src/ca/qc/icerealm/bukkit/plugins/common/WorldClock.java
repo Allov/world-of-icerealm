@@ -10,7 +10,6 @@ public class WorldClock {
 	
 	public static int getHour(World w) {
 		return (int)(w.getTime() / 1000);
-		
 	}
 	
 }

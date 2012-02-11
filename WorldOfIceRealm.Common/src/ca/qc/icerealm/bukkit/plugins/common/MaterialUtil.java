@@ -9,6 +9,24 @@ public class MaterialUtil
 		return name.replace('_', ' ').toLowerCase();		
 	}
 	
+	public static boolean isCookable(Material item)
+	{
+		return item.equals(Material.PORK) ||
+				   item.equals(Material.RAW_BEEF) ||
+				   item.equals(Material.RAW_CHICKEN) ||
+				   item.equals(Material.RAW_FISH);
+	}
+	
+	public static Material getCookableEquivalence(Material item)
+	{
+		if (item.equals(Material.PORK)) return Material.GRILLED_PORK;
+		if (item.equals(Material.RAW_BEEF)) return Material.COOKED_BEEF;
+		if (item.equals(Material.RAW_CHICKEN)) return Material.COOKED_CHICKEN;
+		if (item.equals(Material.RAW_FISH)) return Material.COOKED_FISH;
+		
+		return null;
+	}
+	
 	public static boolean isSword(Material item)
     {
 		return item.equals(Material.GOLD_SWORD) ||
@@ -43,6 +61,38 @@ public class MaterialUtil
 				   item.equals(Material.DIAMOND_LEGGINGS);
     }
 	
+	public static boolean isHelmet(Material item)
+    {
+		return item.equals(Material.GOLD_HELMET) ||
+				   item.equals(Material.LEATHER_HELMET) ||
+				   item.equals(Material.IRON_HELMET) ||
+				   item.equals(Material.DIAMOND_HELMET);
+    }
+	
+	public static boolean isBoots(Material item)
+    {
+		return item.equals(Material.GOLD_BOOTS) ||
+				   item.equals(Material.LEATHER_BOOTS) ||
+				   item.equals(Material.IRON_BOOTS) ||
+				   item.equals(Material.DIAMOND_BOOTS);
+    }
+	
+	public static boolean isLeggings(Material item)
+    {
+		return item.equals(Material.GOLD_LEGGINGS) ||
+				   item.equals(Material.LEATHER_LEGGINGS) ||
+				   item.equals(Material.IRON_LEGGINGS) ||
+				   item.equals(Material.DIAMOND_LEGGINGS);
+    }
+	
+	public static boolean isChestplate(Material item)
+    {
+		return item.equals(Material.GOLD_CHESTPLATE) ||
+				   item.equals(Material.LEATHER_CHESTPLATE) ||
+				   item.equals(Material.IRON_CHESTPLATE) ||
+				   item.equals(Material.DIAMOND_CHESTPLATE);
+    }
+
 	public static boolean isTool(Material item)
     {
 		return item.equals(Material.GOLD_PICKAXE) ||
@@ -92,6 +142,18 @@ public class MaterialUtil
 				{
 					Enchantment.PROTECTION_ENVIRONMENTAL,
 					Enchantment.PROTECTION_EXPLOSIONS,
+					Enchantment.PROTECTION_FIRE,
+					Enchantment.PROTECTION_PROJECTILE
+				};
+		return list;
+	}
+	
+	public static Enchantment[] getBootsEnchantments()
+	{
+		Enchantment[] list = new Enchantment[]
+				{
+					Enchantment.PROTECTION_ENVIRONMENTAL,
+					Enchantment.PROTECTION_EXPLOSIONS,
 					Enchantment.PROTECTION_FALL,
 					Enchantment.PROTECTION_FIRE,
 					Enchantment.PROTECTION_PROJECTILE
@@ -99,7 +161,7 @@ public class MaterialUtil
 		return list;
 	}
 	
-	public static Enchantment[] getArmorNonProtectionEnchantments()
+	public static Enchantment[] getHelmetOnlyEnchantments()
 	{
 		Enchantment[] list = new Enchantment[]
 				{
