@@ -1,0 +1,6 @@
+name: WoI.BoatRace
+main: ca.qc.icerealm.bukkit.plugins.race.BoatRace
+version: 1.0.0
+description: An amusing boat race
+author: punihser_malade
+
