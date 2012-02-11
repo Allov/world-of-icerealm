@@ -54,30 +54,39 @@ public class EnchantmentsRandomizer
 		{
 			if (MaterialUtil.isArmor(item))
 			{
-				//this.logger.info("randomize armor");
-				enchantmentList = randomizeArmor();
+				if (MaterialUtil.isHelmet(item))
+				{
+					// Logique custom
+					enchantmentList = randomizeHelmet();
+				}
+				else if (MaterialUtil.isBoots(item))
+				{
+					enchantmentList = randomize(MaterialUtil.getBootsEnchantments());
+				}
+				else
+				{
+					enchantmentList = randomize(MaterialUtil.getArmorProtectionEnchantments());
+				}
 			}
 			else if (MaterialUtil.isSword(item))
 			{
-				//this.logger.info("randomize sword");
+				// Logique custom
 				enchantmentList = randomizeSword();
 			}
 			else if (MaterialUtil.isBow(item))
 			{
-				//this.logger.info("randomize bow");
-				enchantmentList = randomizeBow();
+				enchantmentList = randomize(MaterialUtil.getBowEnchantments());
 			}
 			else if (MaterialUtil.isEnchantableTool(item))
 			{
-				//this.logger.info("randomize tool");
-				enchantmentList = randomizeTool();
+				enchantmentList = randomize(MaterialUtil.getToolsEnchantments());
 			}
 		}
 		
 		return enchantmentList;
 	}
 	
-	private ArrayList<EnchantmentResult> randomizeArmor()
+	private ArrayList<EnchantmentResult> randomizeHelmet()
 	{
 		ArrayList<EnchantmentResult> enchantmentList = new ArrayList<EnchantmentResult>();
 		
@@ -90,7 +99,7 @@ public class EnchantmentsRandomizer
 				// divide by total number of enchantment
 				double result = Math.random() * 100;
 				
-				if (result <= (odds.getPercentageEnchantments()[level-1] / ((double) (MaterialUtil.getArmorNonProtectionEnchantments().length + MaterialUtil.getArmorProtectionEnchantments().length))) 
+				if (result <= (odds.getPercentageEnchantments()[level-1] / ((double) (MaterialUtil.getHelmetOnlyEnchantments().length + MaterialUtil.getArmorProtectionEnchantments().length))) 
 					 && !enchantmentExists(enchantmentList, MaterialUtil.getArmorProtectionEnchantments()[i])
 					 && level <= MaterialUtil.getArmorProtectionEnchantments()[i].getMaxLevel())
 				{
@@ -100,23 +109,25 @@ public class EnchantmentsRandomizer
 				}
 			}
 			
-			for (int i = 0; i < MaterialUtil.getArmorNonProtectionEnchantments().length; i++)
+			for (int i = 0; i < MaterialUtil.getHelmetOnlyEnchantments().length; i++)
 			{			
 				// Loop into all type of enchantments for this material
 				// divide by total number of enchantment
 				double result = Math.random() * 100;
 				
-				if (result <= (odds.getPercentageEnchantments()[level-1] / ((double) (MaterialUtil.getArmorNonProtectionEnchantments().length + MaterialUtil.getArmorProtectionEnchantments().length)))
-						&& !enchantmentExists(enchantmentList, MaterialUtil.getArmorNonProtectionEnchantments()[i])
-						&& level <= MaterialUtil.getArmorNonProtectionEnchantments()[i].getMaxLevel())
+				if (result <= (odds.getPercentageEnchantments()[level-1] / ((double) (MaterialUtil.getHelmetOnlyEnchantments().length + MaterialUtil.getArmorProtectionEnchantments().length)))
+						&& !enchantmentExists(enchantmentList, MaterialUtil.getHelmetOnlyEnchantments()[i])
+						&& level <= MaterialUtil.getHelmetOnlyEnchantments()[i].getMaxLevel())
 				{
-					enchantmentList.add(new EnchantmentResult(MaterialUtil.getArmorNonProtectionEnchantments()[i], level));
+					enchantmentList.add(new EnchantmentResult(MaterialUtil.getHelmetOnlyEnchantments()[i], level));
 				}
 			}
 		}
 		
 		return enchantmentList;
 	}
+	
+	
 	
 	private ArrayList<EnchantmentResult> randomizeSword()
 	{
@@ -159,32 +170,7 @@ public class EnchantmentsRandomizer
 		return enchantmentList;
 	}
 	
-	private ArrayList<EnchantmentResult> randomizeBow()
-	{
-		ArrayList<EnchantmentResult> enchantmentList = new ArrayList<EnchantmentResult>();
-		
-		// Start from maximum level
-		for (int level = odds.getPercentageEnchantments().length; level > 0; level--)
-		{		
-			for (int i = 0; i < MaterialUtil.getBowEnchantments().length; i++)
-			{			
-				// Loop into all type of enchantments for this material
-				// divide by total number of enchantment
-				double result = Math.random() * 100;
-				
-				if (result <= (odds.getPercentageEnchantments()[level-1] / ((double) (MaterialUtil.getBowEnchantments().length)))
-						&& !enchantmentExists(enchantmentList, MaterialUtil.getBowEnchantments()[i])
-						&& level <= MaterialUtil.getBowEnchantments()[i].getMaxLevel())
-				{
-					enchantmentList.add(new EnchantmentResult(MaterialUtil.getBowEnchantments()[i], level));
-				}
-			}
-		}
-		
-		return enchantmentList;
-	}
-	
-	private ArrayList<EnchantmentResult> randomizeTool()
+	private ArrayList<EnchantmentResult> randomize(Enchantment[] enchantments)
 	{
 		ArrayList<EnchantmentResult> enchantmentList = new ArrayList<EnchantmentResult>();
 		
@@ -192,22 +178,17 @@ public class EnchantmentsRandomizer
 		for (int level = odds.getPercentageEnchantments().length; level > 0; level--)
 		{		
 			//this.logger.info("level: " + level);
-			for (int i = 0; i < MaterialUtil.getToolsEnchantments().length; i++)
+			for (int i = 0; i < enchantments.length; i++)
 			{	
 				// Loop into all type of enchantments for this material
 				// divide by total number of enchantment
 				double result = Math.random() * 100;
 				
-			/*	this.logger.info("result: " + result);
-				this.logger.info("odds.getPercentageEnchantments()[level]: " +  (odds.getPercentageEnchantments()[level-1] / ((double) (MaterialUtil.getToolsEnchantments().length))));
-				this.logger.info("exists: " + enchantmentExists(enchantmentList, MaterialUtil.getToolsEnchantments()[i]));
-				this.logger.info("isNotMaxlevel: " + (level <= MaterialUtil.getToolsEnchantments()[i].getMaxLevel()));
-				*/
-				if (result <= (odds.getPercentageEnchantments()[level-1] / ((double) (MaterialUtil.getToolsEnchantments().length)))
-						&& !enchantmentExists(enchantmentList, MaterialUtil.getToolsEnchantments()[i])
-						&& level <= MaterialUtil.getToolsEnchantments()[i].getMaxLevel())
+				if (result <= (odds.getPercentageEnchantments()[level-1] / ((double) (enchantments.length)))
+						&& !enchantmentExists(enchantmentList, enchantments[i])
+						&& level <= enchantments[i].getMaxLevel())
 				{
-					enchantmentList.add(new EnchantmentResult(MaterialUtil.getToolsEnchantments()[i], level));
+					enchantmentList.add(new EnchantmentResult(enchantments[i], level));
 				}
 			}
 		}

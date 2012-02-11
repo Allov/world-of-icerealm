@@ -10,9 +10,9 @@ import ca.qc.icerealm.bukkit.plugins.raredrops.enchantment.EnchantmentsOdds;
 public class RareDropsFactory 
 {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
-	private int oddsMultiplier = 1;
+	private double oddsMultiplier = 1;
 		
-	public int getOddsMultiplier() 
+	public double getOddsMultiplier() 
 	{
 		return oddsMultiplier;
 	}
@@ -27,7 +27,7 @@ public class RareDropsFactory
 		
 	}
 	
-	public RareDropsFactory(int _oddsMultiplier)
+	public RareDropsFactory(double _oddsMultiplier)
 	{
 		oddsMultiplier = _oddsMultiplier;
 	}

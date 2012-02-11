@@ -1,7 +1,5 @@
 package ca.qc.icerealm.bukkit.plugins.raredrops.enchantment;
 
-import org.bukkit.Material;
-
 public class EnchantmentsOdds 
 {
 	public static final double[] AVERAGE_ODDS = new double[]{30.00, 15.00, 5.00};
