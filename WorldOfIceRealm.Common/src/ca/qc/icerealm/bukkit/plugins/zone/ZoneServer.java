@@ -43,7 +43,7 @@ public class ZoneServer implements ZoneSubject {
 	@Override
 	public void addListener(ZoneObserver obs) {
 		if (obs != null) {
-			_observers.add(obs);	
+			_observers.add(obs);
 		}
 	}
 
