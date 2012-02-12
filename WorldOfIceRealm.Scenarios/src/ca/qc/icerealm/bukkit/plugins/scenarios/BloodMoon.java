@@ -36,12 +36,12 @@ public class BloodMoon extends Scenario implements TimeObserver {
 	private long _alarm = 0;
 
 	// 2 = grass
-	// 12 = sand
-	// 3 = dirt
-	// 18 = leaf
-	// 31 = tall grass
-	// 13 = gravel
-	private int[] validBlockRaw = new int[] { 2, 12, 3, 18, 31, 13 };
+		// 12 = sand
+		// 3 = dirt
+		// 18 = leaf
+		// 31 = tall grass
+		// 13 = gravel
+		private int[] validBlockRaw = new int[] { 2, 12, 3, 18, 31, 13 };
 	
 	@Override
 	public boolean isTriggered() {

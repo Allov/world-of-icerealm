@@ -4,13 +4,10 @@ import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.CreatureType;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.common.WorldClock;
@@ -28,8 +25,7 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 	// le nombre de millisecond avant de spawner autour du joueur
 	private final long _delay = 20000; // 20 sec
 	
-	
-	
+
 	// le id des blocks valides
 	// 2 = grass
 	// 12 = sand
@@ -59,6 +55,11 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 	public void onEnable() {
 		getCommand("bm").setExecutor(new BloodMoonCommander(this));
 		initializeTimer();
+		
+		if (_listener == null) {
+			_listener = new MonsterSpawnListener(this);
+			getServer().getPluginManager().registerEvents(_listener, this);
+		}
 	}
 
 	@Override
@@ -91,6 +92,11 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 	}
 	
 	public void initializeTimer() {
+		
+		if (_starter != null) {
+			TimeServer.getInstance().removeListener(_starter);
+		}
+		
 		// calcul du temps présent et la prochaine alarm
 		_world = this.getServer().getWorld("world");
 		int hour = WorldClock.getHour(_world);
@@ -129,19 +135,15 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 		_starter = new BloodMoonStarter(this);
 		TimeServer.getInstance().addListener(_starter, _delay);
 				
-		if (_listener == null) {
-			_listener = new MonsterSpawnListener(this);
-			getServer().getPluginManager().registerEvents(_listener, this);
-		}	
+			
 		
 		_isActive = true;
 	}
 	
 	public void stopBloodMoon() {
 		_isActive = false;
+		TimeServer.getInstance().removeListener(_starter);
 		getServer().broadcastMessage(ChatColor.DARK_GREEN + "The Blood Moon is now over!");
-		
-		
 	}
 	
 	public boolean isActive() {

@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
+import ca.qc.icerealm.bukkit.plugins.time.SimplePoker;
 import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
 
 public class BloodMoonStarter implements TimeObserver {
@@ -19,13 +20,18 @@ public class BloodMoonStarter implements TimeObserver {
 	
 	@Override
 	public void timeHasCome(long time) {
-
-		_moon.getServer().broadcastMessage(ChatColor.DARK_GREEN + "The monsters are " + ChatColor.RED + " very close!");
+		if (_moon.isActive()) {
+			_moon.getServer().broadcastMessage(ChatColor.DARK_GREEN + "The monsters are " + ChatColor.RED + " very close!");
+			for (Player p : _moon.getServer().getOnlinePlayers()) {
+				_moon.spawnMonsterCloseToPlayer(p.getLocation());
+				_moon.spawnMonsterCloseToPlayer(p.getLocation());
+			}
+		}
 		
-		for (Player p : _moon.getServer().getOnlinePlayers()) {
-			_moon.spawnMonsterCloseToPlayer(p.getLocation());
-			_moon.spawnMonsterCloseToPlayer(p.getLocation());
-		}		
+		
+		
+		
+				
 	}
 
 	@Override
