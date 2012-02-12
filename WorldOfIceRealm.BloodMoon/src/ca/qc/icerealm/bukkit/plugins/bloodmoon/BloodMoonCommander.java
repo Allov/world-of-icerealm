@@ -38,6 +38,7 @@ public class BloodMoonCommander implements CommandExecutor {
 			}
 			if (arg3.length > 0 && arg3[0].contains("reset")) {				
 				_moon.initializeTimer();
+				arg0.sendMessage(ChatColor.DARK_GREEN + "Blood Moon Timer resetted");
 			}
 			if (arg3.length > 0 && arg3[0].contains("status")) {				
 				arg0.sendMessage(ChatColor.DARK_GREEN + "Blood Moon Status: " + ChatColor.YELLOW + _moon.isActive());
@@ -73,6 +74,9 @@ public class BloodMoonCommander implements CommandExecutor {
 				arg0.getServer().broadcastMessage(ChatColor.AQUA + "Blood Moon Plugin is hardreseting");
 				_moon.onDisable();
 				_moon.onEnable();
+			}
+			if (arg3.length == 1 && arg3[0].contains("time")) {
+				arg0.sendMessage(ChatColor.DARK_GREEN + "World time: " + ChatColor.YELLOW + "1/" + ChatColor.GOLD + arg0.getServer().getWorld("world").getTime());
 			}
 
 		}
