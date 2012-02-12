@@ -82,11 +82,11 @@ class ScenarioEngine {
 			
 			_builder = new ScenarioBuilder(plugin.getDataFolder() + "scenarios.yml", _currentServer, _normalWorld, plugin);
 			_scenarios = _builder.getScenariosFromConfigFile();	
-			
+			/*
 			Scenario s = new BloodMoon();
 			_builder.initializeScenario(s);
 			_timedScenarios.add(s);
-			
+			*/
 			Scenario ft = new FishingTournament();
 			_builder.initializeScenario(ft);
 			_timedScenarios.add(ft);
