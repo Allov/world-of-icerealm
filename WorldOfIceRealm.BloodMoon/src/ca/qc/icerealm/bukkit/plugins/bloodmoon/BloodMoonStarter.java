@@ -6,7 +6,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
-import ca.qc.icerealm.bukkit.plugins.time.SimplePoker;
 import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
 
 public class BloodMoonStarter implements TimeObserver {

@@ -34,9 +34,43 @@ public class BloodMoonCommander implements CommandExecutor {
 				_moon.initializeTimer();
 			}
 			if (arg3.length > 0 && arg3[0].contains("status")) {				
-				arg0.sendMessage(ChatColor.DARK_GREEN + "Blood Moon Status: " + ChatColor.GRAY + _moon.isActive());
+				arg0.sendMessage(ChatColor.DARK_GREEN + "Blood Moon Status: " + ChatColor.YELLOW + _moon.isActive());
 			}
 			
+			if (arg3.length == 1 && arg3[0].contains("delay")) {
+				arg0.sendMessage(ChatColor.DARK_GREEN + "Blood Moon Delay: " + ChatColor.YELLOW + _moon.getDelay() + "ms");
+			}
+			if (arg3.length == 2 && arg3[0].contains("delay")) {
+				try {
+					long d = Long.parseLong(arg3[1]);
+					_moon.setDelay(d);
+					arg0.sendMessage(ChatColor.DARK_GREEN + "Blood Moon Delay changed to: " + ChatColor.YELLOW + _moon.getDelay() + " ms");
+				}
+				catch (Exception ex) {
+					arg0.sendMessage(ChatColor.GRAY + "Value was not valid");
+				}
+				
+				
+			}
+			if (arg3.length == 1 && arg3[0].contains("prob")) {
+				arg0.sendMessage(ChatColor.DARK_GREEN + "Blood Moon Prob: " + ChatColor.YELLOW + "1/" + ChatColor.GOLD + _moon.getProbability());
+			}
+			if (arg3.length == 2 && arg3[0].contains("prob")) {
+				try {
+					int d = Integer.parseInt(arg3[1]);
+					_moon.setProbability(d);
+					arg0.sendMessage(ChatColor.DARK_GREEN + "Blood Moon Prob: " + ChatColor.YELLOW + "1/" + ChatColor.GOLD + _moon.getProbability());
+				}
+				catch (Exception ex) {
+					arg0.sendMessage(ChatColor.GRAY + "Value was not valid");
+				}
+			}
+			if (arg3.length == 1 && arg3[0].contains("hardreset")) {
+				arg0.getServer().broadcastMessage(ChatColor.YELLOW + "Blood Moon Plugin is hardreseting");
+				_moon.onDisable();
+				_moon.onEnable();
+			}
+
 		}
 		else 
 		{
