@@ -24,10 +24,9 @@ public class TimeServer implements TimeSubject {
 		}
 		return _instance;
 	}
-	
-	
+
 	@Override
-	public void addListener(TimeObserver obs, long when) {
+	public void addListener(TimeObserver obs, long when) {	
 		if (_observers != null) {
 			obs.setAlaram(when + System.currentTimeMillis());
 			_observers.add(obs);
@@ -40,11 +39,16 @@ public class TimeServer implements TimeSubject {
 				_thread = new Thread(_loop);
 				_thread.start();
 			}
-
 		}
 		
 	}
 	
+	public void removeListener(TimeObserver obs) {
+		if (obs != null && _observers.contains(obs)) {
+			_observers.remove(obs);
+		}
+	}
+
 	public List<TimeObserver> getDueListener(long timeStamp)  {
 		List<TimeObserver> list = new ArrayList<TimeObserver>();
 		for (TimeObserver t : _observers) {
@@ -57,7 +61,10 @@ public class TimeServer implements TimeSubject {
 	}
 	
 	public void removeListener(List<TimeObserver> observer) {
-		_observers.removeAll(observer);
+		if (observer != null) {
+			_observers.removeAll(observer);
+		}
+		
 	}
 
 }
