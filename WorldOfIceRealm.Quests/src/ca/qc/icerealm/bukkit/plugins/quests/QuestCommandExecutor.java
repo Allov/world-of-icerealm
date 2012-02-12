@@ -78,12 +78,7 @@ public class QuestCommandExecutor implements CommandExecutor {
 	}
 
 	private void giveQuest(Player player, String questId) {
-		Quest quest = this.quests.getScriptedQuestService().getQuest(player, questId);
-		if (quest != null) {
-			quest.info();
-		} else {
-			player.sendMessage("No such quest.");
-		}
+		this.quests.getScriptedQuestService().assignQuest(player, questId);
 	}
 
 	private void displayQuestLog(Player player) {

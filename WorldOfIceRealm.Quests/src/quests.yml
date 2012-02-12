@@ -6,22 +6,43 @@
 # 59 = cave-spider
 
 # daily quest
-bone_gnaw:
-    group: normal
-    name: A bone to gnaw on
-    messageStart: Skeletons, I hate skeletons! They always look at me from far away shoot me in the knee! Please kill them and gather their bones so I can chew on them. 
-    messageEnd: Great!!! *gnaw* *gnaw* *gnaw*... leave me alone ... *gnaw*   
+#bone_gnaw:
+#    group: normal
+#    name: A bone to gnaw on
+#    messageStart: Skeletons, I hate skeletons! They always look at me from far away shoot me in the knee! Please kill them and gather their bones so I can chew on them. 
+#    messageEnd: Great!!! *gnaw* *gnaw* *gnaw*... leave me alone ... *gnaw*   
+#    daily: true
+#    objectives:
+#        -   type: collect
+#            name: Collect 15 skeletons bones
+#            what: 352
+#            amount: 15
+#            keep: false
+#        -   type: kill
+#            name: Kill 1 skeletons
+#            what: 51
+#            amount: 1
+#    joinFees:
+#        money: 0
+#        level: 0
+#    dropFees:
+#        money: 50
+#        level: 0
+#    rewards:
+#        money: 300
+#        level: 2
+#        items:
+diamonds:
+    group: normal-adventure
+    name: Diamonds!
+    messageStart: There is an ore that everyone wants but that is really really rare to find. It is used to make the sharpest weapons, the strongest armor and the most effective tools. Find it, you'll need it on your quest.  
+    messageEnd: Oooh, shiny!!    
     daily: true
     objectives:
-        -   type: collect
-            name: Collect 15 skeletons bones
-            what: 352
-            amount: 15
-            keep: false
-        -   type: kill
-            name: Kill 1 skeletons
-            what: 51
-            amount: 1
+        -   type: find
+            name: Find 3 diamonds
+            what: 56
+            amount: 3
     joinFees:
         money: 0
         level: 0
@@ -29,36 +50,61 @@ bone_gnaw:
         money: 50
         level: 0
     rewards:
-        money: 300
+        money: 0
         level: 2
         items:
-precious_pearls:
-    group: hard
-    name: Precious pearls
-    messageStart: We're trying to repair an ender portal to get rid of the ender dragon and we're missing pearls. Bring me enderman's pearl and kill some of them while you're at it. 
-    messageEnd: Great work son. Still more work to do, but we're getting there! Here's your reward.
-    daily: true
-    objectives:
-        -   type: collect
-            name: Collect 5 Enderman pearls
-            what: 368
-            amount: 5
-        -   type: kill
-            name: Kill 5 Enderman
-            what: 58
-            amount: 5
-    joinFees:
-        money: 0
-        level: 0
-    dropFees:
-        money: 50
-        level: 0
-    rewards:
-        money: 500
-        level: 5
-        items:
-            - id: 297
-            - amount: 10
+#blue:
+#    group: normal-adventure
+#    name: Into the blue...
+#    messageStart: They say blue ain't no good because it doesn't do anything, but everyone likes blue! I want to set up a shop here. Find me a block of Lapis Lazuli, and I'll pay you handsomely!  
+#    messageEnd: Thank you kind sir! A bit of blue is always a good news, don't you think? 
+#    daily: true
+#    objectives:
+#        -   type: find
+#            name: Find 3 Lapis Lazuli ore
+#            what: 21
+#            amount: 3
+#        -   type: collect
+#            name: Collect 1 Lapis Lazuli block
+#            what: 22
+#            amount: 1
+#    joinFees:
+#        money: 0
+#        level: 0
+#    dropFees:
+#        money: 50
+#        level: 0
+#    rewards:
+#        money: 500
+#        level: 2
+#        items:
+#precious_pearls:
+#    group: hard
+#    name: Precious pearls
+#    messageStart: We're trying to repair an ender portal to get rid of the ender dragon and we're missing pearls. Bring me enderman's pearl and kill some of them while you're at it. 
+#    messageEnd: Great work son. Still more work to do, but we're getting there! Here's your reward.
+#    daily: true
+#    objectives:
+#        -   type: collect
+#            name: Collect 5 Enderman pearls
+#            what: 368
+#            amount: 5
+#        -   type: kill
+#            name: Kill 5 Enderman
+#            what: 58
+#            amount: 5
+#    joinFees:
+#        money: 0
+#        level: 0
+#    dropFees:
+#        money: 50
+#        level: 0
+#    rewards:
+#        money: 500
+#        level: 5
+#        items:
+#            - id: 297
+#            - amount: 10
 castle_siege:
     group: hard
     name: Castle under siege

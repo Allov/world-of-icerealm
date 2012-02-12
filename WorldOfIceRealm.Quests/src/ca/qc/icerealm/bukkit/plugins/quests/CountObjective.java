@@ -67,4 +67,10 @@ public class CountObjective extends Objective {
 				ChatColor.GREEN + " (" + this.getCurrent() + "/" + this.getAmount() + ")" +
 				(isCompleted() ? ChatColor.GRAY + " (COMPLETED)" : "");
 	}
+	
+	@Override
+	public void reset() {
+		super.reset();
+		this.current = 0;
+	}
 }

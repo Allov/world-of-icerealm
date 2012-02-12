@@ -200,7 +200,7 @@ class FishingEventListener implements Listener {
 				scenario.addCatchToPlayer(event.getPlayer());
 			}
 		}
-	}	
+	}
 }
 
 class Catches {

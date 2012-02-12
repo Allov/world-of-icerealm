@@ -100,7 +100,7 @@ class WalkingScenarioObserver implements TimeObserver {
 	}
 
 	@Override
-	public void setAlaram(long time) {
+	public void setAlarm(long time) {
 		// TODO Auto-generated method stub
 		_alarm = time;
 	}
@@ -110,5 +110,4 @@ class WalkingScenarioObserver implements TimeObserver {
 		// TODO Auto-generated method stub
 		return _alarm;
 	}
-	
 }

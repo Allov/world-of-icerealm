@@ -1,6 +1,7 @@
 package ca.qc.icerealm.bukkit.plugins.quests;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -23,6 +24,8 @@ public class Quest implements ObjectiveListener {
 	private Fees joinFees;
 	private Fees dropFees;
 	private Reward reward;
+
+	private long completionTime;
 
 	public Quest(Player player, String key, String name, String messageStart, String messageEnd, boolean daily, Fees joinFees, Fees dropFees, Reward reward) {
 		this.player = player;
@@ -88,6 +91,7 @@ public class Quest implements ObjectiveListener {
 		}
 		
 		completed = true;
+		completionTime = System.currentTimeMillis();
 		
 		// Objectives are done, reward the player;
 		reward.giveTo(player);
@@ -111,5 +115,17 @@ public class Quest implements ObjectiveListener {
 	
 	public String getKey() {
 		return key;
+	}
+
+	public void reset() {
+		completed = false;
+		for (Objective objective : this.objectives) {
+			objective.reset();
+			objective.register(this);
+		}
+	}
+
+	public long getCompletionTime() {
+		return completionTime;
 	}
 }

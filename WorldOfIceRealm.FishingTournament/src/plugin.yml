@@ -1,0 +1,5 @@
+name: WoI.FishingTournament
+main: ca.qc.icerealm.bukkit.plugins.fishingtournament.FishingTournamentPlugin
+version: 0.1.0
+description: World Of IceRealm Fishing Tournament
+author: Allov

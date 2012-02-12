@@ -70,4 +70,8 @@ public abstract class Objective {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	public void reset() {
+		this.setCompleted(false);
+	}
 }

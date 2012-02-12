@@ -80,7 +80,7 @@ public class BloodMoon extends Scenario implements TimeObserver {
 	}
 
 	@Override
-	public void setAlaram(long time) {
+	public void setAlarm(long time) {
 		_alarm = time;
 	}
 
