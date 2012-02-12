@@ -1,0 +1,9 @@
+name: WoI.BloodMoon
+main: ca.qc.icerealm.bukkit.plugins.bloodmoon.BloodMoon
+version: 1.0.0
+description: A terrible Blood Moon
+author: punihser_malade
+
+commands:
+  bm:
+    description: Stop, Start, Reset the BloodMoon, Muse be OP
