@@ -20,7 +20,7 @@ import ca.qc.icerealm.bukkit.plugins.quests.Quests;
 import ca.qc.icerealm.bukkit.plugins.questslog.QuestLog;
 import ca.qc.icerealm.bukkit.plugins.questslog.QuestLogService;
 
-public class BasicQuestService implements QuestService {
+public class RandomQuestService {
 
 	private static final int ItemRewardChances = 10;
 
@@ -42,17 +42,12 @@ public class BasicQuestService implements QuestService {
 	private final QuestLogService questLogService;
 	private Random random;
 	
-	public BasicQuestService(Quests questsPlugin, QuestLogService questLogService) {
+	public RandomQuestService(Quests questsPlugin, QuestLogService questLogService) {
 		this.questsPlugin = questsPlugin;
 		this.questLogService = questLogService;
 		this.random = new Random(Calendar.getInstance().getTimeInMillis());
 	}
 
-	@Override
-	public void LoadQuests() {
-	}
-
-	@Override
 	public Quest getQuest(Player player) {
 		QuestLog questLog = questLogService.getQuestLogForPlayer(player);
 		if (!questLog.isRandomQuestFinished()) {
@@ -79,6 +74,7 @@ public class BasicQuestService implements QuestService {
 	private Quest createQuest(Player player, Reward reward, String questName, int objectivesCount) {
 		Quest quest = new Quest(
 				player, 
+				"random",
 				questName, 
 				ChatColor.DARK_GREEN + "Hey you there with the blocky head, kill " + ChatColor.GREEN + MaxKillCount / objectivesCount + " " + ChatColor.YELLOW + questName + ChatColor.DARK_GREEN + " for me and I'll pay you good!", 
 				ChatColor.DARK_GREEN + "Thanks! Here's what you were waiting for... make good use of it!", 
@@ -91,7 +87,8 @@ public class BasicQuestService implements QuestService {
 
 	private void createObjectives(Player player, int objectivesCount, List<KillObjective> objectives, List<Integer> creaturesToKill, Quest quest) {
 		for (int i = 0; i < objectivesCount; i++) {
-			KillObjective objective = new KillObjective(player, null, MaxKillCount / objectivesCount, creaturesToKill.get(i));
+			int amount = MaxKillCount / objectivesCount;
+			KillObjective objective = new KillObjective(player, "Kill " +  amount + " " + EntityUtilities.getEntityName(creaturesToKill.get(i)), null, amount, creaturesToKill.get(i));
 			objective.register(quest);
 			objectives.add(objective);
 			this.questsPlugin.getServer().getPluginManager().registerEvents(objective, this.questsPlugin);

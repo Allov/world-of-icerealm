@@ -21,7 +21,7 @@ public class QuestLog {
 	}
 	
 	public boolean isRandomQuestFinished() {
-		return randomQuest == null || randomQuest.isDone();
+		return randomQuest == null || randomQuest.isCompleted();
 	}
 
 	public Player getPlayer() {
@@ -32,24 +32,68 @@ public class QuestLog {
 		return this.randomQuest; 
 	}
 	
+	public Quest getQuestByKey(String key) {
+		if (key == "random") {
+			return randomQuest;
+		}		
+		
+		for (Quest quest : this.quests) {
+			if (quest.getKey().equals(key)) {
+				return quest;
+			}
+		}
+
+		for (Quest quest : this.dailyQuests) {
+			if (quest.getKey().equals(key)) {
+				return quest;
+			}
+		}
+		
+		return null;
+	}
+	
 	public void setRandomQuest(Quest quest) {
 		this.randomQuest = quest;
 	}
-
-	public void display(Player player) {
-		if (this.randomQuest != null) {
-			String prefix = ChatColor.LIGHT_PURPLE + "Random Quest: ";
-			displayQuestText(player, prefix, this.randomQuest);
-		}
-		
-		for (Quest quest : this.quests) {
-			String prefix = ChatColor.LIGHT_PURPLE + "Quest: ";
-			displayQuestText(player, prefix, quest);
+	
+	public void addQuest(Quest quest) {
+		if (quest.isDaily()) {
+			this.dailyQuests.add(quest);
+		} else {
+			this.quests.add(quest);
 		}
 	}
 
-	private void displayQuestText(Player player, String prefix, Quest quest) {
-		player.sendMessage(prefix + ChatColor.YELLOW + quest.getName() + 
-				(this.randomQuest.isDone() ? ChatColor.GREEN + "Completed" : ChatColor.RED + "Not completed"));
+	public void display(Player player) {
+		player.sendMessage(ChatColor.LIGHT_PURPLE + "Random Quest: ");
+		if (this.randomQuest != null) {
+			displayQuestText(player, this.randomQuest);
+		} else {
+			player.sendMessage("  > " + ChatColor.GRAY + "No random quest in progress. Type /q to get one.");
+		}
+		
+		player.sendMessage(ChatColor.LIGHT_PURPLE + "Quest: ");
+		for (Quest quest : this.quests) {
+			displayQuestText(player, quest);
+		}
+		
+		if (this.quests.size() == 0) {
+			player.sendMessage("  > " + ChatColor.GRAY + "No quest in progress or completed.");
+		}
+
+		player.sendMessage(ChatColor.LIGHT_PURPLE + "Daily Quest: ");
+		for (Quest quest : this.dailyQuests) {
+			displayQuestText(player, quest);
+		}
+
+		if (this.dailyQuests.size() == 0) {
+			player.sendMessage("  > " + ChatColor.GRAY + "No daily quest in progress or completed.");
+		}
+	}
+
+	private void displayQuestText(Player player, Quest quest) {
+		player.sendMessage(	"  > " + ChatColor.LIGHT_PURPLE + "[" + ChatColor.YELLOW + quest.getKey() + ChatColor.LIGHT_PURPLE +"] " + 
+							ChatColor.DARK_GREEN + quest.getName() + " " + 
+							(quest.isCompleted() ? ChatColor.GREEN + "Completed" : ChatColor.RED + "Not completed"));
 	}
 }

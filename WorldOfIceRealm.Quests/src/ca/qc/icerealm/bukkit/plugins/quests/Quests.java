@@ -1,15 +1,19 @@
 package ca.qc.icerealm.bukkit.plugins.quests;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.Economy;
 
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import ca.qc.icerealm.bukkit.plugins.quests.builder.BasicQuestService;
-import ca.qc.icerealm.bukkit.plugins.quests.builder.QuestService;
+import ca.qc.icerealm.bukkit.plugins.common.ConfigWrapper;
+import ca.qc.icerealm.bukkit.plugins.quests.builder.RandomQuestService;
+import ca.qc.icerealm.bukkit.plugins.quests.builder.ScriptedQuestService;
 import ca.qc.icerealm.bukkit.plugins.questslog.QuestLogService;
 
 public class Quests extends JavaPlugin {
@@ -18,7 +22,8 @@ public class Quests extends JavaPlugin {
 
 	private PluginManager pluginManager;
 	private RegisteredServiceProvider<Economy> economyProvider;
-	private QuestService questService; 
+	private RandomQuestService randomQuestService;
+	private ScriptedQuestService scriptedQuestService;
 	
 	@Override
 	public void onDisable() {
@@ -26,7 +31,7 @@ public class Quests extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		questService = new BasicQuestService(this, QuestLogService.getInstance());
+		initializeQuestServices();
 		pluginManager = getServer().getPluginManager();
 		
 		if(pluginManager.isPluginEnabled("Vault")) {
@@ -35,7 +40,25 @@ public class Quests extends JavaPlugin {
 					.getRegistration(net.milkbowl.vault.economy.Economy.class);
 		}
 		
+		getServer().getPluginManager().registerEvents(new QuestsEventListener(), this);
+		
 		getCommand("q").setExecutor(new QuestCommandExecutor(this));
+	}
+
+	private void initializeQuestServices() {
+		randomQuestService = new RandomQuestService(this, QuestLogService.getInstance());
+		
+		File file = new File(getDataFolder(), "quests.yml"); 
+		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+
+		InputStream defConfigStream = getResource("quests.yml");
+	    if (defConfigStream != null) {
+	        YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+	        config.setDefaults(defConfig);
+	        config.options().copyDefaults(true);
+	    }
+	    
+		scriptedQuestService = new ScriptedQuestService(this, QuestLogService.getInstance(), new ConfigWrapper(config));
 	}
 
 	public RegisteredServiceProvider<Economy> getEconomyProvider() {
@@ -46,7 +69,11 @@ public class Quests extends JavaPlugin {
 		return pluginManager;
 	}
 
-	public QuestService getQuestService() {
-		return questService;
+	public RandomQuestService getRandomQuestService() {
+		return randomQuestService;
+	}
+
+	public ScriptedQuestService getScriptedQuestService() {
+		return scriptedQuestService;
 	}
 }

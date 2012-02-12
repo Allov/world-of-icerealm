@@ -3,42 +3,24 @@ package ca.qc.icerealm.bukkit.plugins.quests;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 
 public abstract class Objective {
 	private WorldZone zone;
-	private int entityId;	
-	private int amount;
-	private int current;
-	private boolean requirementsFulfilled;
-	private List<ObjectiveListener> listeners;
+	private boolean completed;
 	private Player player;
+	private String name;
+
+	protected List<ObjectiveListener> listeners;
 	
-	public Objective(Player player, WorldZone zone, int amount, int entityId) {
+	public Objective(Player player, WorldZone zone, String name) {
 		this.player = player;
 		this.zone = zone;
-		this.amount = amount;
-		this.entityId = entityId;
+		this.setName(name);
 		
 		this.listeners = new CopyOnWriteArrayList<ObjectiveListener>();
-	}
-	
-	public boolean advance(Entity entity) {
-		if (!requirementsFulfilled) {
-			current++;
-			
-			objectiveProgressed(entity);
-			
-			if (current == amount) {
-				requirementsFulfilled = true;
-				objectiveDone();
-			}
-		}
-		
-		return requirementsFulfilled;
 	}
 	
 	public void register(ObjectiveListener listener) {
@@ -49,39 +31,39 @@ public abstract class Objective {
 		this.listeners.remove(listener);
 	}
 	
-	private void objectiveProgressed(Entity entity) {
+	protected void objectiveProgressed() {
 		for (ObjectiveListener listener : this.listeners) {
-			listener.objectiveProgressed(this, entity);
+			listener.objectiveProgressed(this);
 		}
 	}	
 
-	private void objectiveDone() {
+	protected void objectiveCompleted() {
 		for (ObjectiveListener listener : this.listeners) {
-			listener.objectiveDone(this);
+			listener.objectiveCompleted(this);
 		}
 	}
 
-	public boolean isDone() {
-		return requirementsFulfilled;
-	}
-	
-	public int getEntityId() {
-		return entityId;
-	}
-	
 	public WorldZone getZone() {
 		return zone;
 	}
 	
-	public int getAmount() {
-		return amount;
-	}
-	
-	public int getCurrent() {
-		return current;
-	}
-
 	public Player getPlayer() {
 		return player;
+	}
+
+	public boolean isCompleted() {
+		return completed;
+	}
+
+	protected void setCompleted(boolean completed) {
+		this.completed = completed;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

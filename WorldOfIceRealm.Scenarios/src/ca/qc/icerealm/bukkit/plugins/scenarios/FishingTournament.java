@@ -16,6 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import com.avaje.ebeaninternal.server.transaction.TransactionMap.State;
@@ -39,7 +40,7 @@ public class FishingTournament extends Scenario {
 	private final int Half = End / 2;
 	private final int NearEnd = End - 2;
 	private final long TimeBeforeStart = 10000;
-	private final int Reward = 500; 
+	private final int Reward = 300; 
 
 	private RegisteredServiceProvider<Economy> economyProvider;
 	private final Logger logger = Logger.getLogger("Minecraft");
@@ -163,7 +164,15 @@ public class FishingTournament extends Scenario {
 	}
 	
 	public void giveMoneyReward(Player player) {
-		if (this.economyProvider != null) {
+		if (economyProvider == null) {
+			if(getServer().getPluginManager().isPluginEnabled("Vault")) {
+				economyProvider = getServer()
+						.getServicesManager()
+						.getRegistration(net.milkbowl.vault.economy.Economy.class);
+			}
+		}
+		
+		if (economyProvider != null) {
 			Economy economy = economyProvider.getProvider();
 	
 			if (economy.bankBalance(player.getName()) != null) 
@@ -186,8 +195,6 @@ class FishingEventListener implements Listener {
 	public void onFishOn(PlayerFishEvent event) {
 		if (scenario.isTriggered()) {
 			Entity theCatch = event.getCaught();
-			
-
 			
 			if (theCatch instanceof CraftItem) {
 				scenario.addCatchToPlayer(event.getPlayer());

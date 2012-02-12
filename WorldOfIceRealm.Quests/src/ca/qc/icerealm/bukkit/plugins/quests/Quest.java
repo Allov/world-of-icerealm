@@ -5,29 +5,28 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-
-import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 
 public class Quest implements ObjectiveListener {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 
+	private String key;
 	private String name;
 	private String messageStart;
 	private String messageEnd;
 	private boolean daily;
 	private Player player;
-	private boolean done;
+	private boolean completed;
 	
 	private List<Objective> objectives;
 	
 	private Fees joinFees;
 	private Fees dropFees;
 	private Reward reward;
-	
-	public Quest(Player player, String name, String messageStart, String messageEnd, boolean daily, Fees joinFees, Fees dropFees, Reward reward) {
+
+	public Quest(Player player, String key, String name, String messageStart, String messageEnd, boolean daily, Fees joinFees, Fees dropFees, Reward reward) {
 		this.player = player;
+		this.key = key;
 		this.name = name;
 		this.messageStart = messageStart;
 		this.messageEnd = messageEnd;
@@ -49,19 +48,20 @@ public class Quest implements ObjectiveListener {
 		
 	}
 	
-	public boolean isDone() {
-		return done;
+	public boolean isCompleted() {
+		return completed;
 	}
 
-	public void start() {
-		player.sendMessage(ChatColor.LIGHT_PURPLE + "Quest started: " + ChatColor.YELLOW + this.name);
+	public void info() {
+		player.sendMessage(ChatColor.LIGHT_PURPLE + "Quest: " + ChatColor.YELLOW + this.name);
 		player.sendMessage(ChatColor.DARK_GREEN + this.messageStart);
 		player.sendMessage(ChatColor.LIGHT_PURPLE + "Your reward will be: " + this.reward.toString());		
 	}
 
 	@Override
-	public void objectiveProgressed(Objective objective, Entity entity) {
-		this.player.sendMessage(objective.toString() + " " + EntityUtilities.getEntityName(entity));
+	public void objectiveProgressed(Objective objective) {
+		player.sendMessage( ChatColor.LIGHT_PURPLE + "[" + ChatColor.YELLOW + this.name + ChatColor.LIGHT_PURPLE + "] " + 
+							ChatColor.GREEN + " PROGRESS: "  + objective.toString());
 	}
 
 	@Override
@@ -70,17 +70,21 @@ public class Quest implements ObjectiveListener {
 	}
 
 	@Override
-	public void objectiveDone(Objective objective) {
+	public void objectiveCompleted(Objective objective) {
 		for (Objective obj : objectives) {
-			if (!obj.isDone()) {
+			if (!obj.isCompleted()) {
 				return;
 			}
 		}
 		
-		this.done = true;
+		for (Objective obj : objectives) {
+			obj.unregister(this);
+		}
+		
+		completed = true;
 		
 		// Objectives are done, reward the player;
-		this.reward.giveTo(player);
+		reward.giveTo(player);
 		player.sendMessage(this.messageEnd);
 		player.sendMessage(ChatColor.LIGHT_PURPLE + "Quest is " + ChatColor.GREEN + "done" + ChatColor.DARK_GREEN + "!");
 		player.sendMessage(ChatColor.LIGHT_PURPLE + "You received " + this.reward.toString());
@@ -92,6 +96,14 @@ public class Quest implements ObjectiveListener {
 	}
 
 	public String getName() {
-		return this.name;
+		return name;
+	}
+
+	public boolean isDaily() {
+		return daily;
+	}
+	
+	public String getKey() {
+		return key;
 	}
 }

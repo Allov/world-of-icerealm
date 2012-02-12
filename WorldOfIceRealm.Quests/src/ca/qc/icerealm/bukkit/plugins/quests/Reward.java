@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
+import ca.qc.icerealm.bukkit.plugins.common.MaterialUtil;
 
 public class Reward {
 	private int level;
@@ -80,7 +80,7 @@ public class Reward {
 			
 			for (ItemReward item : getItems()) {
 				Material material = Material.getMaterial(item.getId());
-				message = message + ChatColor.GREEN + item.getAmount() + " " + EntityUtilities.getMaterialFriendName(material.name()) + ChatColor.DARK_GREEN + ", ";  
+				message = message + ChatColor.GREEN + item.getAmount() + " " + MaterialUtil.getMaterialFriendName(material.name()) + ChatColor.DARK_GREEN + ", ";  
 			}
 			
 			message = message.substring(0, message.length() - 2);

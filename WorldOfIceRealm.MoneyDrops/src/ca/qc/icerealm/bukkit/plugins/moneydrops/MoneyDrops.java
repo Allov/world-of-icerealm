@@ -12,7 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class MoneyDrops extends JavaPlugin {
 	
-	private final int MaxMoney = 10;
+	private final int MaxMoney = 20;
 
 	public PluginManager pluginManager;
 	private RegisteredServiceProvider<Economy> economyProvider;
@@ -44,9 +44,7 @@ public class MoneyDrops extends JavaPlugin {
 	        {
 				Random random = new Random(Calendar.getInstance().getTimeInMillis());
 				
-				int reward = random.nextInt(MaxMoney-5)+5;
-				
-	        	economy.depositPlayer(player.getName(), reward);
+	        	economy.depositPlayer(player.getName(), MaxMoney);
 	        }
 		}
 	}

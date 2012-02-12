@@ -1,3 +1,4 @@
 name: WoI.RareDrops
 main: ca.qc.icerealm.bukkit.plugins.raredrops.RareDrops
-version: 0.3.0description: World Of IceRealm rare drops on Monster kill
+version: 0.3.0
+description: World Of IceRealm rare drops on Monster kill

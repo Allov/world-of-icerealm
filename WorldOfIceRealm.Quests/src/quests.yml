@@ -1,86 +1,133 @@
-quests:
-    -   group: easy
-        name: Zombies!
-        messageStart: Kill 10 zombies!
-        messageEnd: Thanks!
-        daily: false
-        objectives:
-            -   type: kill
-                what: 54
-                amount: 10
-        joinFee:
-            -   money: 0
-            -   level: 0
-        dropFee:
-            -   money: 50
-            -   level: 0
-        rewards:
-            -   money: 100
-            -   level: 1
-    -   group: easy
-        name: Creepers!
-        messageStart: Kill 10 creepers!
-        messageEnd: Thanks!
-        daily: false
-        objectives:
-            -   type: kill
-                what: 50
-                amount: 10
-        joinFee:
-            -   money: 0
-            -   level: 0
-        dropFee:
-            -   money: 50
-            -   level: 0
-        rewards:
-            -   money: 200
-            -   level: 2
-    -   group: average
-        name: Creepers 'n bits!
-        messageStart: Kill 10 creepers and collect 10 rotten flesh!
-        messageEnd: Thanks!
-        daily: true
-        objectives:
-            -   type: kill
-                what: 50
-                amount: 10
-            -   type: collect 
-                what: 367
-                amount: 10
-        joinFee:
-            -   money: 0
-            -   level: 0
-        dropFee:
-            -   money: 50
-            -   level: 0
-        rewards:
-            -   money: 200
-            -   level: 2
-            -   items:
-                -   id: 267
-                    amount: 1
-    -   group: hard
-        name: Castle under siege!
-        messageStart: Kill 30 zombies at the Castle!
-        messageEnd: Thanks!
-        zone: -57,756,127,1108
-        daily: true
-        objectives:
-            -   type: kill
-                what: 50
-                amount: 10
-            -   type: collect 
-                what: 367
-                amount: 10
-        joinFee:
-            -   money: 0
-            -   level: 0
-        dropFee:
-            -   money: 50
-            -   level: 0
-        rewards:
-            -   money: 200
-            -   level: 2
-            -   items:
-                -   id: 322
-                    amount: 5
+# 50 = creeper
+# 51 = skeleton
+# 52 = spiders
+# 54 = zombie
+# 58 = enderman
+# 59 = cave-spider
+
+# daily quest
+bone_gnaw:
+    group: easy
+    name: A bone to gnaw on
+    messageStart: Skeletons, I hate skeletons! They always look at me from far away shoot me in the knee! Please kill them and gather their bones so I can chew on them. 
+    messageEnd: Great!!! *gnaw* *gnaw* *gnaw*... leave me alone ... *gnaw*   
+    daily: true
+    objectives:
+        -   type: collect
+            name: Collect 15 skeletons bones
+            what: 352
+            amount: 15
+        -   type: kill
+            name: Kill 8 skeletons
+            what: 51
+            amount: 8
+    joinFees:
+        money: 0
+        level: 0
+    dropFees:
+        money: 50
+        level: 0
+    rewards:
+        money: 300
+        level: 2
+        items:
+first_tools:
+    group: easy
+    name: Your first tools
+    messageStart: You should start by gathering some wood to build a crafting table. 
+    messageEnd: Great.   
+    daily: true
+    objectives:
+        -   type: collect
+            name: Collect 12 oak woods
+            what: 17
+            amount: 12
+    joinFees:
+        money: 0
+        level: 0
+    dropFees:
+        money: 0
+        level: 0
+    rewards:
+        money: 0
+        level: 1
+        items:
+
+precious_pearls:
+    group: hard
+    name: Precious pearls
+    messageStart: We're trying to repair an ender portal to get rid of the ender dragon and we're missing pearls. Bring me enderman's pearl and kill some of them while you're at it. 
+    messageEnd: Great work son. Still more work to do, but we're getting there! Here's your reward.
+    daily: true
+    objectives:
+        -   type: collect
+            name: Collect 5 Enderman pearls
+            what: 368
+            amount: 5
+        -   type: kill
+            name: Kill 5 Enderman
+            what: 58
+            amount: 5
+    joinFees:
+        money: 0
+        level: 0
+    dropFees:
+        money: 50
+        level: 0
+    rewards:
+        money: 500
+        level: 5
+        items:
+            - id: 297
+            - amount: 10
+castle_siege:
+    group: hard
+    name: Castle under siege
+    messageStart: Crazy I tell you, he wouldn't listen to me and now it's out of control. He opened the portal; He did it! Now the sky is filled with obsidian and darkness reign on the kingdom. Please noble warrior, help us drive the evil force out this place!   
+    messageEnd: What? An ender dragon? It can't be... I need to warn everyone! WE'RE DOOMED!
+    daily: true
+    objectives:
+        -   type: kill
+            name: Kill 50 monsters at the castle
+            what: 50,51,52,54,58
+            zone: -227,-890,135,-580,0,128
+            amount: 50
+    joinFees:
+        money: 0
+        level: 0
+    dropFees:
+        money: 50
+        level: 0
+    rewards:
+        money: 750
+        level: 8
+        items:
+            - id: 322
+            - amount: 5
+
+# scenario based quests        
+haunted_post:
+    group: haunted-post
+    name: A haunted post
+    messageStart: Have you ever heard of a haunted post? Not so far away from here is a post that is known to be haunted. HAUNTED I TELL YOU!! Go there at your own risk. 
+    messageEnd: You've shown a lot of courage there son. 
+    daily: false
+    objectives:
+        -   type: zone
+            name: Investigate Haunted Post
+            zone: 366,181,369,184,0,128
+        -   type: kill
+            name: Kill 10 monsters
+            zone: 347,168,386,201,0,128
+            what: 51,52,54,58
+            amount: 10
+    joinFees:
+        money: 0
+        level: 0
+    dropFees:
+        money: 50
+        level: 0
+    rewards:
+        money: 400
+        level: 5
+        items:
