@@ -86,7 +86,7 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 			// on veut se faire poker a la fin de la journée
 			displayListenerAddition("blood moon stopping", newAlarm);
 		}
-		else if (!_isActive) {
+		else {
 			boolean draw = RandomUtil.getDrawResult(_probability);
 			if (draw) {
 				startBloodMoon();
@@ -107,16 +107,20 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 	
 	public void initializeTimer() {
 		
-		if (_starter != null) {
-			TimeServer.getInstance().removeListener(_starter);
-		}
 		
+		TimeServer.getInstance().removeListener(_starter);
+		TimeServer.getInstance().removeListener(this);
+
 		// calcul du temps présent et la prochaine alarm
 		_world = this.getServer().getWorld("world");
 		int hour = WorldClock.getHour(_world);
 		long alarm = 0;
 		
-		if (hour < 12) {
+		if (_isActive) {
+			int untilNight =  24 - hour;
+			alarm = untilNight * _msInMinecraftHour;
+		}
+		else if (hour < 12) {
 			int untilNight = 12 - hour;
 			alarm = untilNight * _msInMinecraftHour;
 		}

@@ -25,12 +25,7 @@ public class BloodMoonStarter implements TimeObserver {
 				_moon.spawnMonsterCloseToPlayer(p.getLocation());
 				_moon.spawnMonsterCloseToPlayer(p.getLocation());
 			}
-		}
-		
-		
-		
-		
-				
+		}			
 	}
 
 	@Override

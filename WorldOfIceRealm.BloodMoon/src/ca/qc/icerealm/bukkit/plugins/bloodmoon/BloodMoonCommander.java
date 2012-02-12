@@ -19,7 +19,13 @@ public class BloodMoonCommander implements CommandExecutor {
 			String[] arg3) {
 		
 		if (arg0.isOp()) {
-			
+			if (arg3.length > 0 && (arg3[0].contains("help") || arg3[0].contains("?"))) {
+				arg0.sendMessage(ChatColor.DARK_GREEN + "/bm start|stop -" + ChatColor.YELLOW + "Start/Stop a BloodMoon");
+				arg0.sendMessage(ChatColor.DARK_GREEN + "/bm reset - " + ChatColor.YELLOW + "Reset timer");
+				arg0.sendMessage(ChatColor.DARK_GREEN + "/bm delay [n] - " + ChatColor.YELLOW + "get/set the first wave delay");
+				arg0.sendMessage(ChatColor.DARK_GREEN + "/bm prob [n] - " + ChatColor.YELLOW + "get/set the probabiliy");
+				arg0.sendMessage(ChatColor.DARK_GREEN + "/bm hardreset - " + ChatColor.YELLOW + "Call onDisable and onEnabled ");
+			}
 			if (arg3.length > 0 && arg3[0].contains("stop")) {				
 				if (_moon.isActive()) {
 					_moon.stopBloodMoon();
@@ -48,9 +54,7 @@ public class BloodMoonCommander implements CommandExecutor {
 				}
 				catch (Exception ex) {
 					arg0.sendMessage(ChatColor.GRAY + "Value was not valid");
-				}
-				
-				
+				}			
 			}
 			if (arg3.length == 1 && arg3[0].contains("prob")) {
 				arg0.sendMessage(ChatColor.DARK_GREEN + "Blood Moon Prob: " + ChatColor.YELLOW + "1/" + ChatColor.GOLD + _moon.getProbability());
@@ -66,7 +70,7 @@ public class BloodMoonCommander implements CommandExecutor {
 				}
 			}
 			if (arg3.length == 1 && arg3[0].contains("hardreset")) {
-				arg0.getServer().broadcastMessage(ChatColor.YELLOW + "Blood Moon Plugin is hardreseting");
+				arg0.getServer().broadcastMessage(ChatColor.AQUA + "Blood Moon Plugin is hardreseting");
 				_moon.onDisable();
 				_moon.onEnable();
 			}
