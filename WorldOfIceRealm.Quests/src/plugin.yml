@@ -1,6 +1,6 @@
 name: WoI.Quests
 main: ca.qc.icerealm.bukkit.plugins.quests.Quests
-version: 0.1.0
+version: 0.2.0
 description: World Of IceRealm Quests
 author: Allov
 softdepend: [Vault]

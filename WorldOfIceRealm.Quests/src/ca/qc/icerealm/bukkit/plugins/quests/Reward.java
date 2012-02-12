@@ -1,6 +1,7 @@
 package ca.qc.icerealm.bukkit.plugins.quests;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import net.milkbowl.vault.economy.Economy;
@@ -52,7 +53,13 @@ public class Reward {
 				
 				Material material = Material.getMaterial(item.getId());
 				if (material != null) {
-					inventory.addItem(new ItemStack(material, item.getAmount()));
+					ItemStack stack = new ItemStack(material, item.getAmount());
+					
+					HashMap<Integer, ItemStack> leftOvers = inventory.addItem(stack);
+					for (ItemStack itemStack : leftOvers.values()) {
+						player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
+					}
+					
 				}				
 			}
 		}

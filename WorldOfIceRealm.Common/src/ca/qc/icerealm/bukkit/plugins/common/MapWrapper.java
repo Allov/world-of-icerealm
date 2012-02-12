@@ -35,4 +35,21 @@ public class MapWrapper {
 		
 		return map.get(key).toString();
 	}
+
+	public boolean getBoolean(String key, boolean defaultIfNull) {
+		if (!map.containsKey(key)) {
+			return defaultIfNull;
+		}
+		
+		boolean value;
+
+		try	{
+			value = Boolean.parseBoolean(map.get(key).toString());
+		} catch(Exception exception) {
+			Logger.getLogger("MapWrapper").severe("Key: " + key + " is not a valid boolean.");
+			value = defaultIfNull;
+		}
+
+		return value;
+	}
 }

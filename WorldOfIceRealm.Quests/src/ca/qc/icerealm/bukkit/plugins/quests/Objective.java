@@ -42,6 +42,10 @@ public abstract class Objective {
 			listener.objectiveCompleted(this);
 		}
 	}
+	
+	protected void questCompleted() {
+		
+	}
 
 	public WorldZone getZone() {
 		return zone;

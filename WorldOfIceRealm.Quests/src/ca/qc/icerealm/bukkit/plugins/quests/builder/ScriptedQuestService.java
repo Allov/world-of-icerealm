@@ -153,9 +153,10 @@ class ObjectiveFactory {
 			
 			objective = new CollectObjective(
 					player, 
-					zone, 
+					zone,
 					map.getString("name", "N/A"), 
-					map.getInt("amount", 0), 
+					map.getInt("amount", 0),
+					map.getBoolean("keep", false),
 					map.getInt("what", 0));
 			
 			quests.getServer().getPluginManager().registerEvents((CollectObjective)objective, quests);			

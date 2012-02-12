@@ -7,7 +7,7 @@
 
 # daily quest
 bone_gnaw:
-    group: easy
+    group: normal
     name: A bone to gnaw on
     messageStart: Skeletons, I hate skeletons! They always look at me from far away shoot me in the knee! Please kill them and gather their bones so I can chew on them. 
     messageEnd: Great!!! *gnaw* *gnaw* *gnaw*... leave me alone ... *gnaw*   
@@ -17,10 +17,11 @@ bone_gnaw:
             name: Collect 15 skeletons bones
             what: 352
             amount: 15
+            keep: false
         -   type: kill
-            name: Kill 8 skeletons
+            name: Kill 1 skeletons
             what: 51
-            amount: 8
+            amount: 1
     joinFees:
         money: 0
         level: 0
@@ -31,28 +32,6 @@ bone_gnaw:
         money: 300
         level: 2
         items:
-first_tools:
-    group: easy
-    name: Your first tools
-    messageStart: You should start by gathering some wood to build a crafting table. 
-    messageEnd: Great.   
-    daily: true
-    objectives:
-        -   type: collect
-            name: Collect 12 oak woods
-            what: 17
-            amount: 12
-    joinFees:
-        money: 0
-        level: 0
-    dropFees:
-        money: 0
-        level: 0
-    rewards:
-        money: 0
-        level: 1
-        items:
-
 precious_pearls:
     group: hard
     name: Precious pearls
@@ -90,8 +69,8 @@ castle_siege:
         -   type: kill
             name: Kill 50 monsters at the castle
             what: 50,51,52,54,58
-            zone: -227,-890,135,-580,0,128
-            amount: 50
+            zone: -71,-752,127,1121,0,128
+            amount: 1
     joinFees:
         money: 0
         level: 0
@@ -103,7 +82,7 @@ castle_siege:
         level: 8
         items:
             - id: 322
-            - amount: 5
+              amount: 5
 
 # scenario based quests        
 haunted_post:

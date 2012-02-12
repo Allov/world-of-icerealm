@@ -55,6 +55,11 @@ public class Quest implements ObjectiveListener {
 	public void info() {
 		player.sendMessage(ChatColor.LIGHT_PURPLE + "Quest: " + ChatColor.YELLOW + this.name);
 		player.sendMessage(ChatColor.DARK_GREEN + this.messageStart);
+		
+		for (Objective objective : this.objectives) {
+			player.sendMessage("  > " + objective.toString());
+		}
+		
 		player.sendMessage(ChatColor.LIGHT_PURPLE + "Your reward will be: " + this.reward.toString());		
 	}
 
@@ -79,13 +84,14 @@ public class Quest implements ObjectiveListener {
 		
 		for (Objective obj : objectives) {
 			obj.unregister(this);
+			obj.questCompleted();
 		}
 		
 		completed = true;
 		
 		// Objectives are done, reward the player;
 		reward.giveTo(player);
-		player.sendMessage(this.messageEnd);
+		player.sendMessage(ChatColor.DARK_GREEN + this.messageEnd);
 		player.sendMessage(ChatColor.LIGHT_PURPLE + "Quest is " + ChatColor.GREEN + "done" + ChatColor.DARK_GREEN + "!");
 		player.sendMessage(ChatColor.LIGHT_PURPLE + "You received " + this.reward.toString());
 	}
