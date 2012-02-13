@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Server;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
@@ -27,9 +28,14 @@ import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.Scenario;
 import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
+import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 
-public class MonsterFury extends Scenario implements TimeObserver {
-	public final Logger logger = Logger.getLogger(("Minecraft"));
+public class MonsterFury {
+	public MonsterFury() {}
+}
+	
+	
+	/*
 	private int _minimumPlayerCount = 1;
 	private boolean _active = false;
 	private MonsterFuryListener _listener;
@@ -47,8 +53,10 @@ public class MonsterFury extends Scenario implements TimeObserver {
 	private String _greater; 
 	private WorldZone _greaterZone;
 	private WorldZone _activationZone;
-	private long _alarm;
+	*/
+	
 
+	/*
 	public MonsterFury(int minPlayer, long coolDown, double protectRadius, int wave, int monster, int exp, int money, double armor, String greater) {
 		_minimumPlayerCount = minPlayer;
 		_coolDown = coolDown;
@@ -104,7 +112,7 @@ public class MonsterFury extends Scenario implements TimeObserver {
 		// on active la premiere wave et le scénario
 		/*
 		getServer().broadcastMessage(ChatColor.GREEN + "First wave is coming!!!");
-		_listener.setMonsterWave(_waves.get(nbWaveDone));*/
+		_listener.setMonsterWave(_waves.get(nbWaveDone));
 		
 		TimeServer.getInstance().addListener(this, 10000);
 		
@@ -162,37 +170,19 @@ public class MonsterFury extends Scenario implements TimeObserver {
 		setZone(_activationZone);
 		_active = false;
 	}
-	
+	*/
 
-	@Override
+
+	/*
 	public void timeHasCome(long time) {
+		/*
 		getServer().broadcastMessage(ChatColor.YELLOW + String.valueOf((nbWaveDone + 1)) + "/" + _waves.size() + ChatColor.GREEN + " wave is coming!!!");
 		if (_waves.size() > 0) {
 			_listener.setMonsterWave(_waves.get(nbWaveDone));
 		}
-		
-	}
+		*/
 
-	@Override
-	public void setAlarm(long time) {
-		_alarm = time;		
-	}
-
-	@Override
-	public long getAlarm() {
-		return _alarm;
-	}
-
-	@Override
-	public void progressHandler() {
-		
-	}
-
-	@Override
-	public boolean isComplete() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+/*
 	
 	public void waveIsDone() {
 		// on load la prochaine wave!
@@ -206,8 +196,62 @@ public class MonsterFury extends Scenario implements TimeObserver {
 			terminateScenario();
 		}
 	}
-}
 
+	@Override
+	public void setAlaram(long time) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setWorldZone(WorldZone z) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public WorldZone getWorldZone() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+*//*
+	@Override
+	public void playerEntered(Player p) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void playerLeft(Player p) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Server getCurrentServer() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setWorldZone(WorldZone z) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public WorldZone getWorldZone() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setAlaram(long time) {
+		// TODO Auto-generated method stub
+		
+	}
+}*/
+/*
 class MonsterFuryListener implements Listener {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private MonsterWave _currentWave;
@@ -228,7 +272,7 @@ class MonsterFuryListener implements Listener {
 		Entity entity = event.getEntity();
 		if (entity instanceof Player) {
 			try {
-				_scenario.getPlayers().remove((Player)entity);	
+				//_scenario.getPlayers().remove((Player)entity);	
 			}
 			catch (Exception ex) { }
 		}
@@ -249,7 +293,8 @@ class MonsterFuryListener implements Listener {
 	}
 	
 }
-
+*/
+/*
 class MonsterWave {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private int _nbMonsters = 0;
@@ -269,17 +314,20 @@ class MonsterWave {
 	
 	public void spawnWave() {
 		for (int i = 0; i < _nbMonsters; i++) {
+			
 			// creation de la location et du monstre
 			Location loc = _scenario.getZone().getRandomLocationOutsideThisZone(_scenario.getWorld(), _exclude);
 			CreatureType type = EntityUtilities.getCreatureType(possibleMonsters[RandomUtil.getRandomInt(possibleMonsters.length)]);			
 			LivingEntity living = _scenario.getWorld().spawnCreature(loc, type);
 			// adding to the table
 			_monstersTable.add(living);
+			
 		}
 		
 	}
 	
 	public void processEntityDeath(Entity e) {
+		
 		if (_monstersTable != null && _monstersTable.contains(e)) {
 			_monstersTable.remove(e);
 			
@@ -320,3 +368,4 @@ class MonsterWave {
 	
 
 }
+*/

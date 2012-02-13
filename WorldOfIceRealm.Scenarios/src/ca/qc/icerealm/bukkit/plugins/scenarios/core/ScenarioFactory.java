@@ -35,7 +35,7 @@ class ScenarioFactory {
 			boolean immune = config.getBoolean(id + ".immune_day_light");
 			return new AmbushScenario(qty, monster, immune);
 		}
-		
+		/*
 		if (typeOfScenario.equalsIgnoreCase("monster_fury")) {
 			
 			String id = "0";
@@ -51,7 +51,7 @@ class ScenarioFactory {
 			String zone = config.getString(id + ".greater_zone");
 			return new MonsterFury(minPlayer, coolDown, protectRadius, wave, monster, exp, money, armor, zone);
 		}
-
+*/
 		return null;
 	}	
 }
