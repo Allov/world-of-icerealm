@@ -37,7 +37,11 @@ public class ZoneServer implements ZoneSubject {
 	}
 	
 	public List<ZoneObserver> getObservers() {
-		return _observers;
+		List<ZoneObserver> copy = new ArrayList<ZoneObserver>();
+		for (ZoneObserver o : _observers)  {
+			copy.add(o);
+		}
+		return copy;
 	}
 	
 	@Override

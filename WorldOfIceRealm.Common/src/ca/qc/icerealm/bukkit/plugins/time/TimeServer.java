@@ -16,6 +16,9 @@ public class TimeServer implements TimeSubject {
 	protected TimeServer() {
 		_observers = new ArrayList<TimeObserver>();
 		_loop = new TimeLoop();
+		_loop.setTimeServer(this);
+		_thread = new Thread(_loop);
+		_thread.start();
 	}
 	
 	public static TimeServer getInstance() {
@@ -27,25 +30,19 @@ public class TimeServer implements TimeSubject {
 
 	@Override
 	public void addListener(TimeObserver obs, long when) {	
-		if (_observers != null) {
+		if (_observers != null && obs != null) {
 			obs.setAlaram(when + System.currentTimeMillis());
 			_observers.add(obs);
+			this.logger.info("TimeServer addListener: " + obs.getAlarm() + "ms will be in " + (obs.getAlarm() - System.currentTimeMillis()) + "ms");
 		}
 		
-		if (_observers.size() > 0) {
-			_loop.setTimeServer(this);
-			
-			if (_thread == null) {
-				_thread = new Thread(_loop);
-				_thread.start();
-			}
-		}
-		
+	
 	}
 	
 	public void removeListener(TimeObserver obs) {
 		if (obs != null && _observers.contains(obs)) {
 			_observers.remove(obs);
+			this.logger.info("TimeServer removeListener: " + (obs.getAlarm() - System.currentTimeMillis()) + "ms to be called");
 		}
 	}
 
@@ -56,6 +53,10 @@ public class TimeServer implements TimeSubject {
 				list.add(t);
 			}
 		}
+		if (list.size() > 0) {
+			this.logger.info("TimeServer dueListener: " + list.size() + "/" + _observers.size() + " listeners");	
+		}
+		
 
 		return list;
 	}
@@ -63,6 +64,7 @@ public class TimeServer implements TimeSubject {
 	public void removeListener(List<TimeObserver> observer) {
 		if (observer != null) {
 			_observers.removeAll(observer);
+			this.logger.info("Removed all due listener - TimeLoop did it");
 		}
 		
 	}
