@@ -8,9 +8,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import ca.qc.icerealm.bukkit.plugins.common.SimpleTimer;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
@@ -57,7 +56,6 @@ public class MonsterFury implements ZoneObserver {
 	private List<MonsterWave> _waves;
 	private int _nbWavesTotal;
 	private int _nbMonsters;
-	private SimpleTimer _waveDelay;
 	private long _timeBetween;
 	
 	public MonsterFury(JavaPlugin plugin) {
@@ -70,13 +68,16 @@ public class MonsterFury implements ZoneObserver {
 		_coolDownActive = false;
 		_coolDownTime = 10000;
 		_minimumPlayer = 1;
-		_activationZone = new WorldZone(_world, "-180,134,-177,137,0,128");
-		_scenarioZone = new WorldZone(_world, "-189,127,-168,140,0,128");
+		//_activationZone = new WorldZone(_world, "-180,134,-177,137,0,128");
+		//_scenarioZone = new WorldZone(_world, "-189,127,-168,140,0,128");
+		_activationZone = new WorldZone(_world, "147,-405,149,-403,0,128");
+		_scenarioZone = new WorldZone(_world, "137,-416,155,-399,0,128");
 		_experience = 100;
 		_nbWaveDone = 0;
 		_waves = new ArrayList<MonsterWave>();
 		_nbWavesTotal = 2;
 		_nbMonsters = 3;
+		_timeBetween = 10000;
 		
 		// set la zone d'activation et enregistre le zone observer
 		_activationZoneObserver = new ActivationZoneObserver(plugin.getServer(), this);
@@ -84,13 +85,8 @@ public class MonsterFury implements ZoneObserver {
 		ZoneServer.getInstance().addListener(_activationZoneObserver);
 		
 		// set les listener
+		_listener = new MonsterFuryListener(this);
 		plugin.getServer().getPluginManager().registerEvents(_listener, plugin);
-		
-		// set les waves
-		for (int i = 0; i < _nbWavesTotal; i++) {
-			_waves.add(new MonsterWave(_nbMonsters, 0.0, this, _scenarioZone, _activationZone));
-		}
-		
 		
 	}
 	
@@ -101,6 +97,11 @@ public class MonsterFury implements ZoneObserver {
 	}
 	
 	public void triggerScenario() {
+		
+		for (int i = 0; i < _nbWavesTotal; i++) {
+			_waves.add(new MonsterWave(_nbMonsters, 0.0, this, _scenarioZone, _activationZone));
+		}
+		
 		// démarrage du cooldown
 		_coolDownActive = true;
 		_coolDownTimer = new CoolDownTimer(this);
@@ -116,11 +117,8 @@ public class MonsterFury implements ZoneObserver {
 		sendMessageToPlayers(ChatColor.YELLOW + String.valueOf(_nbWavesTotal) + ChatColor.GREEN + " waves have been spotted!");
 
 		// on active la premiere wave et le scénario
-		
-		sendMessageToPlayers(ChatColor.GREEN + "First wave is coming!!!");
 		_listener.setMonsterWave(_waves.get(_nbWaveDone));
-		
-		TimeServer.getInstance().addListener(new WaveTimer(_waves.get(_nbWaveDone), this), 10000);
+		TimeServer.getInstance().addListener(new WaveTimer(_waves.get(_nbWaveDone)), _timeBetween);
 		
 		
 		// on démarre le scénario
@@ -227,7 +225,9 @@ public class MonsterFury implements ZoneObserver {
 				
 		if (_nbWaveDone < _waves.size()) {	
 			sendMessageToPlayers(ChatColor.GOLD + "This wave has been pushed back!");
-			TimeServer.getInstance().addListener(new WaveTimer(_waves.get(_nbWaveDone), this), _timeBetween);
+			_listener.setMonsterWave(_waves.get(_nbWaveDone));
+			TimeServer.getInstance().addListener(new WaveTimer(_waves.get(_nbWaveDone)), _timeBetween);
+			
 		}
 		else {
 			terminateScenario();

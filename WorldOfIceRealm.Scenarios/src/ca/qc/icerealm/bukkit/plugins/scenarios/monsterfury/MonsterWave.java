@@ -34,39 +34,53 @@ public class MonsterWave {
 		_exclude = exclude;
 	}
 	
+	public void broadcastToPlayers(String info)  {
+		_scenario.sendMessageToPlayers(info);
+	}
+	
 	public void spawnWave() {
-		for (int i = 0; i < _nbMonsters; i++) {
-			// creation de la location et du monstre
-			Location loc = _scenario.getWorldZone().getRandomLocationOutsideThisZone(_scenario.getWorld(), _exclude);
-			CreatureType type = EntityUtilities.getCreatureType(possibleMonsters[RandomUtil.getRandomInt(possibleMonsters.length)]);			
-			LivingEntity living = _scenario.getWorld().spawnCreature(loc, type);
-			// adding to the table
-			_monstersTable.add(living);
+		if (_scenario.isActive()) {
+			for (int i = 0; i < _nbMonsters; i++) {
+				// creation de la location et du monstre
+				Location loc = _scenario.getWorldZone().getRandomLocationOutsideThisZone(_scenario.getWorld(), _exclude);
+				CreatureType type = EntityUtilities.getCreatureType(possibleMonsters[RandomUtil.getRandomInt(possibleMonsters.length)]);			
+				LivingEntity living = _scenario.getWorld().spawnCreature(loc, type);
+				// adding to the table
+				_monstersTable.add(living);
+			}
 		}
+		
 		
 	}
 	
 	public void processEntityDeath(Entity e) {
-		if (_monstersTable != null && _monstersTable.contains(e)) {
-			_monstersTable.remove(e);
-			
-			if (_monstersTable.size() == 0) {
-				_scenario.waveIsDone();
-			}
-			else {
-				_scenario.getCurrentServer().broadcastMessage(_monstersTable.size() + " monsters left!");
+		this.logger.info("Process Entity death in wave");
+		if (_scenario.isActive()) {
+			if (_monstersTable != null && _monstersTable.contains(e)) {
+				_monstersTable.remove(e);
+				
+				if (_monstersTable.size() == 0) {
+					_scenario.waveIsDone();
+				}
+				else {
+					_scenario.getCurrentServer().broadcastMessage(_monstersTable.size() + " monsters left!");
+				}
 			}
 		}
+		
 	}
 	
 	public void processDamage(EntityDamageEvent e) {
-		if (_monstersTable != null && _monstersTable.contains(e.getEntity())) {
-			
-			if (e.getCause() == DamageCause.FIRE_TICK) {
-				e.setCancelled(true);
+		if (_scenario.isActive()) {
+			if (_monstersTable != null && _monstersTable.contains(e.getEntity())) {
+				
+				if (e.getCause() == DamageCause.FIRE_TICK) {
+					e.setCancelled(true);
+				}
+							
 			}
-						
 		}
+		
 	}
 	
 	public void removeMonsters() {

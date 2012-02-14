@@ -21,16 +21,13 @@ public class MonsterFuryListener implements Listener {
 	}
 	
 	public void setMonsterWave(MonsterWave wave) {
-		if (_scenario.isActive()) {
-			_currentWave = wave;
-			_currentWave.spawnWave();	
-		}
+		_currentWave = wave;
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityDeath(EntityDeathEvent event) {
-		
-		if (_scenario.isActive()) {
+		logger.info("processing death");
+		if (_scenario.isActive() && _currentWave != null) {
 			Entity entity = event.getEntity();
 			if (entity instanceof Player) {
 				try {
@@ -39,6 +36,7 @@ public class MonsterFuryListener implements Listener {
 				catch (Exception ex) { }
 			}
 			else {
+				logger.info("processing death");
 				_currentWave.processEntityDeath(entity);
 			}
 		}
@@ -48,12 +46,12 @@ public class MonsterFuryListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityDamage(EntityDamageEvent event) {
-		if (_scenario.isActive()) {
+		if (_scenario.isActive() && _currentWave != null) {
 			try {
 				_currentWave.processDamage(event);	
 			}
 			catch (Exception ex) {
-				this.logger.info("MonsterFury threw an exception on EntityDamageEvent");
+				ex.printStackTrace();
 			}
 		}
 		

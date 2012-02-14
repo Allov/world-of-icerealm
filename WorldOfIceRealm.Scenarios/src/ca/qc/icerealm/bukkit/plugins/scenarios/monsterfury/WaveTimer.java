@@ -1,24 +1,32 @@
 package ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury;
 
 import org.bukkit.entity.Player;
+import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
 
-import ca.qc.icerealm.bukkit.plugins.common.SimpleTimer;
 
-public class WaveTimer extends SimpleTimer {
+public class WaveTimer implements TimeObserver {
 
 	private MonsterWave _wave;
-	private MonsterFury _fury;
+	private long _alarm;
 	
-	public WaveTimer(MonsterWave wave, MonsterFury f) {
+	public WaveTimer(MonsterWave wave) {
 		_wave = wave;
-		_fury = f;
 	}
 	
 	@Override
 	public void timeHasCome(long time) {
-		_fury.sendMessageToPlayers("Another wave is here!");
+		_wave.broadcastToPlayers("Another wave is here!");
 		_wave.spawnWave();
 	}
 
+	@Override
+	public void setAlaram(long time) {
+		_alarm = time;
+	}
 
+	@Override
+	public long getAlarm() {
+		// TODO Auto-generated method stub
+		return _alarm;
+	}
 }
