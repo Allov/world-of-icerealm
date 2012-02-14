@@ -1,6 +1,7 @@
 package ca.qc.icerealm.bukkit.plugins.time;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
@@ -39,6 +40,14 @@ public class TimeServer implements TimeSubject {
 	}
 	
 	@Override
+	public void addListener(TimeObserver obs, Date when) {
+		long dateToMillis = when.getTime() - System.currentTimeMillis();
+		if (dateToMillis > 0) {
+			this.addListener(obs, dateToMillis);	
+		}
+	}
+		
+	@Override
 	public void removeListener(TimeObserver obs) {
 		if (obs != null && _observers.contains(obs)) {
 			_observers.remove(obs);
@@ -63,4 +72,8 @@ public class TimeServer implements TimeSubject {
 	private void displayInfo(String info) {
 		this.logger.info("[TimeServer] " + info);
 	}
+
+	
+
+	
 }
