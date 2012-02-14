@@ -76,7 +76,7 @@ public class BloodMoonCommander implements CommandExecutor {
 				_moon.onEnable();
 			}
 			if (arg3.length == 1 && arg3[0].contains("time")) {
-				arg0.sendMessage(ChatColor.DARK_GREEN + "World time: " + ChatColor.YELLOW + "1/" + ChatColor.GOLD + arg0.getServer().getWorld("world").getTime());
+				arg0.sendMessage(ChatColor.DARK_GREEN + "World time: " + ChatColor.YELLOW + arg0.getServer().getWorld("world").getTime());
 			}
 
 		}

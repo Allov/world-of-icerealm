@@ -19,7 +19,7 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 	private final Logger logger = Logger.getLogger(("Minecraft"));
 	
 	// nombre constrant de millisecond dans une minute
-	private final long _msInMinecraftHour = 50000; 
+	private final long _msInMinecraftHour = 50; 
 	// il y a une chance sur 10 qu'un blood moon soit activé
 	private int _probability = 1;
 	// le nombre de millisecond avant de spawner autour du joueur
@@ -78,11 +78,11 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 	@Override
 	public void timeHasCome(long time) {
 		long newAlarm = 0;
-		int currentTime = WorldClock.getHour(_world);
+		long currentTime = _world.getTime();
 		
-		if (_isActive && currentTime >= 0 && currentTime <= 12) {
+		if (_isActive && currentTime >= 0 && currentTime <= 12000) {
 			stopBloodMoon();
-			newAlarm = 24 * _msInMinecraftHour;
+			newAlarm = (12000 - currentTime) * _msInMinecraftHour;
 			// on veut se faire poker a la fin de la journée
 			displayListenerAddition("blood moon stopping", newAlarm);
 		}
@@ -92,12 +92,12 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 				startBloodMoon();
 				
 				// on veut se faire pocker a la fin de la nuit
-				newAlarm =  12 * _msInMinecraftHour;
+				newAlarm =  12000 * _msInMinecraftHour;
 				displayListenerAddition("blood moon started", newAlarm);
 			}
 			else {
 				// on veut se faire poker lors de la prochaine nuit
-				newAlarm = 24 * _msInMinecraftHour;
+				newAlarm = 24000 * _msInMinecraftHour;
 				displayListenerAddition("no moon, next night", newAlarm);
 			}
 		}
@@ -113,20 +113,17 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 
 		// calcul du temps présent et la prochaine alarm
 		_world = this.getServer().getWorld("world");
-		int hour = WorldClock.getHour(_world);
+		long hour = _world.getTime();
 		long alarm = 0;
 		
 		if (_isActive) {
-			int untilNight =  24 - hour;
-			alarm = untilNight * _msInMinecraftHour;
+			alarm = (24000 - hour) * _msInMinecraftHour;
 		}
-		else if (hour < 12) {
-			int untilNight = 12 - hour;
-			alarm = untilNight * _msInMinecraftHour;
+		else if (hour < 12000) {
+			alarm = (12000 - hour) * _msInMinecraftHour;
 		}
-		else if (hour >= 12) {
-			int untilNight = (24 - hour) + 12;
-			alarm = untilNight * _msInMinecraftHour;
+		else if (hour >= 12000) {
+			alarm = ((24000 - hour) + 12000) * _msInMinecraftHour;
 		}
 		
 		displayListenerAddition("init timer", alarm);
@@ -134,7 +131,7 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 	}
 	
 	private void displayListenerAddition(String event, long a) {
-		this.logger.info(event + " - Time is: " + _world.getTime() + " and will be poked in " + a + " ms");
+		this.logger.info("[BloodMoon] " + event + " - Time is: " + _world.getTime() + " and will be poked in " + a + " ms");
 	}
 
 	@Override
