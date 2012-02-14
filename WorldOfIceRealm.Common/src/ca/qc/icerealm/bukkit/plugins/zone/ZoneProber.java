@@ -23,9 +23,6 @@ public class ZoneProber implements Runnable {
 				Player[] players = zone.getCurrentServer().getOnlinePlayers();
 				
 				for (Player p : players) {
-					
-					
-					
 					if (zone.getWorldZone().isInside(p.getLocation()) && !_playersInZone.containsKey(p)) {
 						zone.playerEntered(p);
 						_playersInZone.put(p, zone);
@@ -43,7 +40,7 @@ public class ZoneProber implements Runnable {
 			}
 			
 			try {
-				Thread.sleep(100);	
+				Thread.sleep(100);
 			}
 			catch (Exception ex) {
 				_stop = true;

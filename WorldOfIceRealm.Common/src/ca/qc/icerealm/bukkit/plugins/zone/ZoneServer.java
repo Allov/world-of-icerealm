@@ -48,6 +48,7 @@ public class ZoneServer implements ZoneSubject {
 	public void addListener(ZoneObserver obs) {
 		if (obs != null) {
 			_observers.add(obs);
+			displayInfo("addlistener - zone: " + obs.getWorldZone().toString());
 		}
 	}
 
@@ -55,6 +56,7 @@ public class ZoneServer implements ZoneSubject {
 	public void removeListener(ZoneObserver obs) {
 		if (obs != null && _observers.contains(obs)) {
 			_observers.remove(obs);
+			displayInfo("removeListener - zone: " + obs.getWorldZone().toString());
 		}
 	}
 
@@ -66,5 +68,9 @@ public class ZoneServer implements ZoneSubject {
 	@Override
 	public void startListening() {
 		_prober.setStop(false);
+	}
+	
+	private void displayInfo(String info) {
+		this.logger.info("[ZoneServer] " + info);
 	}
 }

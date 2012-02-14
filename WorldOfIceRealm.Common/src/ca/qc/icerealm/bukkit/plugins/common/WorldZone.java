@@ -130,7 +130,9 @@ public class WorldZone {
 		
 	@Override 
 	public String toString() {
-		return "Top Left (" + _leftTop.getX() + "," + _leftTop.getZ() + " Right Bottom (" + _rightBottom.getX() + "," + _rightBottom.getZ();
+		return _leftTop.getX() + "," + _leftTop.getZ() + "," + 
+			   _rightBottom.getX() + "," + _rightBottom.getZ() + "," + 
+			   _rightBottom.getY() + "," + _leftTop.getY();
 	}
 	
 	private Location getRelativeBottomRight() {
