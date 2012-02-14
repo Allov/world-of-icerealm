@@ -17,48 +17,39 @@ import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 
 public class MonsterFury implements ZoneObserver {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
-	
-	/*
-	private int _minimumPlayerCount = 1;
-	private boolean _active = false;
-	private MonsterFuryListener _listener;
-	private List<MonsterWave> _waves;
-	private int nbWaveDone = 0;
-	private long _coolDown = 30000;
-	private long _lastRun = 0;
-	private int _nbWave = 3;
-	private int _nbMonsters = 3;
-	private int _experience = 0;
-	private int _money;
-	private double _damageModifier = 0.0;
-	private double _armorIncrement = 0.0;
-	private long timeBetweenWave = 15000;
-	private String _greater; 
-	private WorldZone _greaterZone;
-	private WorldZone _activationZone;
-	*/
-	
+
+	// objet de plus haut niveau
 	private JavaPlugin _plugin;
 	private World _world;
-	private WorldZone _scenarioZone;
 	private Server _server;
-	private List<Player> _players;
-	private boolean _coolDownActive;
-	private boolean _isActive;
-	private long _coolDownTime;
+	
+	// zone d'activation et celle du scenario
+	private WorldZone _scenarioZone;
+	private WorldZone _activationZone;
+	
+	// different Observer et Listener
 	private CoolDownTimer _coolDownTimer;
 	private ActivationZoneObserver _activationZoneObserver;
 	private MonsterFuryListener _listener;
-	private int _minimumPlayer;
-	private WorldZone _activationZone;
-	private int _experience;
-	private int _nbWaveDone;
-	private List<MonsterWave> _waves;
-	private int _nbWavesTotal;
+	private MonsterFuryEventsListener _eventsListener;
+
+	// propriete modifiable de l'externe
+	private long _coolDownTime;
 	private int _nbMonsters;
 	private long _timeBetween;
+	private String _name;
+	private int _experience;
+	private int _minimumPlayer;
+	private List<MonsterWave> _waves;
 	
-	public MonsterFury(JavaPlugin plugin) {
+	// propriete sur le status du scenario
+	private boolean _coolDownActive;
+	private boolean _isActive;
+	private List<Player> _players;
+	private int _nbWaveDone;
+	private int _nbWavesTotal;
+
+	public MonsterFury(JavaPlugin plugin, MonsterFuryEventsListener event) {
 		// parametre du scenario
 		_plugin = plugin;
 		_server = plugin.getServer();
@@ -78,6 +69,8 @@ public class MonsterFury implements ZoneObserver {
 		_nbWavesTotal = 2;
 		_nbMonsters = 3;
 		_timeBetween = 10000;
+		_name = "Monster Fury";
+		
 		
 		// set la zone d'activation et enregistre le zone observer
 		_activationZoneObserver = new ActivationZoneObserver(plugin.getServer(), this);
@@ -87,6 +80,7 @@ public class MonsterFury implements ZoneObserver {
 		// set les listener
 		_listener = new MonsterFuryListener(this);
 		plugin.getServer().getPluginManager().registerEvents(_listener, plugin);
+		_eventsListener = event;
 		
 	}
 	
@@ -97,7 +91,7 @@ public class MonsterFury implements ZoneObserver {
 	}
 	
 	public void triggerScenario() {
-		
+
 		for (int i = 0; i < _nbWavesTotal; i++) {
 			_waves.add(new MonsterWave(_nbMonsters, 0.0, this, _scenarioZone, _activationZone));
 		}
@@ -110,15 +104,14 @@ public class MonsterFury implements ZoneObserver {
 		// on update la zone du scenario en enlevant la zone d'activation 
 		ZoneServer.getInstance().addListener(this);
 		this.logger.info("Scenario has been trigged");
-		
-		
-		sendMessageToPlayers(ChatColor.RED + "The ennemy is approching!");
-		sendMessageToPlayers(ChatColor.GREEN + "Get ready to push them back!");
-		sendMessageToPlayers(ChatColor.YELLOW + String.valueOf(_nbWavesTotal) + ChatColor.GREEN + " waves have been spotted!");
+				
+		if (_eventsListener != null) {
+			_eventsListener.scenarioStarting(_waves.size(), getPlayers());
+		}
 
 		// on active la premiere wave et le scénario
 		_listener.setMonsterWave(_waves.get(_nbWaveDone));
-		TimeServer.getInstance().addListener(new WaveTimer(_waves.get(_nbWaveDone)), _timeBetween);
+		TimeServer.getInstance().addListener(new WaveTimer(_waves.get(_nbWaveDone), _eventsListener), _timeBetween);
 		
 		
 		// on démarre le scénario
@@ -127,27 +120,27 @@ public class MonsterFury implements ZoneObserver {
 	
 	public void terminateScenario() {
 		if (_isActive) {
+			if (_eventsListener != null) {
+				_eventsListener.scenarioEnding(_nbWaveDone);
+			}
 			
+			int xp = _experience / getPlayers().size();
+			for (Player p : getPlayers()) {
+				p.setLevel(p.getLevel() + xp);
+				p.sendMessage(ChatColor.GREEN + "You received " + ChatColor.GOLD + String.valueOf(xp) + " level of XP!");
+			}
+			
+			_nbWaveDone = 0;	
+			_waves.clear();
+			ZoneServer.getInstance().removeListener(this);
+			_isActive = false;
 		}
-		this.logger.info("Monster fury terminate");
-		this.logger.info("Giving reward to players");
 		
-		_plugin.getServer().broadcastMessage(ChatColor.GOLD +"The ennemy has been defeated!");
-		int xp = _experience / getPlayers().size();
-		for (Player p : getPlayers()) {
-			p.setLevel(p.getLevel() + xp);
-			p.sendMessage(ChatColor.GREEN + "You received " + ChatColor.GOLD + String.valueOf(xp) + " level of XP!");
-		}
-		
-		_nbWaveDone = 0;		
-		ZoneServer.getInstance().removeListener(this);
-		_isActive = false;
 	}
 	
 	public void abortScenario() {
 		this.logger.info("Monster fury aborted");
 		if (_isActive) {
-			sendMessageToPlayers("You retreated into safety");
 			getPlayers().clear();
 			
 			if (_waves != null) {
@@ -172,7 +165,10 @@ public class MonsterFury implements ZoneObserver {
 	}
 	
 	public void setCoolDownActive(boolean active) {
-		this.logger.info("setCoolDownAcitve to " + active);
+		if (_eventsListener != null) {
+			_eventsListener.coolDownChanged(active);
+		}
+		
 		_coolDownActive = active;
 
 		// on doit enlever le listener et en créer un nouveau
@@ -191,6 +187,7 @@ public class MonsterFury implements ZoneObserver {
 		if (_players != null && p != null && !_players.contains(p)) {
 			_players.add(p);
 			if (!_coolDownActive && _players.size() >= _minimumPlayer) {
+				
 				triggerScenario();
 			}
 		}
@@ -202,6 +199,9 @@ public class MonsterFury implements ZoneObserver {
 			_players.remove(p);
 			this.logger.info(p.getName() + " has been removed from the scenario");
 			if (_players.size() == 0) {
+				if (_eventsListener != null) {
+					_eventsListener.scenarioAborting(_nbWaveDone);
+				}
 				abortScenario();
 			}
 		}
@@ -220,24 +220,25 @@ public class MonsterFury implements ZoneObserver {
 	}
 	
 	public void waveIsDone() {
-		// on load la prochaine wave!
 		_nbWaveDone++;
 				
 		if (_nbWaveDone < _waves.size()) {	
-			sendMessageToPlayers(ChatColor.GOLD + "This wave has been pushed back!");
-			_listener.setMonsterWave(_waves.get(_nbWaveDone));
-			TimeServer.getInstance().addListener(new WaveTimer(_waves.get(_nbWaveDone)), _timeBetween);
 			
+			// on load la prochaine wave!
+			if (_eventsListener != null) {
+				_eventsListener.waveIsDone(_nbWaveDone);
+			}
+			
+			_listener.setMonsterWave(_waves.get(_nbWaveDone));
+			TimeServer.getInstance().addListener(new WaveTimer(_waves.get(_nbWaveDone), _eventsListener), _timeBetween);
 		}
 		else {
 			terminateScenario();
 		}
 	}
 	
-	public void sendMessageToPlayers(String msg) {
-		for (Player p : getPlayers()) {
-			p.sendMessage(msg);
-		}
+	public MonsterFuryEventsListener getEventListener() {
+		return _eventsListener;
 	}
 		
 	@Override
@@ -269,167 +270,4 @@ public class MonsterFury implements ZoneObserver {
 	public WorldZone getWorldZone() {
 		return _scenarioZone;
 	}
-	
-	
-	/*
-	public MonsterFury(int minPlayer, long coolDown, double protectRadius, int wave, int monster, int exp, int money, double armor, String greater) {
-		_minimumPlayerCount = minPlayer;
-		_coolDown = coolDown;
-
-		_nbWave = wave;
-		_nbMonsters = monster;
-		_experience = exp;
-		_money = money;
-		_armorIncrement = armor;
-		_greater = greater;
-	}
-	
-	@Override
-	public void terminateInit() {
-		_greaterZone = new WorldZone(getWorld(), _greater);
-		_activationZone = getZone();
-	}
-	
-	@Override
-	public boolean isTriggered() {
-		return _active;
-	}
-
-	@Override
-	public void triggerScenario() {
-		
-		setZone(_greaterZone);
-		
-		if (_waves != null) {
-			_waves.clear();
-		}
-		else {
-			_waves = new ArrayList<MonsterWave>();
-		}
-					
-		// creation des listeners
-		if (_listener == null) {
-			_listener = new MonsterFuryListener(this);
-			getServer().getPluginManager().registerEvents(_listener, getPlugin());
-		}
-		
-		// creation des waves
-		for (int i = 0; i < _nbWave; i++) {
-			MonsterWave wave = new MonsterWave(_nbMonsters, _damageModifier, this, _activationZone);
-			_damageModifier += _armorIncrement;
-			_waves.add(wave);
-		}
-		
-		getServer().broadcastMessage(ChatColor.RED + "The ennemy is approching!");
-		getServer().broadcastMessage(ChatColor.GREEN + "Get ready to push them back!");
-		getServer().broadcastMessage(ChatColor.YELLOW + String.valueOf(_nbWave) + ChatColor.GREEN + " waves have been spotted!");
-
-		// on active la premiere wave et le scénario
-		/*
-		getServer().broadcastMessage(ChatColor.GREEN + "First wave is coming!!!");
-		_listener.setMonsterWave(_waves.get(nbWaveDone));
-		
-		TimeServer.getInstance().addListener(this, 10000);
-		
-		_active = true;
-	}
-
-	@Override
-	public void abortScenario() {
-		// enleve les joueurs du scénario, enleve les waves
-		if (_active) {
-			getServer().broadcastMessage("You retreated into safety");
-			getPlayers().clear();
-			
-			if (_waves != null) {
-				for (MonsterWave wave : _waves) {
-					wave.removeMonsters();
-				}
-				_waves.clear();
-			}
-		}
-		
-		setZone(_activationZone);
-		_active = false;
-	}
-
-	@Override
-	public boolean abortWhenLeaving() {
-		// si un joueur se pousse, il est exclu, il perd tt sa progression
-		return true;
-	}
-
-	@Override
-	public boolean canBeTriggered() {
-		boolean coolDown = (_lastRun + _coolDown) <= System.currentTimeMillis();
-		return coolDown && getPlayers().size() >= _minimumPlayerCount;
-	}
-
-	@Override
-	public boolean mustBeStop() {
-		return (getPlayers().size() == 0);
-	}
-
-	@Override
-	public void terminateScenario() {
-		// donne le XP, du health au joueur
-		getServer().broadcastMessage(ChatColor.GOLD +"The ennemy has been defeated!");
-		int xp = _experience / getPlayers().size();
-		for (Player p : getPlayers()) {
-			p.setLevel(p.getLevel() + xp);
-			p.sendMessage(ChatColor.GREEN + "You received " + ChatColor.GOLD + String.valueOf(xp) + " level of XP!");
-		}
-		
-		_lastRun = System.currentTimeMillis();
-		nbWaveDone = 0;
-		setZone(_activationZone);
-		_active = false;
-	}
-	*/
-
-
 }
-/*
-	
-	public void waveIsDone() {
-		// on load la prochaine wave!
-		nbWaveDone++;
-				
-		if (nbWaveDone < _waves.size()) {	
-			getServer().broadcastMessage(ChatColor.GOLD + "This wave has been pushed back!");
-			TimeServer.getInstance().addListener(this, timeBetweenWave);			
-		}
-		else {
-			terminateScenario();
-		}
-	}
-
-	@Override
-	public void setAlaram(long time) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setWorldZone(WorldZone z) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public WorldZone getWorldZone() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-*/
-
-/*
-
-}
-*/
-/*
-class MonsterWave {
-	
-	
-
-}*/

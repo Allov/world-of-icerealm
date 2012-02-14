@@ -34,8 +34,8 @@ public class MonsterWave {
 		_exclude = exclude;
 	}
 	
-	public void broadcastToPlayers(String info)  {
-		_scenario.sendMessageToPlayers(info);
+	public int getMonstersSize() {
+		return _monstersTable.size();
 	}
 	
 	public void spawnWave() {
@@ -53,17 +53,17 @@ public class MonsterWave {
 		
 	}
 	
-	public void processEntityDeath(Entity e) {
-		this.logger.info("Process Entity death in wave");
+	public void processEntityDeath(Entity e, MonsterFuryEventsListener l) {
 		if (_scenario.isActive()) {
 			if (_monstersTable != null && _monstersTable.contains(e)) {
 				_monstersTable.remove(e);
 				
+				if (l != null) {
+					l.monsterDied(e, _monstersTable.size());
+				}
+				
 				if (_monstersTable.size() == 0) {
 					_scenario.waveIsDone();
-				}
-				else {
-					_scenario.getCurrentServer().broadcastMessage(_monstersTable.size() + " monsters left!");
 				}
 			}
 		}

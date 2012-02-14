@@ -26,18 +26,20 @@ public class MonsterFuryListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityDeath(EntityDeathEvent event) {
-		logger.info("processing death");
 		if (_scenario.isActive() && _currentWave != null) {
 			Entity entity = event.getEntity();
 			if (entity instanceof Player) {
+				
 				try {
-					_scenario.getPlayers().remove((Player)entity);	
+					_scenario.getPlayers().remove((Player)entity);
+					if (_scenario.getEventListener() != null) {
+						_scenario.getEventListener().playerDied((Player)entity, _scenario.getPlayers());
+					}
 				}
 				catch (Exception ex) { }
 			}
 			else {
-				logger.info("processing death");
-				_currentWave.processEntityDeath(entity);
+				_currentWave.processEntityDeath(entity, _scenario.getEventListener());
 			}
 		}
 		
@@ -48,14 +50,12 @@ public class MonsterFuryListener implements Listener {
 	public void onEntityDamage(EntityDamageEvent event) {
 		if (_scenario.isActive() && _currentWave != null) {
 			try {
-				_currentWave.processDamage(event);	
+				_currentWave.processDamage(event);
 			}
 			catch (Exception ex) {
 				ex.printStackTrace();
 			}
 		}
-		
-		
 	}
 	
 }
