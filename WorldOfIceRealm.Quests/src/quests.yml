@@ -6,32 +6,32 @@
 # 59 = cave-spider
 
 # daily quest
-#bone_gnaw:
-#    group: normal
-#    name: A bone to gnaw on
-#    messageStart: Skeletons, I hate skeletons! They always look at me from far away shoot me in the knee! Please kill them and gather their bones so I can chew on them. 
-#    messageEnd: Great!!! *gnaw* *gnaw* *gnaw*... leave me alone ... *gnaw*   
-#    daily: true
-#    objectives:
-#        -   type: collect
-#            name: Collect 15 skeletons bones
-#            what: 352
-#            amount: 15
-#            keep: false
-#        -   type: kill
-#            name: Kill 1 skeletons
-#            what: 51
-#            amount: 1
-#    joinFees:
-#        money: 0
-#        level: 0
-#    dropFees:
-#        money: 50
-#        level: 0
-#    rewards:
-#        money: 300
-#        level: 2
-#        items:
+bone_gnaw:
+    group: normal
+    name: A bone to gnaw on
+    messageStart: Skeletons, I hate skeletons! They always look at me from far away shoot me in the knee! Please kill them and gather their bones so I can chew on them. 
+    messageEnd: Great!!! *gnaw* *gnaw* *gnaw*... leave me alone ... *gnaw*   
+    daily: true
+    objectives:
+        -   type: collect
+            name: Collect 15 skeletons bones
+            what: 352
+            amount: 15
+            keep: true
+        -   type: kill
+            name: Kill 10 skeletons
+            what: 51
+            amount: 10
+    joinFees:
+        money: 0
+        level: 0
+    dropFees:
+        money: 50
+        level: 0
+    rewards:
+        money: 300
+        level: 2
+        items:
 diamonds:
     group: normal-adventure
     name: Diamonds!
@@ -51,19 +51,40 @@ diamonds:
         level: 0
     rewards:
         money: 0
-        level: 2
+        level: 5
         items:
-#blue:
+blue:
+    group: normal-adventure
+    name: Into the blue...
+    messageStart: They say blue ain't no good because it doesn't do anything, but everyone likes blue! I want to set up a shop here. Find me a block of Lapis Lazuli, and I'll pay you handsomely!  
+    messageEnd: Thank you kind sir! A bit of blue is always a good news, don't you think? 
+    daily: true
+    objectives:
+        -   type: find
+            name: Find 3 Lapis Lazuli ore
+            what: 21
+            amount: 3
+        -   type: collect
+            name: Collect 1 Lapis Lazuli block
+            what: 22
+            amount: 1
+    joinFees:
+        money: 0
+        level: 0
+    dropFees:
+        money: 50
+        level: 0
+    rewards:
+        money: 500
+        level: 5
+        items:
+#valentines:
 #    group: normal-adventure
-#    name: Into the blue...
-#    messageStart: They say blue ain't no good because it doesn't do anything, but everyone likes blue! I want to set up a shop here. Find me a block of Lapis Lazuli, and I'll pay you handsomely!  
-#    messageEnd: Thank you kind sir! A bit of blue is always a good news, don't you think? 
+#    name: Aaaw love...
+#    messageStart: Are you in love? Well, you should because it's Valentines Day! Get your love some Cocoa Beans, chocolate is always good!    
+#    messageEnd: Run to your choosen one young flibus!!!
 #    daily: true
 #    objectives:
-#        -   type: find
-#            name: Find 3 Lapis Lazuli ore
-#            what: 21
-#            amount: 3
 #        -   type: collect
 #            name: Collect 1 Lapis Lazuli block
 #            what: 22
@@ -76,35 +97,36 @@ diamonds:
 #        level: 0
 #    rewards:
 #        money: 500
-#        level: 2
-#        items:
-#precious_pearls:
-#    group: hard
-#    name: Precious pearls
-#    messageStart: We're trying to repair an ender portal to get rid of the ender dragon and we're missing pearls. Bring me enderman's pearl and kill some of them while you're at it. 
-#    messageEnd: Great work son. Still more work to do, but we're getting there! Here's your reward.
-#    daily: true
-#    objectives:
-#        -   type: collect
-#            name: Collect 5 Enderman pearls
-#            what: 368
-#            amount: 5
-#        -   type: kill
-#            name: Kill 5 Enderman
-#            what: 58
-#            amount: 5
-#    joinFees:
-#        money: 0
-#        level: 0
-#    dropFees:
-#        money: 50
-#        level: 0
-#    rewards:
-#        money: 500
 #        level: 5
 #        items:
-#            - id: 297
-#            - amount: 10
+enderman:
+    group: normal
+    name: Creepy, creepy things
+    messageStart: Did you see that? I swear, I was looking right at it and he just disa...AAAAAAARRRGGGHH... *silence*.  
+    messageEnd: You avenged this poor guy. You search the corpse and find some sort of golden apple.
+    daily: true
+    objectives:
+        -   type: kill
+            name: Kill 5 Enderman
+            what: 58
+            amount: 5
+        -   type: collect
+            name: Collect 5 Enderman Pearl
+            keep: true
+            what: 368
+            amount: 5
+    joinFees:
+        money: 0
+        level: 0
+    dropFees:
+        money: 50
+        level: 0
+    rewards:
+        money: 300
+        level: 5
+        items:
+            -   id: 322
+                amount: 7
 castle_siege:
     group: hard
     name: Castle under siege
@@ -116,7 +138,7 @@ castle_siege:
             name: Kill 50 monsters at the castle
             what: 50,51,52,54,58
             zone: -71,-752,127,1121,0,128
-            amount: 1
+            amount: 50
     joinFees:
         money: 0
         level: 0
@@ -131,21 +153,21 @@ castle_siege:
               amount: 5
 
 # scenario based quests        
-haunted_post:
-    group: haunted-post
-    name: A haunted post
-    messageStart: Have you ever heard of a haunted post? Not so far away from here is a post that is known to be haunted. HAUNTED I TELL YOU!! Go there at your own risk. 
-    messageEnd: You've shown a lot of courage there son. 
-    daily: false
+haunted_outpost:
+    group: haunted-outpost
+    name: A haunted outpost
+    messageStart: Have you ever heard of a haunted outpost? Not so far away from here is a post that is known to be haunted. HAUNTED I TELL YOU!! Go there at your own risk. 
+    messageEnd: You've shown a lot of courage there son.
+    daily: true
     objectives:
         -   type: zone
-            name: Investigate Haunted Post
+            name: Investigate Haunted Outpost
             zone: 366,181,369,184,0,128
         -   type: kill
-            name: Kill 10 monsters
+            name: Kill 25 monsters
             zone: 347,168,386,201,0,128
             what: 51,52,54,58
-            amount: 10
+            amount: 25
     joinFees:
         money: 0
         level: 0

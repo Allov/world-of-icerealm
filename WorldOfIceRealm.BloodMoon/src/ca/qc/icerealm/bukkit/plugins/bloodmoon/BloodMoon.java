@@ -21,7 +21,7 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 	// nombre constrant de millisecond dans une minute
 	private final long _msInMinecraftHour = 50; 
 	// il y a une chance sur 10 qu'un blood moon soit activé
-	private int _probability = 1;
+	private int _probability = 10;
 	// le nombre de millisecond avant de spawner autour du joueur
 	private long _delay = 20000; // 20 sec
 	

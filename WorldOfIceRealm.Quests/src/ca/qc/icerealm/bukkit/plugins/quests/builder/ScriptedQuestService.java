@@ -28,7 +28,7 @@ import ca.qc.icerealm.bukkit.plugins.questslog.QuestLogService;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 
 public class ScriptedQuestService {
-	private static final long DayInMillis = 1000 * 60 * 60 * 24;
+	private static final long DayInMillis = 1000 * 60 * 60 * 12;
 	
 	private final ConfigWrapper config;
 	private final Logger logger = Logger.getLogger("ScriptedQuests");

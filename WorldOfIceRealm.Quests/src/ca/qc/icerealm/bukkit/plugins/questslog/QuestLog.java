@@ -33,7 +33,7 @@ public class QuestLog {
 	}
 	
 	public Quest getQuestByKey(String key) {
-		if (key == "random") {
+		if (key.equals("random")) {
 			return randomQuest;
 		}		
 		
@@ -81,13 +81,13 @@ public class QuestLog {
 			player.sendMessage("  > " + ChatColor.GRAY + "No quest in progress or completed.");
 		}
 
-		player.sendMessage(ChatColor.LIGHT_PURPLE + "Daily Quest: ");
+		player.sendMessage(ChatColor.LIGHT_PURPLE + "Cooldown Quest: ");
 		for (Quest quest : this.dailyQuests) {
 			displayQuestText(player, quest);
 		}
 
 		if (this.dailyQuests.size() == 0) {
-			player.sendMessage("  > " + ChatColor.GRAY + "No daily quest in progress or completed.");
+			player.sendMessage("  > " + ChatColor.GRAY + "No cooldown quest in progress or completed.");
 		}
 	}
 

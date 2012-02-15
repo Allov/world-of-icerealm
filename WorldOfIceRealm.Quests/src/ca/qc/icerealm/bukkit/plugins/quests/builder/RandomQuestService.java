@@ -54,7 +54,7 @@ public class RandomQuestService {
 			return null;
 		}
 		
-		int objectivesCount = random.nextInt(MaxObjective-1)+1;
+		int objectivesCount = 2;
 		List<KillObjective> objectives = new ArrayList<KillObjective>();
 		List<Integer> creaturesToKill;
 

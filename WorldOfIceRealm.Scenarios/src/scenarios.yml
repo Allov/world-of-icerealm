@@ -6,11 +6,11 @@
    name: Monster Fury
    zone: 366,181,369,184,0,128
    minplayer: 1
-   cooldown: 30000
+   cooldown: 600000
    protectradius: 30.0
-   wave: 2
+   wave: 5
    monster: 20
-   experience: 0
+   experience: 5
    money: 0
    armor: 0.1
    greater_zone: 347,168,386,201,0,128

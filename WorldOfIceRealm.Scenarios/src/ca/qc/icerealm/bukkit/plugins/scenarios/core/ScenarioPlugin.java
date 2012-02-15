@@ -21,16 +21,16 @@ public class ScenarioPlugin extends JavaPlugin {
 	public void onEnable() {
 		// set les scénarios pré enregistré ici!
 		_defaultConfig = new MonsterFuryConfiguration();
-		_defaultConfig.ExperienceReward = 100;								// 100 level d'exp
-		_defaultConfig.CoolDownTime = 10000; 								// 10 sec
+		_defaultConfig.ExperienceReward = 5;								// 100 level d'exp
+		_defaultConfig.CoolDownTime = 600000; 								// 10 sec
 		_defaultConfig.InitialTimeBeforeFirstWave = 10000;					// 10 sec
 		_defaultConfig.MinimumPlayer = 1;									// 1 joueur requis
-		_defaultConfig.MonstersPerWave = 10;								// 10 monstres par wave
+		_defaultConfig.MonstersPerWave = 20;								// 10 monstres par wave
 		_defaultConfig.Name = "Gladiatore";									// le nom du scénario 
-		_defaultConfig.NumberOfWaves = 3;									// 3 waves
+		_defaultConfig.NumberOfWaves = 5;									// 3 waves
 		_defaultConfig.TimeBetweenWave = 10000;								// 10 sec
-		_defaultConfig.ActivationZoneCoords = "-180,134,-177,137,0,128";	// zone d'Activation
-		_defaultConfig.ScenarioZoneCoords = "-189,127,-168,140,0,128";		// zone du scenario
+		_defaultConfig.ActivationZoneCoords = "366,181,369,184,0,128";	// zone d'Activation
+		_defaultConfig.ScenarioZoneCoords = "347,168,386,201,0,128";		// zone du scenario
 		
 		_monster = new MonsterFury(this, _defaultConfig);
 	}

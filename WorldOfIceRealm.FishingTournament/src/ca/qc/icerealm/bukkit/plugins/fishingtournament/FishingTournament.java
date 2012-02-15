@@ -18,7 +18,7 @@ import ca.qc.icerealm.bukkit.plugins.common.WorldClock;
 import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 
-public class FishingTournament implements TimeObserver {
+public class FishingTournament {
 
 	private static final int MineCraftHourInMillis = 50000;
 
@@ -31,7 +31,7 @@ public class FishingTournament implements TimeObserver {
 	private RegisteredServiceProvider<Economy> economyProvider;
 	
 	// Configurations
-	private final int Span = 2;
+	private final int Span = 6;
 	private final int End = Sunset + Span;
 	private final int Half = End / 2;
 	private final int NearEnd = End - 1;
@@ -39,6 +39,7 @@ public class FishingTournament implements TimeObserver {
 	
 	private final FishingTournamentPlugin plugin;
 	private final Server server;
+	private TimeChecker timeChecker;
 
 	private long alarm;
 	
@@ -60,8 +61,9 @@ public class FishingTournament implements TimeObserver {
 	}
 
 	private void startTournament() {
-		boolean draw = RandomUtil.getDrawResult(1);
-		if (draw && server.getOnlinePlayers().length >= 1) {
+		boolean draw = RandomUtil.getDrawResult(10);
+		Logger.getLogger("Minecraft").info("[WoI.FishingTournament] >>> Draw result : " + draw);
+		if (draw && server.getOnlinePlayers().length > 1) {
 			if (fishingEventListener == null) {
 				fishingEventListener = new FishingEventListener(this);
 				server.getPluginManager().registerEvents(fishingEventListener, plugin);
@@ -167,7 +169,7 @@ public class FishingTournament implements TimeObserver {
 	}
 	
 	public void start() {
-		TimeServer.getInstance().addListener(this, 10000);
+		setupAlarm(10000);
 	}
 
 	public void progress() {
@@ -177,6 +179,7 @@ public class FishingTournament implements TimeObserver {
 			this.lastWorldTime = currentWorldTime;
 			
 			if (currentWorldTime == Sunset) {
+				Logger.getLogger("Minecraft").info("[WoI.FishingTournament] >>> Sunset, rolling");
 				startTournament();
 			} else if (isInProgress() && currentWorldTime == Half) {
 				notifyHalf();
@@ -185,24 +188,17 @@ public class FishingTournament implements TimeObserver {
 			} else if (isInProgress() && currentWorldTime == End) {
 				EndTournament();
 			}
-		}		
+		}
 		
-		Logger.getLogger("Minecraft").info("addListener --- this.lastWorldTime != currentWorldTime" + this.lastWorldTime + " != " + currentWorldTime);
-		TimeServer.getInstance().addListener(this, 1000);
+		setupAlarm(1000);
 	}
 
-	@Override
-	public void timeHasCome(long time) {
-		progress();		
+	private void setupAlarm(long when) {
+		timeChecker = new TimeChecker(this);
+		TimeServer.getInstance().addListener(getTimeChecker(), when);
 	}
 
-	@Override
-	public void setAlaram(long time) {
-		this.alarm = time;
-	}
-
-	@Override
-	public long getAlarm() {
-		return alarm;
+	public TimeChecker getTimeChecker() {
+		return timeChecker;
 	}
 }

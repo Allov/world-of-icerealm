@@ -10,7 +10,7 @@ public class FishingTournamentPlugin extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		TimeServer.getInstance().removeListener(fishingTournament);
+		TimeServer.getInstance().removeListener(fishingTournament.getTimeChecker());
 	}
 
 	@Override

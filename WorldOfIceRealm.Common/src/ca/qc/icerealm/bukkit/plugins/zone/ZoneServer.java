@@ -71,6 +71,6 @@ public class ZoneServer implements ZoneSubject {
 	}
 	
 	private void displayInfo(String info) {
-		this.logger.info("[ZoneServer] " + info);
+		//this.logger.info("[ZoneServer] " + info);
 	}
 }

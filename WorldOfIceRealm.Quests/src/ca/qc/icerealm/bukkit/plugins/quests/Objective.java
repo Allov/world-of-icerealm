@@ -25,6 +25,7 @@ public abstract class Objective {
 	
 	public void register(ObjectiveListener listener) {
 		this.listeners.add(listener);
+		listenerAdded();
 	}
 	
 	public void unregister(ObjectiveListener listener) {
@@ -73,5 +74,9 @@ public abstract class Objective {
 
 	public void reset() {
 		this.setCompleted(false);
+	}
+	
+	protected void listenerAdded() {
+		
 	}
 }

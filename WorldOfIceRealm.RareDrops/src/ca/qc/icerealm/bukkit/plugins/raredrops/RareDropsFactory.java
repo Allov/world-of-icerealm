@@ -42,7 +42,7 @@ public class RareDropsFactory
 		{
 			case EntityUtilities.Zombie:
 			{
-				this.logger.info("Killed Zombie");
+				//this.logger.info("Killed Zombie");
 				odds.addOddsItem(new RareDropsOddsItem(5.00 * oddsMultiplier, Material.FEATHER));
 				odds.addOddsItem(new RareDropsOddsItem(3.00 * oddsMultiplier, Material.LEATHER));
 				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_PICKAXE, new EnchantmentsOdds (EnchantmentsOdds.LOW_ODDS)));
@@ -63,7 +63,7 @@ public class RareDropsFactory
 			}
 			case EntityUtilities.Spider:
 			{
-				this.logger.info("Killed Spider");
+				//this.logger.info("Killed Spider");
 				odds.addOddsItem(new RareDropsOddsItem(7.00 * oddsMultiplier, Material.BREAD));
 				odds.addOddsItem(new RareDropsOddsItem(5.00 * oddsMultiplier, Material.COOKIE));
 				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.POTION));
@@ -72,7 +72,7 @@ public class RareDropsFactory
 			}
 			case EntityUtilities.Skeleton:
 			{
-				this.logger.info("Killed Skeleton");
+				//this.logger.info("Killed Skeleton");
 				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_PICKAXE, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
 				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_AXE, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
 				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_SWORD, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
@@ -92,7 +92,7 @@ public class RareDropsFactory
 			}
 			case EntityUtilities.Creeper:
 			{
-				this.logger.info("Killed Creeper");
+				//this.logger.info("Killed Creeper");
 				odds.addOddsItem(new RareDropsOddsItem(2.00 * oddsMultiplier, Material.CAKE));
 				odds.addOddsItem(new RareDropsOddsItem(2.00 * oddsMultiplier, Material.FLINT_AND_STEEL));
 				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.REDSTONE_ORE));
@@ -119,7 +119,7 @@ public class RareDropsFactory
 			}
 			case EntityUtilities.Enderman:
 			{
-				this.logger.info("Killed Enderman");
+				//this.logger.info("Killed Enderman");
 				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.DIRT));
 				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.STONE));
 				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.BLAZE_POWDER));
@@ -138,7 +138,7 @@ public class RareDropsFactory
 			}
 			case EntityUtilities.Slime:
 			{
-				this.logger.info("Killed Slime");
+				//this.logger.info("Killed Slime");
 				odds.addOddsItem(new RareDropsOddsItem(2.00 * oddsMultiplier, Material.CAKE));
 				odds.addOddsItem(new RareDropsOddsItem(5.00 * oddsMultiplier, Material.CLAY));
 				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.MAP));
@@ -156,7 +156,7 @@ public class RareDropsFactory
 			}
 			case EntityUtilities.CaveSpider:
 			{
-				this.logger.info("Killed Cave Spider");
+				//this.logger.info("Killed Cave Spider");
 				odds.addOddsItem(new RareDropsOddsItem(7.00 * oddsMultiplier, Material.BREAD));
 				odds.addOddsItem(new RareDropsOddsItem(4.00 * oddsMultiplier, Material.COOKIE));
 				odds.addOddsItem(new RareDropsOddsItem(2.00 * oddsMultiplier, Material.LAPIS_ORE));
@@ -166,7 +166,7 @@ public class RareDropsFactory
 			}
 			case EntityUtilities.PigZombie:
 			{
-				this.logger.info("Killed Pig Zombie");
+				//this.logger.info("Killed Pig Zombie");
 				odds.addOddsItem(new RareDropsOddsItem(3.00 * oddsMultiplier, Material.FLINT));
 				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.LAVA_BUCKET));
 				odds.addOddsItem(new RareDropsOddsItem(0.10 * oddsMultiplier, Material.DIAMOND_BOOTS, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
@@ -182,21 +182,21 @@ public class RareDropsFactory
 			}
 			case EntityUtilities.Ghast:
 			{
-				this.logger.info("Killed Pig Ghast");
+				//this.logger.info("Killed Pig Ghast");
 				odds.addOddsItem(new RareDropsOddsItem(5.00 * oddsMultiplier, Material.GLOWSTONE_DUST));
 				odds.addOddsItem(new RareDropsOddsItem(3.00 * oddsMultiplier, Material.FEATHER));
 				odds.addOddsItem(new RareDropsOddsItem(5.00 * oddsMultiplier, Material.POTION));
 			}
 			case EntityUtilities.MagmaCube:
 			{
-				this.logger.info("Killed Pig Ghast");
+				//this.logger.info("Killed Pig Ghast");
 				odds.addOddsItem(new RareDropsOddsItem(2.00 * oddsMultiplier, Material.LAPIS_ORE));
 				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.LAVA_BUCKET));
 				odds.addOddsItem(new RareDropsOddsItem(2.00 * oddsMultiplier, Material.MAGMA_CREAM));
 			}
 			case EntityUtilities.EnderDragon:
 			{
-				this.logger.info("Killed Enderdragon");
+				//this.logger.info("Killed Enderdragon");
 				odds.addOddsItem(new RareDropsOddsItem(20.00 * oddsMultiplier, Material.GOLDEN_APPLE));
 				odds.addOddsItem(new RareDropsOddsItem(7.50 * oddsMultiplier, Material.IRON_BOOTS, new EnchantmentsOdds (EnchantmentsOdds.BOSS_HIGH_ODDS)));
 				odds.addOddsItem(new RareDropsOddsItem(7.50 * oddsMultiplier, Material.IRON_CHESTPLATE, new EnchantmentsOdds (EnchantmentsOdds.BOSS_HIGH_ODDS)));
