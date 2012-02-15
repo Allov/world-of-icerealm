@@ -63,6 +63,7 @@ public class MonsterFury implements ZoneObserver {
 		_server = p.getServer();
 		_world = _plugin.getServer().getWorld("world");
 		_players = new ArrayList<Player>();
+		_waves = new ArrayList<MonsterWave>();
 		_isActive = false;
 		_coolDownActive = false;
 		_nbWaveDone = 0;
