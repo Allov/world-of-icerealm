@@ -49,7 +49,7 @@ public class MonsterFuryListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onDisconnectPlayer(PlayerQuitEvent quit) {
-		_scenario.getPlayers().remove(quit.getPlayer());
+		_scenario.removePlayerFromScenario(quit.getPlayer());
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)

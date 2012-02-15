@@ -13,10 +13,12 @@ public class ActivationZoneObserver implements ZoneObserver {
 	private WorldZone _world;
 	private Server _server;
 	private MonsterFury _fury;
+	private int _playerPresent;
 	
 	public ActivationZoneObserver(Server s, MonsterFury fury) {
 		_server = s;
 		_fury = fury;
+		_playerPresent = 0;
 	}
 
 	@Override
@@ -31,17 +33,17 @@ public class ActivationZoneObserver implements ZoneObserver {
 
 	@Override
 	public void playerEntered(Player p) {
-		if (!_fury.isActive() && !_fury.isCoolDownActive()) {
-			_fury.addPlayerToScenario(p);	
+		this.logger.info("you entering in the activation zone");
+		_playerPresent++;
+		if (_playerPresent >= _fury.getMinimumPlayer() && !_fury.isCoolDownActive() && !_fury.isActive()) {
+			_fury.triggerScenario();
 		}
 		
 	}
 
 	@Override
 	public void playerLeft(Player p) {
-		if (!_fury.isActive()) {
-			_fury.removePlayerFromScenario(p);
-		}
+		_playerPresent--;
 	}
 
 	@Override

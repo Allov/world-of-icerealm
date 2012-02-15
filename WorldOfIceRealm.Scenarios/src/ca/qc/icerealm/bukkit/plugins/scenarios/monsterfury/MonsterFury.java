@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -33,6 +34,7 @@ public class MonsterFury implements ZoneObserver, Scenario {
 	private ActivationZoneObserver _activationZoneObserver;
 	private MonsterFuryListener _listener;
 	private MonsterFuryEventsListener _eventsListener;
+	private CommandExecutor _commander;
 
 	// propriete modifiable de l'externe
 	private long _coolDownTime;
@@ -86,6 +88,9 @@ public class MonsterFury implements ZoneObserver, Scenario {
 		_activationZoneObserver = new ActivationZoneObserver(_plugin.getServer(), this);
 		_activationZoneObserver.setWorldZone(_activationZone);
 		ZoneServer.getInstance().addListener(_activationZoneObserver);
+		
+		// on veut ajouter les joueurs dans le scenario
+		ZoneServer.getInstance().addListener(this);
 				
 		// set les listener bukkit
 		_listener = new MonsterFuryListener(this);
@@ -113,7 +118,7 @@ public class MonsterFury implements ZoneObserver, Scenario {
 		TimeServer.getInstance().addListener(_coolDownTimer, _coolDownTime);
 		
 		// on update la zone du scenario en enlevant la zone d'activation 
-		ZoneServer.getInstance().addListener(this);
+		
 		this.logger.info("Scenario has been trigged");
 				
 		if (_eventsListener != null) {
@@ -145,7 +150,6 @@ public class MonsterFury implements ZoneObserver, Scenario {
 			
 			_nbWaveDone = 0;	
 			_waves.clear();
-			ZoneServer.getInstance().removeListener(this);
 			_isActive = false;
 		}
 		
@@ -165,7 +169,6 @@ public class MonsterFury implements ZoneObserver, Scenario {
 		}
 		
 		_nbWaveDone = 0;
-		ZoneServer.getInstance().removeListener(this);
 		_isActive = false;
 	}
 
@@ -200,10 +203,7 @@ public class MonsterFury implements ZoneObserver, Scenario {
 	public void addPlayerToScenario(Player p) {
 		if (_players != null && p != null && !_players.contains(p)) {
 			_players.add(p);
-			if (!_coolDownActive && _players.size() >= _minimumPlayer) {
-				
-				triggerScenario();
-			}
+			p.sendMessage("You entered a scenario zone");
 		}
 	}
 	
@@ -211,8 +211,9 @@ public class MonsterFury implements ZoneObserver, Scenario {
 		// TODO Auto-generated method stub
 		if (_players != null && p != null && _players.contains(p)) {
 			_players.remove(p);
+			p.sendMessage("You left a scenario zone");
 			this.logger.info(p.getName() + " has been removed from the scenario");
-			if (_players.size() == 0) {
+			if (_players.size() == 0 && isActive()) {
 				if (_eventsListener != null) {
 					_eventsListener.scenarioAborting(_nbWaveDone, p);
 				}
@@ -231,6 +232,10 @@ public class MonsterFury implements ZoneObserver, Scenario {
 	
 	public World getWorld() {
 		return _world;
+	}
+	
+	public int getMinimumPlayer() {
+		return _minimumPlayer;
 	}
 	
 	public void waveIsDone() {
@@ -257,17 +262,12 @@ public class MonsterFury implements ZoneObserver, Scenario {
 		
 	@Override
 	public void playerEntered(Player p) {
-		// TODO Auto-generated method stub
-		if (_isActive) {
-			this.addPlayerToScenario(p);	
-		}
+		this.addPlayerToScenario(p);
 	}
 
 	@Override
 	public void playerLeft(Player p) {
-		if (_isActive) {
-			this.removePlayerFromScenario(p);	
-		}
+		this.removePlayerFromScenario(p);	
 	}
 
 	@Override
