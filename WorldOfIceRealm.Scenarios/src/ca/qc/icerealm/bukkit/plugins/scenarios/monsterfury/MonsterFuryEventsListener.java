@@ -10,8 +10,9 @@ public interface MonsterFuryEventsListener {
 	void waveIsDone(int done);
 	void scenarioStarting(int waves, List<Player> list);
 	void scenarioEnding(int wavedone);
-	void scenarioAborting(int wavedone);
-	void coolDownChanged(boolean value);
+	void scenarioAborting(int wavedone, Player p);
+	void coolDownChanged(boolean value, long time);
 	void playerDied(Player p,  List<Player> players);
 	void monsterDied(Entity e, int left);
+	void playerRewared(Player p, int exp);
 }

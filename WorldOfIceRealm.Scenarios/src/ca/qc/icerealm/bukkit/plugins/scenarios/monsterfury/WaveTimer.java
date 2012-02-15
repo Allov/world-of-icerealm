@@ -17,8 +17,6 @@ public class WaveTimer implements TimeObserver {
 	
 	@Override
 	public void timeHasCome(long time) {
-		
-		
 		_wave.spawnWave();
 		if (_listener != null) {
 			_listener.waveStarting(_wave.getMonstersSize());
