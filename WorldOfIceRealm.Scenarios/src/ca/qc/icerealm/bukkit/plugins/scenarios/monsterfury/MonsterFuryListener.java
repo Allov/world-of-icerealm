@@ -9,6 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class MonsterFuryListener implements Listener {
 
@@ -44,6 +45,11 @@ public class MonsterFuryListener implements Listener {
 		}
 		
 		
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onDisconnectPlayer(PlayerQuitEvent quit) {
+		_scenario.getPlayers().remove(quit.getPlayer());
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)

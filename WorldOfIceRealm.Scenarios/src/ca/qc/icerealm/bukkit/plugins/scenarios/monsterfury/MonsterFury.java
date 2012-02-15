@@ -11,11 +11,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
+import ca.qc.icerealm.bukkit.plugins.scenarios.core.Scenario;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 
-public class MonsterFury implements ZoneObserver {
+public class MonsterFury implements ZoneObserver, Scenario {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 
 	// objet de plus haut niveau
@@ -282,5 +283,11 @@ public class MonsterFury implements ZoneObserver {
 	@Override
 	public WorldZone getWorldZone() {
 		return _scenarioZone;
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return _name;
 	}
 }
