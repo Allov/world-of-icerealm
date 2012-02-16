@@ -3,11 +3,14 @@ package ca.qc.icerealm.bukkit.plugins.advancedcompass;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Location;
+
 public class CompassPlayersInfo 
 {
    private static CompassPlayersInfo instance = null;
    private Map<String, CompassMode> playersCurrentComppassModeList = new HashMap<String, CompassMode>();
    private String currentPlayerModePlayerName = null;
+   private Location currentFixedModeLocation = null;
 
    protected CompassPlayersInfo() 
    {
@@ -50,4 +53,14 @@ public class CompassPlayersInfo
    {
 	   return currentPlayerModePlayerName;
    }
+
+	public Location getCurrentFixedModeLocation() 
+	{
+		return currentFixedModeLocation;
+	}
+
+	public void setCurrentFixedModeLocation(Location currentFixedModeLocation) 
+	{
+		this.currentFixedModeLocation = currentFixedModeLocation;
+	}
 }
