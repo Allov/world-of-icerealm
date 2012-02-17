@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 public class CompassCommandExecutor implements CommandExecutor
 {
 	private static final String AdvancedCompassParamHelp = "help";
-	private static final String AdvancedCompassParamPointPlayer = "point";
+	private static final String AdvancedCompassParamPointPlayer = "player";
 	private static final String AdvancedCompassParamCurrentLocation = "current_location";
 	private static final String AdvancedCompassCommandName = "c";
 	
@@ -31,10 +31,10 @@ public class CompassCommandExecutor implements CommandExecutor
 					displayHelp(player);
 				}
 				else if (params[0].equalsIgnoreCase(AdvancedCompassParamPointPlayer))
-				{
+				{					
 					CompassPlayersInfo compassPlayersInfo = CompassPlayersInfo.getInstance();
+					PlayerCompassData compassData = compassPlayersInfo.getPlayerCompassData(player.getName());
 					
-
 					boolean playerIsOnline = false;
 					
 					for (int i = 0; i < player.getServer().getOnlinePlayers().length; i++)
@@ -48,7 +48,8 @@ public class CompassCommandExecutor implements CommandExecutor
 					
 					if (playerIsOnline)
 					{
-						compassPlayersInfo.setCurrentPlayerModePlayerName(params[1]);			
+						compassData.setCurrentPlayerModePlayerName(params[1]);	
+						compassPlayersInfo.setPlayerCompassData(player.getName(), compassData);
 						player.sendMessage(ChatColor.LIGHT_PURPLE + ">> Current pointing location is now set to player " + params[1]);
 					}
 					else
@@ -59,8 +60,10 @@ public class CompassCommandExecutor implements CommandExecutor
 				else if (params[0].equalsIgnoreCase(AdvancedCompassParamCurrentLocation))
 				{
 					CompassPlayersInfo compassPlayersInfo = CompassPlayersInfo.getInstance();
+					PlayerCompassData compassData = compassPlayersInfo.getPlayerCompassData(player.getName());
 					
-					compassPlayersInfo.setCurrentFixedModeLocation(player.getLocation());
+					compassData.setCurrentFixedModeLocation(player.getLocation());
+					compassPlayersInfo.setPlayerCompassData(player.getName(), compassData);
 					player.sendMessage(ChatColor.LIGHT_PURPLE + ">> Current fixed location set");
 				}
 				else if (params[0].equalsIgnoreCase(AdvancedCompassParamHelp))

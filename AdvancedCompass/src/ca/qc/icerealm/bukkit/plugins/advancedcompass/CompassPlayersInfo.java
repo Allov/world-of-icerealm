@@ -8,9 +8,7 @@ import org.bukkit.Location;
 public class CompassPlayersInfo 
 {
    private static CompassPlayersInfo instance = null;
-   private Map<String, CompassMode> playersCurrentComppassModeList = new HashMap<String, CompassMode>();
-   private String currentPlayerModePlayerName = null;
-   private Location currentFixedModeLocation = null;
+   private Map<String, PlayerCompassData> playersCurrentComppassDataList = new HashMap<String, PlayerCompassData>();
 
    protected CompassPlayersInfo() 
    {
@@ -26,41 +24,21 @@ public class CompassPlayersInfo
       
       return instance;
    }
-   
-   public void setCompassMode(String playerName, CompassMode mode)
+
+   public void setPlayerCompassData(String playerName, PlayerCompassData data)
    {
-	   playersCurrentComppassModeList.put(playerName, mode);
+	   playersCurrentComppassDataList.put(playerName, data);
    }
    
-   public CompassMode getCompassMode(String playerName)
+   public PlayerCompassData getPlayerCompassData(String playerName)
    {
-	   CompassMode mode = playersCurrentComppassModeList.get(playerName);
-	   
-	   if (mode != null)
+	   PlayerCompassData data = playersCurrentComppassDataList.get(playerName);
+	   if (data != null)
 	   {
-		   return playersCurrentComppassModeList.get(playerName);
+		   return playersCurrentComppassDataList.get(playerName);
 	   }
 	   
-	   return CompassMode.SpawnPoint;
+	   data = new PlayerCompassData();
+	   return data;
    }
-   
-   public void setCurrentPlayerModePlayerName(String playerName)
-   {
-	   currentPlayerModePlayerName = playerName;
-   }
-   
-   public String getCurrentPlayerModePlayerName()
-   {
-	   return currentPlayerModePlayerName;
-   }
-
-	public Location getCurrentFixedModeLocation() 
-	{
-		return currentFixedModeLocation;
-	}
-
-	public void setCurrentFixedModeLocation(Location currentFixedModeLocation) 
-	{
-		this.currentFixedModeLocation = currentFixedModeLocation;
-	}
 }

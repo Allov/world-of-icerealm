@@ -18,11 +18,11 @@ public class CompassActionListener implements Listener
 		// If left-clicked anywhere with compass
         if(((event.getAction().equals(Action.LEFT_CLICK_AIR) || (event.getAction().equals(Action.LEFT_CLICK_BLOCK))) && event.getItem().getType().equals(Material.COMPASS)))
         { 
-        	//boolean notSet = false;
-        	
         	CompassPlayersInfo compassPlayersInfo = CompassPlayersInfo.getInstance();
         	
-        	CompassMode mode = compassPlayersInfo.getCompassMode(event.getPlayer().getName());
+        	PlayerCompassData compassData = compassPlayersInfo.getPlayerCompassData(event.getPlayer().getName());
+        	
+        	CompassMode mode = compassData.getCurrentCompassMode();
         	CompassMode nextMode = getNextCompassMode(mode);
         	
         	if (nextMode == CompassMode.Bed)
@@ -34,50 +34,56 @@ public class CompassActionListener implements Listener
         		}
         		else
         		{
-        			//event.getPlayer().sendMessage("Your bed location isn't set yet");
-            	//	notSet = true;
             		nextMode = getNextCompassMode(nextMode);
         		}
         	}
         	
         	if (nextMode == CompassMode.Player)
         	{
-        		String playerName = compassPlayersInfo.getCurrentPlayerModePlayerName();
-        		if (compassPlayersInfo.getCurrentPlayerModePlayerName() != null)
+        		String playerName = compassData.getCurrentPlayerModePlayerName();
+        		if (playerName != null)
         		{
-	        		event.getPlayer().setCompassTarget(event.getPlayer().getServer().getPlayer(compassPlayersInfo.getCurrentPlayerModePlayerName()).getLocation());
-	        		event.getPlayer().sendMessage("Your compass is now pointing at " + playerName);
+					for (int i = 0; i < event.getPlayer().getServer().getOnlinePlayers().length; i++)
+					{
+	        			// Validate if player still exists
+						if (event.getPlayer().getServer().getOnlinePlayers()[i].getName().equals(playerName))
+						{
+		        			event.getPlayer().setCompassTarget(event.getPlayer().getServer().getPlayer(playerName).getLocation());
+			        		event.getPlayer().sendMessage("Your compass is now pointing at " + playerName);
+						}
+						else
+						{
+							nextMode = getNextCompassMode(nextMode);
+						}
+					}
         		}
         		else
         		{
-        		//	event.getPlayer().sendMessage("Your compass is not pointing at any player at the moment");
-            	//	notSet = true;
             		nextMode = getNextCompassMode(nextMode);
         		}
         	} 
         	
         	if (nextMode == CompassMode.Fixed)
         	{
-        		if (compassPlayersInfo.getCurrentFixedModeLocation() != null)
+        		if (compassData.getCurrentFixedModeLocation() != null)
         		{
-	        		event.getPlayer().setCompassTarget(compassPlayersInfo.getCurrentFixedModeLocation());
+	        		event.getPlayer().setCompassTarget(compassData.getCurrentFixedModeLocation());
 	        		event.getPlayer().sendMessage("Your compass is now pointing at your current fixed location");
         		}
         		else
         		{
-        		//	event.getPlayer().sendMessage("You haven't set any fixed location to point at");
-            	//	notSet = true;
             		nextMode = getNextCompassMode(nextMode);
         		}
         	} 
         	
-        	if (nextMode == CompassMode.SpawnPoint/* || notSet*/)
+        	if (nextMode == CompassMode.SpawnPoint)
         	{
         		event.getPlayer().setCompassTarget(event.getPlayer().getWorld().getSpawnLocation());
         		event.getPlayer().sendMessage("Your compass is now pointing at world spawn point");
         	}
         	
-        	compassPlayersInfo.setCompassMode(event.getPlayer().getName(), nextMode);
+        	compassData.setCurrentCompassMode(nextMode);
+        	compassPlayersInfo.setPlayerCompassData(event.getPlayer().getName(), compassData);
         }
 	}
 	
