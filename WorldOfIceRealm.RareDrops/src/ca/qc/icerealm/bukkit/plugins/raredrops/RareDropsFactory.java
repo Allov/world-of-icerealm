@@ -78,10 +78,10 @@ public class RareDropsFactory
 				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_SWORD, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
 				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_HOE));
 				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.IRON_SPADE, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));	
-				odds.addOddsItem(new RareDropsOddsItem(0.20 * oddsMultiplier, Material.DIAMOND_PICKAXE, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
-				odds.addOddsItem(new RareDropsOddsItem(0.20 * oddsMultiplier, Material.DIAMOND_SPADE, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
-				odds.addOddsItem(new RareDropsOddsItem(0.20 * oddsMultiplier, Material.DIAMOND_AXE, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
-				odds.addOddsItem(new RareDropsOddsItem(0.20 * oddsMultiplier, Material.DIAMOND_HOE));
+				odds.addOddsItem(new RareDropsOddsItem(0.15 * oddsMultiplier, Material.DIAMOND_PICKAXE, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.15 * oddsMultiplier, Material.DIAMOND_SPADE, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.15 * oddsMultiplier, Material.DIAMOND_AXE, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.15 * oddsMultiplier, Material.DIAMOND_HOE));
 				odds.addOddsItem(new RareDropsOddsItem(0.15 * oddsMultiplier, Material.DIAMOND_SWORD, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
 				odds.addOddsItem(new RareDropsOddsItem(1.50 * oddsMultiplier, Material.BOW, new EnchantmentsOdds (EnchantmentsOdds.LOW_ODDS)));	
 				odds.addOddsItem(new RareDropsOddsItem(0.15 * oddsMultiplier, Material.IRON_BOOTS, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
@@ -169,16 +169,17 @@ public class RareDropsFactory
 				//this.logger.info("Killed Pig Zombie");
 				odds.addOddsItem(new RareDropsOddsItem(3.00 * oddsMultiplier, Material.FLINT));
 				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.LAVA_BUCKET));
-				odds.addOddsItem(new RareDropsOddsItem(0.10 * oddsMultiplier, Material.DIAMOND_BOOTS, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
-				odds.addOddsItem(new RareDropsOddsItem(0.10 * oddsMultiplier, Material.DIAMOND_CHESTPLATE, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
-				odds.addOddsItem(new RareDropsOddsItem(0.10 * oddsMultiplier, Material.DIAMOND_HELMET, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
-				odds.addOddsItem(new RareDropsOddsItem(0.10 * oddsMultiplier, Material.DIAMOND_LEGGINGS, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));	
+				odds.addOddsItem(new RareDropsOddsItem(0.03 * oddsMultiplier, Material.DIAMOND_BOOTS, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.03 * oddsMultiplier, Material.DIAMOND_CHESTPLATE, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.03 * oddsMultiplier, Material.DIAMOND_HELMET, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.03 * oddsMultiplier, Material.DIAMOND_LEGGINGS, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));	
 				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.GOLD_BOOTS, new EnchantmentsOdds (EnchantmentsOdds.HIGH_ODDS)));
 				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.GOLD_CHESTPLATE, new EnchantmentsOdds (EnchantmentsOdds.HIGH_ODDS)));
 				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.GOLD_HELMET, new EnchantmentsOdds (EnchantmentsOdds.HIGH_ODDS)));
 				odds.addOddsItem(new RareDropsOddsItem(0.50 * oddsMultiplier, Material.GOLD_LEGGINGS, new EnchantmentsOdds (EnchantmentsOdds.HIGH_ODDS)));	
 				odds.addOddsItem(new RareDropsOddsItem(0.10 * oddsMultiplier, Material.DIAMOND_SWORD, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
 				odds.addOddsItem(new RareDropsOddsItem(2.00 * oddsMultiplier, Material.GOLD_SWORD, new EnchantmentsOdds (EnchantmentsOdds.HIGH_ODDS)));
+				break;
 			}
 			case EntityUtilities.Ghast:
 			{
@@ -186,6 +187,7 @@ public class RareDropsFactory
 				odds.addOddsItem(new RareDropsOddsItem(5.00 * oddsMultiplier, Material.GLOWSTONE_DUST));
 				odds.addOddsItem(new RareDropsOddsItem(3.00 * oddsMultiplier, Material.FEATHER));
 				odds.addOddsItem(new RareDropsOddsItem(5.00 * oddsMultiplier, Material.POTION));
+				break;
 			}
 			case EntityUtilities.MagmaCube:
 			{
@@ -193,6 +195,7 @@ public class RareDropsFactory
 				odds.addOddsItem(new RareDropsOddsItem(2.00 * oddsMultiplier, Material.LAPIS_ORE));
 				odds.addOddsItem(new RareDropsOddsItem(1.00 * oddsMultiplier, Material.LAVA_BUCKET));
 				odds.addOddsItem(new RareDropsOddsItem(2.00 * oddsMultiplier, Material.MAGMA_CREAM));
+				break;
 			}
 			case EntityUtilities.EnderDragon:
 			{
