@@ -64,7 +64,7 @@ public class CompassCommandExecutor implements CommandExecutor
 					
 					compassData.setCurrentFixedModeLocation(player.getLocation());
 					compassPlayersInfo.setPlayerCompassData(player.getName(), compassData);
-					player.sendMessage(ChatColor.LIGHT_PURPLE + ">> Current fixed location set");
+					player.sendMessage(ChatColor.LIGHT_PURPLE + ">> Current fixed location set, X: " + player.getLocation().getX() + ", Z: " + player.getLocation().getZ());
 				}
 				else if (params[0].equalsIgnoreCase(AdvancedCompassParamHelp))
 				{
