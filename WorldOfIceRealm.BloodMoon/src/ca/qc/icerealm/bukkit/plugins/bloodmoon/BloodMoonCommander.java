@@ -24,6 +24,8 @@ public class BloodMoonCommander implements CommandExecutor {
 				arg0.sendMessage(ChatColor.DARK_GREEN + "/bm reset - " + ChatColor.YELLOW + "Reset timer");
 				arg0.sendMessage(ChatColor.DARK_GREEN + "/bm delay [n] - " + ChatColor.YELLOW + "get/set the first wave delay");
 				arg0.sendMessage(ChatColor.DARK_GREEN + "/bm prob [n] - " + ChatColor.YELLOW + "get/set the probabiliy");
+				arg0.sendMessage(ChatColor.DARK_GREEN + "/bm attempt [n] - " + ChatColor.YELLOW + "get/set the attempt done");
+				arg0.sendMessage(ChatColor.DARK_GREEN + "/bm stack [true,false] - " + ChatColor.YELLOW + "cumulative draw");
 				arg0.sendMessage(ChatColor.DARK_GREEN + "/bm hardreset - " + ChatColor.YELLOW + "Call onDisable and onEnabled ");
 			}
 			if (arg3.length > 0 && arg3[0].contains("stop")) {				
@@ -58,13 +60,15 @@ public class BloodMoonCommander implements CommandExecutor {
 				}			
 			}
 			if (arg3.length == 1 && arg3[0].contains("prob")) {
-				arg0.sendMessage(ChatColor.DARK_GREEN + "Blood Moon Prob: " + ChatColor.YELLOW + "1/" + ChatColor.GOLD + _moon.getProbability());
+				arg0.sendMessage(ChatColor.DARK_GREEN + "Blood Moon Prob: " + ChatColor.YELLOW + "1/" + ChatColor.YELLOW + _moon.getProbability());
+				arg0.sendMessage(ChatColor.DARK_GREEN + "Blood Moon Next Prob: " + ChatColor.GOLD + "1/" + ChatColor.GOLD + (_moon.getProbability() - _moon.getAttemptDone()));
 			}
 			if (arg3.length == 2 && arg3[0].contains("prob")) {
 				try {
 					int d = Integer.parseInt(arg3[1]);
 					_moon.setProbability(d);
-					arg0.sendMessage(ChatColor.DARK_GREEN + "Blood Moon Prob: " + ChatColor.YELLOW + "1/" + ChatColor.GOLD + _moon.getProbability());
+					arg0.sendMessage(ChatColor.DARK_GREEN + "Blood Moon Prob: " + ChatColor.YELLOW + "1/" + ChatColor.YELLOW + _moon.getProbability());
+					arg0.sendMessage(ChatColor.DARK_GREEN + "Blood Moon Next Prob: " + ChatColor.GOLD + "1/" + ChatColor.GOLD + (_moon.getProbability() - _moon.getAttemptDone()));
 				}
 				catch (Exception ex) {
 					arg0.sendMessage(ChatColor.GRAY + "Value was not valid");
@@ -77,6 +81,34 @@ public class BloodMoonCommander implements CommandExecutor {
 			}
 			if (arg3.length == 1 && arg3[0].contains("time")) {
 				arg0.sendMessage(ChatColor.DARK_GREEN + "World time: " + ChatColor.YELLOW + arg0.getServer().getWorld("world").getTime());
+			}
+			
+			if (arg3.length == 1 && arg3[0].contains("attempt")) {
+				arg0.sendMessage(ChatColor.DARK_GREEN + "Blood Moon Attempt: " + ChatColor.GOLD + _moon.getAttemptDone());
+			}
+			if (arg3.length == 2 && arg3[0].contains("attempt")) {
+				try {
+					int d = Integer.parseInt(arg3[1]);
+					_moon.setAttemptDone(d);
+					arg0.sendMessage(ChatColor.DARK_GREEN + "Blood Moon Attempt: " + ChatColor.GOLD + _moon.getAttemptDone());
+				}
+				catch (Exception ex) {
+					arg0.sendMessage(ChatColor.GRAY + "Value was not valid");
+				}
+			}
+			
+			if (arg3.length == 1 && arg3[0].contains("stack")) {
+				arg0.sendMessage(ChatColor.DARK_GREEN + "Blood Moon Stack: " + ChatColor.GOLD + _moon.isCumulative());
+			}
+			if (arg3.length == 2 && arg3[0].contains("stack")) {
+				try {
+					boolean convertBool = Boolean.parseBoolean(arg3[1]);
+					_moon.setCumulative(convertBool);
+					arg0.sendMessage(ChatColor.DARK_GREEN + "Blood Moon Stack: " + ChatColor.GOLD + _moon.isCumulative());
+				}
+				catch (Exception ex) {
+					arg0.sendMessage(ChatColor.GRAY + "Value was not valid");
+				}
 			}
 
 		}

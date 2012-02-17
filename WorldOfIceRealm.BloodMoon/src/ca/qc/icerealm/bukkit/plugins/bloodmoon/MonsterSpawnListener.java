@@ -11,6 +11,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.world.WorldEvent;
 
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 
@@ -55,5 +56,5 @@ public class MonsterSpawnListener implements Listener {
 			event.getPlayer().sendMessage("You cannot sleep during a " + ChatColor.DARK_RED + " BLOOD MOON!");
 		}
 		
-	}	
+	}
 }

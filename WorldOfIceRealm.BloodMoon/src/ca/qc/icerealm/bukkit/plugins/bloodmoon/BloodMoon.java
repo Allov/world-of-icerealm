@@ -24,6 +24,8 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 	private int _probability = 10;
 	// le nombre de millisecond avant de spawner autour du joueur
 	private long _delay = 20000; // 20 sec
+	// 
+	private boolean _isCumulative = false;
 	
 
 	// le id des blocks valides
@@ -38,9 +40,27 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 	// variable du serveur
 	private World _world;
 	private long _timeAlarm = 0;
+	private int _attemptDone = 0;
+	private boolean _cumulative = false;
 	private boolean _isActive = false;
 	private Listener _listener;
 	private BloodMoonStarter _starter;
+	
+	public boolean isCumulative() {
+		return _cumulative;
+	}
+	
+	public void setCumulative(boolean v) {
+		_cumulative = v;
+	}
+	
+	public int getAttemptDone() {
+		return _attemptDone;
+	}
+	
+	public void setAttemptDone(int a) {
+		_attemptDone = a;
+	}
 	
 	public long getDelay() {
 		return _delay;
@@ -60,6 +80,7 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 	
 	@Override
 	public void onDisable() {
+		this.logger.info("[Blood Moon] - removing active listeners");
 		TimeServer.getInstance().removeListener(this);
 		TimeServer.getInstance().removeListener(_starter);
 	}
@@ -87,7 +108,10 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 			displayListenerAddition("blood moon stopping", newAlarm);
 		}
 		else {
-			boolean draw = RandomUtil.getDrawResult(_probability);
+			
+			// calcule le nombre d'essai ici
+			int modifiedProb = _probability - _attemptDone;
+			boolean draw = RandomUtil.getDrawResult(modifiedProb);
 			if (draw) {
 				startBloodMoon();
 				
@@ -96,6 +120,10 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 				displayListenerAddition("blood moon started", newAlarm);
 			}
 			else {
+				
+				if (_cumulative) {
+					_attemptDone++;
+				}
 				// on veut se faire poker lors de la prochaine nuit
 				newAlarm = 24000 * _msInMinecraftHour;
 				displayListenerAddition("no moon, next night", newAlarm);
@@ -149,11 +177,13 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 		getServer().broadcastMessage(ChatColor.DARK_RED + "The Blood Moon " + ChatColor.DARK_GREEN + "is rising!");
 		_starter = new BloodMoonStarter(this);
 		TimeServer.getInstance().addListener(_starter, _delay);
+		_attemptDone = 0;
 		_isActive = true;
 	}
 	
 	public void stopBloodMoon() {
 		_isActive = false;
+		_attemptDone = 0;
 		getServer().broadcastMessage(ChatColor.DARK_GREEN + "The Blood Moon is now over!");
 	}
 	
