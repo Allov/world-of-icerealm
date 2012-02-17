@@ -39,7 +39,7 @@ public class CompassCommandExecutor implements CommandExecutor
 					
 					for (int i = 0; i < player.getServer().getOnlinePlayers().length; i++)
 					{
-						if (player.getServer().getOnlinePlayers()[i].getName().equals(params[1]))
+						if (player.getServer().getOnlinePlayers()[i].getName().equalsIgnoreCase(params[1]))
 						{
 							playerIsOnline = true;
 							break;
@@ -49,8 +49,13 @@ public class CompassCommandExecutor implements CommandExecutor
 					if (playerIsOnline)
 					{
 						compassData.setCurrentPlayerModePlayerName(params[1]);	
+						compassData.setCurrentCompassMode(CompassMode.Player);
 						compassPlayersInfo.setPlayerCompassData(player.getName(), compassData);
+						
 						player.sendMessage(ChatColor.LIGHT_PURPLE + ">> Current pointing location is now set to player " + params[1]);
+						
+						CompassToggler toggler = new CompassToggler(player);
+						toggler.setPlayerMode();
 					}
 					else
 					{
@@ -63,8 +68,12 @@ public class CompassCommandExecutor implements CommandExecutor
 					PlayerCompassData compassData = compassPlayersInfo.getPlayerCompassData(player.getName());
 					
 					compassData.setCurrentFixedModeLocation(player.getLocation());
+					compassData.setCurrentCompassMode(CompassMode.Fixed);
 					compassPlayersInfo.setPlayerCompassData(player.getName(), compassData);
-					player.sendMessage(ChatColor.LIGHT_PURPLE + ">> Current fixed location set, X: " + player.getLocation().getX() + ", Z: " + player.getLocation().getZ());
+					
+					player.sendMessage(ChatColor.LIGHT_PURPLE + ">> Current fixed location set");
+					CompassToggler toggler = new CompassToggler(player);
+					toggler.setFixedMode();
 				}
 				else if (params[0].equalsIgnoreCase(AdvancedCompassParamHelp))
 				{
@@ -87,7 +96,7 @@ public class CompassCommandExecutor implements CommandExecutor
 	private void displayHelp(Player player) 
 	{
 		player.sendMessage(ChatColor.LIGHT_PURPLE + ">> AdvancedCompass help");
-		player.sendMessage(ChatColor.LIGHT_PURPLE + "[ " + ChatColor.YELLOW + "point [playerName], current_location, help" + ChatColor.LIGHT_PURPLE + " ]");		
+		player.sendMessage(ChatColor.LIGHT_PURPLE + "[ " + ChatColor.YELLOW + "player [playerName], current_location, help" + ChatColor.LIGHT_PURPLE + " ]");		
 		player.sendMessage("  > " + ChatColor.YELLOW + "/c player [playerName]" + ChatColor.WHITE + ": "+ ChatColor.DARK_GREEN + " Compass pointing mode will point at this player");	
 		player.sendMessage("  > " + ChatColor.YELLOW + "/c current_location" + ChatColor.WHITE + ": "+ ChatColor.DARK_GREEN + " Compass fixed mode will be fixed at player's location");	
 		player.sendMessage("  > " + ChatColor.YELLOW + "/c help " + ChatColor.WHITE + ": "+ ChatColor.DARK_GREEN + "this blob.");		
