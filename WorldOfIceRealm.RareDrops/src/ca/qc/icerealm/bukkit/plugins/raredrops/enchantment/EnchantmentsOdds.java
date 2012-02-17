@@ -2,10 +2,10 @@ package ca.qc.icerealm.bukkit.plugins.raredrops.enchantment;
 
 public class EnchantmentsOdds 
 {
-	public static final double[] AVERAGE_ODDS = new double[]{30.00, 15.00, 5.00};
+	public static final double[] AVERAGE_ODDS = new double[]{25.00, 12.00, 5.00};
 	public static final double[] LOW_ODDS = new double[]{15.00, 10.00, 5.00};
-	public static final double[] HIGH_ODDS = new double[]{35.00, 20.00, 10.00, 5.00};
-	public static final double[] BOSS_HIGH_ODDS = new double[]{20.00, 20.00, 30.00, 15.00};
+	public static final double[] HIGH_ODDS = new double[]{25.00, 18.00, 8.00, 4.00};
+	public static final double[] BOSS_HIGH_ODDS = new double[]{18.00, 18.00, 25.00, 12.00};
 	
 	public EnchantmentsOdds()
 	{
