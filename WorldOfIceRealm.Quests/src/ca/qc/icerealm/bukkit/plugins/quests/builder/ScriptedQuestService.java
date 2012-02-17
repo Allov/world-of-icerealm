@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import ca.qc.icerealm.bukkit.plugins.common.ConfigWrapper;
@@ -89,7 +90,7 @@ public class ScriptedQuestService {
 				
 				quest = null;
 			} else {
-				player.sendMessage(ChatColor.RED + "You're already on that quest.");
+				quest.info();
 			}
 		}
 		
@@ -151,6 +152,7 @@ class ObjectiveFactory {
 	private static final String ObjectiveTypeKill = "kill";
 	private static final String ObjectiveTypeZone = "zone";
 	private static final String ObjectiveTypeFind = "find";
+	private static final String ObjectiveMonsterFury = "monsterfury";
 	private static ObjectiveFactory instance;
 	
 	public static ObjectiveFactory getInstance() {
@@ -180,6 +182,10 @@ class ObjectiveFactory {
 		} else if (map.getString("type", "").equalsIgnoreCase(ObjectiveTypeFind)) {
 			
 			objective = createFindObjective(quests, player, map, zone);
+			
+		} else if (map.getString("type", "").equalsIgnoreCase(ObjectiveMonsterFury)) {
+			
+			
 			
 		}
 		
@@ -256,9 +262,11 @@ class ObjectiveFactory {
 	private WorldZone getWorldZone(Quests quests, MapWrapper map) {
 		WorldZone zone = null;
 		String coords = map.getString("zone", "");
+		String world = map.getString("world", "world");
+		
 		
 		if (coords.split(",").length == 6) {
-			zone = new WorldZone(quests.getServer().getWorld("world"), coords);
+			zone = new WorldZone(quests.getServer().getWorld(world), coords);
 		}
 		return zone;
 	}

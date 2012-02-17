@@ -2,6 +2,7 @@
 # 51 = skeleton
 # 52 = spiders
 # 54 = zombie
+# 57 = Zombie Pigman
 # 58 = enderman
 # 59 = cave-spider
 
@@ -17,11 +18,39 @@ bone_gnaw:
             name: Collect 15 skeletons bones
             what: 352
             amount: 15
-            keep: true
+            keep: false
         -   type: kill
             name: Kill 10 skeletons
             what: 51
             amount: 10
+    joinFees:
+        money: 0
+        level: 0
+    dropFees:
+        money: 50
+        level: 0
+    rewards:
+        money: 300
+        level: 2
+        items:
+pigmen:
+    group: normal
+    name: Zombified Pigs and Men!
+    messageStart: Eeeew! Can you believe it! I actually saw a zombie that looked like a half-man, half-pig. This is disgusting! They say they carry much gold with them... someone has to capitalize on them.  
+    messageEnd: You've been on the other side? I cannot think of ever going there, it's way to freaky for me...
+    daily: true
+    objectives:
+        -   type: collect
+            world: world_nether
+            name: Collect 32 gold nuggets
+            what: 371
+            amount: 32
+            keep: true
+        -   type: kill
+            name: Kill 10 Zombie pigmen
+            what: 57
+            amount: 10
+            zone: -50,-50,50,50,0,128
     joinFees:
         money: 0
         level: 0

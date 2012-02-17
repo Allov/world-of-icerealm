@@ -43,6 +43,8 @@ public class QuestCommandExecutor implements CommandExecutor {
 					displayList(player);
 				} else if (params.length >= 2 && params[0].equalsIgnoreCase(QuestParamInfo)) {
 					displayQuestInfo(player, params[1]);
+				} else if (params.length == 1) {
+					giveQuest(player, params[0]);
 				}
 			}
 			

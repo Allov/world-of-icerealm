@@ -40,9 +40,13 @@ public class KillObjective extends CountObjective implements Listener {
 			Player killer = livingEntity.getKiller();
 			
 			if (killer != null && getPlayer() == killer) {
-		
+				Logger.getLogger("Minecraft").info(">>>> KOBJ : Zone: " + getZone());
+				Logger.getLogger("Minecraft").info(">>>> KOBJ : Zone: " + livingEntity.getLocation());
+				Logger.getLogger("Minecraft").info(">>>> KOBJ : IsInside: " + getZone().isInside(livingEntity.getLocation()));
+				
+				
 				if (entityIds.contains(EntityUtilities.getEntityId(livingEntity)) && 
-					(getZone() == null || getZone().isInside(killer.getLocation()))) {
+					(getZone() == null || getZone().isInside(livingEntity.getLocation()))) {
 					advance();
 				}
 			}

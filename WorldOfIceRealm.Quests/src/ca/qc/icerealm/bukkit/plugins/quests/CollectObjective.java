@@ -94,7 +94,6 @@ public class CollectObjective extends CountObjective implements Listener, TimeOb
 		
 		if (slot > -1) {
 			amount = inventory.getItem(slot).getAmount();
-			Logger.getLogger("Minecraft").info(">>>> AMOUNT : " + amount);
 		}
 		
 		return amount;
