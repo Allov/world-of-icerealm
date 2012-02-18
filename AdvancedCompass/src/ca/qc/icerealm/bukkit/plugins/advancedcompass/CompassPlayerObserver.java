@@ -28,26 +28,22 @@ public class CompassPlayerObserver implements TimeObserver
 	{
 		if (active && player.isOnline())
 		{
-			logger.info("active");
 			CompassPlayersInfo compassPlayersInfo = CompassPlayersInfo.getInstance();
 			PlayerCompassData compassData = compassPlayersInfo.getPlayerCompassData(getPlayer().getName());
 			
 			if (compassData.getCurrentCompassMode() == CompassMode.Player)
 			{
-				logger.info("compass == player");
 				boolean found = false;
 				for (int i = 0; i < getPointingPlayer().getServer().getOnlinePlayers().length; i++)
 				{
 					// Validate if player still exists
 					if (getPointingPlayer().getServer().getOnlinePlayers()[i].getName().equals(compassData.getCurrentPlayerModePlayerName()))
 					{
-						logger.info("found player, re-adding listener");
 						getPointingPlayer().setCompassTarget(getPointingPlayer().getServer().getPlayer(compassData.getCurrentPlayerModePlayerName()).getLocation());
 		    			
 		    			// Re-Register
-						active = false;
 						//TimeServer.getInstance().removeListener(this);
-		    			TimeServer.getInstance().addListener(this, 10000);
+		    			TimeServer.getInstance().addListener(new CompassPlayerObserver(player, player), AdvancedCompass.PLAYER_MODE_INTERVAL);
 		    			found = true;
 		    			break;
 					}

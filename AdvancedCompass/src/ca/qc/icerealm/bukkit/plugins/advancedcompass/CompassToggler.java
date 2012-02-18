@@ -97,9 +97,8 @@ public class CompassToggler
 					player.setCompassTarget(pointingPlayer.getLocation());
 					player.sendMessage("Your compass is now pointing at " + playerName);
 
-					logger.info("before add instance");
 					// Add a time observer to get constant location change
-					TimeServer.getInstance().addListener(new CompassPlayerObserver(player, pointingPlayer), 10000);
+					TimeServer.getInstance().addListener(new CompassPlayerObserver(player, pointingPlayer), AdvancedCompass.PLAYER_MODE_INTERVAL);
 					
 	        		return true;
 				}

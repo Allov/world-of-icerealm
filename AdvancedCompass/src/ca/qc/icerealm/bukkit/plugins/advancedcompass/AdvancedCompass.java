@@ -4,6 +4,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class AdvancedCompass extends JavaPlugin
 {
+	public static final int PLAYER_MODE_INTERVAL = 1000;
+	
 	@Override
 	public void onDisable() {
 				
