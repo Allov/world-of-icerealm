@@ -39,7 +39,7 @@ public class CompassPlayerObserver implements TimeObserver
 					// Validate if player still exists
 					if (getPointingPlayer().getServer().getOnlinePlayers()[i].getName().equalsIgnoreCase(compassData.getCurrentPlayerModePlayerName()))
 					{
-						getPointingPlayer().setCompassTarget(getPointingPlayer().getServer().getPlayer(compassData.getCurrentPlayerModePlayerName()).getLocation());
+						getPlayer().setCompassTarget(getPlayer().getServer().getPlayer(compassData.getCurrentPlayerModePlayerName()).getLocation());
 		    			
 		    			// Re-Register
 						//TimeServer.getInstance().removeListener(this, AdvancedCompass.PLAYER_MODE_INTERVAL);
