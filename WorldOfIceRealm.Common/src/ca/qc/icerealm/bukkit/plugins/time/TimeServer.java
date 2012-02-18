@@ -70,7 +70,7 @@ public class TimeServer implements TimeSubject {
 	}
 	
 	private void displayInfo(String info) {
-		//this.logger.info("[TimeServer] " + info);
+		this.logger.info("[TimeServer] " + info);
 	}
 
 	
