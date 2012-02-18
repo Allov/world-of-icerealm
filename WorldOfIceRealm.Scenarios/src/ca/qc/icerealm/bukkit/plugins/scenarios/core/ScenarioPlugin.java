@@ -65,7 +65,7 @@ public class ScenarioPlugin extends JavaPlugin {
         _mtConfig.NumberOfWaves = 3;									// 3 waves
         _mtConfig.TimeBetweenWave = 10000;								// 10 sec
         _mtConfig.ActivationZoneCoords = "398,60,404,66,80,90";	// zone d'Activation
-        _mtConfig.ScenarioZoneCoords = "370,43,421,84,64,90";		// zone du scenario
+        _mtConfig.ScenarioZoneCoords = "380,43,421,84,64,90";		// zone du scenario
 
 
         _moontemple = new MonsterFury(this, _mtConfig);

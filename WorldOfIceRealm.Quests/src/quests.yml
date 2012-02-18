@@ -220,7 +220,7 @@ moon_temple:
             zone: 398,60,421,66,80,90
         -   type: kill
             name: Protect the ritual (Kill 25 monsters)
-            zone: 370,43,421,84,64,90
+            zone: 380,43,421,84,64,90
             what: 51,52,54,57
             amount: 25
     joinFees:
