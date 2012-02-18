@@ -16,18 +16,22 @@ import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 public class ScenarioPlugin extends JavaPlugin {
 	
 	private MonsterFury _monster;
+    private MonsterFury _moontemple;
 	private MonsterFuryConfiguration _defaultConfig;
-	
+    private MonsterFuryConfiguration _mtConfig;
+
 	@Override
 	public void onDisable() {
 		_monster.removeAllListener();
+        _moontemple.removeAllListener();
 	}
 
 	@Override
 	public void onEnable() {
 		getCommand("sc").setExecutor(new ScenarioCommander());
 
-		// set les scénarios pré enregistré ici!
+
+		// set les scï¿½narios prï¿½ enregistrï¿½ ici!
 		_defaultConfig = new MonsterFuryConfiguration();
 		_defaultConfig.ExperienceReward = 5;								// 100 level d'exp
 		_defaultConfig.CoolDownTime = 100000; 								// 10 min
@@ -35,20 +39,41 @@ public class ScenarioPlugin extends JavaPlugin {
 		_defaultConfig.TimeoutWhenLeaving = 30000;							// 30 sec
 		_defaultConfig.MinimumPlayer = 1;									// 1 joueur requis
 		_defaultConfig.MonstersPerWave = 25;								// 10 monstres par wave
-		_defaultConfig.Name = "hp";											// le nom du scénario 
+		_defaultConfig.Name = "hp";											// le nom du scï¿½nario 
 		_defaultConfig.NumberOfWaves = 5;									// 3 waves
 		_defaultConfig.TimeBetweenWave = 10000;								// 10 sec
 		_defaultConfig.ActivationZoneCoords = "-180,134,-177,137,0,128";	// zone d'Activation
 		_defaultConfig.ScenarioZoneCoords = "-189,127,-168,140,0,128";		// zone du scenario
 		
-		
 		_monster = new MonsterFury(this, _defaultConfig);
-		
-		
-		
+
 		//_monster.getEntityWaves().add(0, new FourCornerWave(_monster.getWorldZone(), _monster.getWorld(), _monster, 24, 2, 1500));
 		
-		ScenarioService.getInstance().addScenario(_monster);		
+		ScenarioService.getInstance().addScenario(_monster);
+
+
+
+        // Moon Temple
+        _mtConfig = new MonsterFuryConfiguration();
+        _mtConfig.ExperienceReward = 5;								// 100 level d'exp
+        _mtConfig.CoolDownTime = 100000; 								// 10 min
+        _mtConfig.InitialTimeBeforeFirstWave = 10000;					// 10 sec
+        _mtConfig.TimeoutWhenLeaving = 30000;							// 30 sec
+        _mtConfig.MinimumPlayer = 1;									// 1 joueur requis
+        _mtConfig.MonstersPerWave = 32;								// 10 monstres par wave
+        _mtConfig.Name = "moontemple";											// le nom du scï¿½nario
+        _mtConfig.NumberOfWaves = 3;									// 3 waves
+        _mtConfig.TimeBetweenWave = 10000;								// 10 sec
+        _mtConfig.ActivationZoneCoords = "398,60,404,66,80,90";	// zone d'Activation
+        _mtConfig.ScenarioZoneCoords = "380,53,421,84,64,90";		// zone du scenario
+
+
+        _moontemple = new MonsterFury(this, _mtConfig);
+
+        ScenarioService.getInstance().addScenario(_moontemple);
+
+
+
 	}
 }
 
