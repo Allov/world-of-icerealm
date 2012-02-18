@@ -77,8 +77,7 @@ public class DefaultEventListener implements ScenarioEventsListener {
 	public void monsterDied(Entity e, int left) {
 		_totalMonsterKilled++;
 		if ((left == _nbMonster - 1) || (left % 5) == 0 || left < 3) {
-			sendMessageToPlayers(ChatColor.GREEN + "Scenario progress:");
-			sendMessageToPlayers(" " + ChatColor.GRAY + "> " + ChatColor.YELLOW + String.valueOf((_nbMonster - left)) + "/" + _nbMonster + ChatColor.LIGHT_PURPLE + " monsters killed");
+			sendMessageToPlayers(ChatColor.GREEN + "Scenario progress: " + ChatColor.GRAY + "> " + ChatColor.YELLOW + String.valueOf((_nbMonster - left)) + "/" + _nbMonster + ChatColor.LIGHT_PURPLE + " monsters killed");
 		}
 		
 		

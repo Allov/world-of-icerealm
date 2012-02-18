@@ -1,0 +1,6 @@
+name: WoI.Streaks
+main: ca.qc.icerealm.bukkit.plugins.streaks.StreakPlugin
+version: 0.1.0
+description: World Of IceRealm Killing Streaks
+author: Allov
+softdepend: [Vault]
