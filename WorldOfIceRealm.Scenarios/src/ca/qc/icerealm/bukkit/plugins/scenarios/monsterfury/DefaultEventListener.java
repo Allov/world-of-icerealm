@@ -68,5 +68,10 @@ public class DefaultEventListener implements MonsterFuryEventsListener {
 		for (Player p : _player) {
 			p.sendMessage(info);
 		}
+	}
+
+	@Override
+	public void playerLeavingWithTimeout(Player p, long timeout) {
+		p.sendMessage("You are leaving the zone. You have " + timeout + "ms to get back!");		
 	}	
 }

@@ -1,6 +1,5 @@
 package ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury;
 
-import org.bukkit.entity.Player;
 import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
 
 

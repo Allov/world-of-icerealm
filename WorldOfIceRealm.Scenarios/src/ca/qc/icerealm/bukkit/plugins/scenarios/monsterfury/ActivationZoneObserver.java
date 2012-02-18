@@ -2,8 +2,10 @@ package ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury;
 
 
 import java.util.logging.Logger;
+
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 

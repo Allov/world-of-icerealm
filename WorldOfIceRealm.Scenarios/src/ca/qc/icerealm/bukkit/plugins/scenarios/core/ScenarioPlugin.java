@@ -7,7 +7,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFury;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFuryConfiguration;
-import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 
@@ -35,6 +34,7 @@ public class ScenarioPlugin extends JavaPlugin {
 		_defaultConfig.ExperienceReward = 5;								// 100 level d'exp
 		_defaultConfig.CoolDownTime = 20000; 								// 10 sec
 		_defaultConfig.InitialTimeBeforeFirstWave = 10000;					// 10 sec
+		_defaultConfig.TimeoutWhenLeaving = 30000;							// 30 sec
 		_defaultConfig.MinimumPlayer = 1;									// 1 joueur requis
 		_defaultConfig.MonstersPerWave = 2;								// 10 monstres par wave
 		_defaultConfig.Name = "1";											// le nom du scénario 

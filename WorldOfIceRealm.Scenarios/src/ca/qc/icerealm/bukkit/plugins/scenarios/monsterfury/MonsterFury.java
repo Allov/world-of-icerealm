@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.Scenario;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
@@ -37,6 +36,7 @@ public class MonsterFury implements ZoneObserver, Scenario {
 	private CommandExecutor _commander;
 
 	// propriete modifiable de l'externe
+	private long _timeoutWhenLeaving;
 	private long _coolDownTime;
 	private int _nbMonsters;
 	private long _timeBetween;
@@ -124,6 +124,7 @@ public class MonsterFury implements ZoneObserver, Scenario {
 		_nbWavesTotal = c.NumberOfWaves;
 		_nbMonsters = c.MonstersPerWave;
 		_timeBetween = c.TimeBetweenWave;
+		_timeoutWhenLeaving = c.TimeoutWhenLeaving;
 		_name = c.Name;
 		
 		// activation des zones
@@ -261,6 +262,7 @@ public class MonsterFury implements ZoneObserver, Scenario {
 	 * Ajoute un joueur au scenario. Un joueur est ajoute s'il n'est pas contenu dans 
 	 * la liste des joueurs.
 	 */
+	@Override
 	public void addPlayerToScenario(Player p) {
 		if (_players != null && p != null && !_players.contains(p)) {
 			_players.add(p);
@@ -271,6 +273,7 @@ public class MonsterFury implements ZoneObserver, Scenario {
 	/*
 	 * Enleve un joueur au scenario.
 	 */
+	@Override
 	public void removePlayerFromScenario(Player p) {
 		// TODO Auto-generated method stub
 		if (_players != null && p != null && _players.contains(p)) {
@@ -339,7 +342,17 @@ public class MonsterFury implements ZoneObserver, Scenario {
 
 	@Override
 	public void playerLeft(Player p) {
-		this.removePlayerFromScenario(p);	
+		
+		if (_isActive) {
+			TimeServer.getInstance().addListener(new PlayerOutTimer(p, _scenarioZone, this), _timeoutWhenLeaving);
+			if (_eventsListener != null) {
+				_eventsListener.playerLeavingWithTimeout(p, _timeoutWhenLeaving);
+			}
+		}
+		else {
+			this.removePlayerFromScenario(p);
+		}
+			
 	}
 
 	@Override

@@ -11,4 +11,5 @@ public class MonsterFuryConfiguration {
 	public long TimeBetweenWave;
 	public long InitialTimeBeforeFirstWave;
 	public String Name;
+	public long TimeoutWhenLeaving;
 }

@@ -15,4 +15,5 @@ public interface MonsterFuryEventsListener {
 	void playerDied(Player p,  List<Player> players);
 	void monsterDied(Entity e, int left);
 	void playerRewared(Player p, int exp);
+	void playerLeavingWithTimeout(Player p, long timeout);
 }
