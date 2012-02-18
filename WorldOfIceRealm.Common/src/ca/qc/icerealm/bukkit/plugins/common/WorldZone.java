@@ -153,6 +153,29 @@ public class WorldZone {
 		
 		return list;
 	}
+	
+	public List<Location> getFourSide(int radius) {
+		List<Location> list = new ArrayList<Location>();
+		
+		Location top = new Location(_leftTop.getWorld(), _leftTop.getX() + ((_rightBottom.getX() - _leftTop.getX()) / 2), _leftTop.getY(), _leftTop.getZ() + radius);
+		top.setY(top.getWorld().getHighestBlockYAt(top));
+		
+		Location right = new Location(_rightBottom.getWorld(), _rightBottom.getX() - radius, _rightBottom.getY(), _rightBottom.getZ() - ((_rightBottom.getZ() - _leftTop.getZ()) / 2));
+		right.setY(right.getWorld().getHighestBlockYAt(right));
+		
+		Location down = new Location(_rightBottom.getWorld(), _rightBottom.getX() - ((_rightBottom.getX() - _leftTop.getX()) / 2), _rightBottom.getY(), _rightBottom.getZ() - radius);
+		down.setY(down.getWorld().getHighestBlockYAt(down));
+		
+		Location left = new Location(_rightBottom.getWorld(), _leftTop.getX() + radius, _leftTop.getY(), _rightBottom.getZ() - ((_rightBottom.getZ() - _leftTop.getZ()) / 2));
+		left.setY(left.getWorld().getHighestBlockYAt(left));
+		
+		list.add(top);
+		list.add(right);
+		list.add(left);
+		list.add(down);		
+		
+		return list;
+	}
 		
 	@Override 
 	public String toString() {
@@ -191,3 +214,4 @@ public class WorldZone {
 	
 	
 }
+

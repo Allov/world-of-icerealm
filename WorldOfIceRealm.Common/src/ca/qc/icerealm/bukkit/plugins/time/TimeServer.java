@@ -43,7 +43,7 @@ public class TimeServer implements TimeSubject {
 	public void addListener(TimeObserver obs, Date when) {
 		long dateToMillis = when.getTime() - System.currentTimeMillis();
 		if (dateToMillis > 0) {
-			this.addListener(obs, dateToMillis);	
+			this.addListener(obs, dateToMillis);
 		}
 	}
 		
