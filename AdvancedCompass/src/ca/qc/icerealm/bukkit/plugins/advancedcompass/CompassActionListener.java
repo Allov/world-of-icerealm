@@ -16,7 +16,7 @@ public class CompassActionListener implements Listener
 	public void onEntityDeath(org.bukkit.event.player.PlayerInteractEvent event)
 	{     
 		// If left-clicked anywhere with compass
-        if(((event.getAction().equals(Action.LEFT_CLICK_AIR) || (event.getAction().equals(Action.LEFT_CLICK_BLOCK))) && event.getItem().getType().equals(Material.COMPASS)))
+        if(event.getItem() != null && event.getAction() != null && ((event.getAction().equals(Action.LEFT_CLICK_AIR) || (event.getAction().equals(Action.LEFT_CLICK_BLOCK))) && event.getItem().getType() != null && event.getItem().getType().equals(Material.COMPASS)))
         { 
         	CompassToggler toggler = new CompassToggler(event.getPlayer());
         	toggler.toggle();
