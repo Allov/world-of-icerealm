@@ -127,6 +127,32 @@ public class WorldZone {
 		
 		return loc;
 	}
+	
+	public List<Location> getFourCorner(int radius) {
+		List<Location> list = new ArrayList<Location>();
+		
+		Location topLeft = new Location(_leftTop.getWorld(), _leftTop.getX() + radius, _leftTop.getY(), _leftTop.getZ() + radius);
+		topLeft.setY(_leftTop.getWorld().getHighestBlockYAt(topLeft));
+		
+		Location topRight = new Location(_leftTop.getWorld(), _rightBottom.getX() - radius, _leftTop.getY(), _leftTop.getZ() + radius);
+		topRight.setY(_leftTop.getWorld().getHighestBlockYAt(topRight));
+		
+		Location bottomLeft = new Location(_leftTop.getWorld(), _leftTop.getX() + radius, _leftTop.getY(), _rightBottom.getZ() - radius);
+		bottomLeft.setY(_leftTop.getWorld().getHighestBlockYAt(bottomLeft));
+		
+		Location bottomRight = new Location(_leftTop.getWorld(), _rightBottom.getX() - radius, _leftTop.getY(), _rightBottom.getZ() - radius);
+		bottomRight.setY(_leftTop.getWorld().getHighestBlockYAt(bottomRight));
+		
+		
+		
+		
+		list.add(topLeft);
+		list.add(topRight);
+		list.add(bottomLeft);
+		list.add(bottomRight);
+		
+		return list;
+	}
 		
 	@Override 
 	public String toString() {
