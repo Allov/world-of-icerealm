@@ -1,9 +1,15 @@
 package ca.qc.icerealm.bukkit.plugins.advancedcompass;
 
+import java.util.logging.Logger;
+
 import org.bukkit.entity.Player;
+
+import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 
 public class CompassToggler 
 {
+	public final Logger logger = Logger.getLogger(("Minecraft"));
+
 	private Player player = null;
 	private CompassPlayersInfo compassPlayersInfo;
 	private PlayerCompassData compassData;
@@ -87,8 +93,14 @@ public class CompassToggler
     			// Validate if player still exists
 				if (player.getServer().getOnlinePlayers()[i].getName().equalsIgnoreCase(playerName))
 				{
-					player.setCompassTarget(player.getServer().getPlayer(playerName).getLocation());
+					Player pointingPlayer = player.getServer().getPlayer(playerName);
+					player.setCompassTarget(pointingPlayer.getLocation());
 					player.sendMessage("Your compass is now pointing at " + playerName);
+
+					logger.info("before add instance");
+					// Add a time observer to get constant location change
+					TimeServer.getInstance().addListener(new CompassPlayerObserver(player, pointingPlayer), 1000);
+					
 	        		return true;
 				}
 			}	
