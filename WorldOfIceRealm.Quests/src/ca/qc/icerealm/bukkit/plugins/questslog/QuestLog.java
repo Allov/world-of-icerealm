@@ -92,8 +92,20 @@ public class QuestLog {
 	}
 
 	private void displayQuestText(Player player, Quest quest) {
-		player.sendMessage(	"  > " + ChatColor.LIGHT_PURPLE + "[" + ChatColor.YELLOW + quest.getKey() + ChatColor.LIGHT_PURPLE +"] " + 
+		player.sendMessage(	"  > " + ChatColor.LIGHT_PURPLE + "[" + ChatColor.YELLOW + (quest.getRequires().length() > 0 ? quest.getRequires() + ChatColor.GRAY + "->" + ChatColor.YELLOW : "") + 
+						    quest.getKey() + ChatColor.LIGHT_PURPLE +"] " + 
 							ChatColor.DARK_GREEN + quest.getName() + " " + 
 							(quest.isCompleted() ? ChatColor.GREEN + "Completed" : ChatColor.RED + "Not completed"));
+	}
+
+	public void removeChildDailyQuests(Quest rootQuest) {
+		
+		Quest[] quests = this.dailyQuests.toArray(new Quest[0]);
+		for (Quest quest : quests) {
+			if (quest.getRequires().equalsIgnoreCase(rootQuest.getKey())) {
+				removeChildDailyQuests(quest);
+				this.dailyQuests.remove(quest);
+			}
+		}
 	}
 }

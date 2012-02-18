@@ -88,11 +88,6 @@ public class QuestCommandExecutor implements CommandExecutor {
 	}
 
 	private void giveRandomQuest(Player player) {
-		Quest quest = this.quests.getRandomQuestService().getQuest(player);
-		if (quest != null) {
-			quest.info();
-		} else {
-			player.sendMessage(ChatColor.RED + "You're already on a random quest.");
-		}
+		this.quests.getRandomQuestService().assignRandomQuest(player);
 	}
 }

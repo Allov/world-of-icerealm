@@ -41,9 +41,7 @@ public class MoneyDrops extends JavaPlugin {
 			Economy economy = economyProvider.getProvider();
 	
 			if (economy.bankBalance(player.getName()) != null) 
-	        {
-				Random random = new Random(Calendar.getInstance().getTimeInMillis());
-				
+	        {	
 	        	economy.depositPlayer(player.getName(), MaxMoney);
 	        }
 		}

@@ -1,7 +1,5 @@
 package ca.qc.icerealm.bukkit.plugins.quests;
 
-import java.util.logging.Logger;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -58,17 +56,11 @@ public class CollectObjective extends CountObjective implements Listener, TimeOb
 		}
 	}
 	
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onItemAddedToInventory(PlayerInventoryEvent event) {
-		Logger.getLogger("Minecraft").info(event.getEventName());
-	}
-	
 	@Override
 	protected void questCompleted() {
 		super.questCompleted();
 		
 		if (!this.keep) {
-			Logger.getLogger("Minecraft").info("Keep: " + this.keep + " materialId: " + materialId + " amount: " + getAmount());
 			MaterialData material = new MaterialData(materialId);
 			this.getPlayer().getInventory().removeItem(new ItemStack(material.getItemType(), getAmount()));
 		}

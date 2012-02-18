@@ -13,7 +13,10 @@ import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.quests.Fees;
 import ca.qc.icerealm.bukkit.plugins.quests.ItemReward;
+import ca.qc.icerealm.bukkit.plugins.quests.ItemsReward;
 import ca.qc.icerealm.bukkit.plugins.quests.KillObjective;
+import ca.qc.icerealm.bukkit.plugins.quests.LevelReward;
+import ca.qc.icerealm.bukkit.plugins.quests.MoneyReward;
 import ca.qc.icerealm.bukkit.plugins.quests.Quest;
 import ca.qc.icerealm.bukkit.plugins.quests.Reward;
 import ca.qc.icerealm.bukkit.plugins.quests.Quests;
@@ -48,41 +51,54 @@ public class RandomQuestService {
 		this.random = new Random(Calendar.getInstance().getTimeInMillis());
 	}
 
-	public Quest getQuest(Player player) {
+	public void assignRandomQuest(Player player) {
 		QuestLog questLog = questLogService.getQuestLogForPlayer(player);
 		if (!questLog.isRandomQuestFinished()) {
-			return null;
+			questLog.getRandomQuest().info();
+		} else {
+			int objectivesCount = 2;
+			List<KillObjective> objectives = new ArrayList<KillObjective>();
+			List<Integer> creaturesToKill;
+	
+			creaturesToKill = createCreatureToKillList(objectivesCount);
+			
+			String questName = getQuestName(creaturesToKill);
+			Quest quest = createQuest(player, questName, objectivesCount);
+			createObjectives(player, objectivesCount, objectives, creaturesToKill, quest);
+			
+			questLog.setRandomQuest(quest);
+			quest.info();
 		}
-		
-		int objectivesCount = 2;
-		List<KillObjective> objectives = new ArrayList<KillObjective>();
-		List<Integer> creaturesToKill;
-
-		creaturesToKill = createCreatureToKillList(objectivesCount);
-		Reward reward = generateReward(objectivesCount);
-		
-		String questName = getQuestName(creaturesToKill);
-		Quest quest = createQuest(player, reward, questName, objectivesCount);
-		createObjectives(player, objectivesCount, objectives, creaturesToKill, quest);
-		
-		questLog.setRandomQuest(quest);
-
-		return quest;
-		
 	}
 
-	private Quest createQuest(Player player, Reward reward, String questName, int objectivesCount) {
+	private Quest createQuest(Player player, String questName, int objectivesCount) {
 		Quest quest = new Quest(
 				player, 
 				"random",
-				questName, 
+				questName,
+				"",
 				ChatColor.DARK_GREEN + "Hey you there with the blocky head, kill " + ChatColor.GREEN + MaxKillCount / objectivesCount + " " + ChatColor.YELLOW + questName + ChatColor.DARK_GREEN + " for me and I'll pay you good!", 
 				ChatColor.DARK_GREEN + "Thanks! Here's what you were waiting for... make good use of it!", 
 				false, 
 				new Fees(0, 0, 0, 0),
-				new Fees(0, 0, 0, 0),
-				reward);
+				new Fees(0, 0, 0, 0));
+		
+		assignRewards(quest);
+		
 		return quest;
+	}
+
+	private void assignRewards(Quest quest) {
+		quest.getRewards().add(new LevelReward(BaseLevelReward));
+		quest.getRewards().add(new MoneyReward(this.questsPlugin.getEconomyProvider().getProvider(), BaseMoneyReward));
+		
+		// Item reward;
+		if (RandomUtil.getDrawResult(ItemRewardChances)) {
+			ItemsReward itemsReward = new ItemsReward();
+			int rewardId = random.nextInt(BaseItemRewards.length-1);
+			itemsReward.getItems().add(BaseItemRewards[rewardId]);
+			quest.getRewards().add(itemsReward);
+		}
 	}
 
 	private void createObjectives(Player player, int objectivesCount, List<KillObjective> objectives, List<Integer> creaturesToKill, Quest quest) {
@@ -95,20 +111,6 @@ public class RandomQuestService {
 		}
 
 		quest.getObjectives().addAll(objectives);
-	}
-
-	private Reward generateReward(int objectivesCount) {
-		Reward reward = new Reward(
-				BaseLevelReward, 
-				BaseMoneyReward, 
-				this.questsPlugin.getEconomyProvider().getProvider());
-		
-		if (RandomUtil.getDrawResult(ItemRewardChances)) {
-			int rewardId = random.nextInt(BaseItemRewards.length-1);
-			reward.getItems().add(BaseItemRewards[rewardId]);
-		}
-		
-		return reward;
 	}
 
 	private List<Integer> createCreatureToKillList(int objectivesCount) {

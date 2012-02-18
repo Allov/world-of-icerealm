@@ -52,6 +52,13 @@ public class ZoneObjective extends Objective implements ZoneObserver {
 	}
 	
 	@Override
+	public void reset() {
+		super.reset();
+		
+		ZoneServer.getInstance().addListener(this);
+	}
+	
+	@Override
 	protected void objectiveCompleted() {
 		super.objectiveCompleted();
 		

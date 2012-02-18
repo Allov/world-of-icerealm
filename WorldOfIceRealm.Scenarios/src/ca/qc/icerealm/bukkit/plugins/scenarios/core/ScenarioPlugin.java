@@ -31,7 +31,7 @@ public class ScenarioPlugin extends JavaPlugin {
 		getCommand("sc").setExecutor(new ScenarioCommander());
 
 
-		// set les scï¿½narios prï¿½ enregistrï¿½ ici!
+		// set les scénarios pré enregistré ici!
 		_defaultConfig = new MonsterFuryConfiguration();
 		_defaultConfig.ExperienceReward = 5;								// 100 level d'exp
 		_defaultConfig.CoolDownTime = 100000; 								// 10 min

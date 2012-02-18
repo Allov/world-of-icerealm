@@ -22,20 +22,22 @@ public class Quest implements ObjectiveListener {
 	
 	private Fees joinFees;
 	private Fees dropFees;
-	private Reward reward;
+	private List<Reward> rewards;
 
 	private long completionTime;
 
-	public Quest(Player player, String key, String name, String messageStart, String messageEnd, boolean daily, Fees joinFees, Fees dropFees, Reward reward) {
+	private String requires;
+
+	public Quest(Player player, String key, String name, String requires, String messageStart, String messageEnd, boolean daily, Fees joinFees, Fees dropFees) {
 		this.player = player;
 		this.key = key;
 		this.name = name;
+		this.setRequires(requires);
 		this.messageStart = messageStart;
 		this.messageEnd = messageEnd;
 		this.daily = daily;
 		this.joinFees = joinFees;
 		this.dropFees = dropFees;
-		this.reward = reward;		
 	}
 	
 	public List<Objective> getObjectives() {
@@ -44,6 +46,14 @@ public class Quest implements ObjectiveListener {
 		}
 		
 		return objectives;
+	}
+	
+	public List<Reward> getRewards() {
+		if (rewards == null) {
+			rewards = new ArrayList<Reward>();
+		}
+		
+		return rewards;
 	}
 
 	public void drop() {
@@ -62,7 +72,16 @@ public class Quest implements ObjectiveListener {
 			player.sendMessage("  > " + objective.toString());
 		}
 		
-		player.sendMessage(ChatColor.LIGHT_PURPLE + "Your reward will be: " + this.reward.toString());		
+		if (getRewards().size() > 0) {
+			player.sendMessage(ChatColor.LIGHT_PURPLE + "Your rewards will be: ");
+			displayRewards(player);
+		}
+	}
+
+	private void displayRewards(Player player) {
+		for (Reward reward : getRewards()) {
+			player.sendMessage("  > " + reward.toString());
+		}
 	}
 
 	@Override
@@ -92,13 +111,21 @@ public class Quest implements ObjectiveListener {
 		completed = true;
 		completionTime = System.currentTimeMillis();
 		
-		// Objectives are done, reward the player;
-		reward.giveTo(player);
 		player.sendMessage(ChatColor.DARK_GREEN + this.messageEnd);
 		player.sendMessage(ChatColor.LIGHT_PURPLE + "Quest is " + ChatColor.GREEN + "done" + ChatColor.DARK_GREEN + "!");
-		player.sendMessage(ChatColor.LIGHT_PURPLE + "You received " + this.reward.toString());
+		player.sendMessage(ChatColor.LIGHT_PURPLE + "You received : ");
+		displayRewards(player);
+
+		// Objectives are done, reward the player;
+		giveRewards(player);
 	}
 	
+	private void giveRewards(Player player) {
+		for (Reward reward : getRewards()) {
+			reward.give(player);
+		}
+	}
+
 	@Override
 	public String toString() {
 		return ChatColor.LIGHT_PURPLE + "Quest: "  + ChatColor.YELLOW + this.name;
@@ -126,5 +153,13 @@ public class Quest implements ObjectiveListener {
 
 	public long getCompletionTime() {
 		return completionTime;
+	}
+
+	public String getRequires() {
+		return requires;
+	}
+
+	public void setRequires(String requires) {
+		this.requires = requires;
 	}
 }

@@ -33,10 +33,32 @@ bone_gnaw:
         money: 300
         level: 2
         items:
+theportal:
+    group: easy
+    name: The Portal
+    messageStart: Eeeew! Can you believe it! I actually saw a zombie that looked like a half-man, half-pig. This is disgusting! I saw it carry much gold with them... someone has to capitalize on them. If I wasn't affraid of this portal...  
+    messageEnd: Listen to the voice in the echoes...
+    daily: true
+    objectives:
+        -   type: zone
+            name: Investigate the portal
+            zone:  625,262,633,271,0,128
+    joinFees:
+        money: 0
+        level: 0
+    dropFees:
+        money: 0
+        level: 0
+    rewards:
+        money: 0
+        level: 0
+        quests: pigmen
+        items:
 pigmen:
     group: normal
+    requires: theportal
     name: Zombified Pigs and Men!
-    messageStart: Eeeew! Can you believe it! I actually saw a zombie that looked like a half-man, half-pig. This is disgusting! They say they carry much gold with them... someone has to capitalize on them.  
+    messageStart: YOU THINK YOU CAN ENTER THIS PORTAL MORTAL? YOU THINK YOU CAN DEFEAT LIVING NIGHTMARES? I CHALLENGE YOU TO ENTER THE PORTAL AND SURVIVE!!!  
     messageEnd: You've been on the other side? I cannot think of ever going there, it's way to freaky for me...
     daily: true
     objectives:
@@ -45,22 +67,25 @@ pigmen:
             name: Collect 32 gold nuggets
             what: 371
             amount: 32
-            keep: true
+            keep: false
         -   type: kill
             name: Kill 10 Zombie pigmen
             what: 57
             amount: 10
-            zone: -50,-50,50,50,0,128
     joinFees:
         money: 0
         level: 0
     dropFees:
-        money: 50
+        money: 0
         level: 0
     rewards:
-        money: 300
-        level: 2
+        money: 500
+        level: 5
         items:
+            -   id: 307
+                amount: 1
+            -   id: 322
+                amount: 4
 diamonds:
     group: normal-adventure
     name: Diamonds!
@@ -208,28 +233,28 @@ haunted_outpost:
         level: 5
         items:
 
-moon_temple:
-    group: desert-temples
-    name: The Temple of the Moon
-    messageStart: The moon goddess, it is in pain! Her tears cover the moon in blood and our land suffers. You must reach the top of the Moon Temple in the desert and perform the sacrifice ritual. Give her some peace at last!
-    messageEnd: The goddess has heard our call, she can be at peace... for now!
-    daily: true
-    objectives:
-        -   type: zone
-            name: Reach the top of the Moon Temple
-            zone: 398,60,421,66,80,90
-        -   type: kill
-            name: Protect the ritual (Kill 25 monsters)
-            zone: 380,43,421,84,64,90
-            what: 51,52,54,57
-            amount: 25
-    joinFees:
-        money: 0
-        level: 0
-    dropFees:
-        money: 50
-        level: 0
-    rewards:
-        money: 400
-        level: 5
-        items:
+#moon_temple:
+#    group: desert-temples
+#    name: The Temple of the Moon
+#    messageStart: The moon goddess, it is in pain! Her tears cover the moon in blood and our land suffers. You must reach the top of the Moon Temple in the desert and perform the sacrifice ritual. Give her some peace at last!
+#    messageEnd: The goddess has heard our call, she can be at peace... for now!
+#    daily: true
+#    objectives:
+#        -   type: zone
+#            name: Reach the top of the Moon Temple
+#            zone: 398,60,421,66,80,90
+#        -   type: kill
+#            name: Protect the ritual (Kill 25 monsters)
+#            zone: 380,43,421,84,64,90
+#            what: 51,52,54,57
+#            amount: 25
+#    joinFees:
+#        money: 0
+#        level: 0
+#    dropFees:
+#        money: 50
+#        level: 0
+#    rewards:
+#        money: 400
+#        level: 5
+#        items:
