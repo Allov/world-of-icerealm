@@ -17,6 +17,8 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
+import ca.qc.icerealm.bukkit.plugins.scenarios.core.EntityWave;
+import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioEventsListener;
 
 public class BasicMonsterWave implements EntityWave {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
@@ -26,9 +28,9 @@ public class BasicMonsterWave implements EntityWave {
 	private MonsterFury _scenario;
 	private WorldZone _exclude;
 	private String[] possibleMonsters = new String[] { "zombie", "skeleton", "spider" };
-	private MonsterFuryEventsListener _eventsListener;
+	private ScenarioEventsListener _eventsListener;
 	
-	public BasicMonsterWave(int qty, double armorModifier, MonsterFury s, WorldZone greater, WorldZone exclude, MonsterFuryEventsListener listener) {
+	public BasicMonsterWave(int qty, double armorModifier, MonsterFury s, WorldZone greater, WorldZone exclude, ScenarioEventsListener listener) {
 		_scenario = s;
 		_monstersTable = new HashSet<Entity>();
 		_nbMonsters = qty;
@@ -75,6 +77,12 @@ public class BasicMonsterWave implements EntityWave {
 		
 	}
 	
+	@Override
+	public void setSpawnLocation(List<Location> l) {
+		// les location sont généré lors de la creation des waves
+	}
+
+	
 	public void cancelWave() {
 		if (_monstersTable != null && _monstersTable.size() > 0) {
 			 for (Entity l : _monstersTable) {
@@ -106,5 +114,22 @@ public class BasicMonsterWave implements EntityWave {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void setMonsters(String monsters) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getMaxNbOfEntities() {
+		// TODO Auto-generated method stub
+		return _nbMonsters;
+	}
+
+	@Override
+	public String[] getMonsters() {
+		return possibleMonsters;
 	}
 }

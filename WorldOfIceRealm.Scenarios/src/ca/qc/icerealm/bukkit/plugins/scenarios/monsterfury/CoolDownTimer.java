@@ -14,7 +14,6 @@ public class CoolDownTimer implements TimeObserver {
 	@Override
 	public void timeHasCome(long time) {
 		// TODO Auto-generated method stub
-		_fury.getCurrentServer().broadcastMessage("Monster Fury can now be activated");
 		_fury.setCoolDownActive(false);
 	}
 

@@ -16,6 +16,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
+import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioEventsListener;
 
 public class MonsterWave {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
@@ -53,7 +54,7 @@ public class MonsterWave {
 		
 	}
 	
-	public void processEntityDeath(Entity e, MonsterFuryEventsListener l) {
+	public void processEntityDeath(Entity e, ScenarioEventsListener l) {
 		if (_scenario.isActive()) {
 			if (_monstersTable != null && _monstersTable.contains(e)) {
 				_monstersTable.remove(e);

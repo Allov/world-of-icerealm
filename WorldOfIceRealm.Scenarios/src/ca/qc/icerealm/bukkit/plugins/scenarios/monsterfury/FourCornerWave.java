@@ -15,6 +15,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
+import ca.qc.icerealm.bukkit.plugins.scenarios.core.EntityWave;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.Scenario;
 import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
@@ -90,6 +91,11 @@ public class FourCornerWave implements EntityWave, TimeObserver {
 		
 		TimeServer.getInstance().removeListener(this);
 	}
+	
+	@Override
+	public void setSpawnLocation(List<Location> l) {
+		// les location sont généré lors de la creation des waves
+	}
 
 	@Override
 	public int getNbOfEntities() {
@@ -113,5 +119,22 @@ public class FourCornerWave implements EntityWave, TimeObserver {
 	public long getAlarm() {
 		// TODO Auto-generated method stub
 		return _alarm;
+	}
+
+	@Override
+	public void setMonsters(String monsters) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getMaxNbOfEntities() {
+		// TODO Auto-generated method stub
+		return _maxMonster;
+	}
+
+	@Override
+	public String[] getMonsters() {
+		return possibleMonsters;
 	}
 }

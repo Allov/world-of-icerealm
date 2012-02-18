@@ -11,6 +11,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import ca.qc.icerealm.bukkit.plugins.scenarios.core.EntityWave;
+
 public class MonsterFuryListener implements Listener {
 
 	public final Logger logger = Logger.getLogger(("Minecraft"));

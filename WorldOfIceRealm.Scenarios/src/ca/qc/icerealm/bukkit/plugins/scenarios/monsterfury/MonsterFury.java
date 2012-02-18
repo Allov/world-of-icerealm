@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.command.CommandExecutor;
@@ -12,7 +13,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
+import ca.qc.icerealm.bukkit.plugins.scenarios.core.EntityWave;
+import ca.qc.icerealm.bukkit.plugins.scenarios.core.PlayerOutTimer;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.Scenario;
+import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioEventsListener;
+import ca.qc.icerealm.bukkit.plugins.scenarios.core.WaveTimer;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
@@ -33,8 +38,10 @@ public class MonsterFury implements ZoneObserver, Scenario {
 	private CoolDownTimer _coolDownTimer;
 	private ActivationZoneObserver _activationZoneObserver;
 	private MonsterFuryListener _listener;
-	private MonsterFuryEventsListener _eventsListener;
+	private ScenarioEventsListener _eventsListener;
 	private CommandExecutor _commander;
+	private WaveTimer _waveTimer;
+	private List<PlayerOutTimer> _playerOutTimers;
 
 	// propriete modifiable de l'externe
 	private long _timeoutWhenLeaving;
@@ -70,7 +77,7 @@ public class MonsterFury implements ZoneObserver, Scenario {
 	 * @param config
 	 * @param event
 	 */
-	public MonsterFury(JavaPlugin plugin, MonsterFuryConfiguration config, MonsterFuryEventsListener event) {
+	public MonsterFury(JavaPlugin plugin, MonsterFuryConfiguration config, ScenarioEventsListener event) {
 		initializeParameter(plugin, config, event);
 		createBasicWaves();
 	}
@@ -95,7 +102,7 @@ public class MonsterFury implements ZoneObserver, Scenario {
 	 * @param event
 	 * @param wave
 	 */
-	public MonsterFury(JavaPlugin plugin, MonsterFuryConfiguration config, MonsterFuryEventsListener event, List<EntityWave> wave) {
+	public MonsterFury(JavaPlugin plugin, MonsterFuryConfiguration config, ScenarioEventsListener event, List<EntityWave> wave) {
 		initializeParameter(plugin, config, event);
 		_waves = wave;
 	}
@@ -107,7 +114,7 @@ public class MonsterFury implements ZoneObserver, Scenario {
 	}
 
 	
-	private void initializeParameter(JavaPlugin p, MonsterFuryConfiguration c, MonsterFuryEventsListener l) {
+	private void initializeParameter(JavaPlugin p, MonsterFuryConfiguration c, ScenarioEventsListener l) {
 		// parametre du scenario et status de celui-ci
 		_plugin = p;
 		_server = p.getServer();
@@ -117,6 +124,7 @@ public class MonsterFury implements ZoneObserver, Scenario {
 		_isActive = false;
 		_coolDownActive = false;
 		_nbWaveDone = 0;
+		_playerOutTimers = new ArrayList<PlayerOutTimer>();
 		
 		// parametre modifiable
 		_coolDownTime = c.CoolDownTime;
@@ -155,6 +163,14 @@ public class MonsterFury implements ZoneObserver, Scenario {
 		ZoneServer.getInstance().removeListener(_activationZoneObserver);
 		TimeServer.getInstance().removeListener(_coolDownTimer);
 		ZoneServer.getInstance().removeListener(this);
+		TimeServer.getInstance().removeListener(_waveTimer);
+		
+		for (EntityWave w : _waves) {
+			w.cancelWave();
+		}
+		_waves.clear();
+		_waves = null;
+		
 	}
 	
 	/**
@@ -164,21 +180,15 @@ public class MonsterFury implements ZoneObserver, Scenario {
 		
 		if (_waves != null && _waves.size() > 0) {
 			// démarrage du cooldown
-			_coolDownActive = true;
-			_coolDownTimer = new CoolDownTimer(this);
-			TimeServer.getInstance().addListener(_coolDownTimer, _coolDownTime);
-			
-			// on update la zone du scenario en enlevant la zone d'activation 
-			
-			this.logger.info("Scenario has been trigged");
-					
+			setCoolDownActive(true);
+							
 			if (_eventsListener != null) {
 				_eventsListener.scenarioStarting(_waves.size(), getPlayers());
 			}
 
 			// on active la premiere wave et le scénario
 			_listener.setMonsterWave(_waves.get(_nbWaveDone));
-			TimeServer.getInstance().addListener(new WaveTimer(_waves.get(_nbWaveDone), _eventsListener), _timeBetween);
+			TimeServer.getInstance().addListener(new WaveTimer(_waves.get(_nbWaveDone), _eventsListener, this), _timeBetween);
 			
 			
 			// on démarre le scénario
@@ -215,7 +225,6 @@ public class MonsterFury implements ZoneObserver, Scenario {
 	 * Annulation inattendu du scenario. Il faut releaser les ress ici.
 	 */
 	public void abortScenario() {
-		this.logger.info("Monster fury aborted");
 		if (_isActive) {
 			getPlayers().clear();
 			
@@ -250,7 +259,7 @@ public class MonsterFury implements ZoneObserver, Scenario {
 			TimeServer.getInstance().addListener(_coolDownTimer, _coolDownTime);
 			
 			if (_eventsListener != null) {
-				_eventsListener.coolDownChanged(active, _coolDownTime);
+				_eventsListener.coolDownChanged(active, _coolDownTime, this);
 			}
 		}
 		else if (!_coolDownActive && !_isActive && _players.size() >= _minimumPlayer) {
@@ -266,7 +275,9 @@ public class MonsterFury implements ZoneObserver, Scenario {
 	public void addPlayerToScenario(Player p) {
 		if (_players != null && p != null && !_players.contains(p)) {
 			_players.add(p);
-			p.sendMessage("You entered a scenario zone");
+			if (_eventsListener != null) {
+				_eventsListener.playerAdded(p, this);
+			}
 		}
 	}
 	
@@ -278,8 +289,9 @@ public class MonsterFury implements ZoneObserver, Scenario {
 		// TODO Auto-generated method stub
 		if (_players != null && p != null && _players.contains(p)) {
 			_players.remove(p);
-			p.sendMessage("You left a scenario zone");
-			this.logger.info(p.getName() + " has been removed from the scenario");
+			if (_eventsListener != null) {
+				_eventsListener.playerRemoved(p, this);
+			}
 			if (_players.size() == 0 && isActive()) {
 				if (_eventsListener != null) {
 					_eventsListener.scenarioAborting(_nbWaveDone, p);
@@ -315,7 +327,6 @@ public class MonsterFury implements ZoneObserver, Scenario {
 	
 	public void waveIsDone() {
 		_nbWaveDone++;
-		this.logger.info("This wave is done : " + _nbWaveDone + "/" + _waves.size());		
 		if (_nbWaveDone < _waves.size()) {	
 			
 			// on load la prochaine wave!
@@ -324,27 +335,43 @@ public class MonsterFury implements ZoneObserver, Scenario {
 			}
 			
 			_listener.setMonsterWave(_waves.get(_nbWaveDone));
-			TimeServer.getInstance().addListener(new WaveTimer(_waves.get(_nbWaveDone), _eventsListener), _timeBetween);
+			_waveTimer = new WaveTimer(_waves.get(_nbWaveDone), _eventsListener, this);
+			TimeServer.getInstance().addListener(_waveTimer, _timeBetween);
 		}
 		else {
 			terminateScenario();
 		}
 	}
 	
-	public MonsterFuryEventsListener getEventListener() {
+	public ScenarioEventsListener getEventListener() {
 		return _eventsListener;
 	}
 		
 	@Override
 	public void playerEntered(Player p) {
-		this.addPlayerToScenario(p);
+		
+		boolean playerWasOutside = false;
+		for (PlayerOutTimer t : _playerOutTimers) {
+			if (t.getPlayer() == p) {
+				TimeServer.getInstance().removeListener(t);
+				_playerOutTimers.remove(t);
+				playerWasOutside = true;
+				break;
+			}
+		}
+		
+		if (!playerWasOutside) {
+			this.addPlayerToScenario(p);	
+		}
+		
 	}
 
 	@Override
 	public void playerLeft(Player p) {
 		
 		if (_isActive) {
-			TimeServer.getInstance().addListener(new PlayerOutTimer(p, _scenarioZone, this), _timeoutWhenLeaving);
+			PlayerOutTimer timer = new PlayerOutTimer(p, _scenarioZone, this);
+			TimeServer.getInstance().addListener(timer, _timeoutWhenLeaving);
 			if (_eventsListener != null) {
 				_eventsListener.playerLeavingWithTimeout(p, _timeoutWhenLeaving);
 			}
@@ -357,6 +384,10 @@ public class MonsterFury implements ZoneObserver, Scenario {
 
 	@Override
 	public Server getCurrentServer() {
+		return _server;
+	}
+	
+	public Server getScenarioServer() {
 		return _server;
 	}
 	
@@ -383,5 +414,11 @@ public class MonsterFury implements ZoneObserver, Scenario {
 			return getPlayers().get(i);
 		}
 		return null;
+	}
+
+	@Override
+	public boolean isCooldownActive() {
+		// TODO Auto-generated method stub
+		return _coolDownActive;
 	}
 }
