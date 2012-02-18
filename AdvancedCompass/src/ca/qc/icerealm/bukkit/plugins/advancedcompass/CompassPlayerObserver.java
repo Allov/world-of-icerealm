@@ -33,7 +33,7 @@ public class CompassPlayerObserver implements TimeObserver
 			
 			if (compassData.getCurrentCompassMode() == CompassMode.Player)
 			{
-				boolean found = false;
+				//boolean found = false;
 				for (int i = 0; i < getPointingPlayer().getServer().getOnlinePlayers().length; i++)
 				{
 					// Validate if player still exists
@@ -42,19 +42,18 @@ public class CompassPlayerObserver implements TimeObserver
 						getPlayer().setCompassTarget(getPlayer().getServer().getPlayer(compassData.getCurrentPlayerModePlayerName()).getLocation());
 		    			
 		    			// Re-Register
-						//TimeServer.getInstance().removeListener(this, AdvancedCompass.PLAYER_MODE_INTERVAL);
 		    			TimeServer.getInstance().addListener(this, AdvancedCompass.PLAYER_MODE_INTERVAL);
-		    			found = true;
+		    			//found = true;
 		    			break;
 					}
 				}	
 				
 				// Player left, unregister this listener
 				
-				if (!found)
+				/*if (!found)
 				{
 					getPlayer().sendMessage(ChatColor.RED + ">> Compass pointing player has gone offline");
-				}
+				}*/
 			}
 		}
 	}
