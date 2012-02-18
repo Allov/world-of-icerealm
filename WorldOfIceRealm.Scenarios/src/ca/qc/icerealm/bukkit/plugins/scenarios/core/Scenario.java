@@ -13,5 +13,6 @@ public interface Scenario {
 	void terminateScenario();
 	void abortScenario();
 	boolean isActive();
+	Player pickRandomPlayer();
 		
 }

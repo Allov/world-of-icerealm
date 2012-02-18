@@ -10,6 +10,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.Scenario;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
@@ -205,7 +206,6 @@ public class MonsterFury implements ZoneObserver, Scenario {
 			}
 			
 			_nbWaveDone = 0;	
-			_waves.clear();
 			_isActive = false;
 		}
 		
@@ -374,5 +374,14 @@ public class MonsterFury implements ZoneObserver, Scenario {
 	public String getName() {
 		// TODO Auto-generated method stub
 		return _name;
+	}
+
+	@Override
+	public Player pickRandomPlayer() {
+		int i = RandomUtil.getRandomInt(getPlayersCount());
+		if (i >= 0 && i < getPlayersCount()) {
+			return getPlayers().get(i);
+		}
+		return null;
 	}
 }

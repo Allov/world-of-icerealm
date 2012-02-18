@@ -10,6 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
@@ -47,6 +48,12 @@ public class BasicMonsterWave implements EntityWave {
 				Location loc = _scenario.getWorldZone().getRandomLocationOutsideThisZone(_scenario.getWorld(), _exclude);
 				CreatureType type = EntityUtilities.getCreatureType(possibleMonsters[RandomUtil.getRandomInt(possibleMonsters.length)]);			
 				LivingEntity living = _scenario.getWorld().spawnCreature(loc, type);
+				
+				if (living instanceof Monster) {
+					Monster m = (Monster)living;
+					m.setTarget(_scenario.pickRandomPlayer());
+				}
+				
 				// adding to the table
 				_monstersTable.add(living);
 			}
