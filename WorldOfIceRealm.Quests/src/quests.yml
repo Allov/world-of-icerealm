@@ -207,3 +207,29 @@ haunted_outpost:
         money: 400
         level: 5
         items:
+
+moon_temple:
+    group: desert-temples
+    name: The Temple of the Moon
+    messageStart: The moon goddess, it is in pain! Her tears cover the moon in blood and our land suffers. You must reach the top of the Moon Temple in the desert and perform the sacrifice ritual. Give her some peace at last!
+    messageEnd: The goddess has heard our call, she can be at peace... for now!
+    daily: true
+    objectives:
+        -   type: zone
+            name: Reach the top of the Moon Temple
+            zone: 398,60,421,66,80,90
+        -   type: kill
+            name: Protect the ritual (Kill 25 monsters)
+            zone: 380,53,421,84,64,90
+            what: 51,52,54,57
+            amount: 25
+    joinFees:
+        money: 0
+        level: 0
+    dropFees:
+        money: 50
+        level: 0
+    rewards:
+        money: 400
+        level: 5
+        items:
