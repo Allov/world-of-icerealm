@@ -3,22 +3,13 @@ package ca.qc.icerealm.bukkit.plugins.scenarios.core;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-
 import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.DefaultEventListener;
-import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.FourCornerWave;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFury;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFuryConfiguration;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.RegularSpawnWave;
-import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
-import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
-
-
 
 public class ScenarioPlugin extends JavaPlugin {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
