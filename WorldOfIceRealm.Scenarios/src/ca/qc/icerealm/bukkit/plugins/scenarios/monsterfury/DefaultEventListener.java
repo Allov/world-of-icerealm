@@ -16,7 +16,7 @@ public class DefaultEventListener implements MonsterFuryEventsListener {
 	@Override
 	public void waveStarting(int monster) {
 		_nbMonster = monster;
-		sendMessageToPlayers("This wave has " + monster + " monsters!"); 
+		sendMessageToPlayers("This wave has " + monster + " monsters!");
 	}
 
 	@Override
@@ -24,11 +24,9 @@ public class DefaultEventListener implements MonsterFuryEventsListener {
 		sendMessageToPlayers("This wave has been pushed back! " + (_nbWaves - done) + " waves left.");
 	}
 
-
 	@Override
 	public void scenarioEnding(int wavedone) {
-		sendMessageToPlayers("The enemy has been defeated! " + wavedone + " waves have been pushed back!");
-		
+		sendMessageToPlayers("The enemy has been defeated! " + wavedone + " waves have been pushed back!");	
 	}
 
 	@Override
@@ -40,7 +38,7 @@ public class DefaultEventListener implements MonsterFuryEventsListener {
 
 	@Override
 	public void coolDownChanged(boolean value, long time) {
-		// rien a faire! 
+		sendMessageToPlayers("Count down: " + value + ". time: " + time);
 	}
 
 	@Override
@@ -70,7 +68,5 @@ public class DefaultEventListener implements MonsterFuryEventsListener {
 		for (Player p : _player) {
 			p.sendMessage(info);
 		}
-	}
-
-	
+	}	
 }

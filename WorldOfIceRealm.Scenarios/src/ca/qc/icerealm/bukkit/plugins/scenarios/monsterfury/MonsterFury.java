@@ -43,7 +43,7 @@ public class MonsterFury implements ZoneObserver, Scenario {
 	private String _name;
 	private int _experience;
 	private int _minimumPlayer;
-	private List<MonsterWave> _waves;
+	private List<EntityWave> _waves;
 	
 	// propriete sur le status du scenario
 	private boolean _coolDownActive;
@@ -52,13 +52,59 @@ public class MonsterFury implements ZoneObserver, Scenario {
 	private int _nbWaveDone;
 	private int _nbWavesTotal;
 	
+	/**
+	 * Constructeur par défaut. Genere des BasicMonsterWave selon la config.
+	 * @param plugin
+	 * @param config
+	 */
 	public MonsterFury(JavaPlugin plugin, MonsterFuryConfiguration config) {
 		initializeParameter(plugin, config, new DefaultEventListener());
+		createBasicWaves();		
 	}
 	
+	/**
+	 * Genere des BasicMonsterWave et prend en parametre un event listenenr. Laisser le Event Listener
+	 * a null pour n'avoir aucun feedback.
+	 * @param plugin
+	 * @param config
+	 * @param event
+	 */
 	public MonsterFury(JavaPlugin plugin, MonsterFuryConfiguration config, MonsterFuryEventsListener event) {
 		initializeParameter(plugin, config, event);
+		createBasicWaves();
 	}
+	
+	/**
+	 * Prend en parametre la liste des waves qui seront joue dans le scenario. Le Event Listener par defaut.
+	 * Il est possible de changer la liste de wave apres la creation de l'objet.
+	 * est utilise.
+	 * @param plugin
+	 * @param config
+	 * @param event
+	 */
+	public MonsterFury(JavaPlugin plugin, MonsterFuryConfiguration config, List<EntityWave> event) {
+		initializeParameter(plugin, config, new DefaultEventListener());
+		_waves = event;
+	}
+	
+	/**
+	 * Prend en parametre un event listener et la liste des waves. Il est possible de changer la liste apres la creation de l'objet.
+	 * @param plugin
+	 * @param config
+	 * @param event
+	 * @param wave
+	 */
+	public MonsterFury(JavaPlugin plugin, MonsterFuryConfiguration config, MonsterFuryEventsListener event, List<EntityWave> wave) {
+		initializeParameter(plugin, config, event);
+		_waves = wave;
+	}
+	
+	private void createBasicWaves() {
+		for (int i = 0; i < _nbWavesTotal; i++) {
+			_waves.add(new BasicMonsterWave(_nbMonsters, 0.0, this, _scenarioZone, _activationZone, _eventsListener));
+		}
+	}
+
 	
 	private void initializeParameter(JavaPlugin p, MonsterFuryConfiguration c, MonsterFuryEventsListener l) {
 		// parametre du scenario et status de celui-ci
@@ -66,7 +112,7 @@ public class MonsterFury implements ZoneObserver, Scenario {
 		_server = p.getServer();
 		_world = _plugin.getServer().getWorld("world");
 		_players = new ArrayList<Player>();
-		_waves = new ArrayList<MonsterWave>();
+		_waves = new ArrayList<EntityWave>();
 		_isActive = false;
 		_coolDownActive = false;
 		_nbWaveDone = 0;
@@ -100,40 +146,49 @@ public class MonsterFury implements ZoneObserver, Scenario {
 		_eventsListener = l;
 	}
 	
+	/**
+	 * Appelle les methode remove des different observers.
+	 */
 	public void removeAllListener() {
 		ZoneServer.getInstance().removeListener(_activationZoneObserver);
 		TimeServer.getInstance().removeListener(_coolDownTimer);
 		ZoneServer.getInstance().removeListener(this);
 	}
 	
+	/**
+	 * Demarre le scenario
+	 */
 	public void triggerScenario() {
+		
+		if (_waves != null && _waves.size() > 0) {
+			// démarrage du cooldown
+			_coolDownActive = true;
+			_coolDownTimer = new CoolDownTimer(this);
+			TimeServer.getInstance().addListener(_coolDownTimer, _coolDownTime);
+			
+			// on update la zone du scenario en enlevant la zone d'activation 
+			
+			this.logger.info("Scenario has been trigged");
+					
+			if (_eventsListener != null) {
+				_eventsListener.scenarioStarting(_waves.size(), getPlayers());
+			}
 
-		for (int i = 0; i < _nbWavesTotal; i++) {
-			_waves.add(new MonsterWave(_nbMonsters, 0.0, this, _scenarioZone, _activationZone));
+			// on active la premiere wave et le scénario
+			_listener.setMonsterWave(_waves.get(_nbWaveDone));
+			TimeServer.getInstance().addListener(new WaveTimer(_waves.get(_nbWaveDone), _eventsListener), _timeBetween);
+			
+			
+			// on démarre le scénario
+			_isActive = true;
 		}
 		
-		// démarrage du cooldown
-		_coolDownActive = true;
-		_coolDownTimer = new CoolDownTimer(this);
-		TimeServer.getInstance().addListener(_coolDownTimer, _coolDownTime);
 		
-		// on update la zone du scenario en enlevant la zone d'activation 
-		
-		this.logger.info("Scenario has been trigged");
-				
-		if (_eventsListener != null) {
-			_eventsListener.scenarioStarting(_waves.size(), getPlayers());
-		}
-
-		// on active la premiere wave et le scénario
-		_listener.setMonsterWave(_waves.get(_nbWaveDone));
-		TimeServer.getInstance().addListener(new WaveTimer(_waves.get(_nbWaveDone), _eventsListener), _timeBetween);
-		
-		
-		// on démarre le scénario
-		_isActive = true;
 	}
 	
+	/**
+	 * Termnine le scenario de facon normale
+	 */
 	public void terminateScenario() {
 		if (_isActive) {
 			if (_eventsListener != null) {
@@ -155,16 +210,18 @@ public class MonsterFury implements ZoneObserver, Scenario {
 		
 	}
 	
+	/**
+	 * Annulation inattendu du scenario. Il faut releaser les ress ici.
+	 */
 	public void abortScenario() {
 		this.logger.info("Monster fury aborted");
 		if (_isActive) {
 			getPlayers().clear();
 			
 			if (_waves != null) {
-				for (MonsterWave wave : _waves) {
-					wave.removeMonsters();
+				for (EntityWave wave : _waves) {
+					wave.cancelWave();
 				}
-				_waves.clear();
 			}
 		}
 		
@@ -200,6 +257,10 @@ public class MonsterFury implements ZoneObserver, Scenario {
 		}
 	}
 		
+	/*
+	 * Ajoute un joueur au scenario. Un joueur est ajoute s'il n'est pas contenu dans 
+	 * la liste des joueurs.
+	 */
 	public void addPlayerToScenario(Player p) {
 		if (_players != null && p != null && !_players.contains(p)) {
 			_players.add(p);
@@ -207,6 +268,9 @@ public class MonsterFury implements ZoneObserver, Scenario {
 		}
 	}
 	
+	/*
+	 * Enleve un joueur au scenario.
+	 */
 	public void removePlayerFromScenario(Player p) {
 		// TODO Auto-generated method stub
 		if (_players != null && p != null && _players.contains(p)) {
@@ -238,9 +302,17 @@ public class MonsterFury implements ZoneObserver, Scenario {
 		return _minimumPlayer;
 	}
 	
+	public List<EntityWave> getEntityWaves() {
+		return _waves;
+	}
+	
+	public void setEntityWaves(List<EntityWave> l) {
+		_waves = l;
+	}
+	
 	public void waveIsDone() {
 		_nbWaveDone++;
-				
+		this.logger.info("This wave is done : " + _nbWaveDone + "/" + _waves.size());		
 		if (_nbWaveDone < _waves.size()) {	
 			
 			// on load la prochaine wave!

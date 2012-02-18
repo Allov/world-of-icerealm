@@ -64,9 +64,6 @@ public class ScenarioCommander implements CommandExecutor {
 				}
 				
 			}
-			else if (params.length == 2 && params[1].contains("terminate")) {
-				
-			}
 			else {
 				sender.sendMessage("unknown command");
 			}

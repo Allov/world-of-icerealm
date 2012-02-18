@@ -14,14 +14,14 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class MonsterFuryListener implements Listener {
 
 	public final Logger logger = Logger.getLogger(("Minecraft"));
-	private MonsterWave _currentWave;
+	private EntityWave _currentWave;
 	private MonsterFury _scenario;
 	
 	public MonsterFuryListener(MonsterFury s) {
 		_scenario = s;
 	}
 	
-	public void setMonsterWave(MonsterWave wave) {
+	public void setMonsterWave(EntityWave wave) {
 		_currentWave = wave;
 	}
 	
@@ -40,7 +40,7 @@ public class MonsterFuryListener implements Listener {
 				catch (Exception ex) { }
 			}
 			else {
-				_currentWave.processEntityDeath(entity, _scenario.getEventListener());
+				_currentWave.processEntityDeath(entity);
 			}
 		}
 		

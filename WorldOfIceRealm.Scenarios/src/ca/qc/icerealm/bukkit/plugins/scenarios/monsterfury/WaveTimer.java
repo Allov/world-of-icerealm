@@ -7,10 +7,10 @@ import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
 public class WaveTimer implements TimeObserver {
 
 	private MonsterFuryEventsListener _listener;
-	private MonsterWave _wave;
+	private EntityWave _wave;
 	private long _alarm;
 	
-	public WaveTimer(MonsterWave wave, MonsterFuryEventsListener l) {
+	public WaveTimer(EntityWave wave, MonsterFuryEventsListener l) {
 		_wave = wave;
 		_listener = l;
 	}
@@ -19,7 +19,7 @@ public class WaveTimer implements TimeObserver {
 	public void timeHasCome(long time) {
 		_wave.spawnWave();
 		if (_listener != null) {
-			_listener.waveStarting(_wave.getMonstersSize());
+			_listener.waveStarting(_wave.getNbOfEntities());
 		}
 		
 	}
