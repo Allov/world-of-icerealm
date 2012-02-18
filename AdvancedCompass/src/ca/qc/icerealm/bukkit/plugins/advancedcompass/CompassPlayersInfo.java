@@ -3,25 +3,18 @@ package ca.qc.icerealm.bukkit.plugins.advancedcompass;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.Location;
-
 public class CompassPlayersInfo 
 {
-   private static CompassPlayersInfo instance = null;
+   private static final CompassPlayersInfo instance = new CompassPlayersInfo();
    private Map<String, PlayerCompassData> playersCurrentComppassDataList = new HashMap<String, PlayerCompassData>();
 
-   protected CompassPlayersInfo() 
+   private CompassPlayersInfo() 
    {
 
    }
    
-   public static CompassPlayersInfo getInstance() 
+   public static synchronized CompassPlayersInfo getInstance() 
    {
-      if (instance == null) 
-      {
-         instance = new CompassPlayersInfo();
-      }
-      
       return instance;
    }
 
@@ -33,12 +26,11 @@ public class CompassPlayersInfo
    public PlayerCompassData getPlayerCompassData(String playerName)
    {
 	   PlayerCompassData data = playersCurrentComppassDataList.get(playerName);
-	   if (data != null)
-	   {
-		   return playersCurrentComppassDataList.get(playerName);
-	   }
 	   
-	   data = new PlayerCompassData();
+	   if (data == null)
+	   {
+		   data = new PlayerCompassData();
+	   }
 	   return data;
    }
 }

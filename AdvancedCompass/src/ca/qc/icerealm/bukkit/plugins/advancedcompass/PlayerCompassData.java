@@ -6,21 +6,21 @@ public class PlayerCompassData
 {
     private String currentPlayerModePlayerName = null;
     private Location currentFixedModeLocation = null;
-    private CompassMode currentCompassMode = null;
+    private CompassMode currentCompassMode = CompassMode.SpawnPoint;
    
     public void setCurrentPlayerModePlayerName(String playerName)
     {
-	    currentPlayerModePlayerName = playerName;
+	    this.currentPlayerModePlayerName = playerName;
     }
    
     public String getCurrentPlayerModePlayerName()
     {
-	    return currentPlayerModePlayerName;
+	    return this.currentPlayerModePlayerName;
     }
 
 	public Location getCurrentFixedModeLocation() 
 	{
-		return currentFixedModeLocation;
+		return this.currentFixedModeLocation;
 	}
 
 	public void setCurrentFixedModeLocation(Location currentFixedModeLocation) 
@@ -30,14 +30,7 @@ public class PlayerCompassData
 
 	public CompassMode getCurrentCompassMode() 
 	{
-		CompassMode mode = currentCompassMode;
-		   
-	    if (mode != null)
-	    {
-	  	    return mode;
-	    }
-	   
-	   return CompassMode.SpawnPoint;
+	  	return this.currentCompassMode;
 	}
 
 	public void setCurrentCompassMode(CompassMode currentCompassMode) 

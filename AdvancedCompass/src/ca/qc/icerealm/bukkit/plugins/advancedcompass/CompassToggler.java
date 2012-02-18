@@ -99,7 +99,7 @@ public class CompassToggler
 
 					logger.info("before add instance");
 					// Add a time observer to get constant location change
-					TimeServer.getInstance().addListener(new CompassPlayerObserver(player, pointingPlayer), 1000);
+					TimeServer.getInstance().addListener(new CompassPlayerObserver(player, pointingPlayer), 10000);
 					
 	        		return true;
 				}

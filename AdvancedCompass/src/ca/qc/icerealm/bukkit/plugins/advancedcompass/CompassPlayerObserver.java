@@ -46,8 +46,8 @@ public class CompassPlayerObserver implements TimeObserver
 		    			
 		    			// Re-Register
 						active = false;
-						TimeServer.getInstance().removeListener(this);
-		    			TimeServer.getInstance().addListener(new CompassPlayerObserver(player, pointingPlayer), 1000);
+						//TimeServer.getInstance().removeListener(this);
+		    			TimeServer.getInstance().addListener(this, 10000);
 		    			found = true;
 		    			break;
 					}
@@ -59,12 +59,7 @@ public class CompassPlayerObserver implements TimeObserver
 				{
 					getPlayer().sendMessage(ChatColor.RED + ">> Compass pointing player has gone offline");
 				}
-			//	active = false;
 			}
-			/*else
-			{
-				active = false;
-			}*/
 		}
 	}
 	
