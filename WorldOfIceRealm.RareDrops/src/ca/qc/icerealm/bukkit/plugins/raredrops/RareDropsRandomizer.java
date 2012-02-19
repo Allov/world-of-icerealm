@@ -55,7 +55,7 @@ public class RareDropsRandomizer
 						for (int j = 0; j < enchantments.size(); j++)
 						{	
 							EnchantmentResult enchantment = enchantments.get(j);
-							this.logger.info(item.getItem().name() + ": adding enchantment: " + enchantment.getEnchantment().toString() + " " + enchantment.getLevel());
+						//	this.logger.info(item.getItem().name() + ": adding enchantment: " + enchantment.getEnchantment().toString() + " " + enchantment.getLevel());
 							stack.addEnchantment(enchantment.getEnchantment(), enchantment.getLevel());
 						}
 					}
@@ -66,10 +66,13 @@ public class RareDropsRandomizer
 					}*/
 					
 					// Appliquer le comportement de nourriture cuite
-					if (MaterialUtil.isCookable(stack.getType()) && odds.getMonster().getFireTicks() > 0)
+					if (odds.getMonster() != null)
 					{
-						stack.setType(MaterialUtil.getCookableEquivalence(stack.getType()));
-					}			
+						if (MaterialUtil.isCookable(stack.getType()) && odds.getMonster().getFireTicks() > 0)
+						{
+							stack.setType(MaterialUtil.getCookableEquivalence(stack.getType()));
+						}	
+					}
 				
 					stackList.add(stack);	
 				}
