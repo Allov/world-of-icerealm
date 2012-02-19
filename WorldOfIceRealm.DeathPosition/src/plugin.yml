@@ -1,0 +1,6 @@
+name: WoI.DeathLocation
+main: ca.qc.icerealm.bukkit.plugins.deathlocation.DeathLocation
+version: 1.0.0
+description: Compass location on death
+author: Draskus
+softdepend: [Vault]
