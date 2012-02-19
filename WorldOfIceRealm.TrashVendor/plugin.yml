@@ -1,0 +1,8 @@
+name: WoI.BloodMoon
+main: ca.qc.icerealm.bukkit.plugins.trashvendor.TrashVendorPlugin
+version: 1.0.0
+description: A simple vendor to get rid of useless item
+
+commands:
+  tv:
+    description: able to control the price and the location of it
