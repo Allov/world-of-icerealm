@@ -50,8 +50,8 @@ public class TrashVendorPlugin extends JavaPlugin implements TimeObserver, Liste
 			economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
 		}
 		
-		_location = new Location(getServer().getWorld("world"), -163.0, 71.0, 145.0); // server test punisher
-		//_location = new Location(getServer().getWorld("world"), 691.0,69.0,277.0); // shop village
+		//_location = new Location(getServer().getWorld("world"), -163.0, 71.0, 145.0); // server test punisher
+		_location = new Location(getServer().getWorld("world"), 691.0,69.0,277.0); // shop village
 		_zone = new WorldZone(_location, 2);
 		_villager = (Villager)getServer().getWorld("world").spawnCreature(_location, EntityUtilities.getCreatureType("Villager"));
 		timeHasCome(System.currentTimeMillis());
