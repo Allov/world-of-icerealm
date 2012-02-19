@@ -14,7 +14,7 @@ public class AdvancedCompass extends JavaPlugin
 	@Override
 	public void onEnable() {
 		
-		// Version 0.3.0
+		// Version 1.0.0
 		getServer().getPluginManager().registerEvents(new CompassActionListener(), this);
 		
 		getCommand("c").setExecutor(new CompassCommandExecutor());

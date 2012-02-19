@@ -6,6 +6,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import ca.qc.icerealm.bukkit.plugins.advancedcompass.data.CompassMode;
+import ca.qc.icerealm.bukkit.plugins.advancedcompass.data.CompassPlayersInfo;
+import ca.qc.icerealm.bukkit.plugins.advancedcompass.data.PlayerCompassData;
+
 public class CompassCommandExecutor implements CommandExecutor
 {
 	private static final String AdvancedCompassParamHelp = "help";
@@ -50,8 +54,7 @@ public class CompassCommandExecutor implements CommandExecutor
 					{
 						compassData.setCurrentPlayerModePlayerName(params[1]);	
 						compassData.setCurrentCompassMode(CompassMode.Player);
-						compassPlayersInfo.setPlayerCompassData(player.getName(), compassData);
-						
+
 						player.sendMessage(ChatColor.LIGHT_PURPLE + ">> Current pointing location is now set to player " + params[1]);
 						
 						CompassToggler toggler = new CompassToggler(player);
@@ -69,7 +72,6 @@ public class CompassCommandExecutor implements CommandExecutor
 					
 					compassData.setCurrentFixedModeLocation(player.getLocation());
 					compassData.setCurrentCompassMode(CompassMode.Fixed);
-					compassPlayersInfo.setPlayerCompassData(player.getName(), compassData);
 					
 					player.sendMessage(ChatColor.LIGHT_PURPLE + ">> Current fixed location set");
 					CompassToggler toggler = new CompassToggler(player);

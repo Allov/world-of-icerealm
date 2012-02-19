@@ -2,9 +2,11 @@ package ca.qc.icerealm.bukkit.plugins.advancedcompass;
 
 import java.util.logging.Logger;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import ca.qc.icerealm.bukkit.plugins.advancedcompass.data.CompassMode;
+import ca.qc.icerealm.bukkit.plugins.advancedcompass.data.CompassPlayersInfo;
+import ca.qc.icerealm.bukkit.plugins.advancedcompass.data.PlayerCompassData;
 import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 
@@ -26,6 +28,7 @@ public class CompassPlayerObserver implements TimeObserver
 	@Override
 	public void timeHasCome(long time) 
 	{
+		// if current player is offline, stop here
 		if (active && player.isOnline())
 		{
 			CompassPlayersInfo compassPlayersInfo = CompassPlayersInfo.getInstance();
@@ -33,7 +36,6 @@ public class CompassPlayerObserver implements TimeObserver
 			
 			if (compassData.getCurrentCompassMode() == CompassMode.Player)
 			{
-				//boolean found = false;
 				for (int i = 0; i < getPointingPlayer().getServer().getOnlinePlayers().length; i++)
 				{
 					// Validate if player still exists
@@ -41,19 +43,11 @@ public class CompassPlayerObserver implements TimeObserver
 					{
 						getPlayer().setCompassTarget(getPlayer().getServer().getPlayer(compassData.getCurrentPlayerModePlayerName()).getLocation());
 		    			
-		    			// Re-Register
+		    			// Re-Register listener
 		    			TimeServer.getInstance().addListener(this, AdvancedCompass.PLAYER_MODE_INTERVAL);
-		    			//found = true;
 		    			break;
 					}
 				}	
-				
-				// Player left, unregister this listener
-				
-				/*if (!found)
-				{
-					getPlayer().sendMessage(ChatColor.RED + ">> Compass pointing player has gone offline");
-				}*/
 			}
 		}
 	}

@@ -2,8 +2,12 @@ package ca.qc.icerealm.bukkit.plugins.advancedcompass;
 
 import java.util.logging.Logger;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import ca.qc.icerealm.bukkit.plugins.advancedcompass.data.CompassMode;
+import ca.qc.icerealm.bukkit.plugins.advancedcompass.data.CompassPlayersInfo;
+import ca.qc.icerealm.bukkit.plugins.advancedcompass.data.PlayerCompassData;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 
 public class CompassToggler 
@@ -59,6 +63,14 @@ public class CompassToggler
     		}
     	} 
     	
+    	if (nextMode == CompassMode.Custom)
+    	{
+    		if (!setCustomLocationMode())
+    		{
+    			nextMode = getNextCompassMode(nextMode);
+    		}
+    	} 
+    	
     	if (nextMode == CompassMode.SpawnPoint)
     	{
     		if (!setSpawnPointMode())
@@ -68,7 +80,7 @@ public class CompassToggler
     	}
     	
     	compassData.setCurrentCompassMode(nextMode);
-    	compassPlayersInfo.setPlayerCompassData(player.getName(), compassData);		
+    	//compassPlayersInfo.setPlayerCompassData(player.getName(), compassData);		
 	}
 	
 	public boolean setBedMode()
@@ -76,7 +88,7 @@ public class CompassToggler
 		if (player.getBedSpawnLocation() != null)
 		{
 			player.setCompassTarget(player.getBedSpawnLocation());
-			player.sendMessage("Your compass is now pointing at your bed");
+			player.sendMessage(ChatColor.LIGHT_PURPLE + ">> Your compass is now pointing at your bed");
 			return true;
 		}
 		
@@ -95,7 +107,7 @@ public class CompassToggler
 				{
 					Player pointingPlayer = player.getServer().getPlayer(playerName);
 					player.setCompassTarget(pointingPlayer.getLocation());
-					player.sendMessage("Your compass is now pointing at " + playerName);
+					player.sendMessage(ChatColor.LIGHT_PURPLE + ">> Your compass is now pointing at " + playerName);
 
 					// Add a time observer to get constant location change
 					TimeServer.getInstance().addListener(new CompassPlayerObserver(player, pointingPlayer), AdvancedCompass.PLAYER_MODE_INTERVAL);
@@ -113,7 +125,7 @@ public class CompassToggler
 		if (compassData.getCurrentFixedModeLocation() != null)
 		{
 			player.setCompassTarget(compassData.getCurrentFixedModeLocation());
-			player.sendMessage("Your compass is now pointing at your current fixed location");
+			player.sendMessage(ChatColor.LIGHT_PURPLE + ">> Your compass is now pointing at your current fixed location");
 			return true;
 		}
 		
@@ -123,8 +135,29 @@ public class CompassToggler
 	public boolean setSpawnPointMode()
 	{
 		player.setCompassTarget(player.getWorld().getSpawnLocation());
-		player.sendMessage("Your compass is now pointing at world spawn point");
+		player.sendMessage(ChatColor.LIGHT_PURPLE + ">> Your compass is now pointing at world spawn point");
 		return true;
+	}
+	
+	public boolean setCustomLocationMode()
+	{
+		if (compassData.getCurrentCustomModeLocation() != null)
+		{
+			player.setCompassTarget(compassData.getCurrentCustomModeLocation());
+			
+			if (compassData.getCurrentCustomToggleMessage() == null)
+			{
+				player.sendMessage(ChatColor.LIGHT_PURPLE + ">> Current custom location set");
+			}
+			else
+			{
+				player.sendMessage(ChatColor.LIGHT_PURPLE + ">> " + compassData.getCurrentCustomToggleMessage());
+			}
+			
+			return true;
+		}
+		
+		return false;
 	}
 	
 	public CompassMode getNextCompassMode(CompassMode mode)
@@ -132,7 +165,8 @@ public class CompassToggler
 		if (mode == CompassMode.SpawnPoint) return CompassMode.Bed;
 		if (mode == CompassMode.Bed) return CompassMode.Player;
 		if (mode == CompassMode.Player) return CompassMode.Fixed;
-		if (mode == CompassMode.Fixed) return CompassMode.SpawnPoint;
+		if (mode == CompassMode.Fixed) return CompassMode.Custom;
+		if (mode == CompassMode.Custom) return CompassMode.SpawnPoint;
 		
 		return CompassMode.SpawnPoint;
 	}

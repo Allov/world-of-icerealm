@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.advancedcompass;
+package ca.qc.icerealm.bukkit.plugins.advancedcompass.data;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +30,7 @@ public class CompassPlayersInfo
 	   if (data == null)
 	   {
 		   data = new PlayerCompassData();
+		   playersCurrentComppassDataList.put(playerName, data);
 	   }
 	   return data;
    }
