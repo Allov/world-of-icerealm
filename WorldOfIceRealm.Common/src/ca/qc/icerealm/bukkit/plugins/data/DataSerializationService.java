@@ -17,7 +17,7 @@ public class DataSerializationService implements DataPersistenceService
 	
 	
 	@Override
-	public boolean save(String pluginName, String key, Serializable data)
+	public boolean save(String pluginName, String key, Object data)
 	{
 		boolean success = false;
 		testFolder(pluginName);
@@ -71,7 +71,7 @@ public class DataSerializationService implements DataPersistenceService
 	}
 
 	@Override
-	public Serializable load(String pluginName, String key) 
+	public Object load(String pluginName, String key) 
 	{
 		Serializable data = null;
 		testFolder(pluginName);
