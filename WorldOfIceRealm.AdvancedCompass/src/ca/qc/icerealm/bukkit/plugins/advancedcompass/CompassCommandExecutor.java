@@ -1,5 +1,7 @@
 package ca.qc.icerealm.bukkit.plugins.advancedcompass;
 
+import java.util.logging.Logger;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,9 +11,13 @@ import org.bukkit.entity.Player;
 import ca.qc.icerealm.bukkit.plugins.advancedcompass.data.CompassMode;
 import ca.qc.icerealm.bukkit.plugins.advancedcompass.data.CompassPlayersInfo;
 import ca.qc.icerealm.bukkit.plugins.advancedcompass.data.PlayerCompassData;
+import ca.qc.icerealm.bukkit.plugins.data.DataPersistenceService;
+import ca.qc.icerealm.bukkit.plugins.data.DataSerializationService;
 
 public class CompassCommandExecutor implements CommandExecutor
 {
+	public final Logger logger = Logger.getLogger(("Minecraft"));
+	
 	private static final String AdvancedCompassParamHelp = "help";
 	private static final String AdvancedCompassParamPointPlayer = "player";
 	private static final String AdvancedCompassParamCurrentLocation = "current_location";
@@ -76,6 +82,18 @@ public class CompassCommandExecutor implements CommandExecutor
 					player.sendMessage(ChatColor.LIGHT_PURPLE + ">> Current fixed location set");
 					CompassToggler toggler = new CompassToggler(player);
 					toggler.setFixedMode();
+					
+					// Save data for persistence
+					
+					try
+					{
+						DataPersistenceService dataService = new DataSerializationService();
+						dataService.save("advancedcompass", "current_location", compassPlayersInfo.toSerializablePlayerCompassData());
+					}
+					catch(Exception e)
+					{
+						logger.warning("Failed to save data from AdvancedCompass");
+					}
 				}
 				else if (params[0].equalsIgnoreCase(AdvancedCompassParamHelp))
 				{

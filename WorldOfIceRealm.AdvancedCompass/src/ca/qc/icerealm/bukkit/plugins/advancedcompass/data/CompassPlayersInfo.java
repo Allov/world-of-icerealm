@@ -2,9 +2,14 @@ package ca.qc.icerealm.bukkit.plugins.advancedcompass.data;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
+
+import org.bukkit.Location;
 
 public class CompassPlayersInfo 
 {
+	public final Logger logger = Logger.getLogger(("Minecraft"));
+	
    private static final CompassPlayersInfo instance = new CompassPlayersInfo();
    private Map<String, PlayerCompassData> playersCurrentComppassDataList = new HashMap<String, PlayerCompassData>();
 
@@ -34,4 +39,24 @@ public class CompassPlayersInfo
 	   }
 	   return data;
    }
+   
+	public SerializablePlayerCompassData toSerializablePlayerCompassData()
+	{
+		SerializablePlayerCompassData data = new SerializablePlayerCompassData();
+		
+		Object[] playersName = playersCurrentComppassDataList.keySet().toArray();
+		
+		for (int i = 0; i < playersName.length; i++)
+		{
+			Location loc = playersCurrentComppassDataList.get(playersName[i]).getCurrentFixedModeLocation();
+			
+			if (loc != null)
+			{
+				logger.info("playerName: " + playersName[i].toString());
+				data.addPlayerLocationData(playersName[i].toString(), loc.getX(), loc.getY(), loc.getZ());
+			}
+		}
+		
+		return data;
+	}
 }

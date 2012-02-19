@@ -2,11 +2,16 @@ package ca.qc.icerealm.bukkit.plugins.advancedcompass;
 
 import java.util.logging.Logger;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+
+import ca.qc.icerealm.bukkit.plugins.advancedcompass.data.CompassPlayersInfo;
+import ca.qc.icerealm.bukkit.plugins.advancedcompass.data.PlayerCompassData;
+import ca.qc.icerealm.bukkit.plugins.common.LocationUtil;
 
 public class CompassActionListener implements Listener
 {
@@ -20,6 +25,14 @@ public class CompassActionListener implements Listener
         { 
         	CompassToggler toggler = new CompassToggler(event.getPlayer());
         	toggler.toggle();
+        }
+        else if(event.getItem() != null && event.getAction() != null && ((event.getAction().equals(Action.RIGHT_CLICK_AIR) || (event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) && event.getItem().getType() != null && event.getItem().getType().equals(Material.COMPASS)))
+        {
+        	if (event.getPlayer().getCompassTarget() != null)
+        	{
+        		double distance = LocationUtil.getDistanceBetween(event.getPlayer().getLocation(), event.getPlayer().getCompassTarget());
+        		event.getPlayer().sendMessage(ChatColor.LIGHT_PURPLE + ">> Distance: " + ((int)distance) + "m.");
+        	}
         }
 	}
 }
