@@ -45,7 +45,6 @@ public class TrashVendorPlugin extends JavaPlugin implements TimeObserver, Liste
 
 	@Override
 	public void onEnable() {
-		getCommand("tv").setExecutor(new TrashVendorCommander(this));
 		
 		if(this.getServer().getPluginManager().isPluginEnabled("Vault")) {
 			economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
