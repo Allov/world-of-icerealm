@@ -30,6 +30,7 @@ public class CustomCompassManager
 		PlayerCompassData compassData = compassPlayersInfo.getPlayerCompassData(player.getName());
 		
 		compassData.setCurrentCustomModeLocation(location);
+		compassData.setCurrentCustomToggleMessage(toggleMessage);
 		compassData.setCurrentCompassMode(CompassMode.Custom);
 		compassData.setCurrentCustomLocationKey(key);
 		

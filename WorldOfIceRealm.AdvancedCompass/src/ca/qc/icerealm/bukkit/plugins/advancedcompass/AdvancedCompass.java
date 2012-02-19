@@ -32,7 +32,6 @@ public class AdvancedCompass extends JavaPlugin
 		
 		DataPersistenceService dataService = new DataSerializationService();
 		
-		logger.info("1");
 		if (dataService.exists("advancedcompass", "current_location"))
 		{
 			try
