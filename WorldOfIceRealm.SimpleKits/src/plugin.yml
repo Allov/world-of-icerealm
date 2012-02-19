@@ -1,0 +1,8 @@
+name: WoI.SimpleKits
+main: ca.qc.icerealm.bukkit.plugins.simplekits.SimpleKitsPlugin
+version: 0.1.0
+description: World Of IceRealm Simple Kits
+author: Allov
+commands:
+  kit:
+    description: Give a predefined kit for testing purpose.

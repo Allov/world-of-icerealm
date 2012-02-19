@@ -131,9 +131,6 @@ public class StreakListener implements Listener {
 		if (entity instanceof Player) {
 			Combo combo = getCombo((Player) entity);
 			combo.setFlawless(false);
-			
-			//((Player)entity).sendMessage("" + ChatColor.GRAY + "Flawless combo cancelled.");
-			
 		}
 	}
 
@@ -165,8 +162,6 @@ public class StreakListener implements Listener {
 		
 		combo.setKillCount(combo.getKillCount() + 1);
 		combo.setLastKillTime(currentTime);
-		
-		//killer.sendMessage("" + ChatColor.GRAY + "Streak count is " + combo.getKillCount() + ". Time since last kill " + lastKillTimeDifference);
 		
 		return combo;
 	}
