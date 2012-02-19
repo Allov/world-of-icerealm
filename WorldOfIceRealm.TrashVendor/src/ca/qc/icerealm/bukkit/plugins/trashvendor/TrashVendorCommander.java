@@ -29,7 +29,7 @@ public class TrashVendorCommander implements CommandExecutor {
 		
 		if (arg0.isOp()) {
 			if (arg3.length > 0 && arg3[0].contains("create")) {				
-				
+				/*
 				if (arg0 instanceof Player) {
 					Player p = (Player)arg0;
 					Villager e = (Villager)p.getWorld().spawnCreature(p.getLocation(), EntityUtilities.getCreatureType("Villager"));
@@ -37,7 +37,7 @@ public class TrashVendorCommander implements CommandExecutor {
 					listener.timeHasCome(System.currentTimeMillis());
 					p.getServer().getPluginManager().registerEvents(listener, _plugin);
 				}
-				
+				*/
 			}
 		}
 		else {
