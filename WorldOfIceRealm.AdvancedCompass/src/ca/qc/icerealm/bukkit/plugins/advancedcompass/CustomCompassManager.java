@@ -3,6 +3,7 @@ package ca.qc.icerealm.bukkit.plugins.advancedcompass;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import ca.qc.icerealm.bukkit.plugins.advancedcompass.CompassToggler;
 import ca.qc.icerealm.bukkit.plugins.advancedcompass.data.CompassMode;
 import ca.qc.icerealm.bukkit.plugins.advancedcompass.data.CompassPlayersInfo;
 import ca.qc.icerealm.bukkit.plugins.advancedcompass.data.PlayerCompassData;
@@ -50,7 +51,7 @@ public class CustomCompassManager
     	return compassData.getCurrentCustomModeLocation();
     }
 
-	public void removeCustomLocation(String key)
+	public void removeCustomLocation()
 	{
 		CompassPlayersInfo compassPlayersInfo = CompassPlayersInfo.getInstance();
 		PlayerCompassData compassData = compassPlayersInfo.getPlayerCompassData(player.getName());
