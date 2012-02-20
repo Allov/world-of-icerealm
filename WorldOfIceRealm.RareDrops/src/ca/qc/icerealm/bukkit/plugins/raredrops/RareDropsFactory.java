@@ -197,6 +197,18 @@ public class RareDropsFactory
 				odds.addOddsItem(new RareDropsOddsItem(2.00 * oddsMultiplier, Material.MAGMA_CREAM));
 				break;
 			}
+			case EntityUtilities.Blaze:
+			{
+				//this.logger.info("Killed Pig Blaze");
+				odds.addOddsItem(new RareDropsOddsItem(5.00 * oddsMultiplier, Material.GOLD_INGOT));
+				odds.addOddsItem(new RareDropsOddsItem(3.00 * oddsMultiplier, Material.GOLDEN_APPLE));
+				odds.addOddsItem(new RareDropsOddsItem(0.06 * oddsMultiplier, Material.DIAMOND_BOOTS, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.06 * oddsMultiplier, Material.DIAMOND_CHESTPLATE, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.06 * oddsMultiplier, Material.DIAMOND_HELMET, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				odds.addOddsItem(new RareDropsOddsItem(0.06 * oddsMultiplier, Material.DIAMOND_LEGGINGS, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));	
+				odds.addOddsItem(new RareDropsOddsItem(0.20 * oddsMultiplier, Material.DIAMOND_SWORD, new EnchantmentsOdds (EnchantmentsOdds.AVERAGE_ODDS)));
+				break;
+			}
 			case EntityUtilities.EnderDragon:
 			{
 				//this.logger.info("Killed Enderdragon");
