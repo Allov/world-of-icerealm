@@ -24,11 +24,12 @@ public class CountObjective extends Objective {
 		return current > amount ? amount : current;
 	}
 
-	public void advance(int increment) {
-		if (!isCompleted()) {
-			current = current + increment;
+	public void advance(int amount) {
+		if (!isCompleted() && amount != 0) {
+			current = current + amount;
 			
-			if (current >= amount) {
+			if (current >= this.amount) {
+				current = getAmount();
 				setCompleted(true);
 				objectiveProgressed();
 				objectiveCompleted();
@@ -36,24 +37,6 @@ public class CountObjective extends Objective {
 				objectiveProgressed();
 			}
 
-		}
-	}
-	
-	public void regress() {
-		regress(1);
-	}
-	
-	public void regress(int decrement) {
-		if (current > 0) {
-			setCompleted(false);
-			
-			current = current - decrement;
-			
-			if (current <= 0) {
-				current = 0;
-			}
-			
-			objectiveProgressed();
 		}
 	}
 	

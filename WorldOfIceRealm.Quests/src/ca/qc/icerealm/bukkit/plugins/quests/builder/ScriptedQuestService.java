@@ -30,6 +30,7 @@ import ca.qc.icerealm.bukkit.plugins.quests.Reward;
 import ca.qc.icerealm.bukkit.plugins.quests.ZoneObjective;
 import ca.qc.icerealm.bukkit.plugins.questslog.QuestLog;
 import ca.qc.icerealm.bukkit.plugins.questslog.QuestLogService;
+import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 
 public class ScriptedQuestService {
@@ -183,6 +184,9 @@ public class ScriptedQuestService {
 			Objective objective = ObjectiveFactory.getInstance()
 					.createFromMap(this.questsPlugin, player, map);
 			quest.getObjectives().add(objective);
+		}
+		
+		for(Objective objective : quest.getObjectives()) {
 			objective.register(quest);
 		}
 		
@@ -282,8 +286,7 @@ class ObjectiveFactory {
 		return objective;
 	}
 
-	private FindObjective createFindObjective(Quests quests, Player player, MapWrapper map,
-			WorldZone zone) {
+	private FindObjective createFindObjective(Quests quests, Player player, MapWrapper map, WorldZone zone) {
 		FindObjective objective = new FindObjective(
 										player, 
 										zone, 
@@ -295,8 +298,7 @@ class ObjectiveFactory {
 		return objective;
 	}
 
-	private CollectObjective createCollectObjective(Quests quests, Player player, MapWrapper map,
-			WorldZone zone) {
+	private CollectObjective createCollectObjective(Quests quests, Player player, MapWrapper map, WorldZone zone) {
 		CollectObjective objective = new CollectObjective(
 											player, 
 											zone,
@@ -304,8 +306,6 @@ class ObjectiveFactory {
 											map.getInt("amount", 0),
 											map.getBoolean("keep", false),
 											map.getInt("what", 0));
-		
-		quests.getServer().getPluginManager().registerEvents(objective, quests);
 		return objective;
 	}
 
