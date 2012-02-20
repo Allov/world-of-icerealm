@@ -24,9 +24,6 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 	private int _probability = 10;
 	// le nombre de millisecond avant de spawner autour du joueur
 	private long _delay = 20000; // 20 sec
-	// 
-	private boolean _isCumulative = false;
-	
 
 	// le id des blocks valides
 	// 2 = grass
@@ -45,6 +42,8 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 	private boolean _isActive = false;
 	private Listener _listener;
 	private BloodMoonStarter _starter;
+	private BloodMoonStopper _stopper;
+	private BloodMoonDraw _draw;
 	
 	public boolean isCumulative() {
 		return _cumulative;
@@ -83,6 +82,8 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 		this.logger.info("[Blood Moon] - removing active listeners");
 		TimeServer.getInstance().removeListener(this);
 		TimeServer.getInstance().removeListener(_starter);
+		TimeServer.getInstance().removeListener(_stopper);
+		TimeServer.getInstance().removeListener(_draw);
 	}
 
 	@Override
@@ -98,14 +99,12 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 
 	@Override
 	public void timeHasCome(long time) {
+		this.logger.info("TIME HAS COME IN BLOOD MOON, NOT SUPPOSED!!!!!");
 		long newAlarm = 0;
 		long currentTime = _world.getTime();
 		
-		if (_isActive && currentTime >= 0 && currentTime <= 12000) {
+		if (currentTime >= 0 && currentTime <= 12000) {
 			stopBloodMoon();
-			newAlarm = (12000 - currentTime) * _msInMinecraftHour;
-			// on veut se faire poker a la fin de la journée
-			displayListenerAddition("blood moon stopping", newAlarm);
 		}
 		else {
 			
@@ -134,20 +133,20 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 	}
 	
 	public void initializeTimer() {
-		
-		
+		// on arrete le bloodmoon et reinitialise les timers
 		TimeServer.getInstance().removeListener(_starter);
+		TimeServer.getInstance().removeListener(_stopper);
+		TimeServer.getInstance().removeListener(_draw);
 		TimeServer.getInstance().removeListener(this);
-
+		_isActive = false;
+		_attemptDone = 0;
+		
 		// calcul du temps présent et la prochaine alarm
 		_world = this.getServer().getWorld("world");
 		long hour = _world.getTime();
 		long alarm = 0;
 		
-		if (_isActive) {
-			alarm = (24000 - hour) * _msInMinecraftHour;
-		}
-		else if (hour < 12000) {
+		if (hour < 12000) {
 			alarm = (12000 - hour) * _msInMinecraftHour;
 		}
 		else if (hour >= 12000) {
@@ -155,7 +154,8 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 		}
 		
 		displayListenerAddition("init timer", alarm);
-		TimeServer.getInstance().addListener(this, alarm);
+		_draw = new BloodMoonDraw(this);
+		TimeServer.getInstance().addListener(_draw, alarm);
 	}
 	
 	private void displayListenerAddition(String event, long a) {
@@ -172,18 +172,45 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 		return _timeAlarm;
 	}
 	
+	public boolean drawBloodMoon() {
+		int modifiedProb = _probability - _attemptDone;
+		boolean draw = RandomUtil.getDrawResult(modifiedProb);
+		
+		if (!draw && _cumulative) {
+			_attemptDone++;
+		}
+		
+		return draw;
+	}
+	
 	public void startBloodMoon() {
 		
 		getServer().broadcastMessage(ChatColor.DARK_RED + "The Blood Moon " + ChatColor.DARK_GREEN + "is rising!");
+		// le starter pour spawner les monstres apres 10 sec
 		_starter = new BloodMoonStarter(this);
 		TimeServer.getInstance().addListener(_starter, _delay);
+		// le stopper pour arreter le bloodmoon dans 12h minecraft
+		_stopper  = new BloodMoonStopper(this);
+		TimeServer.getInstance().addListener(_stopper, 12000 * _msInMinecraftHour);
+		// reset les essais
 		_attemptDone = 0;
 		_isActive = true;
 	}
 	
 	public void stopBloodMoon() {
+		
+		/*
 		_isActive = false;
 		_attemptDone = 0;
+		long newAlarm = 0;
+		
+		newAlarm = (12000 - _world.getTime()) * _msInMinecraftHour;
+		
+		displayListenerAddition("blood moon stopping", newAlarm);
+		_draw = new BloodMoonDraw(this);
+		TimeServer.getInstance().addListener(_draw, newAlarm);
+		*/
+		initializeTimer();
 		getServer().broadcastMessage(ChatColor.DARK_GREEN + "The Blood Moon is now over!");
 	}
 	

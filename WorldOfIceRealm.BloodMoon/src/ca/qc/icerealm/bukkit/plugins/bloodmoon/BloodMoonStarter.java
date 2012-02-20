@@ -20,7 +20,7 @@ public class BloodMoonStarter implements TimeObserver {
 	@Override
 	public void timeHasCome(long time) {
 		if (_moon.isActive()) {
-			_moon.getServer().broadcastMessage(ChatColor.DARK_GREEN + "The monsters are " + ChatColor.RED + " very close!");
+			_moon.getServer().broadcastMessage(ChatColor.DARK_GREEN + "The monsters are " + ChatColor.RED + "very close!");
 			for (Player p : _moon.getServer().getOnlinePlayers()) {
 				_moon.spawnMonsterCloseToPlayer(p.getLocation());
 				_moon.spawnMonsterCloseToPlayer(p.getLocation());
