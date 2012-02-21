@@ -46,6 +46,7 @@ public class MonsterFury implements ZoneObserver, Scenario {
 	// propriete modifiable de l'externe
 	private long _timeoutWhenLeaving;
 	private long _coolDownTime;
+	private long _coolDownUntilTime;
 	private int _nbMonsters;
 	private long _timeBetween;
 	private String _name;
@@ -215,6 +216,14 @@ public class MonsterFury implements ZoneObserver, Scenario {
 				}
 			}
 			
+			getPlayers().clear();
+			
+			if (_waves != null) {
+				for (EntityWave wave : _waves) {
+					wave.cancelWave();
+				}
+			}
+			
 			_nbWaveDone = 0;	
 			_isActive = false;
 		}
@@ -257,6 +266,7 @@ public class MonsterFury implements ZoneObserver, Scenario {
 		if (_coolDownActive) {
 			_coolDownTimer = new CoolDownTimer(this);
 			TimeServer.getInstance().addListener(_coolDownTimer, _coolDownTime);
+			_coolDownUntilTime = System.currentTimeMillis() + _coolDownTime;
 			
 			if (_eventsListener != null) {
 				_eventsListener.coolDownChanged(active, _coolDownTime, this);
@@ -352,7 +362,7 @@ public class MonsterFury implements ZoneObserver, Scenario {
 		
 		boolean playerWasOutside = false;
 		for (PlayerOutTimer t : _playerOutTimers) {
-			if (t.getPlayer() == p) {
+			if (t.getPlayer().getEntityId() == p.getEntityId()) {
 				TimeServer.getInstance().removeListener(t);
 				_playerOutTimers.remove(t);
 				playerWasOutside = true;
@@ -420,5 +430,22 @@ public class MonsterFury implements ZoneObserver, Scenario {
 	public boolean isCooldownActive() {
 		// TODO Auto-generated method stub
 		return _coolDownActive;
+	}
+
+	@Override
+	public WorldZone getScenarioZone() {
+		return _scenarioZone;
+	}
+
+	@Override
+	public long timeBeforeActivationPossible() {
+		// TODO Auto-generated method stub
+		if (_coolDownUntilTime - System.currentTimeMillis() > 0) {
+			return _coolDownUntilTime - System.currentTimeMillis();
+		}
+		else {
+			return 0;
+		}
+		
 	}
 }

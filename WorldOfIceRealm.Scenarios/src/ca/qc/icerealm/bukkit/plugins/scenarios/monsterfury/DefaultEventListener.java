@@ -20,8 +20,6 @@ public class DefaultEventListener implements ScenarioEventsListener {
 	@Override
 	public void waveStarting(int monster, String[] types) {
 		_nbMonster = monster;
-		sendMessageToPlayers(ChatColor.GREEN + "Monster Wave is coming:");
-		sendMessageToPlayers(" " + ChatColor.GRAY + "> " + ChatColor.YELLOW + String.valueOf(monster) + ChatColor.GREEN + " monsters");
 		
 		StringBuffer buf = new StringBuffer();
 		for (int i = 0; i < types.length; i++) {
@@ -30,14 +28,13 @@ public class DefaultEventListener implements ScenarioEventsListener {
 				buf.append(", ");
 			}
 		}
-		sendMessageToPlayers(" " + ChatColor.GRAY + "> " + ChatColor.YELLOW + "Contains: " + ChatColor.LIGHT_PURPLE + buf.toString());
+		
+		sendMessageToPlayers(ChatColor.GREEN + "New wave coming:" + ChatColor.GRAY + "> " + ChatColor.YELLOW + String.valueOf(monster) + ChatColor.LIGHT_PURPLE + " monsters" + ChatColor.YELLOW + ", contains: " + ChatColor.LIGHT_PURPLE + buf.toString());
 	}
 
 	@Override
 	public void waveIsDone(int done) {
-		sendMessageToPlayers(ChatColor.GREEN + "Scenario progress:");
-		sendMessageToPlayers(" " + ChatColor.GRAY + "> " + ChatColor.YELLOW + String.valueOf(done) + ChatColor.GOLD + " waves done");
-		sendMessageToPlayers(" " + ChatColor.GRAY + "> " + ChatColor.GREEN + String.valueOf( (_nbWaves - done)) + ChatColor.DARK_GREEN + " waves left");
+		sendMessageToPlayers(ChatColor.GREEN + "Scenario progress:" + ChatColor.GRAY + "> " + ChatColor.GREEN + String.valueOf(done) + "/" + String.valueOf(_nbWaves) + ChatColor.DARK_GREEN + " waves done");
 	}
 
 	@Override
@@ -55,22 +52,20 @@ public class DefaultEventListener implements ScenarioEventsListener {
 
 	@Override
 	public void coolDownChanged(boolean value, long time, Scenario s) {
-		
+		/*
 		if (!value) {
 			s.getScenarioServer().broadcastMessage(ChatColor.GREEN + "[" + s.getName() + "] " + ChatColor.LIGHT_PURPLE + " Scenario can be activated now");	
 		}
 		if (value) {
 			s.getScenarioServer().broadcastMessage(ChatColor.GREEN + "[" + s.getName() + "] " + ChatColor.LIGHT_PURPLE + " Scenario will be available in " + ChatColor.YELLOW + (time) + " ms");	
 		}
-		
+		*/
 		
 	}
 
 	@Override
 	public void playerDied(Player p, List<Player> players) {
-		sendMessageToPlayers(ChatColor.GREEN + "Scenario progress:");
-		sendMessageToPlayers(" " + ChatColor.GRAY + "> " + ChatColor.RED + p.getName() + ChatColor.LIGHT_PURPLE + " died");
-		sendMessageToPlayers(" " + ChatColor.GRAY + "> " + ChatColor.YELLOW + String.valueOf(players.size()) + ChatColor.LIGHT_PURPLE + " still alive");
+		sendMessageToPlayers(ChatColor.GREEN + "Scenario progress: " + ChatColor.GRAY + "> " + ChatColor.RED + p.getName() + ChatColor.LIGHT_PURPLE + " died, " + ChatColor.YELLOW + String.valueOf(players.size()) + ChatColor.LIGHT_PURPLE + " still alive");
 	}
 
 	@Override
@@ -95,8 +90,7 @@ public class DefaultEventListener implements ScenarioEventsListener {
 	
 	@Override
 	public void playerRewared(Player p, int exp) {
-		sendMessageToPlayers(ChatColor.GREEN + "Scenario reward:");
-		p.sendMessage(" " + ChatColor.GRAY + "> " + ChatColor.YELLOW + String.valueOf(exp) + " level of XP!");
+		sendMessageToPlayers(ChatColor.GREEN + "Scenario reward: " + ChatColor.GRAY + "> " + ChatColor.YELLOW + String.valueOf(exp) + " level of XP!");
 	}
 	
 	private void sendMessageToPlayers(String info) {
@@ -107,18 +101,27 @@ public class DefaultEventListener implements ScenarioEventsListener {
 
 	@Override
 	public void playerLeavingWithTimeout(Player p, long timeout) {
-		p.sendMessage(ChatColor.GREEN + "You are leaving the scenario zone.");
-		p.sendMessage(" " + ChatColor.GRAY + "> " + ChatColor.YELLOW + String.valueOf(timeout / 1000) + " seconds " + ChatColor.LIGHT_PURPLE + "until you're kicked out");		
+		p.sendMessage(ChatColor.GREEN + "Leaving the zone! "+ ChatColor.GRAY + "> " + ChatColor.YELLOW + String.valueOf(timeout / 1000) + " seconds " + ChatColor.LIGHT_PURPLE + "until you're kicked out");
 	}
 
 	@Override
 	public void playerRemoved(Player p, Scenario s) {
-		p.sendMessage(ChatColor.GREEN + "[" + s.getName() + "] " + ChatColor.LIGHT_PURPLE + "You are outside the scenario zone.");
+		p.sendMessage(ChatColor.GREEN + "[" + s.getName() + "] " + ChatColor.LIGHT_PURPLE + "You are leaving the scenario zone.");
 	}
 
 	@Override
 	public void playerAdded(Player p, Scenario s) {
-		p.sendMessage(ChatColor.GREEN + "[" + s.getName() + "] " + ChatColor.LIGHT_PURPLE + " You are inside a scenario zone.");
-		p.sendMessage(ChatColor.GREEN + "[" + s.getName() + "] " + ChatColor.LIGHT_PURPLE + " Cool Down Active: " + ChatColor.YELLOW + String.valueOf(s.isCooldownActive()));
+		
+		StringBuffer buf = new StringBuffer();
+		buf.append(ChatColor.GREEN + "[" + s.getName() + "] " + ChatColor.LIGHT_PURPLE + " You are inside a scenario zone. ");
+		
+		if (s.isCooldownActive()) {
+			buf.append(ChatColor.RED + "Will be available in " + ChatColor.GOLD + s.timeBeforeActivationPossible() / 1000 + " sec");
+		}
+		else {
+			buf.append(ChatColor.GREEN + "Can be activated now");
+		}
+		
+		p.sendMessage(buf.toString());
 	}
 }

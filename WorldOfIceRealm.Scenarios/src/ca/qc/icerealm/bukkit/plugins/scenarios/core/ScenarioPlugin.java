@@ -14,6 +14,7 @@ import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.RegularSpawnWave;
 public class ScenarioPlugin extends JavaPlugin {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private MonsterFury _hauntedOutpost = null;
+	private MonsterFury _defaultWaves = null;
 
 	@Override
 	public void onDisable() {
@@ -24,6 +25,36 @@ public class ScenarioPlugin extends JavaPlugin {
 	public void onEnable() {
 		getCommand("sc").setExecutor(new ScenarioCommander());
 		createHauntedOutpost();
+		createDefaultWaves();
+	}
+	
+	private void createDefaultWaves() {
+		if (_defaultWaves == null) {
+			MonsterFuryConfiguration config  = new MonsterFuryConfiguration();
+			config.ExperienceReward = 5;										// 100 level d'exp
+			config.CoolDownTime = 10000; 										// 10 min
+			config.InitialTimeBeforeFirstWave = 500;							// 10 sec
+			config.TimeoutWhenLeaving = 2000;									// 30 sec
+			config.MinimumPlayer = 1;											// 1 joueur requis
+			config.MonstersPerWave = 5;							    		 	// 10 monstres par wave
+			config.Name = "default";											// le nom du scénario 
+			config.NumberOfWaves = 3;											// 3 waves
+			config.TimeBetweenWave = 5000;										// 10 sec
+			config.ActivationZoneCoords = "-181,133,-177,137,0,128";			// zone d'Activation
+			config.ScenarioZoneCoords = "-189,127,-168,140,0,128";				// zone du scenario
+			
+			_defaultWaves = new MonsterFury(this, config, new DefaultEventListener());
+			
+			EntityWave w = new RegularSpawnWave(1500, _defaultWaves, 20);
+			w.setMonsters("spider,slime");
+			w.setSpawnLocation(_defaultWaves.getScenarioZone().getRandomLocation(_defaultWaves.getWorld(), 20));
+			
+			List<EntityWave> waves = _defaultWaves.getEntityWaves();
+			waves.add(w);
+			_defaultWaves.setEntityWaves(_defaultWaves.getEntityWaves());
+			
+			ScenarioService.getInstance().addScenario(_defaultWaves);
+		}
 	}
 	
 	private void createHauntedOutpost() {
@@ -31,16 +62,16 @@ public class ScenarioPlugin extends JavaPlugin {
 			
 			MonsterFuryConfiguration _defaultConfig = new MonsterFuryConfiguration();
 			_defaultConfig.ExperienceReward = 5;										// 100 level d'exp
-			_defaultConfig.CoolDownTime = 600000; 										// 10 min
-			_defaultConfig.InitialTimeBeforeFirstWave = 10000;							// 10 sec
+			_defaultConfig.CoolDownTime = 10000; 										// 10 min
+			_defaultConfig.InitialTimeBeforeFirstWave = 5000;							// 10 sec
 			_defaultConfig.TimeoutWhenLeaving = 30000;									// 30 sec
 			_defaultConfig.MinimumPlayer = 1;											// 1 joueur requis
-			_defaultConfig.MonstersPerWave = 25;							    		// 10 monstres par wave
+			_defaultConfig.MonstersPerWave = 8;							    		 // 10 monstres par wave
 			_defaultConfig.Name = "haunted_outpost";									// le nom du scénario 
 			_defaultConfig.NumberOfWaves = 5;											// 3 waves
-			_defaultConfig.TimeBetweenWave = 10000;										// 10 sec
-			_defaultConfig.ActivationZoneCoords = "366,181,369,184,0,128";				// zone d'Activation
-			_defaultConfig.ScenarioZoneCoords = "347,168,386,201,0,128";				// zone du scenario
+			_defaultConfig.TimeBetweenWave = 5000;										// 10 sec
+			_defaultConfig.ActivationZoneCoords = "-148,155,-144,159,0,128";				// zone d'Activation
+			_defaultConfig.ScenarioZoneCoords = "-159,148,-133,165,0,128";				// zone du scenario
 			
 			_hauntedOutpost = new MonsterFury(this, _defaultConfig, new DefaultEventListener(), null);
 			

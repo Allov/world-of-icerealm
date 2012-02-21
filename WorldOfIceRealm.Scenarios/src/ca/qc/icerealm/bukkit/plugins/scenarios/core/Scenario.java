@@ -6,6 +6,8 @@ import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
+
 
 public interface Scenario {
 	String getName();
@@ -22,4 +24,6 @@ public interface Scenario {
 	ScenarioEventsListener getEventListener();
 	Server getScenarioServer();
 	boolean isCooldownActive();
+	long timeBeforeActivationPossible();
+	WorldZone getScenarioZone();
 }
