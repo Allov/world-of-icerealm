@@ -25,7 +25,7 @@ public class ScenarioPlugin extends JavaPlugin {
 	public void onEnable() {
 		getCommand("sc").setExecutor(new ScenarioCommander());
 		createHauntedOutpost();
-		createDefaultWaves();
+		//createDefaultWaves();
 	}
 	
 	private void createDefaultWaves() {
