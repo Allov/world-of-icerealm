@@ -1,5 +1,6 @@
 package ca.qc.icerealm.bukkit.plugins.trashvendor;
 
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.Economy;
@@ -15,6 +16,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
@@ -32,9 +34,12 @@ public class TrashVendorPlugin extends JavaPlugin implements TimeObserver, Liste
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private Location _location;
 	private Villager _villager;
+	private Location _lastPosition;
 	private WorldZone _zone;
 	private long _alarm;
+	private String _vendorName = "SmokeySteve";
 	private RegisteredServiceProvider<Economy> economyProvider;
+	private HashMap<Material, Double> _tradeTable;
 	
 	@Override
 	public void onDisable() {
@@ -50,10 +55,14 @@ public class TrashVendorPlugin extends JavaPlugin implements TimeObserver, Liste
 			economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
 		}
 		
-		//_location = new Location(getServer().getWorld("world"), -163.0, 71.0, 145.0); // server test punisher
-		_location = new Location(getServer().getWorld("world"), 691.0,69.0,276.0); // shop village
-		_zone = new WorldZone(_location, 4);
+		fillTradeTable();
+		
+		_location = new Location(getServer().getWorld("world"), -163.0, 71.0, 145.0); // server test punisher
+		//_location = new Location(getServer().getWorld("world"), 691.0,69.0,276.0); // shop village
+		//_zone = new WorldZone(_location, 4);
+		_zone = new WorldZone(getServer().getWorld("world"), "-167,140,-159,150,69,75");
 		_villager = (Villager)getServer().getWorld("world").spawnCreature(_location, EntityUtilities.getCreatureType("Villager"));
+		_lastPosition = _villager.getLocation(); 
 		timeHasCome(System.currentTimeMillis());
 		getServer().getPluginManager().registerEvents(this, this);
 		ZoneServer.getInstance().addListener(this);
@@ -61,21 +70,41 @@ public class TrashVendorPlugin extends JavaPlugin implements TimeObserver, Liste
 		
 	}
 	
+	private void fillTradeTable() {
+		_tradeTable = new HashMap<Material, Double>();
+		_tradeTable.put(Material.ROTTEN_FLESH, 1.0);
+		_tradeTable.put(Material.STRING, 1.0);
+		_tradeTable.put(Material.BONE, 1.0);
+		_tradeTable.put(Material.SPIDER_EYE, 1.0);
+		_tradeTable.put(Material.SULPHUR, 1.0);
+	}
+	
 	public void giveMoneyReward(Player player, double money) {
 		if (this.economyProvider != null) {
+			Double doubleMoney = money;
 			Economy economy = economyProvider.getProvider();
 	
 			if (economy.bankBalance(player.getName()) != null) 
 	        {	
 	        	economy.depositPlayer(player.getName(), money);
-	        	player.sendMessage(ChatColor.GREEN + "[Trash Vendor] - " + ChatColor.YELLOW + "You received " + ChatColor.GOLD + money + " gold");
+	        	player.sendMessage(ChatColor.GREEN + "[" + ChatColor.GRAY + _vendorName + ChatColor.GREEN + "] - " + ChatColor.GREEN + "You received " + ChatColor.GOLD + doubleMoney.intValue() + " gold");
 	        }
 		}
 	}
 	
 	@Override
 	public void timeHasCome(long time) {
-		_villager.teleport(_location);		
+		/*
+		if (!_zone.isInside(_villager.getLocation())) {
+			_villager.teleport(_location);	
+		}
+		*/
+		/*
+		else {
+			_lastPosition = _villager.getLocation();
+		}
+		*/
+		_villager.teleport(_location);	
 		TimeServer.getInstance().addListener(this, 100);
 		
 	}
@@ -104,37 +133,26 @@ public class TrashVendorPlugin extends JavaPlugin implements TimeObserver, Liste
 	public void itemDropToVendor(PlayerDropItemEvent event) {
 		if (_zone.isInside(event.getItemDrop().getLocation())) {
 			
-			if (event.getItemDrop().getItemStack().getType() == Material.ROTTEN_FLESH) {
-				giveMoneyReward(event.getPlayer(), event.getItemDrop().getItemStack().getAmount());
-				event.getItemDrop().remove();
-			}
-			else if (event.getItemDrop().getItemStack().getType() == Material.SPIDER_EYE) {
-				giveMoneyReward(event.getPlayer(), event.getItemDrop().getItemStack().getAmount());
-				event.getItemDrop().remove();
-			}
-			else if (event.getItemDrop().getItemStack().getType() == Material.STRING) {
-				giveMoneyReward(event.getPlayer(), event.getItemDrop().getItemStack().getAmount());
-				event.getItemDrop().remove();
-			}
-			else if (event.getItemDrop().getItemStack().getType() == Material.BONE) {
-				giveMoneyReward(event.getPlayer(), event.getItemDrop().getItemStack().getAmount());
-				event.getItemDrop().remove();
-			}
-			else if (event.getItemDrop().getItemStack().getType() == Material.SULPHUR) {
-				giveMoneyReward(event.getPlayer(), event.getItemDrop().getItemStack().getAmount());
-				event.getItemDrop().remove();
+			if (_tradeTable.containsKey(event.getItemDrop().getItemStack().getType())) {
+				processTrade(event);
 			}
 			else {
 				event.setCancelled(true);
-				event.getPlayer().sendMessage(ChatColor.GREEN + "[Trash Vendor] - " + ChatColor.RED + "Not interested in these items!");
+				event.getPlayer().sendMessage(ChatColor.GREEN + "[" + ChatColor.GRAY + _vendorName + ChatColor.GREEN + "] - " + ChatColor.RED + "Not interested in these items!");
+				event.getPlayer().updateInventory();
 			}
-			
-			
-			
+		}		
+	}
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void playerRightClickf(PlayerInteractEntityEvent event) {
+		if (event.getRightClicked().getEntityId() == _villager.getEntityId()) {
+			event.getPlayer().sendMessage(ChatColor.GREEN + "[" + ChatColor.GRAY + _vendorName + ChatColor.GREEN + "] - " + ChatColor.DARK_GREEN + "Did you ever go to Newtown? I heard it has been doomed after a terrible fight with the ENDERDRAGON.");
 		}
-		
-		
-		
+	}
+	
+	private void processTrade(PlayerDropItemEvent event) {
+		giveMoneyReward(event.getPlayer(), event.getItemDrop().getItemStack().getAmount());
+		event.getItemDrop().remove();
 	}
 
 	@Override
@@ -151,9 +169,8 @@ public class TrashVendorPlugin extends JavaPlugin implements TimeObserver, Liste
 
 	@Override
 	public void playerEntered(Player p) {
-		p.sendMessage(ChatColor.GREEN + "[Trash Vendor] - " + ChatColor.YELLOW + "Hi there you blocky head! Sell me those items");
-		p.sendMessage(ChatColor.YELLOW + "by dropping them on me!");
-		p.sendMessage(ChatColor.GRAY + " > " + ChatColor.LIGHT_PURPLE + "Rotten Flesh, Spider Eye, String, Bones, Sulphur: " + ChatColor.YELLOW + " (1g each)");
+		p.sendMessage(ChatColor.GREEN + "[" + ChatColor.GRAY + _vendorName + ChatColor.GREEN + "] - " +  ChatColor.DARK_GREEN + "Drop items on me for " + ChatColor.GOLD + "gold:");
+		p.sendMessage(ChatColor.GRAY + " > " + ChatColor.GREEN + "Rotten Flesh, Spider Eye, String, Bones, Sulphur: " + ChatColor.GOLD + "1 gold");
 
 		
 	}
