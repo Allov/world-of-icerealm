@@ -15,7 +15,7 @@ import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 
-public class BloodMoon extends JavaPlugin implements TimeObserver {
+public class BloodMoon extends JavaPlugin {
 	private final Logger logger = Logger.getLogger(("Minecraft"));
 	
 	// nombre constrant de millisecond dans une minute
@@ -36,7 +36,6 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 		
 	// variable du serveur
 	private World _world;
-	private long _timeAlarm = 0;
 	private int _attemptDone = 0;
 	private boolean _cumulative = false;
 	private boolean _isActive = false;
@@ -80,7 +79,6 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 	@Override
 	public void onDisable() {
 		this.logger.info("[Blood Moon] - removing active listeners");
-		TimeServer.getInstance().removeListener(this);
 		TimeServer.getInstance().removeListener(_starter);
 		TimeServer.getInstance().removeListener(_stopper);
 		TimeServer.getInstance().removeListener(_draw);
@@ -96,48 +94,12 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 			getServer().getPluginManager().registerEvents(_listener, this);
 		}
 	}
-
-	@Override
-	public void timeHasCome(long time) {
-		this.logger.info("TIME HAS COME IN BLOOD MOON, NOT SUPPOSED!!!!!");
-		long newAlarm = 0;
-		long currentTime = _world.getTime();
-		
-		if (currentTime >= 0 && currentTime <= 12000) {
-			stopBloodMoon();
-		}
-		else {
-			
-			// calcule le nombre d'essai ici
-			int modifiedProb = _probability - _attemptDone;
-			boolean draw = RandomUtil.getDrawResult(modifiedProb);
-			if (draw) {
-				startBloodMoon();
-				
-				// on veut se faire pocker a la fin de la nuit
-				newAlarm =  12000 * _msInMinecraftHour;
-				displayListenerAddition("blood moon started", newAlarm);
-			}
-			else {
-				
-				if (_cumulative) {
-					_attemptDone++;
-				}
-				// on veut se faire poker lors de la prochaine nuit
-				newAlarm = 24000 * _msInMinecraftHour;
-				displayListenerAddition("no moon, next night", newAlarm);
-			}
-		}
-
-		TimeServer.getInstance().addListener(this, newAlarm);
-	}
 	
 	public void initializeTimer() {
 		// on arrete le bloodmoon et reinitialise les timers
 		TimeServer.getInstance().removeListener(_starter);
 		TimeServer.getInstance().removeListener(_stopper);
 		TimeServer.getInstance().removeListener(_draw);
-		TimeServer.getInstance().removeListener(this);
 		_isActive = false;
 		_attemptDone = 0;
 		
@@ -162,16 +124,6 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 		this.logger.info("[BloodMoon] " + event + " - Time is: " + _world.getTime() + " and will be poked in " + a + " ms");
 	}
 
-	@Override
-	public void setAlaram(long time) {
-		_timeAlarm = time;
-	}
-
-	@Override
-	public long getAlarm() {
-		return _timeAlarm;
-	}
-	
 	public boolean drawBloodMoon() {
 		int modifiedProb = _probability - _attemptDone;
 		boolean draw = RandomUtil.getDrawResult(modifiedProb);
@@ -198,18 +150,6 @@ public class BloodMoon extends JavaPlugin implements TimeObserver {
 	}
 	
 	public void stopBloodMoon() {
-		
-		/*
-		_isActive = false;
-		_attemptDone = 0;
-		long newAlarm = 0;
-		
-		newAlarm = (12000 - _world.getTime()) * _msInMinecraftHour;
-		
-		displayListenerAddition("blood moon stopping", newAlarm);
-		_draw = new BloodMoonDraw(this);
-		TimeServer.getInstance().addListener(_draw, newAlarm);
-		*/
 		initializeTimer();
 		getServer().broadcastMessage(ChatColor.DARK_GREEN + "The Blood Moon is now over!");
 	}
