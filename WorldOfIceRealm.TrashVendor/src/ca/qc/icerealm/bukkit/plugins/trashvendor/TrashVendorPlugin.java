@@ -91,8 +91,6 @@ public class TrashVendorPlugin extends JavaPlugin implements TimeObserver, Liste
 	        	player.sendMessage(ChatColor.GREEN + "[" + ChatColor.GRAY + _vendorName + ChatColor.GREEN + "] - " + ChatColor.GREEN + "You received " + ChatColor.GOLD + doubleMoney.intValue() + " gold");
 	        }
 		}
-		
-		player.sendMessage(ChatColor.GREEN + "[" + ChatColor.GRAY + _vendorName + ChatColor.GREEN + "] - " + ChatColor.GREEN + "You received " + ChatColor.GOLD + doubleMoney.intValue() + " gold");
 	}
 	
 	@Override
