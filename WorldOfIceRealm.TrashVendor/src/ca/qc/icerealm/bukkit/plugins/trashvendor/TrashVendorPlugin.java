@@ -57,10 +57,10 @@ public class TrashVendorPlugin extends JavaPlugin implements TimeObserver, Liste
 		
 		fillTradeTable();
 		
-		_location = new Location(getServer().getWorld("world"), -163.0, 71.0, 145.0); // server test punisher
-		//_location = new Location(getServer().getWorld("world"), 691.0,69.0,276.0); // shop village
-		//_zone = new WorldZone(_location, 4);
-		_zone = new WorldZone(getServer().getWorld("world"), "-167,140,-159,150,69,75");
+		//_location = new Location(getServer().getWorld("world"), -163.0, 71.0, 145.0); // server test punisher
+		_location = new Location(getServer().getWorld("world"), 691.0,69.0,276.0); // shop village
+		_zone = new WorldZone(_location, 5);
+		//_zone = new WorldZone(getServer().getWorld("world"), "-167,140,-159,150,69,75");
 		_villager = (Villager)getServer().getWorld("world").spawnCreature(_location, EntityUtilities.getCreatureType("Villager"));
 		_lastPosition = _villager.getLocation(); 
 		timeHasCome(System.currentTimeMillis());
@@ -80,8 +80,9 @@ public class TrashVendorPlugin extends JavaPlugin implements TimeObserver, Liste
 	}
 	
 	public void giveMoneyReward(Player player, double money) {
+		Double doubleMoney = money;
 		if (this.economyProvider != null) {
-			Double doubleMoney = money;
+			
 			Economy economy = economyProvider.getProvider();
 	
 			if (economy.bankBalance(player.getName()) != null) 
@@ -90,6 +91,8 @@ public class TrashVendorPlugin extends JavaPlugin implements TimeObserver, Liste
 	        	player.sendMessage(ChatColor.GREEN + "[" + ChatColor.GRAY + _vendorName + ChatColor.GREEN + "] - " + ChatColor.GREEN + "You received " + ChatColor.GOLD + doubleMoney.intValue() + " gold");
 	        }
 		}
+		
+		player.sendMessage(ChatColor.GREEN + "[" + ChatColor.GRAY + _vendorName + ChatColor.GREEN + "] - " + ChatColor.GREEN + "You received " + ChatColor.GOLD + doubleMoney.intValue() + " gold");
 	}
 	
 	@Override
@@ -151,7 +154,7 @@ public class TrashVendorPlugin extends JavaPlugin implements TimeObserver, Liste
 	}
 	
 	private void processTrade(PlayerDropItemEvent event) {
-		giveMoneyReward(event.getPlayer(), event.getItemDrop().getItemStack().getAmount());
+		giveMoneyReward(event.getPlayer(), event.getItemDrop().getItemStack().getAmount() * _tradeTable.get(event.getItemDrop().getItemStack().getType()));
 		event.getItemDrop().remove();
 	}
 
