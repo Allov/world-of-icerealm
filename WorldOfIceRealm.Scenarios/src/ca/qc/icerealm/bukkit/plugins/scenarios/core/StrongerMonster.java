@@ -39,7 +39,6 @@ public class StrongerMonster implements Listener {
 			}
 			else {
 				((Monster)e.getEntity()).setHealth( ((Monster)e.getEntity()).getMaxHealth() );
-				this.logger.info("damage to entity " + _entityId + " " + _damageSoFar);
 			}
 		}
 	}
