@@ -1,0 +1,4 @@
+name: WoI.RareMobs
+main: ca.qc.icerealm.bukkit.plugins.raremobs.RareMobs
+version: 0.1.0
+description: World Of IceRealm rare mobs spawning randomly
