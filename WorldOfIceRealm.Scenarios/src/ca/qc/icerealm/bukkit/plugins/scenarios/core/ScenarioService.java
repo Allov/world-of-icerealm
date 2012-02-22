@@ -3,16 +3,24 @@ package ca.qc.icerealm.bukkit.plugins.scenarios.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
+import org.bukkit.plugin.java.JavaPlugin;
+
 public class ScenarioService {
 
 	private List<Scenario> _registeredScenario;
+	private JavaPlugin _plugin;
 	
 	private static ScenarioService _instance;
 	
 	protected ScenarioService() {
 		_registeredScenario = new ArrayList<Scenario>();
 	}
-	
+
 	public static ScenarioService getInstance() {
 		if (_instance == null) {
 			_instance = new ScenarioService();
@@ -30,6 +38,14 @@ public class ScenarioService {
 		if (s != null) {
 			_registeredScenario.remove(s);
 		}
+	}
+	
+	public JavaPlugin getPlugin() {
+		return _plugin;
+	}
+	
+	public void setPlugin(JavaPlugin j) {
+		_plugin = j;
 	}
 	
 	public List<Scenario> getScenarios() {
@@ -54,5 +70,28 @@ public class ScenarioService {
 			}
 		}
 		return list;
+	}
+	
+	public LivingEntity spawnCreature(World w, Location l, CreatureType t) {
+		return w.spawnCreature(l, t);
+	}
+	
+	public LivingEntity spawnCreature(World w, Location l, CreatureType t, int maxHealth) {
+		return spawnCreature(w, l, t, maxHealth, true);
+	}
+	
+	public LivingEntity spawnCreature(World w, Location l, CreatureType t, int maxHealth, boolean burn) {
+		LivingEntity creature = this.spawnCreature(w, l, t);
+		StrongerMonster m = new StrongerMonster(creature, maxHealth, burn);
+		_plugin.getServer().getPluginManager().registerEvents(m, _plugin);
+		return creature;
+	}
+	
+	public Monster spawnMonster(World w, Location l, CreatureType t) {
+		LivingEntity e = w.spawnCreature(l, t);
+		if (e instanceof Monster) {
+			return (Monster)e;
+		}
+		return null;
 	}
 }
