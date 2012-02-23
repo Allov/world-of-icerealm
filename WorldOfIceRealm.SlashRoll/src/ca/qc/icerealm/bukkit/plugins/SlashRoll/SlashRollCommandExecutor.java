@@ -18,18 +18,62 @@ public class SlashRollCommandExecutor implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String commandName, String[] params) {
-		if(sender instanceof Player){
-			if (commandName.equalsIgnoreCase(RollCommandName)) {
-				roll((Player)sender);
-			}
+		if (!commandName.equalsIgnoreCase(RollCommandName))
+		{
+			return false;
+		}
+		
+		if(! (sender instanceof Player))
+		{
+			return false;
+		}
+		
+		if(params == null)
+		{
+			return false;
+		}
+		
+		if (IsStandardRoll(commandName,params)) {
+			roll((Player)sender, Max);
 			return true;
 		}
+		
+		if(IsParametrisedRoll(commandName, params))
+		{
+			int paramValue = parseInt(params[0]);
+			roll((Player)sender, paramValue);
+			return true;
+		}
+	
 		return false;
 	}
+	
+	private boolean IsStandardRoll(String commandName, String[] params)
+	{
+		return params.length == 0;
+	}
+	
+	private boolean IsParametrisedRoll(String commandName, String[] params)
+	{
+		return params.length > 0;
+	}
+	
+	private int parseInt(String input) {
+		int returnValue = -1;
+		try {
 
-	private void roll(Player sender) {
+			returnValue = Integer.parseInt(input);
+        
+        } catch (NumberFormatException ex) {
+            return -1;
+        }
+        
+        return returnValue;
+	}
+
+	private void roll(Player sender, int maxValue) {
 		List<Entity> list = sender.getNearbyEntities(20, 20, 20);
-		int rollValue = Min + (int)(Math.random() * ((Max - Min) + 1));
+		int rollValue = Min + (int)(Math.random() * ((maxValue - Min) + 1));
 		sender.sendMessage(ChatColor.GOLD + sender.getName() + " rolled " + rollValue);
 		for (Entity t : list)
 		{
