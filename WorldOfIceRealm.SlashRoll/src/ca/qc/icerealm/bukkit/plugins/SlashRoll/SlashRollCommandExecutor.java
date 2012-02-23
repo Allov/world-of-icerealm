@@ -3,6 +3,7 @@ package ca.qc.icerealm.bukkit.plugins.SlashRoll;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -29,14 +30,13 @@ public class SlashRollCommandExecutor implements CommandExecutor {
 	private void roll(Player sender) {
 		List<Entity> list = sender.getNearbyEntities(20, 20, 20);
 		int rollValue = Min + (int)(Math.random() * ((Max - Min) + 1));
-		logger.warning(sender.getName() + " rolled " + rollValue);
-		sender.sendMessage(sender.getName() + " rolled " + rollValue);
+		sender.sendMessage(ChatColor.GOLD + sender.getName() + " rolled " + rollValue);
 		for (Entity t : list)
 		{
 			if(t instanceof Player)
 			{
 				Player recipient = (Player) t;
-				recipient.sendMessage(sender.getName() + " rolled " + rollValue);
+				recipient.sendMessage(ChatColor.GOLD + sender.getName() + " rolled " + rollValue);
 				
 			}
 		}
