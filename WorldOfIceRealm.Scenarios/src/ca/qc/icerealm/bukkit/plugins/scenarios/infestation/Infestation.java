@@ -27,6 +27,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
@@ -44,8 +45,9 @@ public class Infestation implements ZoneObserver, Listener {
 	private List<Spawner> _spawners;
 	private String[] _monsters;
 	private World _world;
+	private JavaPlugin _plugin;
 	
-	public Infestation(Server s, String zone, int qty, String[] monsters) {
+	public Infestation(Server s, String zone, int qty, String[] monsters, JavaPlugin p) {
 		_server = s;
 		_world = _server.getWorld("world");
 		_zone = new WorldZone(_world, zone);
@@ -53,12 +55,14 @@ public class Infestation implements ZoneObserver, Listener {
 		_quantity = qty;
 		_spawners = new ArrayList<Spawner>();
 		_monsters = monsters;
+		_plugin = p;
 	}
 	
 	private void createRandomSpawners() {
 		for (int i = 0; i < _quantity; i++) {
 			CreatureType creature = EntityUtilities.getCreatureType(_monsters[RandomUtil.getRandomInt(_monsters.length)]);
-			Spawner spawner = new Spawner(_zone.getRandomLocation(_world), 5000, creature, 5);
+			Spawner spawner = new Spawner(_zone.getRandomLocation(_world), 5000, creature, 5, 100);
+			_server.getPluginManager().registerEvents(spawner, _plugin);
 			_spawners.add(spawner);
 		}
 	}

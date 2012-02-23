@@ -6,10 +6,13 @@ import java.util.logging.Logger;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
+import ca.qc.icerealm.bukkit.plugins.scenarios.barbarian.BarbarianRaid;
+import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.Infestation;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.DefaultEventListener;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFury;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFuryConfiguration;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.RegularSpawnWave;
+import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 
 public class ScenarioPlugin extends JavaPlugin {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
@@ -24,8 +27,21 @@ public class ScenarioPlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		getCommand("sc").setExecutor(new ScenarioCommander());
-		createHauntedOutpost();
+		ScenarioService.getInstance().setPlugin(this);
+		
+		Infestation inf = new Infestation(this.getServer(), "-46,-16,-29,12,0,128", 5, new String[] {"zombie", "skeleton", "creeper"}, this);
+		ZoneServer.getInstance().addListener(inf);
+		getServer().getPluginManager().registerEvents(inf, this);
+		
+		//createBarbarianRaid();
+		//createHauntedOutpost();
 		//createDefaultWaves();
+	}
+	
+	private void createBarbarianRaid() {
+		
+		BarbarianRaid raid = new BarbarianRaid(this.getServer(), "-102,56,-96,62,67,72", "-103,48,-99,52,66,69");
+		
 	}
 	
 	private void createDefaultWaves() {
@@ -63,13 +79,13 @@ public class ScenarioPlugin extends JavaPlugin {
 			MonsterFuryConfiguration _defaultConfig = new MonsterFuryConfiguration();
 			_defaultConfig.ExperienceReward = 5;										// 100 level d'exp
 			_defaultConfig.CoolDownTime = 10000; 										// 10 min
-			_defaultConfig.InitialTimeBeforeFirstWave = 5000;							// 10 sec
+			_defaultConfig.InitialTimeBeforeFirstWave = 10000;							// 10 sec
 			_defaultConfig.TimeoutWhenLeaving = 30000;									// 30 sec
 			_defaultConfig.MinimumPlayer = 1;											// 1 joueur requis
-			_defaultConfig.MonstersPerWave = 8;							    		 // 10 monstres par wave
+			_defaultConfig.MonstersPerWave = 35;							    		 // 10 monstres par wave
 			_defaultConfig.Name = "haunted_outpost";									// le nom du scénario 
 			_defaultConfig.NumberOfWaves = 5;											// 3 waves
-			_defaultConfig.TimeBetweenWave = 5000;										// 10 sec
+			_defaultConfig.TimeBetweenWave = 10000;										// 10 sec
 			_defaultConfig.ActivationZoneCoords = "-148,155,-144,159,0,128";				// zone d'Activation
 			_defaultConfig.ScenarioZoneCoords = "-159,148,-133,165,0,128";				// zone du scenario
 			

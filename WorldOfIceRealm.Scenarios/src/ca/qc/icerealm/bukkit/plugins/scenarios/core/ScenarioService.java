@@ -76,6 +76,13 @@ public class ScenarioService {
 		return w.spawnCreature(l, t);
 	}
 	
+	public LivingEntity spawnCreature(World w, Location l, CreatureType t, boolean burn) {
+		LivingEntity creature = this.spawnCreature(w, l, t);
+		StrongerMonster m = new StrongerMonster(creature, creature.getMaxHealth(), burn);
+		_plugin.getServer().getPluginManager().registerEvents(m, _plugin);
+		return creature;
+	}
+	
 	public LivingEntity spawnCreature(World w, Location l, CreatureType t, int maxHealth) {
 		return spawnCreature(w, l, t, maxHealth, true);
 	}
@@ -85,13 +92,5 @@ public class ScenarioService {
 		StrongerMonster m = new StrongerMonster(creature, maxHealth, burn);
 		_plugin.getServer().getPluginManager().registerEvents(m, _plugin);
 		return creature;
-	}
-	
-	public Monster spawnMonster(World w, Location l, CreatureType t) {
-		LivingEntity e = w.spawnCreature(l, t);
-		if (e instanceof Monster) {
-			return (Monster)e;
-		}
-		return null;
 	}
 }
