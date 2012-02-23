@@ -105,6 +105,7 @@ public class RegularSpawnWave implements EntityWave, TimeObserver {
 		if (_scenario.isActive() &&_monsters != null && _monsters.contains(e.getEntity())) {
 			if (e.getCause() == DamageCause.FIRE_TICK) {
 				e.setCancelled(true);
+				e.getEntity().setFireTicks(0);
 			}						
 		}
 	}
