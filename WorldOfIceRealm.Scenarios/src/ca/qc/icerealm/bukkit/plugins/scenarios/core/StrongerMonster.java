@@ -27,6 +27,13 @@ public class StrongerMonster implements Listener {
 		_burn = burn;
 	}
 	
+	public StrongerMonster(LivingEntity m, boolean burn) {
+		_max = m.getMaxHealth();
+		_damageSoFar = 0;
+		_entityId = m.getEntityId();
+		_burn = burn;
+	}
+	
 	
 	public void onMonsterDamage(EntityDamageEvent e) {
 		if (_entityId == e.getEntity().getEntityId()) {
