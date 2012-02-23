@@ -1,0 +1,8 @@
+name: WoI.SlashRoll
+main: ca.qc.icerealm.bukkit.plugins.SlashRoll.SlashRoll
+version: 1.0.0
+description: Let's roll baby!
+author: Shwminator
+commands:
+  roll:
+    description: roll
