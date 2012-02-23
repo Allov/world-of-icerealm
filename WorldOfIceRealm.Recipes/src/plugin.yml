@@ -1,0 +1,4 @@
+name: WoI.Recipes
+main: ca.qc.icerealm.bukkit.plugins.recipes.Recipes
+version: 0.1.0
+description: World Of IceRealm custom crafting recipes
