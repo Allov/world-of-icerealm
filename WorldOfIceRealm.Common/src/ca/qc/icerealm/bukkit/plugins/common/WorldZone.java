@@ -130,6 +130,31 @@ public class WorldZone {
 		return loc;
 	}
 	
+	public Location getRandomHighestLocation(World w) {
+		double topLeftX = 0;
+		double topLeftZ = 0;
+		double bottomRightX = getRelativeBottomRight().getX();
+		double bottomRightZ = getRelativeBottomRight().getZ();
+		double tlX = RandomUtil.getRandomDouble(topLeftX, bottomRightX);
+		double tlZ = RandomUtil.getRandomDouble(topLeftZ, bottomRightZ);
+		tlX += getTopLeft().getX();
+		tlZ += getTopLeft().getZ();
+		
+		Location loc = new Location(w, tlX, _leftTop.getY(), tlZ);
+		Location l = loc.clone();
+		Block b = w.getHighestBlockAt(l);
+		int down = 0;
+		double newY = loc.getY();
+		while (b.getType() == org.bukkit.Material.AIR && newY > _rightBottom.getY()) {
+			down++;
+			l = new Location(loc.getWorld(), loc.getX(), newY - down, loc.getZ());
+			b = w.getBlockAt(l);
+		}
+		
+		l.setY(l.getY() + 1);
+		return l;
+	}
+	
 	public Location getRandomLowestLocation(World w) {
 		double topLeftX = 0;
 		double topLeftZ = 0;
