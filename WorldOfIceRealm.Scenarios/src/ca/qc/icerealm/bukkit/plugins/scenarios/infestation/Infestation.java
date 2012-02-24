@@ -73,7 +73,15 @@ public class Infestation implements ZoneObserver, Listener {
 	private void createRandomSpawners() {
 		for (int i = 0; i < _quantity; i++) {
 			CreatureType creature = EntityUtilities.getCreatureType(_monsters[RandomUtil.getRandomInt(_monsters.length)]);
-			Spawner spawner = new Spawner(_zone.getRandomLowestLocation(_world), creature, _config);
+			Location l = null;
+			if (_config.UseLowestBlock) {
+				l = _zone.getRandomLowestLocation(_world);
+			}
+			else {
+				l = _zone.getRandomHighestLocation(_world);
+			}
+			
+			Spawner spawner = new Spawner(l, creature, _config);
 			_server.getPluginManager().registerEvents(spawner, _plugin);
 			_spawners.add(spawner);
 		}

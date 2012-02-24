@@ -14,7 +14,8 @@ public class InfestationConfiguration {
 		config.ProbabilityToSpawn = c.ProbabilityToSpawn;
 		config.RegenerateExplodedBlocks = c.RegenerateExplodedBlocks;
 		config.SpawnerMonsters = c.SpawnerMonsters;
-		config.SpawnerQuantity = c.SpawnerQuantity;		
+		config.SpawnerQuantity = c.SpawnerQuantity;
+		config.UseLowestBlock = c.UseLowestBlock;
 		return config;
 	}
 	
@@ -29,5 +30,6 @@ public class InfestationConfiguration {
 	public boolean RegenerateExplodedBlocks;
 	public long DelayBeforeRegeneration;
 	public int MaxHealth;
+	public boolean UseLowestBlock;
 	
 }
