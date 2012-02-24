@@ -48,16 +48,6 @@ public class Infestation implements ZoneObserver, Listener {
 	private JavaPlugin _plugin;
 	private InfestationConfiguration _config;
 	
-	public Infestation(Server s, String zone, int qty, String[] monsters) {
-		_server = s;
-		_world = _server.getWorld("world");
-		_zone = new WorldZone(_world, zone);
-		_players = new ArrayList<Player>();		
-		_quantity = qty;
-		_spawners = new ArrayList<Spawner>();
-		_monsters = monsters;
-	}
-	
 	public Infestation(JavaPlugin j, InfestationConfiguration config) {
 		_plugin = j;
 		_server = j.getServer();
