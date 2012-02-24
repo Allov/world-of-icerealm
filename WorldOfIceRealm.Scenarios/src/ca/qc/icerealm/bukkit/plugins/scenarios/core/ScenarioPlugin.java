@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.barbarian.BarbarianRaid;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.Infestation;
+import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.InfestationConfiguration;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.DefaultEventListener;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFury;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFuryConfiguration;
@@ -29,9 +30,33 @@ public class ScenarioPlugin extends JavaPlugin {
 		getCommand("sc").setExecutor(new ScenarioCommander());
 		ScenarioService.getInstance().setPlugin(this);
 		
-		Infestation inf = new Infestation(this.getServer(), "-46,-16,-29,12,0,128", 5, new String[] {"zombie", "skeleton", "creeper"}, this);
+		InfestationConfiguration config = new InfestationConfiguration();
+		config.InfestedZone = "-46,-16,-29,12,60,68";
+		config.BurnDuringDaylight = false;
+		config.DelayBeforeRegeneration = 5000;
+		config.HealthModifier = 2.0;
+		config.IntervalBetweenSpawn = 5000;
+		config.MaxMonstersPerSpawn = 10;
+		config.RegenerateExplodedBlocks = true;
+		config.ProbabilityToSpawn = 5;
+		config.SpawnerMonsters = "zombie,skeleton";
+		config.SpawnerQuantity = 3;
+		config.UseLowestBlock = true;
+		
+		Infestation inf = new Infestation(this, config);
 		ZoneServer.getInstance().addListener(inf);
 		getServer().getPluginManager().registerEvents(inf, this);
+		
+		InfestationConfiguration config1 = InfestationConfiguration.clone(config);
+		config1.InfestedZone = "-19,759,93,1070,60,106";
+		config1.HealthModifier = 0.0;
+		config1.ProbabilityToSpawn = 5;
+		config1.MaxMonstersPerSpawn = 10;
+		config1.SpawnerQuantity = 20;
+		config1.UseLowestBlock = false;
+		Infestation inf1 = new Infestation(this, config1);
+		ZoneServer.getInstance().addListener(inf1);
+		getServer().getPluginManager().registerEvents(inf1, this);
 		
 		//createBarbarianRaid();
 		//createHauntedOutpost();
