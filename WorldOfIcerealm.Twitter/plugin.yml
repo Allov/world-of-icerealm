@@ -1,0 +1,5 @@
+name: WoIR.Twitter
+main: ca.qc.icerealm.bukkit.plugins.Twitter.TweetFacade
+version: 1.0.0
+description: Let's Tweet baby!
+author: Shwminator

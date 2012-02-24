@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import ca.qc.icerealm.bukkit.plugins.twitter.TwitterWrapper;
+import ca.qc.icerealm.bukkit.plugins.Twitter.TweetFacade;
 
 public class SlashRollCommandExecutor implements CommandExecutor {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
@@ -81,10 +81,10 @@ public class SlashRollCommandExecutor implements CommandExecutor {
 		int rollValue = Min + (int)(Math.random() * ((maxValue - Min) + 1));
 		sender.sendMessage(ChatColor.GOLD + sender.getName() + " rolled " + rollValue);
 		
-		TwitterWrapper tw = new TwitterWrapper();
+		
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
-		tw.UpdateStatus(dateFormat.format(date));
+		TweetFacade.UpdateStatus(dateFormat.format(date));
 		
 		for (Entity t : list)
 		{

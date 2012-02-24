@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.twitter;
+package ca.qc.icerealm.bukkit.plugins.Twitter;
 
 public class test {
 
@@ -8,7 +8,7 @@ public class test {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		//new TwitterWrapper().UpdateStatus("test");
-		new TwitterWrapper().SendDirectMessage("pparadis", "");
+		new TwitterService().SendDirectMessage("pparadis", "");
 	}
 
 }

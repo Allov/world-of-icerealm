@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.twitter;
+package ca.qc.icerealm.bukkit.plugins.Twitter;
 
 import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
@@ -6,11 +6,11 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
-public class TwitterWrapper {
+public class TwitterService {
 	
 	private ConfigurationBuilder cb;
 	
-	public TwitterWrapper()
+	public TwitterService()
 	{
 		cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true)
