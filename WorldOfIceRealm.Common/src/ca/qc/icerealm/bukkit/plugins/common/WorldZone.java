@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import net.minecraft.server.Material;
+
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 
 /**
  * Permet de définir une zone dans le monde.
@@ -80,8 +83,7 @@ public class WorldZone {
 	public double getMaxHeight() {
 		return _leftTop.getY();
 	}
-	
-	
+
 	public Location getCentralPointAt(double height) {
 		double x = (this._leftTop.getX() + this._rightBottom.getX()) / 2;
 		double z = (this._leftTop.getZ() + this._rightBottom.getZ()) / 2;
@@ -126,6 +128,30 @@ public class WorldZone {
 		}
 		
 		return loc;
+	}
+	
+	public Location getRandomLowestLocation(World w) {
+		double topLeftX = 0;
+		double topLeftZ = 0;
+		double bottomRightX = getRelativeBottomRight().getX();
+		double bottomRightZ = getRelativeBottomRight().getZ();
+		double tlX = RandomUtil.getRandomDouble(topLeftX, bottomRightX);
+		double tlZ = RandomUtil.getRandomDouble(topLeftZ, bottomRightZ);
+		tlX += getTopLeft().getX();
+		tlZ += getTopLeft().getZ();
+		
+		Location loc = new Location(w, tlX, _rightBottom.getY(), tlZ);
+		Location l = loc.clone();
+		Block b = w.getBlockAt(loc);
+		int up = 0;
+		double newY = loc.getY() + up;
+		while (b.getType() != org.bukkit.Material.AIR && newY < _leftTop.getY()) {
+			up++;
+			l = new Location(loc.getWorld(), loc.getX(), newY + up, loc.getZ());
+			b = w.getBlockAt(l);
+		}
+				
+		return l;
 	}
 	
 	public List<Location> getFourCorner(int radius) {
