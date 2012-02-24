@@ -1,5 +1,8 @@
 package ca.qc.icerealm.bukkit.plugins.SlashRoll;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -9,6 +12,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+
+import ca.qc.icerealm.bukkit.plugins.twitter.TwitterWrapper;
 
 public class SlashRollCommandExecutor implements CommandExecutor {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
@@ -23,7 +28,7 @@ public class SlashRollCommandExecutor implements CommandExecutor {
 			return false;
 		}
 		
-		if(! (sender instanceof Player))
+		if(!(sender instanceof Player))
 		{
 			return false;
 		}
@@ -75,6 +80,12 @@ public class SlashRollCommandExecutor implements CommandExecutor {
 		List<Entity> list = sender.getNearbyEntities(20, 20, 20);
 		int rollValue = Min + (int)(Math.random() * ((maxValue - Min) + 1));
 		sender.sendMessage(ChatColor.GOLD + sender.getName() + " rolled " + rollValue);
+		
+		TwitterWrapper tw = new TwitterWrapper();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+		tw.UpdateStatus(dateFormat.format(date));
+		
 		for (Entity t : list)
 		{
 			if(t instanceof Player)
