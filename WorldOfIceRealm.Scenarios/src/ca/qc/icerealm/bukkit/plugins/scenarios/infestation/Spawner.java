@@ -28,6 +28,8 @@ public class Spawner implements TimeObserver, Listener {
 	private int _maxMonster = 20;
 	private int _maxHealth;
 	private List<LivingEntity> _entities;
+	private boolean _burn;
+	private double _healthModifier;
 	
 	public Spawner(Location l, long interval, CreatureType t, int prob, int maxHealth) {
 		_location = l;
@@ -39,13 +41,24 @@ public class Spawner implements TimeObserver, Listener {
 		TimeServer.getInstance().addListener(this, _interval);
 	}
 	
-	
-	
+	public Spawner(Location l, CreatureType t, InfestationConfiguration config) {
+		_location = l;
+		_interval = config.IntervalBetweenSpawn;
+		_type = t;
+		_prob = config.ProbabilityToSpawn;
+		_entities = new ArrayList<LivingEntity>();
+		_maxHealth = config.MaxHealth;
+		_burn = config.BurnDuringDaylight;
+		_healthModifier = config.HealthModifier;
+		_maxMonster = config.MaxMonstersPerSpawn;
+		TimeServer.getInstance().addListener(this, _interval);
+	}
+
 	@Override
 	public void timeHasCome(long time) {
 		boolean draw = RandomUtil.getDrawResult(_prob);		
 		if (draw && _entities.size() < _maxMonster) {
-			_entities.add(ScenarioService.getInstance().spawnCreature(_location.getWorld(), _location, _type, _maxHealth, false));
+			_entities.add(ScenarioService.getInstance().spawnCreature(_location.getWorld(), _location, _type, _healthModifier, _burn));
 		}
 		TimeServer.getInstance().addListener(this, _interval);
 	}

@@ -46,8 +46,9 @@ public class Infestation implements ZoneObserver, Listener {
 	private String[] _monsters;
 	private World _world;
 	private JavaPlugin _plugin;
+	private InfestationConfiguration _config;
 	
-	public Infestation(Server s, String zone, int qty, String[] monsters, JavaPlugin p) {
+	public Infestation(Server s, String zone, int qty, String[] monsters) {
 		_server = s;
 		_world = _server.getWorld("world");
 		_zone = new WorldZone(_world, zone);
@@ -55,13 +56,24 @@ public class Infestation implements ZoneObserver, Listener {
 		_quantity = qty;
 		_spawners = new ArrayList<Spawner>();
 		_monsters = monsters;
-		_plugin = p;
+	}
+	
+	public Infestation(JavaPlugin j, InfestationConfiguration config) {
+		_plugin = j;
+		_server = j.getServer();
+		_players = new ArrayList<Player>();
+		_spawners = new ArrayList<Spawner>();
+		_world = _server.getWorld("world");
+		_zone = new WorldZone(_world, config.InfestedZone);
+		_quantity = config.SpawnerQuantity;
+		_monsters = config.SpawnerMonsters.split(",");
+		_config = config;
 	}
 	
 	private void createRandomSpawners() {
 		for (int i = 0; i < _quantity; i++) {
 			CreatureType creature = EntityUtilities.getCreatureType(_monsters[RandomUtil.getRandomInt(_monsters.length)]);
-			Spawner spawner = new Spawner(_zone.getRandomLocation(_world), 5000, creature, 5, 100);
+			Spawner spawner = new Spawner(_zone.getRandomLowestLocation(_world), creature, _config);
 			_server.getPluginManager().registerEvents(spawner, _plugin);
 			_spawners.add(spawner);
 		}
@@ -79,6 +91,7 @@ public class Infestation implements ZoneObserver, Listener {
 
 	@Override
 	public void playerEntered(Player p) {
+		p.sendMessage("You entering a combat zone!");
 		_players.add(p);
 		if (_spawners.size() == 0) {
 			createRandomSpawners();
@@ -109,7 +122,7 @@ public class Infestation implements ZoneObserver, Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockDestroy(EntityExplodeEvent  event) {
-		if (_zone.isInside(event.getEntity().getLocation())) {
+		if (_config.RegenerateExplodedBlocks && _zone.isInside(event.getEntity().getLocation())) {
 			HashMap<Location, BlockContainer> _blocks = new HashMap<Location, BlockContainer>();
 			for (Block b : event.blockList()) {
 				BlockContainer bc = new BlockContainer();
@@ -119,7 +132,7 @@ public class Infestation implements ZoneObserver, Listener {
 			}
 			
 			BlockRestore restore = new BlockRestore(_world, _blocks);
-			TimeServer.getInstance().addListener(restore, 20);
+			TimeServer.getInstance().addListener(restore, _config.DelayBeforeRegeneration);
 		}		
 	}
 }
