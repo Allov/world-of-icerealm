@@ -1,10 +1,9 @@
 package ca.qc.icerealm.bukkit.plugins.common;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
-
-import net.minecraft.server.Material;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -19,12 +18,18 @@ public class WorldZone {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private Location _rightBottom;
 	private Location _leftTop;
+	private int _nbBlocks;
+	private World _world;
+	private Location _relativeRightBottom;
 	
 	public WorldZone(Location l, double radius) {
 		_leftTop = new Location(l.getWorld(), l.getX() - radius, l.getY(), l.getZ() - radius);
 		_rightBottom = new Location(l.getWorld(), l.getX() + radius, l.getY(), l.getZ() + radius);
 		_leftTop.setY(128);
 		_rightBottom.setY(0);
+		_world = l.getWorld();
+		setNBlock();		
+		_relativeRightBottom = getRelativeBottomRight();
 	}
 	
 	public WorldZone(Location lt, Location rb) {
@@ -32,6 +37,9 @@ public class WorldZone {
 		_rightBottom = rb;
 		_leftTop.setY(128);
 		_rightBottom.setY(0);
+		_world = _leftTop.getWorld();
+		setNBlock();
+		_relativeRightBottom = getRelativeBottomRight();
 	}
 	
 	public WorldZone(Location lt, Location rb, double min, double max) {
@@ -39,10 +47,16 @@ public class WorldZone {
 		_rightBottom = rb;
 		_leftTop.setY(max);
 		_rightBottom.setY(min);
+		_world = _leftTop.getWorld();
+		setNBlock();
+		_relativeRightBottom = getRelativeBottomRight();
 	}
 	
 	public WorldZone(World w, String data) {
 		buildFromString(w, data);
+		_world = w;
+		setNBlock();
+		_relativeRightBottom = getRelativeBottomRight();
 	}
 	
 	public boolean isInside(Location position) {
@@ -109,12 +123,8 @@ public class WorldZone {
 	}
 	
 	public Location getRandomLocation(World w) {
-		double topLeftX = 0;
-		double topLeftZ = 0;
-		double bottomRightX = getRelativeBottomRight().getX();
-		double bottomRightZ = getRelativeBottomRight().getZ();
-		double tlX = RandomUtil.getRandomDouble(topLeftX, bottomRightX);
-		double tlZ = RandomUtil.getRandomDouble(topLeftZ, bottomRightZ);
+		double tlX = RandomUtil.getRandomDouble(0.0, _relativeRightBottom.getX());
+		double tlZ = RandomUtil.getRandomDouble(0.0, _relativeRightBottom.getZ());
 		tlX += getTopLeft().getX();
 		tlZ += getTopLeft().getZ();
 		
@@ -131,37 +141,48 @@ public class WorldZone {
 	}
 	
 	public Location getRandomHighestLocation(World w) {
-		double topLeftX = 0;
-		double topLeftZ = 0;
-		double bottomRightX = getRelativeBottomRight().getX();
-		double bottomRightZ = getRelativeBottomRight().getZ();
-		double tlX = RandomUtil.getRandomDouble(topLeftX, bottomRightX);
-		double tlZ = RandomUtil.getRandomDouble(topLeftZ, bottomRightZ);
-		tlX += getTopLeft().getX();
-		tlZ += getTopLeft().getZ();
-		
-		Location loc = new Location(w, tlX, _leftTop.getY(), tlZ);
-		Location l = loc.clone();
-		Block b = w.getHighestBlockAt(l);
-		int down = 0;
-		double newY = loc.getY();
-		while (b.getType() == org.bukkit.Material.AIR && newY > _rightBottom.getY()) {
-			down++;
-			l = new Location(loc.getWorld(), loc.getX(), newY - down, loc.getZ());
-			b = w.getBlockAt(l);
-		}
-		
-		l.setY(l.getY() + 1);
-		return l;
+		return getRandomHighestLocation(w, new ArrayList<Location>());
 	}
 	
+	
+	
+	private Location getRandomHighestLocation(World w, List<Location> list) {
+		Location l = null;
+		if (list.size() < _nbBlocks) {
+			double tlX = RandomUtil.getRandomDouble(0.0, _relativeRightBottom.getX());
+			double tlZ = RandomUtil.getRandomDouble(0.0, _relativeRightBottom.getZ());
+			tlX += getTopLeft().getX();
+			tlZ += getTopLeft().getZ();
+			
+			Location loc = new Location(_world, tlX, _leftTop.getY(), tlZ);
+			
+			if (!isLocationPresent(loc, list)) {
+				l = loc.clone();
+				Block b = _world.getHighestBlockAt(l);
+				int down = 0;
+				double newY = loc.getY();
+				while (b.getType() == org.bukkit.Material.AIR && newY > _rightBottom.getY()) {
+					down++;
+					l = new Location(_world, loc.getX(), newY - down, loc.getZ());
+					b = _world.getBlockAt(l);
+				}
+
+				if (_world.getBlockAt(l).getType() == org.bukkit.Material.WATER ||
+					_world.getBlockAt(l).getType() == org.bukkit.Material.STATIONARY_WATER) {
+					list.add(l);
+					l = getRandomHighestLocation(_world, list);
+				}
+			}
+			else {
+				l = getRandomHighestLocation(_world, list);
+			}
+		}
+		return l;
+	}
+
 	public Location getRandomLowestLocation(World w) {
-		double topLeftX = 0;
-		double topLeftZ = 0;
-		double bottomRightX = getRelativeBottomRight().getX();
-		double bottomRightZ = getRelativeBottomRight().getZ();
-		double tlX = RandomUtil.getRandomDouble(topLeftX, bottomRightX);
-		double tlZ = RandomUtil.getRandomDouble(topLeftZ, bottomRightZ);
+		double tlX = RandomUtil.getRandomDouble(0.0, _relativeRightBottom.getX());
+		double tlZ = RandomUtil.getRandomDouble(0.0, _relativeRightBottom.getZ());
 		tlX += getTopLeft().getX();
 		tlZ += getTopLeft().getZ();
 		
@@ -175,7 +196,11 @@ public class WorldZone {
 			l = new Location(loc.getWorld(), loc.getX(), newY + up, loc.getZ());
 			b = w.getBlockAt(l);
 		}
-				
+		
+		if (w.getBlockAt(l).getType() == org.bukkit.Material.WATER) {
+			l = getRandomLowestLocation(w);
+		}
+		
 		return l;
 	}
 	
@@ -261,6 +286,21 @@ public class WorldZone {
 			_leftTop = new Location(w, coordsDouble[0], coordsDouble[5], coordsDouble[1]);
 			_rightBottom = new Location(w, coordsDouble[2], coordsDouble[4], coordsDouble[3]);
 		}
+	}
+	
+	private void setNBlock() {
+		Double width = _rightBottom.getX() - _leftTop.getX();
+		Double height = _rightBottom.getZ() - _leftTop.getZ();
+		_nbBlocks = width.intValue() * height.intValue();
+	}
+	
+	private boolean isLocationPresent(Location l, List<Location> list) {
+		for (Location loc : list) {
+			if (loc.getX() == l.getX() && loc.getZ() == l.getZ()) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	
