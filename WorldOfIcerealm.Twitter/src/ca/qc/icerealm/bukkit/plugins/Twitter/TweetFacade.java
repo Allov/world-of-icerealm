@@ -16,6 +16,8 @@ public class TweetFacade extends JavaPlugin {
 	public void onEnable() {
 		// TODO Auto-generated method stub
 		tw = new TwitterService();
+		
+		
 	}
 	
 	

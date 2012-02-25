@@ -84,6 +84,7 @@ public class SlashRollCommandExecutor implements CommandExecutor {
 		
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
+        logger.warning("tweeting : " + dateFormat.format(date));
 		TweetFacade.UpdateStatus(dateFormat.format(date));
 		
 		for (Entity t : list)
