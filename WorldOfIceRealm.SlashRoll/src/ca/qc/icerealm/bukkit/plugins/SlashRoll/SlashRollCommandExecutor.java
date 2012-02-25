@@ -79,20 +79,22 @@ public class SlashRollCommandExecutor implements CommandExecutor {
 	private void roll(Player sender, int maxValue) {
 		List<Entity> list = sender.getNearbyEntities(20, 20, 20);
 		int rollValue = Min + (int)(Math.random() * ((maxValue - Min) + 1));
-		sender.sendMessage(ChatColor.GOLD + sender.getName() + " rolled " + rollValue);
 		
-		
+		String playerMessage = sender.getName() + " rolled " + rollValue;
+		sender.sendMessage(ChatColor.GOLD + playerMessage);
+				
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
-        logger.warning("tweeting : " + dateFormat.format(date));
-		TweetFacade.UpdateStatus(dateFormat.format(date));
+		TweetFacade.UpdateStatus(dateFormat.format(date) + " - " + playerMessage);
 		
 		for (Entity t : list)
 		{
 			if(t instanceof Player)
 			{
 				Player recipient = (Player) t;
-				recipient.sendMessage(ChatColor.GOLD + sender.getName() + " rolled " + rollValue);
+				String partyMessage = sender.getName() + " rolled " + rollValue;
+				recipient.sendMessage(ChatColor.GOLD + partyMessage);
+				TweetFacade.UpdateStatus(dateFormat.format(date) + " - " + partyMessage);
 				
 			}
 		}

@@ -9,6 +9,7 @@ import twitter4j.conf.ConfigurationBuilder;
 public class TwitterService {
 	
 	private ConfigurationBuilder cb;
+	TwitterFactory tf;
 	
 	public TwitterService()
 	{
@@ -18,11 +19,11 @@ public class TwitterService {
 		.setOAuthConsumerSecret("NX3zl9OCIu4eRqWvsIMVJWoW1IeTqrhaqvU4yDdD0")
 		.setOAuthAccessToken("490863314-RJBxwxSTh77zqW2Ur38RpZIQ6SrUX272wKyTeVTM")
 		.setOAuthAccessTokenSecret("ncefxX3S6FpM0Mkw3XSep7eTFU0F8nV6Druqkh4RPg");
+		tf = new TwitterFactory(cb.build());
 	}
 	
 	public void UpdateStatus(String status)
 	{
-		TwitterFactory tf = new TwitterFactory(cb.build());
 		Twitter twitter = tf.getInstance();
 		
 		try {
@@ -34,7 +35,6 @@ public class TwitterService {
 	
 	public void SendDirectMessage(String username, String message)
 	{
-		TwitterFactory tf = new TwitterFactory(cb.build());
 		Twitter twitter = tf.getInstance();
 		
 		try {
