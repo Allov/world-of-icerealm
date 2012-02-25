@@ -20,10 +20,14 @@ public class TweetFacade extends JavaPlugin {
 		
 	}
 	
-	
 	public static void UpdateStatus(String status)
 	{
 		tw.UpdateStatus(status);
+	}
+	
+	public static void SendDirectMessage(String username, String message)
+	{
+		tw.SendDirectMessage(username, message);
 	}
 	
 

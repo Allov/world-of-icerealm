@@ -1,6 +1,5 @@
 package ca.qc.icerealm.bukkit.plugins.Twitter;
 
-import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -27,7 +26,7 @@ public class TwitterService {
 		Twitter twitter = tf.getInstance();
 		
 		try {
-			twitter.updateStatus(new StatusUpdate(status));
+			twitter.updateStatus(status);
 		} catch (TwitterException e) {
 			e.printStackTrace();
 		}
