@@ -303,8 +303,41 @@ cs:
         -   type: kill
             name: Kill 50 monsters at the castle
             what: 50,51,52,54,58
-            zone: -71,-752,127,1121,0,128
+            zone: -71,752,127,1121,0,128
             amount: 50
+    rewards:
+        money: 750
+        level: 8
+        items:
+            - id: 322
+              amount: 5
+inf:
+    group: hard
+    name: Infestation
+    messageStart: Above an old village, a platform was built to bring darkness to the villagers by evil doers. But, a greater soul have been able to turn the tides and bring the evil monsters to them. Now, they are crying for help and need your assistance!   
+    messageEnd: An endless stream of monsters you say? Oh my ... they got what they deserve I guess!
+    daily: true
+    objectives:
+        -   type: kill
+            name: Kill 20 Zombies at the platform
+            what: 54
+            zone: 26,-74,116,24,98,127
+            amount: 20
+        -   type: kill
+            name: Kill 20 Spiders at the platform
+            what: 52
+            zone: 26,-74,116,24,98,127
+            amount: 20
+        -   type: kill
+            name: Kill 20 Skeletons at the platform
+            what: 51
+            zone: 26,-74,116,24,98,127
+            amount: 20
+        -   type: kill
+            name: Kill 20 Creepers at the platform
+            what: 50
+            zone: 26,-74,116,24,98,127
+            amount: 20
     rewards:
         money: 750
         level: 8
