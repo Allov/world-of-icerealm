@@ -17,7 +17,10 @@ public class QuestReward implements Reward {
 	
 	@Override
 	public void give(Player player) {
-		scriptedQuestService.assignQuest(player, getQuestName());
+		Quest quest = scriptedQuestService.assignQuest(player, getQuestName());
+		if (quest != null) {
+			quest.info();
+		}
 	}
 
 	public String getQuestName() {

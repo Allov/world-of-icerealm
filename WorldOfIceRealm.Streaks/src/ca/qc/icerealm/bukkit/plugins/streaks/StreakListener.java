@@ -31,7 +31,7 @@ public class StreakListener implements Listener {
 	private static final int BaseMoneyReward = 50;
 	private static final int BaseLevelReward = 1;
 	private static final long MaximumStreakInactivityTime = 15000;
-	private static final int KillStreakCount = 8;
+	private static final int[] ComboMileStones = new int[] { 5, 12, 20, 32, 48, 68, 92, 120 };
 
 	private Map<Player, Combo> combos;
 	private final Economy economy;
@@ -59,44 +59,46 @@ public class StreakListener implements Listener {
 	private void calculateCombo(Player killer, Combo combo) {
 		String comboString = combo.toString();
 		
-		if (combo.getKillCount() % KillStreakCount == 0) {
-			int comboCount = combo.getKillCount() / KillStreakCount;
-			int moneyReward = giveMoneyReward(killer, comboCount);
+		if (combo.getComboMileStone() <= ComboMileStones.length  &&
+			combo.getKillCount() == ComboMileStones[combo.getComboMileStone()]) {
+			
+			combo.incrementComboMileStone();
+			int moneyReward = giveMoneyReward(killer, combo.getComboMileStone());
 			
 			comboString += "(" + ChatColor.YELLOW + "+" + moneyReward + " golds";
 			
 			if (combo.isFlawless()) {
-				int levelReward = giveLevelReward(killer, (int)Math.ceil(((double)comboCount * 0.5)));
+				int levelReward = giveLevelReward(killer, (int)Math.ceil(((double)combo.getComboMileStone() * 0.5)));
 				comboString += ChatColor.DARK_GREEN + " and " + ChatColor.YELLOW + levelReward + " level"; 
-			} else if (comboCount >= KillStreakLevelRewardComboCount) {
+			} else if (combo.getComboMileStone() >= KillStreakLevelRewardComboCount) {
 				int levelReward = giveLevelReward(killer, 1);				
 				comboString += ChatColor.DARK_GREEN + " and " + ChatColor.YELLOW + levelReward + " level"; 
 			}			
 			
-			if (comboCount == SpeedRewardComboCount) {
+			if (combo.getComboMileStone() == SpeedRewardComboCount) {
 				giveSpeedReward(killer);
 				comboString += ChatColor.DARK_GREEN + " and " + ChatColor.YELLOW + "swiftness"; 
 			}
 			
-			if (comboCount == StrengthRewardComboCount) {
+			if (combo.getComboMileStone() == StrengthRewardComboCount) {
 				giveStrengthReward(killer);
 				comboString += ChatColor.DARK_GREEN + " and " + ChatColor.YELLOW + "strength"; 
 			}
 
-			if (comboCount == RegenRewardComboCount) {
+			if (combo.getComboMileStone() == RegenRewardComboCount) {
 				giveRegenReward(killer);
 				comboString += ChatColor.DARK_GREEN + " and " + ChatColor.YELLOW + "regen"; 
 			}
 			
-			if (comboCount == KillingStreak) {
+			if (combo.getComboMileStone() == KillingStreak) {
 				plugin.getServer().broadcastMessage("" + ChatColor.YELLOW + killer.getDisplayName() + ChatColor.DARK_GREEN + " is on a " + ChatColor.RED + " killing streak!");
 			}
 
-			if (comboCount == RampageStreak) {
+			if (combo.getComboMileStone() == RampageStreak) {
 				plugin.getServer().broadcastMessage("" + ChatColor.YELLOW + killer.getDisplayName() + ChatColor.DARK_GREEN + " is on a " + ChatColor.RED + " rampage streak!");
 			}
 
-			if (comboCount == GodlikeStreak) {
+			if (combo.getComboMileStone() == GodlikeStreak) {
 				plugin.getServer().broadcastMessage("" + ChatColor.YELLOW + killer.getDisplayName() + ChatColor.DARK_GREEN + " is " + ChatColor.RED + " GODLIKE! A " + ChatColor.GREEN + combo.getKillCount() + ChatColor.DARK_GREEN + " kill streak! Strength has been awarded to everyone.");
 				for (Player player : plugin.getServer().getOnlinePlayers()) {
 					giveStrengthReward(player);
@@ -192,6 +194,7 @@ class Combo {
 	private boolean critical;
 	private boolean bow;
 	private long lastKillTime;
+	private int comboMileStone;
 	
 	public int getKillCount() {
 		return killCount;
@@ -239,11 +242,20 @@ class Combo {
 		this.flawless = true;
 		this.critical = false;
 		this.bow = false;
+		this.comboMileStone = 0;
 	}
 	
 	@Override
 	public String toString() {
 		return 	"" + (isFlawless() ? ChatColor.YELLOW + "Flawlessly " : "") + ChatColor.DARK_GREEN + 
 				(isFlawless() ? "killed " : "Killed ") + ChatColor.GREEN + getKillCount() + ChatColor.DARK_GREEN + " monsters";
+	}
+
+	public int getComboMileStone() {
+		return comboMileStone;
+	}
+
+	public void incrementComboMileStone() {
+		this.comboMileStone++;
 	}
 }

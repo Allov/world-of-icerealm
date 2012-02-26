@@ -103,7 +103,7 @@ public class ScenarioPlugin extends JavaPlugin {
 			
 			MonsterFuryConfiguration _defaultConfig = new MonsterFuryConfiguration();
 			_defaultConfig.ExperienceReward = 5;										// 100 level d'exp
-			_defaultConfig.CoolDownTime = 10000; 										// 10 min
+			_defaultConfig.CoolDownTime = 600000; 										// 10 min
 			_defaultConfig.InitialTimeBeforeFirstWave = 10000;							// 10 sec
 			_defaultConfig.TimeoutWhenLeaving = 30000;									// 30 sec
 			_defaultConfig.MinimumPlayer = 1;											// 1 joueur requis
@@ -111,8 +111,8 @@ public class ScenarioPlugin extends JavaPlugin {
 			_defaultConfig.Name = "haunted_outpost";									// le nom du scénario 
 			_defaultConfig.NumberOfWaves = 5;											// 3 waves
 			_defaultConfig.TimeBetweenWave = 10000;										// 10 sec
-			_defaultConfig.ActivationZoneCoords = "-148,155,-144,159,0,128";				// zone d'Activation
-			_defaultConfig.ScenarioZoneCoords = "-159,148,-133,165,0,128";				// zone du scenario
+			_defaultConfig.ActivationZoneCoords = "366,181,369,184,0,128";				// zone d'Activation
+			_defaultConfig.ScenarioZoneCoords = "347,168,386,201,0,128";				// zone du scenario
 			
 			_hauntedOutpost = new MonsterFury(this, _defaultConfig, new DefaultEventListener(), null);
 			

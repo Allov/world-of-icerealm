@@ -1,10 +1,13 @@
 package ca.qc.icerealm.bukkit.plugins.questslog;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
+import ca.qc.icerealm.bukkit.plugins.quests.persistance.QuestLogPersister;
 
 public class QuestLogService {
 	
@@ -17,22 +20,29 @@ public class QuestLogService {
 		return instance;
 	}
 	
-	private List<QuestLog> questLogs;
+	private Map<String, QuestLog> questLogs;
 	
 	public QuestLogService() {
-		this.questLogs = new ArrayList<QuestLog>();
+		this.questLogs = new HashMap<String, QuestLog>();
+	}
+	
+	public boolean isQuestLogCreated(Player player) {
+		return questLogs.containsKey(player.getName());
 	}
 	
 	public QuestLog getQuestLogForPlayer(Player player) {
-		for (QuestLog questLog : this.questLogs) {
-			if (questLog.getPlayer() == player) {
-				return questLog;
-			}
+		QuestLog questLog = null;
+		
+		if (!isQuestLogCreated(player)) {
+			questLog = new QuestLog(player);
+			this.questLogs.put(player.getName(), questLog);
+			
+			questLog.addListener(QuestLogPersister.getInstance());
+		} else {
+			questLog = questLogs.get(player.getName());
 		}
 		
-		QuestLog questLog = new QuestLog(player);
-		this.questLogs.add(questLog);		
-		return questLog;
+		return questLog;		
 	}
 
 	public void displayLogForPlayer(Player player) {
@@ -42,5 +52,9 @@ public class QuestLogService {
 		} else {
 			player.sendMessage(ChatColor.RED + "You are not on any quest at the moment.");
 		}
+	}
+
+	public void removeQuestLog(Player player) {
+		questLogs.remove(player.getName());
 	}
 }

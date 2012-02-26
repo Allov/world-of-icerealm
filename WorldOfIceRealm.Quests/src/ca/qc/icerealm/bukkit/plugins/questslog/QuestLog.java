@@ -2,11 +2,17 @@ package ca.qc.icerealm.bukkit.plugins.questslog;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import ca.qc.icerealm.bukkit.plugins.quests.CollectObjective;
+import ca.qc.icerealm.bukkit.plugins.quests.Objective;
 import ca.qc.icerealm.bukkit.plugins.quests.Quest;
+import ca.qc.icerealm.bukkit.plugins.quests.QuestListener;
+import ca.qc.icerealm.bukkit.plugins.quests.persistance.QuestLogPersister;
 
 public class QuestLog {
 	private Player player;
@@ -14,10 +20,20 @@ public class QuestLog {
 	private List<Quest> dailyQuests;
 	private Quest randomQuest;
 	
+	private List<QuestLogListener> listeners = new CopyOnWriteArrayList<QuestLogListener>();
+	
 	public QuestLog(Player player) {
 		this.player = player;
 		this.quests = new ArrayList<Quest>();
 		this.dailyQuests = new ArrayList<Quest>();
+	}
+	
+	public void addListener(QuestLogListener questLogListener) {
+		listeners.add(questLogListener);
+	}
+	
+	public void removeListener(QuestLogListener questLogListener) {
+		listeners.remove(questLogListener);
 	}
 	
 	public boolean isRandomQuestFinished() {
@@ -54,6 +70,10 @@ public class QuestLog {
 	
 	public void setRandomQuest(Quest quest) {
 		this.randomQuest = quest;
+		
+		for(QuestLogListener questLogListener : listeners) {
+			questLogListener.randomQuestSet(quest);
+		}
 	}
 	
 	public void addQuest(Quest quest) {
@@ -61,6 +81,10 @@ public class QuestLog {
 			this.dailyQuests.add(quest);
 		} else {
 			this.quests.add(quest);
+		}
+
+		for(QuestLogListener questLogListener : listeners) {
+			questLogListener.questAdded(quest);
 		}
 	}
 
@@ -96,6 +120,33 @@ public class QuestLog {
 						    quest.getKey() + ChatColor.LIGHT_PURPLE +"] " + 
 							ChatColor.DARK_GREEN + quest.getName() + " " + 
 							(quest.isCompleted() ? ChatColor.GREEN + "Completed" : ChatColor.RED + "Not completed"));
+	}
+	
+	public void unregisterQuests() {
+		for (Quest quest : dailyQuests) {
+			unregisterObjectives(quest);
+			quest.removeListener(QuestLogPersister.getInstance());
+		}
+
+		for (Quest quest : quests) {
+			unregisterObjectives(quest);
+			quest.removeListener(QuestLogPersister.getInstance());
+		}
+		
+		if (randomQuest != null) {
+			unregisterObjectives(randomQuest);
+			randomQuest.removeListener(QuestLogPersister.getInstance());
+		}
+	}
+
+	private void unregisterObjectives(Quest quest) {
+		for (Objective objective : quest.getObjectives()) {
+			objective.unregister(quest);
+			
+			if (objective instanceof QuestListener) {
+				quest.removeListener((QuestListener) objective);
+			}
+		}
 	}
 
 	public void removeChildDailyQuests(Quest rootQuest) {

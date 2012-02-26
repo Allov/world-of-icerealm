@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 
-public class CountObjective extends Objective {
+public abstract class CountObjective extends Objective {
 
 	private int amount;
 	private int current;
@@ -15,7 +15,11 @@ public class CountObjective extends Objective {
 		// TODO Auto-generated constructor stub
 		this.amount = amount;
 	}
-
+	
+	public void setCurrent(int current) {
+		this.current = current;
+	}
+	
 	public int getAmount() {
 		return amount;
 	}

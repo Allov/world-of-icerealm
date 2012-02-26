@@ -18,8 +18,6 @@ import ca.qc.icerealm.bukkit.plugins.questslog.QuestLogService;
 
 public class Quests extends JavaPlugin {
 
-	public final Logger logger = Logger.getLogger(("Minecraft"));
-
 	private PluginManager pluginManager;
 	private RegisteredServiceProvider<Economy> economyProvider;
 	private RandomQuestService randomQuestService;
@@ -40,7 +38,7 @@ public class Quests extends JavaPlugin {
 					.getRegistration(net.milkbowl.vault.economy.Economy.class);
 		}
 		
-		getServer().getPluginManager().registerEvents(new QuestsEventListener(), this);
+		getServer().getPluginManager().registerEvents(new QuestsEventListener(scriptedQuestService), this);
 		
 		getCommand("q").setExecutor(new QuestCommandExecutor(this));
 	}

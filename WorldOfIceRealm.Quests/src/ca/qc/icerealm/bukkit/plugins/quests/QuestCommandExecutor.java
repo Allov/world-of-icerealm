@@ -6,6 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import ca.qc.icerealm.bukkit.plugins.quests.persistance.QuestLogPersister;
 import ca.qc.icerealm.bukkit.plugins.questslog.QuestLog;
 import ca.qc.icerealm.bukkit.plugins.questslog.QuestLogService;
 
@@ -80,7 +81,11 @@ public class QuestCommandExecutor implements CommandExecutor {
 	}
 
 	private void giveQuest(Player player, String questId) {
-		this.quests.getScriptedQuestService().assignQuest(player, questId);
+		Quest quest = this.quests.getScriptedQuestService().assignQuest(player, questId);
+		
+		if (quest != null) {
+			quest.info();
+		}
 	}
 
 	private void displayQuestLog(Player player) {

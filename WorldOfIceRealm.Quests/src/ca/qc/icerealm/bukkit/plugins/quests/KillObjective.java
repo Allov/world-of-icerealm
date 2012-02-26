@@ -2,9 +2,7 @@ package ca.qc.icerealm.bukkit.plugins.quests;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -46,5 +44,10 @@ public class KillObjective extends CountObjective implements Listener {
 				}
 			}
 		}
+	}
+
+	@Override
+	public String getType() {
+		return "kill";
 	}
 }

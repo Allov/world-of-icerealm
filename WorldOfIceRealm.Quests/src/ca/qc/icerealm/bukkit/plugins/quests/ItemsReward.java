@@ -31,8 +31,6 @@ public class ItemsReward implements Reward {
 			if (material != null) {
 				ItemStack stack = new ItemStack(material, item.getAmount());
 				
-				Logger.getLogger("Minecraft").info("Giving reward : " + item.getId() + " Amount: " + item.getAmount());
-				
 				PlayerInventory inventory = player.getInventory();
 				HashMap<Integer, ItemStack> leftOvers = inventory.addItem(stack);
 				for (ItemStack itemStack : leftOvers.values()) {

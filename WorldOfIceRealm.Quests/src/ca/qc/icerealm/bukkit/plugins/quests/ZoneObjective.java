@@ -64,4 +64,9 @@ public class ZoneObjective extends Objective implements ZoneObserver {
 		
 		ZoneServer.getInstance().removeListener(this);
 	}
+
+	@Override
+	public String getType() {
+		return "zone";
+	}
 }

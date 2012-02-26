@@ -7,7 +7,7 @@
 # 59 = cave-spider
 
 # daily quest
-bone_gnaw:
+bg:
     group: normal
     name: A bone to gnaw on
     messageStart: Skeletons, I hate skeletons! They always look at me from far away shoot me in the knee! Please kill them and gather their bones so I can chew on them. 
@@ -23,17 +23,143 @@ bone_gnaw:
             name: Kill 10 skeletons
             what: 51
             amount: 10
-    joinFees:
-        money: 0
-        level: 0
-    dropFees:
-        money: 50
-        level: 0
     rewards:
         money: 300
         level: 2
         items:
-theportal:
+sd:
+    group: normal
+    name: A spider's delight
+    messageStart: Spiders like to jump and poke around and make these weird sounds that annoys me to the highest point. You see there, in that cage? I managed to capture one and I'm going to make it pay for all the others by making it eat Fermented Spiders Eyes. Yes, you heard it well. These femented eyes can cause illness to the point of rendering one so crazy it's going to be a pleasure to watch! 
+    messageEnd: Aah, thanks for gathering the ingredients! Here's your pay.   
+    daily: true
+    objectives:
+        -   type: collect
+            name: Collect 10 Spider Eyes 
+            what: 375
+            amount: 10
+            keep: false
+        -   type: collect
+            name: Collect 10 Sugars 
+            what: 353
+            amount: 10
+            keep: false
+        -   type: collect
+            name: Collect 10 Brown Mushrooms 
+            what: 39
+            amount: 10
+            keep: false
+        -   type: kill
+            name: Kill 10 Spiders
+            what: 52
+            amount: 10
+    rewards:
+        money: 300
+        level: 2
+        items:
+os:
+    group: normal
+    name: Repairing an old shoe
+    messageStart: Not so long ago, I used to repair everone's gear with leather. However, with cows being limited on this island, it's hard to find it. I know Zombies are known to wear leather armor. Please, find me some leather so I can go back in the business again!
+    messageEnd: I wouldn't have been able to do it myself, thanks a lot!    
+    daily: true
+    objectives:
+        -   type: collect
+            name: Collect 5 Leather 
+            what: 334
+            amount: 5
+            keep: false
+        -   type: kill
+            name: Kill 10 Zombies
+            what: 54
+            amount: 10
+    rewards:
+        money: 300
+        level: 2
+        items:
+tb:
+    group: normal
+    name: Things that goes BOOM!
+    messageStart: Pssst! You there... you seem like you can handle a simple task? I'm the best explosive handler in town, but what I need is Gunpowder, and only these damn Creepers have them. Want to make money? Get me some... 
+    messageEnd: Aaaaaah yeah! Step away, son!
+    daily: true
+    objectives:
+        -   type: collect
+            name: Collect 20 Gunpowder 
+            what: 289
+            amount: 20
+            keep: false
+        -   type: kill
+            name: Kill 10 Creepers
+            what: 50
+            amount: 10
+    rewards:
+        money: 500
+        level: 3
+        quests: fire
+        items:
+            -   id: 46
+                amount: 1
+cave:
+    group: average
+    name: Cave
+    messageStart: This world is filled with cave networks and you were not the first to explore it. Many have perished in the deepest black to the poisonous Cave Spiders. If you are to find these, I can only wish you are going to be prepared.   
+    messageEnd: Who could have known that two glass of milk is better than one?    
+    daily: true
+    cooldown: 259200000
+    objectives:
+        -   type: kill
+            name: Kill 10 Cave Spiders
+            what: 59
+            amount: 10
+    rewards:
+        money: 500
+        level: 5
+        items:
+            -   id: 377
+                amount: 2
+            -   id: 322
+                amount: 2
+cmn:
+    group: average
+    name: Cry more, noob
+    requires: theportal
+    messageStart: In this world where fire is predominant reign these flying white creatures that are known to make things explode when they're not happy. But, when attacked and killed, they cry tears that are known to regenerate one's health. You'll need them on your journey, gather as much as you can!   
+    messageEnd: Aah the sound of a dying Ghast... A relief, isn't it?    
+    daily: true
+    objectives:
+        -   type: collect
+            name: Collect 5 Ghast Tears 
+            what: 370
+            amount: 5
+            keep: true
+        -   type: kill
+            name: Kill 5 Ghast
+            what: 56
+            amount: 5
+    rewards:
+        money: 400
+        level: 3
+        items:
+            -   id: 322
+                amount: 3
+fire:
+    group: average
+    name: Fire starter
+    requires: tb
+    messageStart: Son, thank you for your work, but I think I'll need more fire power than that. Blaze could be the answer. Take this device and gather their soul inside of it. I'll make a powerful explosive from this.  
+    messageEnd: It seems really unstable, let's see what it can do...    
+    daily: true
+    objectives:
+        -   type: kill
+            name: Kill 10 Blaze
+            what: 61
+            amount: 10
+    rewards:
+        money: 400
+        level: 3
+        items:
+tp:
     group: easy
     name: The Portal
     messageStart: Eeeew! Can you believe it! I actually saw a zombie that looked like a half-man, half-pig. This is disgusting! I saw it carry much gold with them... someone has to capitalize on them. If I wasn't affraid of this portal...  
@@ -43,19 +169,13 @@ theportal:
         -   type: zone
             name: Investigate the portal
             zone:  625,262,633,271,0,128
-    joinFees:
-        money: 0
-        level: 0
-    dropFees:
-        money: 0
-        level: 0
     rewards:
         money: 0
         level: 0
         quests: pigmen
         items:
 pigmen:
-    group: normal
+    group: average
     requires: theportal
     name: Zombified Pigs and Men!
     messageStart: YOU THINK YOU CAN ENTER THIS PORTAL MORTAL? YOU THINK YOU CAN DEFEAT LIVING NIGHTMARES? I CHALLENGE YOU TO ENTER THE PORTAL AND SURVIVE!!!  
@@ -72,12 +192,6 @@ pigmen:
             name: Kill 10 Zombie pigmen
             what: 57
             amount: 10
-    joinFees:
-        money: 0
-        level: 0
-    dropFees:
-        money: 0
-        level: 0
     rewards:
         money: 500
         level: 5
@@ -85,24 +199,19 @@ pigmen:
             -   id: 307
                 amount: 1
             -   id: 322
-                amount: 4
-diamonds:
+                amount: 3
+dia:
     group: normal-adventure
     name: Diamonds!
     messageStart: There is an ore that everyone wants but that is really really rare to find. It is used to make the sharpest weapons, the strongest armor and the most effective tools. Find it, you'll need it on your quest.  
     messageEnd: Oooh, shiny!!    
     daily: true
+    cooldown: 259200000
     objectives:
         -   type: find
             name: Find 3 diamonds
             what: 56
             amount: 3
-    joinFees:
-        money: 0
-        level: 0
-    dropFees:
-        money: 50
-        level: 0
     rewards:
         money: 0
         level: 5
@@ -113,6 +222,7 @@ blue:
     messageStart: They say blue ain't no good because it doesn't do anything, but everyone likes blue! I want to set up a shop here. Find me a block of Lapis Lazuli, and I'll pay you handsomely!  
     messageEnd: Thank you kind sir! A bit of blue is always a good news, don't you think? 
     daily: true
+    cooldown: 259200000
     objectives:
         -   type: find
             name: Find 3 Lapis Lazuli ore
@@ -122,12 +232,6 @@ blue:
             name: Collect 1 Lapis Lazuli block
             what: 22
             amount: 1
-    joinFees:
-        money: 0
-        level: 0
-    dropFees:
-        money: 50
-        level: 0
     rewards:
         money: 500
         level: 5
@@ -143,17 +247,11 @@ blue:
 #            name: Collect 1 Lapis Lazuli block
 #            what: 22
 #            amount: 1
-#    joinFees:
-#        money: 0
-#        level: 0
-#    dropFees:
-#        money: 50
-#        level: 0
 #    rewards:
 #        money: 500
 #        level: 5
 #        items:
-enderman:
+ender:
     group: normal
     name: Creepy, creepy things
     messageStart: Did you see that? I swear, I was looking right at it and he just disa...AAAAAAARRRGGGHH... *silence*.  
@@ -169,19 +267,13 @@ enderman:
             keep: true
             what: 368
             amount: 5
-    joinFees:
-        money: 0
-        level: 0
-    dropFees:
-        money: 50
-        level: 0
     rewards:
         money: 300
         level: 5
         items:
             -   id: 322
-                amount: 7
-castle_siege:
+                amount: 5
+cs:
     group: hard
     name: Castle under siege
     messageStart: Crazy I tell you, he wouldn't listen to me and now it's out of control. He opened the portal; He did it! Now the sky is filled with obsidian and darkness reign on the kingdom. Please noble warrior, help us drive the evil force out this place!   
@@ -193,12 +285,6 @@ castle_siege:
             what: 50,51,52,54,58
             zone: -71,-752,127,1121,0,128
             amount: 50
-    joinFees:
-        money: 0
-        level: 0
-    dropFees:
-        money: 50
-        level: 0
     rewards:
         money: 750
         level: 8
@@ -207,7 +293,7 @@ castle_siege:
               amount: 5
 
 # scenario based quests        
-haunted_outpost:
+hop:
     group: haunted-outpost
     name: A haunted outpost
     messageStart: Have you ever heard of a haunted outpost? Not so far away from here is a post that is known to be haunted. HAUNTED I TELL YOU!! Go there at your own risk. 
@@ -222,12 +308,6 @@ haunted_outpost:
             zone: 347,168,386,201,0,128
             what: 51,52,54,58
             amount: 25
-    joinFees:
-        money: 0
-        level: 0
-    dropFees:
-        money: 50
-        level: 0
     rewards:
         money: 400
         level: 5
@@ -248,12 +328,6 @@ haunted_outpost:
 #            zone: 380,43,421,84,64,90
 #            what: 51,52,54,57
 #            amount: 25
-#    joinFees:
-#        money: 0
-#        level: 0
-#    dropFees:
-#        money: 50
-#        level: 0
 #    rewards:
 #        money: 400
 #        level: 5

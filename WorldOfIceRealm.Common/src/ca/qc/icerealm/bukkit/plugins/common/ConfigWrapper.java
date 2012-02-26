@@ -42,6 +42,14 @@ public class ConfigWrapper {
 		return getConfig().getBoolean(path);
 	}
 	
+	public long getLong(String path, long defaultIfNull) {
+		if (getConfig().get(path) == null) {
+			return defaultIfNull;
+		}
+		
+		return getConfig().getLong(path);
+	}
+
 	public List<MapWrapper> getMapList(String path, List<MapWrapper> defaultIfNull) {
 		if (getConfig().get(path) == null) {
 			return defaultIfNull;

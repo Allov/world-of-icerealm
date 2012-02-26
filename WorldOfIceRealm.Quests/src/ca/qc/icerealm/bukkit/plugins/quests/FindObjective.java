@@ -29,4 +29,9 @@ public class FindObjective extends CountObjective implements Listener {
 			advance();
 		}
 	}
+
+	@Override
+	public String getType() {
+		return "find";
+	}
 }

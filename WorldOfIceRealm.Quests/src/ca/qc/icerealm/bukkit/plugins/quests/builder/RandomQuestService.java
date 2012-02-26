@@ -11,14 +11,12 @@ import org.bukkit.entity.Player;
 
 import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
-import ca.qc.icerealm.bukkit.plugins.quests.Fees;
 import ca.qc.icerealm.bukkit.plugins.quests.ItemReward;
 import ca.qc.icerealm.bukkit.plugins.quests.ItemsReward;
 import ca.qc.icerealm.bukkit.plugins.quests.KillObjective;
 import ca.qc.icerealm.bukkit.plugins.quests.LevelReward;
 import ca.qc.icerealm.bukkit.plugins.quests.MoneyReward;
 import ca.qc.icerealm.bukkit.plugins.quests.Quest;
-import ca.qc.icerealm.bukkit.plugins.quests.Reward;
 import ca.qc.icerealm.bukkit.plugins.quests.Quests;
 import ca.qc.icerealm.bukkit.plugins.questslog.QuestLog;
 import ca.qc.icerealm.bukkit.plugins.questslog.QuestLogService;
@@ -29,7 +27,6 @@ public class RandomQuestService {
 
 	private final int[] Creatures = new int[] { EntityUtilities.Zombie, EntityUtilities.Creeper, EntityUtilities.Spider, EntityUtilities.Skeleton, EntityUtilities.Enderman };
 	
-	private final int MaxObjective = 3;
 	private final int MaxKillCount = 10;
 	private final int BaseLevelReward = 1;
 	private final int BaseMoneyReward = 100;
@@ -79,9 +76,8 @@ public class RandomQuestService {
 				"",
 				ChatColor.DARK_GREEN + "Hey you there with the blocky head, kill " + ChatColor.GREEN + MaxKillCount / objectivesCount + " " + ChatColor.YELLOW + questName + ChatColor.DARK_GREEN + " for me and I'll pay you good!", 
 				ChatColor.DARK_GREEN + "Thanks! Here's what you were waiting for... make good use of it!", 
-				false, 
-				new Fees(0, 0, 0, 0),
-				new Fees(0, 0, 0, 0));
+				false,
+				0);
 		
 		assignRewards(quest);
 		

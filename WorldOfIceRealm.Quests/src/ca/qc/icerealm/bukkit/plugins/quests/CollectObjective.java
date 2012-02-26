@@ -1,7 +1,5 @@
 package ca.qc.icerealm.bukkit.plugins.quests;
 
-import java.util.logging.Logger;
-
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -11,7 +9,7 @@ import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 
-public class CollectObjective extends CountObjective implements TimeObserver {
+public class CollectObjective extends CountObjective implements TimeObserver, QuestListener {
 
 	private final int materialId;
 	private final boolean keep;
@@ -33,16 +31,14 @@ public class CollectObjective extends CountObjective implements TimeObserver {
 		advance(ownedAmount - getCurrent());
 	}
 
-	@Override
-	protected void questCompleted() {
-		super.questCompleted();
-		
+	public void questCompleted(Quest quest) {
 		if (!this.keep) {
 			MaterialData material = new MaterialData(materialId);
 			this.getPlayer().getInventory().removeItem(new ItemStack(material.getItemType(), getAmount()));
 		}
 		
 		TimeServer.getInstance().removeListener(this);
+		quest.removeListener(this);
 	}
 
 	private int checkForItemInPlayerInventory() {
@@ -81,5 +77,14 @@ public class CollectObjective extends CountObjective implements TimeObserver {
 	@Override
 	public long getAlarm() {
 		return this.alarm;
+	}
+
+	@Override
+	public String getType() {
+		return "collect";
+	}
+
+	@Override
+	public void questProgressed(Quest quest, Objective objective) {
 	}
 }

@@ -2,42 +2,45 @@ package ca.qc.icerealm.bukkit.plugins.quests;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class Quest implements ObjectiveListener {
-	public final Logger logger = Logger.getLogger(("Minecraft"));
-
 	private String key;
 	private String name;
 	private String messageStart;
 	private String messageEnd;
 	private boolean daily;
+	private long cooldown;
 	private Player player;
 	private boolean completed;
+	private long completionTime;
+	private String requires;
 	
 	private List<Objective> objectives;
-	
-	private Fees joinFees;
-	private Fees dropFees;
 	private List<Reward> rewards;
+	private List<QuestListener> listeners = new CopyOnWriteArrayList<QuestListener>();
 
-	private long completionTime;
-
-	private String requires;
-
-	public Quest(Player player, String key, String name, String requires, String messageStart, String messageEnd, boolean daily, Fees joinFees, Fees dropFees) {
+	public Quest(Player player, String key, String name, String requires, String messageStart, String messageEnd, boolean daily, long cooldown) {
 		this.player = player;
 		this.key = key;
 		this.name = name;
-		this.setRequires(requires);
+		this.cooldown = cooldown;
+		this.requires = requires;
 		this.messageStart = messageStart;
 		this.messageEnd = messageEnd;
 		this.daily = daily;
-		this.joinFees = joinFees;
-		this.dropFees = dropFees;
+	}
+	
+	public void addListener(QuestListener listener) {
+		listeners.add(listener);
+	}
+	
+	public void removeListener(QuestListener listener) {
+		listeners.remove(listener);
 	}
 	
 	public List<Objective> getObjectives() {
@@ -65,16 +68,16 @@ public class Quest implements ObjectiveListener {
 	}
 
 	public void info() {
-		player.sendMessage(ChatColor.LIGHT_PURPLE + "Quest: " + ChatColor.YELLOW + this.name);
-		player.sendMessage(ChatColor.DARK_GREEN + this.messageStart);
+		getPlayer().sendMessage(ChatColor.LIGHT_PURPLE + "Quest: " + ChatColor.YELLOW + this.name);
+		getPlayer().sendMessage(ChatColor.DARK_GREEN + this.messageStart);
 		
 		for (Objective objective : this.objectives) {
-			player.sendMessage("  > " + objective.toString());
+			getPlayer().sendMessage("  > " + objective.toString());
 		}
 		
 		if (getRewards().size() > 0) {
-			player.sendMessage(ChatColor.LIGHT_PURPLE + "Your rewards will be: ");
-			displayRewards(player);
+			getPlayer().sendMessage(ChatColor.LIGHT_PURPLE + "Your rewards will be: ");
+			displayRewards(getPlayer());
 		}
 	}
 
@@ -86,7 +89,11 @@ public class Quest implements ObjectiveListener {
 
 	@Override
 	public void objectiveProgressed(Objective objective) {
-		player.sendMessage( ChatColor.LIGHT_PURPLE + "[" + ChatColor.YELLOW + this.name + ChatColor.LIGHT_PURPLE + "] " + 
+		for(QuestListener listener : listeners) {
+			listener.questProgressed(this, objective);
+		}
+		
+		getPlayer().sendMessage( ChatColor.LIGHT_PURPLE + "[" + ChatColor.YELLOW + this.name + ChatColor.LIGHT_PURPLE + "] " + 
 							ChatColor.GREEN + " PROGRESS: "  + objective.toString());
 	}
 
@@ -103,21 +110,24 @@ public class Quest implements ObjectiveListener {
 			}
 		}
 		
-		for (Objective obj : objectives) {
-			obj.unregister(this);
-			obj.questCompleted();
-		}
-		
 		completed = true;
 		completionTime = System.currentTimeMillis();
+
+		for (Objective obj : objectives) {
+			obj.unregister(this);
+		}
 		
-		player.sendMessage(ChatColor.DARK_GREEN + this.messageEnd);
-		player.sendMessage(ChatColor.LIGHT_PURPLE + "Quest is " + ChatColor.GREEN + "done" + ChatColor.DARK_GREEN + "!");
-		player.sendMessage(ChatColor.LIGHT_PURPLE + "You received : ");
-		displayRewards(player);
+		for (QuestListener listener : listeners) {
+			listener.questCompleted(this);
+		}
+		
+		getPlayer().sendMessage(ChatColor.DARK_GREEN + this.messageEnd);
+		getPlayer().sendMessage(ChatColor.LIGHT_PURPLE + "Quest is " + ChatColor.GREEN + "done" + ChatColor.DARK_GREEN + "!");
+		getPlayer().sendMessage(ChatColor.LIGHT_PURPLE + "You received : ");
+		displayRewards(getPlayer());
 
 		// Objectives are done, reward the player;
-		giveRewards(player);
+		giveRewards(getPlayer());
 	}
 	
 	private void giveRewards(Player player) {
@@ -161,5 +171,26 @@ public class Quest implements ObjectiveListener {
 
 	public void setRequires(String requires) {
 		this.requires = requires;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setCompletionTime(long completionTime) {
+		this.completionTime = completionTime;
+		this.completed = completionTime > 0;		
+	}
+
+	public long getCooldown() {
+		return cooldown;
+	}
+
+	public void setCooldown(long cooldown) {
+		this.cooldown = cooldown;
+	}
+
+	public boolean isDailyCooldownOver() {
+		return System.currentTimeMillis() - this.getCompletionTime() > this.getCooldown();
 	}
 }

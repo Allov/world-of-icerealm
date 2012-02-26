@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
 <jardesc>
-    <jar path="C:/Minecraft - Copy/plugins/icerealm.simplekits.jar"/>
+    <jar path="C:/MinecraftTest/plugins/icerealm.simplekits.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/WorldOfIceRealm.SimpleKits/simplekits_export.jardesc" exportErrors="false" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>

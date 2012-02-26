@@ -2,6 +2,7 @@ package ca.qc.icerealm.bukkit.plugins.quests;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Logger;
 
 import org.bukkit.entity.Player;
 
@@ -44,10 +45,6 @@ public abstract class Objective {
 		}
 	}
 	
-	protected void questCompleted() {
-		
-	}
-
 	public WorldZone getZone() {
 		return zone;
 	}
@@ -79,4 +76,6 @@ public abstract class Objective {
 	protected void listenerAdded() {
 		
 	}
+
+	public abstract String getType();
 }
