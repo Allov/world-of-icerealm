@@ -83,9 +83,9 @@ public class SlashRollCommandExecutor implements CommandExecutor {
 		String playerMessage = sender.getName() + " rolled " + rollValue;
 		sender.sendMessage(ChatColor.GOLD + playerMessage);
 				
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		/*DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
-		TweetFacade.UpdateStatus(dateFormat.format(date) + " - " + playerMessage);
+		TweetFacade.UpdateStatus(dateFormat.format(date) + " - " + playerMessage);*/
 		
 		for (Entity t : list)
 		{
@@ -94,7 +94,7 @@ public class SlashRollCommandExecutor implements CommandExecutor {
 				Player recipient = (Player) t;
 				String partyMessage = sender.getName() + " rolled " + rollValue;
 				recipient.sendMessage(ChatColor.GOLD + partyMessage);
-				TweetFacade.UpdateStatus(dateFormat.format(date) + " - " + partyMessage);
+				//TweetFacade.UpdateStatus(dateFormat.format(date) + " - " + partyMessage);
 				
 			}
 		}
