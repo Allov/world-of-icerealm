@@ -12,20 +12,11 @@ import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.CreatureType;
-import org.bukkit.entity.Creeper;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.entity.CreeperPowerEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -61,18 +52,9 @@ public class Infestation implements ZoneObserver, Listener {
 	}
 	
 	private void createRandomSpawners() {
-		for (int i = 0; i < _quantity; i++) {
-			CreatureType creature = EntityUtilities.getCreatureType(_monsters[RandomUtil.getRandomInt(_monsters.length)]);
-			Location l = null;
-			if (_config.UseLowestBlock) {
-				l = _zone.getRandomLowestLocation(_world);
-			}
-			else {
-				l = _zone.getRandomHighestLocation(_world);
-			}
-			
-			Spawner spawner = new Spawner(l, creature, _config);
-			_server.getPluginManager().registerEvents(spawner, _plugin);
+		for (int i = 0; i < _quantity; i++) {	
+			Spawner spawner = new Spawner(_zone, _config);
+		    _server.getPluginManager().registerEvents(spawner, _plugin);
 			_spawners.add(spawner);
 		}
 	}
@@ -93,7 +75,7 @@ public class Infestation implements ZoneObserver, Listener {
 		_players.add(p);
 		if (_spawners.size() == 0) {
 			createRandomSpawners();
-		}		
+		}
 	}
 
 	@Override
@@ -106,6 +88,8 @@ public class Infestation implements ZoneObserver, Listener {
 			}
 			_spawners.clear();
 		}
+		
+		p.sendMessage("you left a combat zone");
 	}
 
 	@Override
@@ -115,7 +99,7 @@ public class Infestation implements ZoneObserver, Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDisconnect(PlayerQuitEvent event) {
-		_players.remove(event.getPlayer());
+		playerLeft(event.getPlayer());
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)

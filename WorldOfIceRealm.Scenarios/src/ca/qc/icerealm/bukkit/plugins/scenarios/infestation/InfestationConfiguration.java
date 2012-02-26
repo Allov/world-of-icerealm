@@ -16,10 +16,16 @@ public class InfestationConfiguration {
 		config.SpawnerMonsters = c.SpawnerMonsters;
 		config.SpawnerQuantity = c.SpawnerQuantity;
 		config.UseLowestBlock = c.UseLowestBlock;
+		config.Server = c.Server;
+		config.DelayBeforeRespawn = c.DelayBeforeRespawn;
+		config.SpawnerRadiusActivation = c.SpawnerRadiusActivation;
+		config.UseInfestedZoneAsRadius = c.UseInfestedZoneAsRadius;
+		config.ResetWhenNoPlayerAround = c.ResetWhenNoPlayerAround;
 		return config;
 	}
 	
 	public String InfestedZone;
+	public boolean UseInfestedZoneAsRadius;
 	public int SpawnerQuantity;
 	public String SpawnerMonsters;
 	public long IntervalBetweenSpawn;
@@ -31,5 +37,9 @@ public class InfestationConfiguration {
 	public long DelayBeforeRegeneration;
 	public int MaxHealth;
 	public boolean UseLowestBlock;
-	
+	public org.bukkit.Server Server;
+	public long DelayBeforeRespawn;
+	public double SpawnerRadiusActivation;
+	public boolean ResetWhenNoPlayerAround;
+	// faire un objet pour changer l'algorithme de random location
 }

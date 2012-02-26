@@ -16,6 +16,8 @@ public class BlockRestore implements TimeObserver {
 
 	private World _world;
 	private HashMap<Location, BlockContainer> _blocks;
+	private Location _location;
+	private long _delayIfEntitiesPresent = 10000;
 	
 	public BlockRestore(World w, HashMap<Location, BlockContainer> b) {
 		_world = w;
@@ -24,6 +26,7 @@ public class BlockRestore implements TimeObserver {
 	 
 	@Override
 	public void timeHasCome(long time) {
+			
 		for (Location l : _blocks.keySet()) {
 			Block b = _world.getBlockAt(l);
 			b.setTypeId(_blocks.get(l).TypeId);

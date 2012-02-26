@@ -7,69 +7,110 @@ import java.util.logging.Logger;
 import org.bukkit.Location;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
+import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
 import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
+import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 
 public class Spawner implements TimeObserver, Listener {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private long _alarm;
-	private Location _location;
-	private CreatureType _type;
 	private long _interval;
 	private int _prob;
-	private int _maxMonster = 20;
-	private int _maxHealth;
+	private int _maxMonster;
 	private List<LivingEntity> _entities;
 	private boolean _burn;
 	private double _healthModifier;
+	private WorldZone _zone;
+	private Location _startingLocation;
+	private SpawnerZoneActivator _activator;
+	private InfestationConfiguration _config;
+	private Player _target;
+	private WorldZone _zoneActivator;
+	private boolean _isPlayerAround;
+	private String[] _monstersToSpawn;
+
 	
-	public Spawner(Location l, long interval, CreatureType t, int prob, int maxHealth) {
-		_location = l;
-		_interval = interval;
-		_prob = prob;
-		_type = t;
-		_entities = new ArrayList<LivingEntity>();
-		_maxHealth = maxHealth;
-		TimeServer.getInstance().addListener(this, _interval);
-	}
 	
-	public Spawner(Location l, CreatureType t, InfestationConfiguration config) {
-		_location = l;
+	public Spawner(WorldZone z, InfestationConfiguration config) {
+		_zone = z;
+		_startingLocation = _zone.getRandomHighestLocation(_zone.getWorld());
 		_interval = config.IntervalBetweenSpawn;
-		_type = t;
 		_prob = config.ProbabilityToSpawn;
 		_entities = new ArrayList<LivingEntity>();
-		_maxHealth = config.MaxHealth;
 		_burn = config.BurnDuringDaylight;
 		_healthModifier = config.HealthModifier;
 		_maxMonster = config.MaxMonstersPerSpawn;
-		TimeServer.getInstance().addListener(this, _interval);
-	}
-
-	@Override
-	public void timeHasCome(long time) {
-		boolean draw = RandomUtil.getDrawResult(_prob);		
-		if (draw && _entities.size() < _maxMonster) {
-			_entities.add(ScenarioService.getInstance().spawnCreature(_location.getWorld(), _location, _type, _healthModifier, _burn));
+		_config = config;
+		if (config.UseInfestedZoneAsRadius) {
+			_zoneActivator = _zone;
 		}
-		TimeServer.getInstance().addListener(this, _interval);
+		else {
+			_zoneActivator = new WorldZone(_startingLocation, _config.SpawnerRadiusActivation);	
+		}
+		
+		_activator = new SpawnerZoneActivator(_zoneActivator, config.Server, this, _config);
+		ZoneServer.getInstance().addListener(_activator);
+		_monstersToSpawn = _config.SpawnerMonsters.split(",");
 	}
 	
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void monsterDie(EntityDeathEvent event) {
-		for (LivingEntity e : _entities) {
-			if (e.getEntityId() == event.getEntity().getEntityId()) {
-				_entities.remove(e);
-				break;
+	public void setTarget(Player p) {
+		_target = p;
+	}
+
+	public void setPlayerAround(boolean a) {
+		_isPlayerAround = a;
+	}
+	
+	@Override
+	public void timeHasCome(long time) {
+		boolean draw = RandomUtil.getDrawResult(_prob);	
+		
+		if (draw && _entities.size() < _maxMonster && _isPlayerAround) {
+			Location random = _zoneActivator.getRandomHighestLocation(_zoneActivator.getWorld());
+			random.setY(random.getY() + 1);
+			CreatureType creature = EntityUtilities.getCreatureType(_monstersToSpawn[RandomUtil.getRandomInt(_monstersToSpawn.length)]);
+			LivingEntity l = ScenarioService.getInstance().spawnCreature(_zone.getWorld(), random, creature, _healthModifier, _burn);
+			if (l instanceof Monster) {
+				Monster m = (Monster)l;
+				m.setTarget(_target);
 			}
+			_entities.add(l);
+		}
+
+		
+		if (_entities.size() == _maxMonster && _config.DelayBeforeRespawn > 0) {
+			_entities.clear();
+			_isPlayerAround = false;
+			TimeServer.getInstance().addListener(this, _config.DelayBeforeRespawn);
+		}
+		else {
+			TimeServer.getInstance().addListener(this, _interval);
+		}
+	}
+	
+	public void resetLocation() {
+		
+		if (_config.DelayBeforeRespawn == 0) {
+			_entities.clear();
+			TimeServer.getInstance().removeListener(this);
+			ZoneServer.getInstance().removeListener(_activator);
+			_startingLocation = _zone.getRandomHighestLocation(_zone.getWorld());
+			WorldZone activator = new WorldZone(_startingLocation, _config.SpawnerRadiusActivation);
+			_zoneActivator = activator;
+			_activator = new SpawnerZoneActivator(_zoneActivator, _config.Server, this, _config);
+			ZoneServer.getInstance().addListener(_activator);
 		}
 	}
 

@@ -18,11 +18,12 @@ import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 public class ScenarioPlugin extends JavaPlugin {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private MonsterFury _hauntedOutpost = null;
-	private MonsterFury _defaultWaves = null;
+	private Infestation _ruinsPlateform = null;
 
 	@Override
 	public void onDisable() {
-		releaseHauntedOutpost();		
+		releaseHauntedOutpost();	
+		releaseRuinsPlateform();
 	}
 
 	@Override
@@ -30,71 +31,40 @@ public class ScenarioPlugin extends JavaPlugin {
 		getCommand("sc").setExecutor(new ScenarioCommander());
 		ScenarioService.getInstance().setPlugin(this);
 		
-		InfestationConfiguration config = new InfestationConfiguration();
-		config.InfestedZone = "-46,-16,-29,12,60,68";
-		config.BurnDuringDaylight = false;
-		config.DelayBeforeRegeneration = 5000;
-		config.HealthModifier = 2.0;
-		config.IntervalBetweenSpawn = 5000;
-		config.MaxMonstersPerSpawn = 10;
-		config.RegenerateExplodedBlocks = true;
-		config.ProbabilityToSpawn = 5;
-		config.SpawnerMonsters = "zombie,skeleton";
-		config.SpawnerQuantity = 3;
-		config.UseLowestBlock = true;
-		
-		Infestation inf = new Infestation(this, config);
-		ZoneServer.getInstance().addListener(inf);
-		getServer().getPluginManager().registerEvents(inf, this);
-		
-		InfestationConfiguration config1 = InfestationConfiguration.clone(config);
-		config1.InfestedZone = "-19,759,93,1070,60,106";
-		config1.HealthModifier = 0.0;
-		config1.ProbabilityToSpawn = 5;
-		config1.MaxMonstersPerSpawn = 10;
-		config1.SpawnerQuantity = 20;
-		config1.UseLowestBlock = false;
-		Infestation inf1 = new Infestation(this, config1);
-		ZoneServer.getInstance().addListener(inf1);
-		getServer().getPluginManager().registerEvents(inf1, this);
-		
-		//createBarbarianRaid();
-		//createHauntedOutpost();
-		//createDefaultWaves();
+		createHauntedOutpost();
+		createRuinsPlateform();
+	}
+
+	private void createRuinsPlateform() {
+		// configuration de la plate forme
+		if (_ruinsPlateform == null) {
+			InfestationConfiguration config = new InfestationConfiguration();
+			config.InfestedZone = "26,-74,116,24,98,127";
+			config.BurnDuringDaylight = false;
+			config.RegenerateExplodedBlocks = true;
+			config.UseLowestBlock = true;
+			config.SpawnerMonsters = "zombie,skeleton,spider";
+			config.SpawnerQuantity = 10;
+			config.ProbabilityToSpawn = 1;
+			config.MaxMonstersPerSpawn = 5;
+			config.DelayBeforeRegeneration = 300;
+			config.HealthModifier = 0.0;
+			config.IntervalBetweenSpawn = 1500;
+			config.SpawnerRadiusActivation = 20;
+			config.DelayBeforeRespawn = 0;	
+			config.UseInfestedZoneAsRadius = false;
+			config.ResetWhenNoPlayerAround = true;
+			config.Server = getServer();
+
+			_ruinsPlateform = new Infestation(this, config);
+			ZoneServer.getInstance().addListener(_ruinsPlateform);
+			getServer().getPluginManager().registerEvents(_ruinsPlateform, this);
+		}
 	}
 	
-	private void createBarbarianRaid() {
-		
-		BarbarianRaid raid = new BarbarianRaid(this.getServer(), "-102,56,-96,62,67,72", "-103,48,-99,52,66,69");
-		
-	}
-	
-	private void createDefaultWaves() {
-		if (_defaultWaves == null) {
-			MonsterFuryConfiguration config  = new MonsterFuryConfiguration();
-			config.ExperienceReward = 5;										// 100 level d'exp
-			config.CoolDownTime = 10000; 										// 10 min
-			config.InitialTimeBeforeFirstWave = 500;							// 10 sec
-			config.TimeoutWhenLeaving = 2000;									// 30 sec
-			config.MinimumPlayer = 1;											// 1 joueur requis
-			config.MonstersPerWave = 5;							    		 	// 10 monstres par wave
-			config.Name = "default";											// le nom du scénario 
-			config.NumberOfWaves = 3;											// 3 waves
-			config.TimeBetweenWave = 5000;										// 10 sec
-			config.ActivationZoneCoords = "-181,133,-177,137,0,128";			// zone d'Activation
-			config.ScenarioZoneCoords = "-189,127,-168,140,0,128";				// zone du scenario
-			
-			_defaultWaves = new MonsterFury(this, config, new DefaultEventListener());
-			
-			EntityWave w = new RegularSpawnWave(1500, _defaultWaves, 20);
-			w.setMonsters("spider,slime");
-			w.setSpawnLocation(_defaultWaves.getScenarioZone().getRandomLocation(_defaultWaves.getWorld(), 20));
-			
-			List<EntityWave> waves = _defaultWaves.getEntityWaves();
-			waves.add(w);
-			_defaultWaves.setEntityWaves(_defaultWaves.getEntityWaves());
-			
-			ScenarioService.getInstance().addScenario(_defaultWaves);
+	private void releaseRuinsPlateform() {
+		if (_ruinsPlateform != null) {
+			ZoneServer.getInstance().removeListener(_ruinsPlateform);
 		}
 	}
 	
@@ -140,3 +110,49 @@ public class ScenarioPlugin extends JavaPlugin {
 		}
 	}
 }
+
+// configuration de la maison a zoune 2 enderman
+/*
+InfestationConfiguration zounehouse = new InfestationConfiguration();
+zounehouse.InfestedZone = "46,-8,54,0,98,102";
+zounehouse.BurnDuringDaylight = false;
+zounehouse.UseInfestedZoneAsRadius = true;
+zounehouse.RegenerateExplodedBlocks = true;
+zounehouse.UseLowestBlock = false;
+zounehouse.SpawnerMonsters = "zombie";
+zounehouse.SpawnerQuantity = 1;
+zounehouse.ProbabilityToSpawn = 1;
+zounehouse.MaxMonstersPerSpawn = 2;
+zounehouse.DelayBeforeRegeneration = 150;
+zounehouse.HealthModifier = 1.0;
+zounehouse.IntervalBetweenSpawn = 1500;
+zounehouse.SpawnerRadiusActivation = 1;
+zounehouse.DelayBeforeRespawn = 120000;	
+config.ResetWhenNoPlayerAround = false;
+zounehouse.Server = getServer();
+//Infestation zounehousesurprise = new Infestation(this, zounehouse);
+//ZoneServer.getInstance().addListener(zounehousesurprise);
+//getServer().getPluginManager().registerEvents(zounehousesurprise, this);
+
+
+
+// configuration de la zone du chateau
+InfestationConfiguration config1 = InfestationConfiguration.clone(config);
+config1.InfestedZone = "-73,-355,134,-22,50,120";
+config1.HealthModifier = 0.0;
+config1.ProbabilityToSpawn = 2;
+config1.MaxMonstersPerSpawn = 5;
+config1.SpawnerQuantity = 100;
+config1.SpawnerMonsters = "zombie,skeleton,spider,creeper";
+config1.UseLowestBlock = false;
+config1.DelayBeforeRespawn = 600000;
+config1.SpawnerRadiusActivation = 10;
+// creation de l'instance
+//Infestation inf1 = new Infestation(this, config1);
+//ZoneServer.getInstance().addListener(inf1);
+//getServer().getPluginManager().registerEvents(inf1, this);
+
+//createBarbarianRaid();
+//createHauntedOutpost();
+//createDefaultWaves();
+*/
