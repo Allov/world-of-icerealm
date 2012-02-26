@@ -7,6 +7,26 @@
 # 59 = cave-spider
 
 # daily quest
+squid:
+    group: easy
+    name: Squidberg!
+    messageStart: Ink?? You call that an ink defense? BLLLLLUUUUURRRG... Get more ink...
+    messageEnd: Did you see me escaping? I was like whoop whoop whoop whoop!   
+    daily: true
+    objectives:
+        -   type: collect
+            name: Collect 50 Ink Sac
+            what: 351
+            amount: 50
+            keep: false
+        -   type: kill
+            name: Kill 20 Squids
+            what: 94
+            amount: 20
+    rewards:
+        money: 300
+        level: 3
+        items:
 bg:
     group: normal
     name: A bone to gnaw on
