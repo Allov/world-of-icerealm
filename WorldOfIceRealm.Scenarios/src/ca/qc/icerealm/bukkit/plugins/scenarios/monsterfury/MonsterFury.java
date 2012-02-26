@@ -207,8 +207,11 @@ public class MonsterFury implements ZoneObserver, Scenario {
 			if (_eventsListener != null) {
 				_eventsListener.scenarioEnding(_nbWaveDone);
 			}
+			int xp = 0;
+			if (getPlayers().size() != 0) {
+				xp = _experience / getPlayers().size();	
+			}
 			
-			int xp = _experience / getPlayers().size();
 			for (Player p : getPlayers()) {
 				p.setLevel(p.getLevel() + xp);
 				if (_eventsListener != null) {
