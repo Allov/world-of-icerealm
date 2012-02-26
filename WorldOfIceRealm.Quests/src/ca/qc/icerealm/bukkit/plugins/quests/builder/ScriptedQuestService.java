@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -73,7 +74,10 @@ public class ScriptedQuestService {
 		if (quest == null) {
 			quest = createAndAssignQuest(player, id, questLog, checkRequirements, completionTime);
 		} else {
-			quest.setCompletionTime(completionTime);
+			if (completionTime > 0) {
+				quest.setCompletionTime(completionTime);
+			}
+			
 			if (quest.isCompleted() && quest.isDaily()) {
 				if (!quest.isDailyCooldownOver()) {
 					displayDailyResetMessage(player, quest);
@@ -137,7 +141,7 @@ public class ScriptedQuestService {
 	}
 
 	private void displayDailyResetMessage(Player player, Quest quest) {
-		Date availableDate = new Date(quest.getCompletionTime() + DayInMillis);
+		Date availableDate = new Date(quest.getCompletionTime() + quest.getCooldown());
 		Date current = new Date(System.currentTimeMillis());
 
 		long diffInSeconds = (availableDate.getTime() - current.getTime()) / 1000;
@@ -153,7 +157,8 @@ public class ScriptedQuestService {
 
 		player.sendMessage(ChatColor.LIGHT_PURPLE
 				+ "You will be eligible to start this quest in "
-				+ ChatColor.YELLOW + diff[1] + " hours " + diff[2] + " minutes");
+				+ ChatColor.YELLOW + (diff[0] > 0 ? diff[0] + " days " : "")
+				+ diff[1] + " hours " + diff[2] + " minutes");
 	}
 
 	private Quest createQuest(Player player, String id, long completionTime) {
@@ -224,6 +229,14 @@ public class ScriptedQuestService {
 		String questId = config.getString(id + ".rewards.quests", "");
 		if (!questId.equals("")) {
 			quest.getRewards().add(new QuestReward(this, questId));
+		}
+	}
+
+	public void giveAll(Player player) {
+		Set<String> set = config.getConfig().getKeys(false);
+		
+		for (String key : set) {
+			assignQuest(player, key);
 		}
 	}
 }

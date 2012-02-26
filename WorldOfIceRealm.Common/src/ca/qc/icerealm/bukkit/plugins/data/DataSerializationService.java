@@ -59,15 +59,8 @@ public class DataSerializationService implements DataPersistenceService
 	public boolean exists(String pluginName, String key) 
 	{
 		testFolder(pluginName);
-		
 		File f = new File(PLUGINS_FOLDER + FILE_SEPARATOR + pluginName + FILE_SEPARATOR + key + "." + FILE_EXTENSION);
-		
-		if(f.exists())
-		{ 
-			return true;
-		}
-		
-		return false;
+		return f.exists();
 	}
 
 	@Override

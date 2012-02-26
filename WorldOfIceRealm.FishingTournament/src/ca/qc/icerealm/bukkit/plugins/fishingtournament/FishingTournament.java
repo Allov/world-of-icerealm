@@ -61,8 +61,7 @@ public class FishingTournament {
 	}
 
 	private void startTournament() {
-		boolean draw = RandomUtil.getDrawResult(10);
-		Logger.getLogger("Minecraft").info("[WoI.FishingTournament] >>> Draw result : " + draw);
+		boolean draw = RandomUtil.getDrawResult(8);
 		if (draw && server.getOnlinePlayers().length > 1) {
 			if (fishingEventListener == null) {
 				fishingEventListener = new FishingEventListener(this);
@@ -179,7 +178,6 @@ public class FishingTournament {
 			this.lastWorldTime = currentWorldTime;
 			
 			if (currentWorldTime == Sunset) {
-				Logger.getLogger("Minecraft").info("[WoI.FishingTournament] >>> Sunset, rolling");
 				startTournament();
 			} else if (isInProgress() && currentWorldTime == Half) {
 				notifyHalf();

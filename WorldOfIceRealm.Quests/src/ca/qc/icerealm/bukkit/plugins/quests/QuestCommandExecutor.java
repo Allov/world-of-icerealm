@@ -19,6 +19,7 @@ public class QuestCommandExecutor implements CommandExecutor {
 	private static final String QuestParamGive = "give";
 	private static final String QuestParamList = "list";
 	private static final String QuestParamInfo = "info";
+	private static final String QuestParamGiveAll = "giveall";
 	private final Quests quests;
 
 	public QuestCommandExecutor(Quests quests) {
@@ -36,6 +37,8 @@ public class QuestCommandExecutor implements CommandExecutor {
 					giveRandomQuest(player);
 				} else if (params[0].equalsIgnoreCase(QuestParamLog)) {
 					displayQuestLog(player);
+				} else if (params[0].equalsIgnoreCase(QuestParamGiveAll)) {
+					giveAll(player);
 				} else if (params.length >= 2 && params[0].equalsIgnoreCase(QuestParamGive)) {
 					giveQuest(player, params[1]);
 				} else if (params[0].equalsIgnoreCase(QuestParamHelp)) {
@@ -53,6 +56,10 @@ public class QuestCommandExecutor implements CommandExecutor {
 		} else {
 			return false;
 		}
+	}
+
+	private void giveAll(Player player) {
+		this.quests.getScriptedQuestService().giveAll(player);
 	}
 
 	private void displayQuestInfo(Player player, String questId) {
