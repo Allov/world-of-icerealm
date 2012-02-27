@@ -90,10 +90,14 @@ public class Spawner implements TimeObserver, Listener {
 		}
 
 		
-		if (_entities.size() == _maxMonster && _config.DelayBeforeRespawn > 0) {
+		if (_entities.size() == _maxMonster) {
 			_entities.clear();
-			_isPlayerAround = false;
-			TimeServer.getInstance().addListener(this, _config.DelayBeforeRespawn);
+			if (_config.DelayBeforeRespawn > 0) {
+				_isPlayerAround = false;
+				TimeServer.getInstance().addListener(this, _config.DelayBeforeRespawn);
+			}
+			
+		
 		}
 		else {
 			TimeServer.getInstance().addListener(this, _interval);

@@ -3,6 +3,8 @@ package ca.qc.icerealm.bukkit.plugins.scenarios.core;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
@@ -39,23 +41,27 @@ public class ScenarioPlugin extends JavaPlugin {
 		// configuration de la plate forme
 		if (_ruinsPlateform == null) {
 			InfestationConfiguration config = new InfestationConfiguration();
-			config.InfestedZone = "26,-74,116,24,98,127";
+			config.InfestedZone = "25,-75,117,25,98,127";
 			config.BurnDuringDaylight = false;
 			config.RegenerateExplodedBlocks = true;
+			config.DelayBeforeRegeneration = 300;
 			config.UseLowestBlock = true;
+			config.UseInfestedZoneAsRadius = false;
+			config.ResetWhenNoPlayerAround = true;
 			config.SpawnerMonsters = "zombie,skeleton,spider";
 			config.SpawnerQuantity = 10;
 			config.ProbabilityToSpawn = 1;
 			config.MaxMonstersPerSpawn = 5;
-			config.DelayBeforeRegeneration = 300;
+			
 			config.HealthModifier = 0.0;
 			config.IntervalBetweenSpawn = 1500;
 			config.SpawnerRadiusActivation = 20;
 			config.DelayBeforeRespawn = 0;	
-			config.UseInfestedZoneAsRadius = false;
-			config.ResetWhenNoPlayerAround = true;
-			config.Server = getServer();
 
+			config.EnterZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.YELLOW + "You entering an infested zone. " + ChatColor.RED + "Watch your back!";
+			config.LeaveZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.YELLOW + "You are leaving the infested zone";
+			config.Server = getServer();
+			
 			_ruinsPlateform = new Infestation(this, config);
 			ZoneServer.getInstance().addListener(_ruinsPlateform);
 			getServer().getPluginManager().registerEvents(_ruinsPlateform, this);

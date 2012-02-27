@@ -41,5 +41,7 @@ public class InfestationConfiguration {
 	public long DelayBeforeRespawn;
 	public double SpawnerRadiusActivation;
 	public boolean ResetWhenNoPlayerAround;
+	public String EnterZoneMessage;
+	public String LeaveZoneMessage;
 	// faire un objet pour changer l'algorithme de random location
 }
