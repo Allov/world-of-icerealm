@@ -52,4 +52,22 @@ public class MapWrapper {
 
 		return value;
 	}
+
+	public double getDouble(String key, double defaultIfNull) 
+	{
+		if (!map.containsKey(key)) {
+			return defaultIfNull;
+		}
+		
+		double value;
+		
+		try	{
+			value = Double.parseDouble(map.get(key).toString());
+		} catch(Exception exception) {
+			Logger.getLogger("MapWrapper").severe("Key: " + key + " is not a valid double.");
+			value = defaultIfNull;
+		}
+		
+		return value;
+	}
 }
