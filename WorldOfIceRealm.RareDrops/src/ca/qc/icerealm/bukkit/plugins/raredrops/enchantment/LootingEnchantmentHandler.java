@@ -58,17 +58,14 @@ public class LootingEnchantmentHandler
 		{	
 			if (enchs.get(Enchantment.LOOT_BONUS_MOBS) == 1)
 			{
-				logger.info("multiplier = 1.25");
 				multiplier = 1.25;
 			}
 			else if (enchs.get(Enchantment.LOOT_BONUS_MOBS) == 2)
 			{
-				logger.info("multiplier = 1.50");
 				multiplier = 1.50;
 			}        			
 			else if (enchs.get(Enchantment.LOOT_BONUS_MOBS) == 3)
 			{
-				logger.info("multiplier = 2.00");
 				multiplier = 2.00;
 			}
 		}      			

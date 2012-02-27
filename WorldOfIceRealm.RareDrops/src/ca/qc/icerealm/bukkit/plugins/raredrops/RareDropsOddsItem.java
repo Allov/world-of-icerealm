@@ -26,7 +26,9 @@ public class RareDropsOddsItem
 
 	private double percentage = 0;	
 	private Material item = null;
+	private String customName = null;
 	private EnchantmentsOdds enchantmentsOdds = null;
+	private Material enchantmentsAs = null;
 	
 	public Material getItem() 
 	{
@@ -57,4 +59,22 @@ public class RareDropsOddsItem
 	{
 		this.enchantmentsOdds = enchantmentsOdds;
 	}
+	
+	public Material getEnchantmentsAs() 
+	{
+		return enchantmentsAs;
+	}
+
+	public void setEnchantmentsAs(Material enchantmentsAs) 
+	{
+		this.enchantmentsAs = enchantmentsAs;
+	}
+
+	public String getCustomName() {
+		return customName;
+	}
+
+	public void setCustomName(String customName) {
+		this.customName = customName;
+	}	
 }

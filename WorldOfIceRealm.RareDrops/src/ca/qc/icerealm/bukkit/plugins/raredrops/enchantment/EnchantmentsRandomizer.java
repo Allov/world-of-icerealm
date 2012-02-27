@@ -56,7 +56,7 @@ public class EnchantmentsRandomizer
 			{
 				if (MaterialUtil.isHelmet(item))
 				{
-					// Logique custom
+					// Custom logic
 					enchantmentList = randomizeHelmet();
 				}
 				else if (MaterialUtil.isBoots(item))
@@ -70,7 +70,7 @@ public class EnchantmentsRandomizer
 			}
 			else if (MaterialUtil.isSword(item))
 			{
-				// Logique custom
+				// Custom logic
 				enchantmentList = randomizeSword();
 			}
 			else if (MaterialUtil.isBow(item))
@@ -177,7 +177,6 @@ public class EnchantmentsRandomizer
 		// Start from maximum level
 		for (int level = odds.getPercentageEnchantments().length; level > 0; level--)
 		{		
-			//this.logger.info("level: " + level);
 			for (int i = 0; i < enchantments.length; i++)
 			{	
 				// Loop into all type of enchantments for this material

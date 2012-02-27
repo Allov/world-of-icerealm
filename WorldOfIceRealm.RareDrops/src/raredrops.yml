@@ -1,0 +1,389 @@
+# Enchantments odds presets (level 1, level 2, level 3, level 4, level 5):
+#    low odds = 15.00, 10.00, 5.00
+#    average odds = 25.00, 12.00, 5.00
+#    high odds = 25.00, 18.00, 8.00, 4.00
+#    boss high odds = 18.00, 18.00, 25.00, 12.00, 3.00
+#    sure low odds = 100.00, 50.00, 12.00
+#    sure average odds = 100.00, 50.00, 25.00, 12.00, 3.00
+#    sure high odds = 50.00, 100.00, 50.00, 30.00, 15.00
+#
+# Custom enchantments odds can be used as well (level 1, level 2, etc.)
+
+mobs:
+    ZOMBIE:
+        materials:
+            -   name: FEATHER
+                odds: 5.00
+            -   name: LEATHER
+                odds: 3.00
+            -   name: IRON_PICKAXE
+                odds: 0.50
+                enchantments: low odds
+            -   name: IRON_AXE
+                odds: 0.25
+                enchantments: low odds
+            -   name: IRON_AXE               # custom rare weapon
+                custom name: iron battle axe
+                odds: 0.25
+                enchantments: sure low odds
+                enchantments as: IRON_SWORD
+            -   name: IRON_SWORD
+                odds: 0.25
+                enchantments: low odds
+            -   name: IRON_SPADE
+                odds: 0.25
+                enchantments: low odds
+            -   name: IRON_HOE
+                odds: 0.25
+            -   name: FLINT
+                odds: 2.00
+            -   name: APPLE
+                odds: 5.00     
+            -   name: RAW_BEEF
+                odds: 4.00
+            -   name: RAW_CHICKEN
+                odds: 4.00
+            -   name: RAW_FISH
+                odds: 4.00                
+            -   name: IRON_BOOTS
+                odds: 0.10
+                enchantments: low odds 
+            -   name: IRON_CHESTPLATE
+                odds: 0.10
+                enchantments: low odds 
+            -   name: IRON_HELMET
+                odds: 0.10
+                enchantments: low odds 
+            -   name: IRON_LEGGINGS
+                odds: 0.10
+                enchantments: low odds                                          
+    SKELETON:
+        materials:
+            -   name: IRON_PICKAXE
+                odds: 0.50
+                enchantments: average odds
+            -   name: IRON_AXE
+                odds: 0.50
+                enchantments: average odds
+            -   name: IRON_SWORD
+                odds: 0.50
+                enchantments: average odds
+            -   name: IRON_HOE
+                odds: 0.50
+            -   name: IRON_SPADE
+                odds: 0.50
+                enchantments: average odds
+            -   name: DIAMOND_PICKAXE
+                odds: 0.15
+                enchantments: average odds
+            -   name: DIAMOND_SPADE
+                odds: 0.15
+                enchantments: average odds
+            -   name: DIAMOND_HOE
+                odds: 0.15
+            -   name: DIAMOND_SWORD
+                odds: 0.15
+                enchantments: average odds     
+            -   name: DIAMOND_AXE
+                odds: 0.15
+                enchantments: average odds        
+            -   name: DIAMOND_AXE            # custom rare weapon
+                custom name: diamond battle axe
+                odds: 0.15
+                enchantments: sure average odds
+                enchantments as: DIAMOND_SWORD
+            -   name: SHEARS                 # custom rare weapon
+                custom name: scissors
+                odds: 0.15
+                enchantments: sure high odds
+                enchantments as: IRON_SWORD
+            -   name: BOW
+                odds: 1.50
+                enchantments: low odds    
+            -   name: IRON_BOOTS
+                odds: 0.15
+                enchantments: average odds 
+            -   name: IRON_CHESTPLATE
+                odds: 0.15
+                enchantments: average odds 
+            -   name: IRON_HELMET
+                odds: 0.15
+                enchantments: average odds 
+            -   name: IRON_LEGGINGS
+                odds: 0.15
+                enchantments: average odds   
+    SPIDER:
+        materials:
+            -   name: BREAD
+                odds: 10.00
+            -   name: COOKIE
+                odds: 5.00
+            -   name: POTION
+                odds: 1.00                
+            -   name: INK_SACK
+                odds: 1.00
+            -   name: IRON_INGOT
+                odds: 2.00
+    CREEPER:
+        materials:
+            -   name: DIAMOND_CHESTPLATE
+                odds: 0.05
+                enchantments: average odds 
+            -   name: DIAMOND_HELMET
+                odds: 0.05
+                enchantments: average odds 
+            -   name: DIAMOND_LEGGINGS
+                odds: 0.05
+                enchantments: average odds 
+            -   name: DIAMOND_BOOTS
+                odds: 0.05
+                enchantments: average odds 
+            -   name: SHEARS                 # custom rare weapon
+                custom name: scissors
+                odds: 0.20
+                enchantments: sure high odds
+                enchantments as: IRON_SWORD    
+            -   name: IRON_BOOTS
+                odds: 0.75
+                enchantments: average odds 
+            -   name: IRON_CHESTPLATE
+                odds: 0.75
+                enchantments: average odds 
+            -   name: IRON_HELMET
+                odds: 0.75
+                enchantments: average odds 
+            -   name: IRON_LEGGINGS
+                odds: 0.75
+                enchantments: average odds  
+            -   name: RECORD_3
+                odds: 0.01
+            -   name: RECORD_4
+                odds: 0.01
+            -   name: RECORD_5
+                odds: 0.01
+            -   name: RECORD_6
+                odds: 0.01
+            -   name: RECORD_7
+                odds: 0.01
+            -   name: RECORD_8
+                odds: 0.01
+            -   name: RECORD_9
+                odds: 0.01
+            -   name: RECORD_10
+                odds: 0.01
+            -   name: RECORD_11
+                odds: 0.01
+            -   name: CAKE
+                odds: 2.00
+            -   name: FLINT_AND_STEEL
+                odds: 2.00
+            -   name: REDSTONE_ORE
+                odds: 1.00
+            -   name: BLAZE_POWDER
+                odds: 1.00
+            -   name: GOLDEN_APPLE
+                odds: 3.00
+    ENDERMAN:
+        materials:
+            -   name: DIRT
+                odds: 1.00
+            -   name: STONE
+                odds: 1.00
+            -   name: BLAZE_POWDER
+                odds: 1.00
+            -   name: GOLDEN_APPLE
+                odds: 5.00
+            -   name: MELON
+                odds: 10.00   
+            -   name: DIAMOND_CHESTPLATE
+                odds: 0.15
+                enchantments: high odds 
+            -   name: DIAMOND_HELMET
+                odds: 0.15
+                enchantments: high odds 
+            -   name: DIAMOND_LEGGINGS
+                odds: 0.15
+                enchantments: high odds 
+            -   name: DIAMOND_BOOTS
+                odds: 0.15
+                enchantments: high odds 
+            -   name: DIAMOND_AXE                 # custom rare weapon
+                custom name: diamond battle axe
+                odds: 0.15
+                enchantments: sure high odds
+                enchantments as: IRON_SWORD    
+            -   name: IRON_BOOTS
+                odds: 1.50
+                enchantments: high odds 
+            -   name: IRON_CHESTPLATE
+                odds: 1.50
+                enchantments: high odds 
+            -   name: IRON_HELMET
+                odds: 1.50
+                enchantments: high odds 
+            -   name: IRON_LEGGINGS
+                odds: 1.50
+                enchantments: high odds  
+    SLIME:
+        materials:
+            -   name: RECORD_3
+                odds: 0.01
+            -   name: RECORD_4
+                odds: 0.01
+            -   name: RECORD_5
+                odds: 0.01
+            -   name: RECORD_6
+                odds: 0.01
+            -   name: RECORD_7
+                odds: 0.01
+            -   name: RECORD_8
+                odds: 0.01
+            -   name: RECORD_9
+                odds: 0.01
+            -   name: RECORD_10
+                odds: 0.01
+            -   name: RECORD_11
+                odds: 0.01
+            -   name: CAKE
+                odds: 2.00
+            -   name: CLAY
+                odds: 5.00
+            -   name: MAP
+                odds: 0.50
+            -   name: GOLDEN_APPLE
+                odds: 3.00   
+    CAVE_SPIDER:
+        materials:
+            -   name: BREAD
+                odds: 7.00
+            -   name: COOKIE
+                odds: 4.00
+            -   name: LAPIS_ORE
+                odds: 1.00                
+            -   name: INK_SACK
+                odds: 1.00
+            -   name: RAILS
+                odds: 3.00
+            -   name: DIAMOND
+                odds: 0.50
+    PIG_ZOMBIE:
+        materials:         
+            -   name: DIAMOND_CHESTPLATE
+                odds: 0.03
+                enchantments: average odds 
+            -   name: DIAMOND_HELMET
+                odds: 0.03
+                enchantments: average odds 
+            -   name: DIAMOND_LEGGINGS
+                odds: 0.03
+                enchantments: average odds 
+            -   name: DIAMOND_BOOTS
+                odds: 0.03
+                enchantments: average odds 
+            -   name: GOLD_BOOTS
+                odds: 0.50
+                enchantments: high odds 
+            -   name: GOLD_CHESTPLATE
+                odds: 0.50
+                enchantments: high odds 
+            -   name: GOLD_LEGGINGS
+                odds: 0.50
+                enchantments: high odds 
+            -   name: GOLD_HELMET
+                odds: 0.50
+                enchantments: high odds  
+            -   name: DIAMOND_SWORD
+                odds: 0.10
+                enchantments: average odds  
+            -   name: GOLD_SWORD
+                odds: 2.00
+                enchantments: high odds  
+    GHAST:
+        materials:
+            -   name: GLOWSTONE_DUST
+                odds: 5.00
+            -   name: FEATHER
+                odds: 5.00             
+    MAGMA_CUBE:
+        materials:
+            -   name: MAGMA_CREAM
+                odds: 2.00
+            -   name: LAVA_BUCKET
+                odds: 1.00
+            -   name: LAPIS_ORE
+                odds: 2.00      
+    BLAZE:
+        materials:
+            -   name: GOLD_INGOT
+                odds: 5.00
+            -   name: GOLDEN_APPLE
+                odds: 3.00  
+            -   name: DIAMOND_CHESTPLATE
+                odds: 0.06
+                enchantments: average odds 
+            -   name: DIAMOND_HELMET
+                odds: 0.06
+                enchantments: average odds 
+            -   name: DIAMOND_LEGGINGS
+                odds: 0.06
+                enchantments: average odds 
+            -   name: DIAMOND_BOOTS
+                odds: 0.06
+                enchantments: average odds 
+    ENDER_DRAGON:
+        materials:
+            -   name: GOLDEN_APPLE
+                odds: 50.00  
+            -   name: DIAMOND_CHESTPLATE
+                odds: 3.00
+                enchantments: boss high odds
+            -   name: DIAMOND_HELMET
+                odds: 3.00
+                enchantments: boss high odds
+            -   name: DIAMOND_LEGGINGS
+                odds: 3.00
+                enchantments: boss high odds
+            -   name: DIAMOND_BOOTS
+                odds: 3.00
+                enchantments: boss high odds
+            -   name: IRON_CHESTPLATE
+                odds: 15.00
+                enchantments: boss high odds
+            -   name: IRON_HELMET
+                odds: 15.00
+                enchantments: boss high odds
+            -   name: IRON_LEGGINGS
+                odds: 15.00
+                enchantments: boss high odds
+            -   name: IRON_BOOTS
+                odds: 15.00
+                enchantments: boss high odds    
+            -   name: DIAMOND_PICKAXE
+                odds: 3.00
+                enchantments: boss high odds
+            -   name: DIAMOND_SPADE
+                odds: 3.00
+                enchantments: boss high odds
+            -   name: DIAMOND_AXE
+                odds: 3.00
+                enchantments: boss high odds
+            -   name: DIAMOND_SWORD
+                odds: 3.00
+                enchantments: boss high odds
+            -   name: IRON_PICKAXE
+                odds: 10.00
+                enchantments: boss high odds
+            -   name: IRON_AXE
+                odds: 10.00
+                enchantments: boss high odds
+            -   name: IRON_SWORD
+                odds: 10.00
+                enchantments: boss high odds
+            -   name: IRON_SPADE
+                odds: 10.00
+                enchantments: boss high odds 
+            -   name: DIAMOND_AXE                 # custom rare weapon
+                custom name: diamond battle axe
+                odds: 3.00
+                enchantments: sure high odds
+                enchantments as: IRON_SWORD     

@@ -1,11 +1,16 @@
 package ca.qc.icerealm.bukkit.plugins.raredrops.enchantment;
 
+import org.bukkit.Material;
+
 public class EnchantmentsOdds 
 {
 	public static final double[] AVERAGE_ODDS = new double[]{25.00, 12.00, 5.00};
 	public static final double[] LOW_ODDS = new double[]{15.00, 10.00, 5.00};
 	public static final double[] HIGH_ODDS = new double[]{25.00, 18.00, 8.00, 4.00};
-	public static final double[] BOSS_HIGH_ODDS = new double[]{18.00, 18.00, 25.00, 12.00};
+	public static final double[] BOSS_HIGH_ODDS = new double[]{18.00, 18.00, 25.00, 12.00, 3.00};
+	public static final double[] SURE_LOW_ODDS = new double[]{100.00, 25.00, 12.00};
+	public static final double[] SURE_AVERAGE_ODDS = new double[]{100.00, 50.00, 25.00, 12.00, 3.00};
+	public static final double[] SURE_HIGH_ODDS = new double[]{18.00, 100.00, 35.00, 15.00, 4.00};
 	
 	public EnchantmentsOdds()
 	{
@@ -27,7 +32,7 @@ public class EnchantmentsOdds
 	/*
 	 * Chances d'obtenir un enchantement pour chaque level a partir du level 1. Le nombre de levels est optionnel.
 	 * 
-	 * EX: new int[]{20.00, 10.00, 5.00};
+	 * EX: new double[]{20.00, 10.00, 5.00};
 	 * 
 	 * 20% de chance d'avoir n'importe quel enchantement level 1, 10% pour le level 2, 5% pour le level 3.
 	 */

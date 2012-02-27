@@ -29,13 +29,13 @@ public class RareDropsRandomizer
 		this.setOdds(odds);
 	}
 	
-	public ArrayList<ItemStack> randomize()
+	public ArrayList<RareDropResult> randomize()
 	{
-		ArrayList<ItemStack> stackList = new ArrayList<ItemStack>();
+		ArrayList<RareDropResult> stackList = new ArrayList<RareDropResult>();
 		
 		if (odds != null)
 		{
-			// Boucle dans les items possibles
+			// Looping in all item odds
 			for (int i = 0; i < odds.getOddsItems().size(); i++)
 			{
 				RareDropsOddsItem item = odds.getOddsItems().get(i);			
@@ -45,27 +45,22 @@ public class RareDropsRandomizer
 				{
 					ItemStack stack = new ItemStack(item.getItem(), 1);
 
-					// Appliquer les chances d'avoir un item enchante
+					// Apply chances of getting an enchanted item 
 					if (item.getEnchantmentsOdds() != null)
 					{
-						EnchantmentsRandomizer enchRandomizer = new EnchantmentsRandomizer(item.getEnchantmentsOdds(), item.getItem());		
+						EnchantmentsRandomizer enchRandomizer = new EnchantmentsRandomizer(item.getEnchantmentsOdds(), item.getEnchantmentsAs() == null ? item.getItem() : item.getEnchantmentsAs() );		
 						ArrayList<EnchantmentResult> enchantments = enchRandomizer.randomize();
 
-						// Appliquer les enchantements obtenus
+						// Apply enchantements
 						for (int j = 0; j < enchantments.size(); j++)
 						{	
 							EnchantmentResult enchantment = enchantments.get(j);
 						//	this.logger.info(item.getItem().name() + ": adding enchantment: " + enchantment.getEnchantment().toString() + " " + enchantment.getLevel());
-							stack.addEnchantment(enchantment.getEnchantment(), enchantment.getLevel());
+							stack.addUnsafeEnchantment(enchantment.getEnchantment(), enchantment.getLevel());
 						}
 					}
 					
-					/*if (item.getItem().equals(Material.POTION))
-					{
-
-					}*/
-					
-					// Appliquer le comportement de nourriture cuite
+					// Apply cooked meat behavior
 					if (odds.getMonster() != null)
 					{
 						if (MaterialUtil.isCookable(stack.getType()) && odds.getMonster().getFireTicks() > 0)
@@ -74,7 +69,11 @@ public class RareDropsRandomizer
 						}	
 					}
 				
-					stackList.add(stack);	
+					RareDropResult stackResult = new RareDropResult();
+					stackResult.setItemStack(stack);
+					stackResult.setCustomName(item.getCustomName());
+					
+					stackList.add(stackResult);	
 				}
 			}
 		}
