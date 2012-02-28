@@ -1,6 +1,7 @@
 package ca.qc.icerealm.bukkit.plugins.time;
 
 import java.util.List;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 public class TimeLoop implements Runnable {
@@ -20,9 +21,9 @@ public class TimeLoop implements Runnable {
 			try {
 				List<TimeObserver> observers = _timeServer.getDueListener(System.currentTimeMillis());
 				
-				for (TimeObserver ob : observers) {
+				for (final TimeObserver ob : observers) {
 					_timeServer.removeListener(ob);
-					ob.timeHasCome(System.currentTimeMillis());
+					 Executors.newSingleThreadExecutor().execute(new TimeExecutor(ob));
 				}
 				
 				try {
