@@ -37,11 +37,13 @@ public class SpawnerZoneActivator implements ZoneObserver {
 	public void playerEntered(Player p) {
 		_spawner.setTarget(p);
 		if (_countPlayer == 0) {	
+			
 			_spawner.setPlayerAround(true);
 			_spawner.timeHasCome(System.currentTimeMillis());
 		}
 		
 		_countPlayer++;
+		this.logger.info(p.getName() + " enter spawner zone");
 	}
 
 	@Override
@@ -50,8 +52,10 @@ public class SpawnerZoneActivator implements ZoneObserver {
 		if (_countPlayer == 0) {
 			_spawner.setPlayerAround(false);
 			_spawner.resetLocation();
+			this.logger.info("resettting a spawner zone");
 			
 		}
+		this.logger.info(p.getName() + " leaves a spawner zone");
 	}
 
 	@Override

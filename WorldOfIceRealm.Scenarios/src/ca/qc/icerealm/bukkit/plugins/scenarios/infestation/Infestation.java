@@ -35,7 +35,7 @@ public class Infestation implements ZoneObserver, Listener {
 	private List<Player> _players;
 	private Server _server;
 	private int _quantity;
-	private List<FixedSpawner> _spawners;
+	private List<Spawner> _spawners;
 	private String[] _monsters;
 	private World _world;
 	private JavaPlugin _plugin;
@@ -46,7 +46,7 @@ public class Infestation implements ZoneObserver, Listener {
 		_plugin = j;
 		_server = j.getServer();
 		_players = new ArrayList<Player>();
-		_spawners = new ArrayList<FixedSpawner>();
+		_spawners = new ArrayList<Spawner>();
 		_world = _server.getWorld("world");
 		_zone = new WorldZone(_world, config.InfestedZone);
 		_quantity = config.SpawnerQuantity;
@@ -58,8 +58,12 @@ public class Infestation implements ZoneObserver, Listener {
 	private void createRandomSpawners() {
 		for (int i = 0; i < _quantity; i++) {		
 			Location l = _zone.getRandomLocation(_world);
+			
+			Spawner spawner = new Spawner(_zone, _config, _zoneSubject);
+			/*
 			FixedSpawner spawner = new FixedSpawner(l, _config, _players);
 			TimeServer.getInstance().addListener(spawner, _config.IntervalBetweenSpawn);
+			*/
 			_spawners.add(spawner);
 		}
 	}
@@ -76,7 +80,7 @@ public class Infestation implements ZoneObserver, Listener {
 
 	@Override
 	public void playerEntered(Player p) {
-		this.logger.info("player entered");
+		
 		p.sendMessage(_config.EnterZoneMessage);
 		_players.add(p);
 		if (_spawners.size() == 0) {
@@ -87,19 +91,23 @@ public class Infestation implements ZoneObserver, Listener {
 
 	@Override
 	public void playerLeft(Player p) {
-		
-		_players.remove(p);
-		this.logger.info("player left remove");
-		if (_players.size() == 0) {
-			for (FixedSpawner s : _spawners) {
-				TimeServer.getInstance().removeListener(s);
-				s.clearRemainingMonsters();
+		if (_players.contains(p)) {
+			_players.remove(p);
+
+			if (_players.size() == 0) {
+				/*
+				for (FixedSpawner s : _spawners) {
+					TimeServer.getInstance().removeListener(s);
+					s.clearRemainingMonsters();
+				}
+				*/
+				_spawners.clear();
+				this.logger.info("resetting the spawner");
 			}
-			_spawners.clear();
-			this.logger.info("resetting the spawner");
+			this.logger.info(_config.LeaveZoneMessage);
+			p.sendMessage(_config.LeaveZoneMessage);	
 		}
-		this.logger.info(_config.LeaveZoneMessage);
-		p.sendMessage(_config.LeaveZoneMessage);
+		
 	}
 
 	@Override

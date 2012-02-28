@@ -22,6 +22,7 @@ import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
 import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
+import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
 
 public class Spawner implements TimeObserver, Listener {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
@@ -40,10 +41,11 @@ public class Spawner implements TimeObserver, Listener {
 	private WorldZone _zoneActivator;
 	private boolean _isPlayerAround;
 	private String[] _monstersToSpawn;
+	private ZoneSubject _zoneServer;
 
 	
 	
-	public Spawner(WorldZone z, InfestationConfiguration config) {
+	public Spawner(WorldZone z, InfestationConfiguration config, ZoneSubject zone) {
 		_zone = z;
 		_startingLocation = _zone.getRandomHighestLocation(_zone.getWorld());
 		_interval = config.IntervalBetweenSpawn;
@@ -53,6 +55,7 @@ public class Spawner implements TimeObserver, Listener {
 		_healthModifier = config.HealthModifier;
 		_maxMonster = config.MaxMonstersPerSpawn;
 		_config = config;
+		_zoneServer = zone;
 		if (config.UseInfestedZoneAsRadius) {
 			_zoneActivator = _zone;
 		}
@@ -61,7 +64,7 @@ public class Spawner implements TimeObserver, Listener {
 		}
 		
 		_activator = new SpawnerZoneActivator(_zoneActivator, config.Server, this, _config);
-		ZoneServer.getInstance().addListener(_activator);
+		_zoneServer.addListener(_activator);
 		_monstersToSpawn = _config.SpawnerMonsters.split(",");
 	}
 	
@@ -78,8 +81,8 @@ public class Spawner implements TimeObserver, Listener {
 		boolean draw = RandomUtil.getDrawResult(_prob);	
 		
 		if (draw && _entities.size() < _maxMonster && _isPlayerAround) {
-			Location random = _zoneActivator.getRandomHighestLocation(_zoneActivator.getWorld());
-			random.setY(random.getY() + 1);
+			Location random = _zoneActivator.getRandomLocation(_zoneActivator.getWorld());
+			random.setY(random.getY() + 2);
 			CreatureType creature = EntityUtilities.getCreatureType(_monstersToSpawn[RandomUtil.getRandomInt(_monstersToSpawn.length)]);
 			LivingEntity l = ScenarioService.getInstance().spawnCreature(_zone.getWorld(), random, creature, _healthModifier, _burn);
 			if (l instanceof Monster) {
@@ -87,6 +90,7 @@ public class Spawner implements TimeObserver, Listener {
 				m.setTarget(_target);
 			}
 			_entities.add(l);
+			this.logger.info(creature.toString() + " at " + l.getLocation().getX() + "," + l.getLocation().getY() + "," + l.getLocation().getZ());
 		}
 
 		
@@ -109,12 +113,12 @@ public class Spawner implements TimeObserver, Listener {
 		if (_config.DelayBeforeRespawn == 0) {
 			_entities.clear();
 			TimeServer.getInstance().removeListener(this);
-			ZoneServer.getInstance().removeListener(_activator);
-			_startingLocation = _zone.getRandomHighestLocation(_zone.getWorld());
+			_zoneServer.removeListener(_activator);
+			_startingLocation = _zone.getRandomLocation(_zone.getWorld());
 			WorldZone activator = new WorldZone(_startingLocation, _config.SpawnerRadiusActivation);
 			_zoneActivator = activator;
 			_activator = new SpawnerZoneActivator(_zoneActivator, _config.Server, this, _config);
-			ZoneServer.getInstance().addListener(_activator);
+			_zoneServer.addListener(_activator);
 		}
 	}
 
