@@ -107,4 +107,5 @@ public class ScenarioService {
 		_plugin.getServer().getPluginManager().registerEvents(m, _plugin);
 		return creature;
 	}
+	
 }

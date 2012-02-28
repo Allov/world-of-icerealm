@@ -26,6 +26,7 @@ import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
+import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
 
 public class Infestation implements ZoneObserver, Listener {
 
@@ -39,8 +40,9 @@ public class Infestation implements ZoneObserver, Listener {
 	private World _world;
 	private JavaPlugin _plugin;
 	private InfestationConfiguration _config;
+	private ZoneSubject _zoneSubject;
 	
-	public Infestation(JavaPlugin j, InfestationConfiguration config) {
+	public Infestation(JavaPlugin j, InfestationConfiguration config, ZoneSubject zones) {
 		_plugin = j;
 		_server = j.getServer();
 		_players = new ArrayList<Player>();
@@ -50,6 +52,7 @@ public class Infestation implements ZoneObserver, Listener {
 		_quantity = config.SpawnerQuantity;
 		_monsters = config.SpawnerMonsters.split(",");
 		_config = config;
+		_zoneSubject = zones;
 	}
 	
 	private void createRandomSpawners() {
@@ -77,7 +80,7 @@ public class Infestation implements ZoneObserver, Listener {
 		_players.add(p);
 		if (_spawners.size() == 0) {
 			createRandomSpawners();
-		}
+		}			
 	}
 
 	@Override
@@ -86,8 +89,8 @@ public class Infestation implements ZoneObserver, Listener {
 		
 		if (_players.size() == 0) {
 			for (FixedSpawner s : _spawners) {
-				s.clearRemainingMonsters();
 				TimeServer.getInstance().removeListener(s);
+				s.clearRemainingMonsters();
 			}
 			_spawners.clear();
 		}

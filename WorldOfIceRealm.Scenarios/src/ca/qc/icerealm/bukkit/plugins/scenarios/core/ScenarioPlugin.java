@@ -15,12 +15,19 @@ import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.DefaultEventListener;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFury;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFuryConfiguration;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.RegularSpawnWave;
+import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneProber;
+import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneServer;
+import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
+import ca.qc.icerealm.bukkit.plugins.zone.ZoneProber;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
+import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
 
 public class ScenarioPlugin extends JavaPlugin {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private MonsterFury _hauntedOutpost = null;
 	private Infestation _ruinsPlateform = null;
+	private ZoneSubject _zoneServer;
+	private ScenarioZoneProber _prober;
 
 	@Override
 	public void onDisable() {
@@ -30,6 +37,12 @@ public class ScenarioPlugin extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		// enable zoneserver
+		//_zoneServer = new ScenarioZoneServer(getServer());
+		_zoneServer = ZoneServer.getInstance();
+		//_prober = new ScenarioZoneProber(_zoneServer);
+		//this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new ScenarioZoneProber(_zoneServer), 0L, 10L);
+		
 		getCommand("sc").setExecutor(new ScenarioCommander());
 		ScenarioService.getInstance().setPlugin(this);
 		
@@ -58,19 +71,19 @@ public class ScenarioPlugin extends JavaPlugin {
 			config.SpawnerRadiusActivation = 20;
 			config.DelayBeforeRespawn = 0;	
 
-			config.EnterZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.YELLOW + "You entering an infested zone. " + ChatColor.RED + "Watch your back!";
-			config.LeaveZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.YELLOW + "You are leaving the infested zone";
+			config.EnterZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.YELLOW + "You are entering an infested zone. " + ChatColor.RED + "Watch your back!";
+			config.LeaveZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.DARK_AQUA + "You are leaving the infested zone";
 			config.Server = getServer();
 			
-			_ruinsPlateform = new Infestation(this, config);
-			ZoneServer.getInstance().addListener(_ruinsPlateform);
+			_ruinsPlateform = new Infestation(this, config, _zoneServer);
+			_zoneServer.addListener(_ruinsPlateform);
 			getServer().getPluginManager().registerEvents(_ruinsPlateform, this);
 		}
 	}
 	
 	private void releaseRuinsPlateform() {
 		if (_ruinsPlateform != null) {
-			ZoneServer.getInstance().removeListener(_ruinsPlateform);
+			_zoneServer.removeListener(_ruinsPlateform);
 		}
 	}
 	
