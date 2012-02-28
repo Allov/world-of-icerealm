@@ -8,17 +8,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
-import ca.qc.icerealm.bukkit.plugins.scenarios.barbarian.BarbarianRaid;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.Infestation;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.InfestationConfiguration;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.DefaultEventListener;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFury;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFuryConfiguration;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.RegularSpawnWave;
-import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneProber;
-import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneServer;
-import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
-import ca.qc.icerealm.bukkit.plugins.zone.ZoneProber;
+
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
 
@@ -27,7 +23,7 @@ public class ScenarioPlugin extends JavaPlugin {
 	private MonsterFury _hauntedOutpost = null;
 	private Infestation _ruinsPlateform = null;
 	private ZoneSubject _zoneServer;
-	private ScenarioZoneProber _prober;
+	//private ScenarioZoneProber _prober;
 
 	@Override
 	public void onDisable() {

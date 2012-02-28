@@ -56,7 +56,7 @@ public class Infestation implements ZoneObserver, Listener {
 	}
 	
 	private void createRandomSpawners() {
-		for (int i = 0; i < _quantity; i++) {	
+		for (int i = 0; i < _quantity; i++) {		
 			Location l = _zone.getRandomLocation(_world);
 			FixedSpawner spawner = new FixedSpawner(l, _config, _players);
 			TimeServer.getInstance().addListener(spawner, _config.IntervalBetweenSpawn);
