@@ -1,6 +1,8 @@
 package ca.qc.icerealm.bukkit.plugins.scenarios.zone;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -27,8 +29,11 @@ public class SinglePlayerProber implements Runnable {
 	
 	@Override
 	public void run() {
-		this.logger.info("checkgin playuer: " + _player.getName());
-		for (ZoneObserver zone : _subject.getObservers()) {
+		//this.logger.info("checkgin playuer: " + _player.getName());
+		
+		Collection<ZoneObserver> observers = Collections.unmodifiableCollection(_subject.getObservers());
+		
+		for (ZoneObserver zone : observers) {
 			
 			if (zone.getWorldZone().isInside(_player.getLocation())) {
 

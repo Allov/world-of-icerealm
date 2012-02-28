@@ -1,6 +1,7 @@
 package ca.qc.icerealm.bukkit.plugins.scenarios.zone;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -16,22 +17,29 @@ public class ScenarioZoneServer implements ZoneSubject, Runnable {
 
 	public ScenarioZoneServer(Server s) {
 		_server = s;
-		_observers = new ArrayList<ZoneObserver>();
+		_observers = Collections.synchronizedList(new ArrayList<ZoneObserver>());
 	}
 	
 	@Override
 	public void addListener(ZoneObserver obs) {
 		if (obs != null) {
-			_observers.add(obs);
-			logger.info("add observer sc zone server");
+			synchronized (this) {
+				_observers.add(obs);
+				logger.info("add observer sc zone server");
+			}
+			
 		}
 	}
 
 	@Override
 	public void removeListener(ZoneObserver obs) {
 		if (obs != null && _observers.contains(obs)) {
-			_observers.remove(obs);
-			logger.info("remove observer sc zone server");
+			
+			synchronized (this) {
+				_observers.remove(obs);
+				logger.info("remove observer sc zone server");
+			}
+			
 		}
 	}
 
@@ -53,8 +61,12 @@ public class ScenarioZoneServer implements ZoneSubject, Runnable {
 	}
 
 	@Override
-	public List<ZoneObserver> getObservers() {
-		return _observers;
+	public synchronized List<ZoneObserver> getObservers() {
+		List<ZoneObserver> copy = new ArrayList<ZoneObserver>();
+		for (ZoneObserver o : _observers)  {
+			copy.add(o);
+		}
+		return copy;
 	}
 
 	@Override

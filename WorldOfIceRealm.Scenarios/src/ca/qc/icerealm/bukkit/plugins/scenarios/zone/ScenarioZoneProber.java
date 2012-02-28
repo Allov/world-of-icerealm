@@ -20,7 +20,6 @@ public class ScenarioZoneProber implements Runnable {
 	public ScenarioZoneProber(ZoneSubject subject) {
 		_subject = subject;
 		_zoneObservers = new HashMap<ZoneObserver, List<Player>>();
-
 	}
 	
 	public synchronized HashMap<ZoneObserver, List<Player>> getZoneObservers() {
@@ -34,7 +33,7 @@ public class ScenarioZoneProber implements Runnable {
 			Executors.newSingleThreadExecutor().execute(new SinglePlayerProber(player, _subject, this));
 		}
 		t.finish();
-		logger.info("prob: " + t.getResult() + " ms");
+		//logger.info("prob: " + t.getResult() + " ms");
 
 	}
 }
