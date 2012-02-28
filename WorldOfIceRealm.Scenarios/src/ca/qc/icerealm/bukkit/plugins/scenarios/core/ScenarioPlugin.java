@@ -72,7 +72,7 @@ public class ScenarioPlugin extends JavaPlugin {
 			config.Server = getServer();
 			
 			_ruinsPlateform = new Infestation(this, config, _zoneServer);
-			_zoneServer.addListener(_ruinsPlateform);
+			ZoneServer.getInstance().addListener(_ruinsPlateform);
 			getServer().getPluginManager().registerEvents(_ruinsPlateform, this);
 		}
 	}
