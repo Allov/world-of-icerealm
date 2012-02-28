@@ -23,7 +23,8 @@ public class TimeLoop implements Runnable {
 				
 				for (final TimeObserver ob : observers) {
 					_timeServer.removeListener(ob);
-					 Executors.defaultThreadFactory().newThread(new TimeExecutor(ob));
+					Executors.newSingleThreadExecutor().execute(new TimeExecutor(ob));
+					//ob.timeHasCome(System.currentTimeMillis());
 				}
 				
 				try {
