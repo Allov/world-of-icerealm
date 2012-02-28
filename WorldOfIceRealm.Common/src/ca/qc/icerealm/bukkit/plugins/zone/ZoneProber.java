@@ -10,11 +10,12 @@ public class ZoneProber implements Runnable {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private boolean _stop = false;
 	private HashMap<ZoneObserver, List<Player>> _zoneObservers;
+	private ZoneSubject _subject;
 	
 	public ZoneProber() {
 		_zoneObservers = new HashMap<ZoneObserver, List<Player>>();
 	}
-		
+			
 	@Override
 	public void run() {
 		
@@ -26,6 +27,10 @@ public class ZoneProber implements Runnable {
 					Player[] players = zone.getCurrentServer().getOnlinePlayers();
 					
 					for (Player p : players) {
+						
+						
+						
+						
 						if (zone.getWorldZone().isInside(p.getLocation())) {
 							
 							

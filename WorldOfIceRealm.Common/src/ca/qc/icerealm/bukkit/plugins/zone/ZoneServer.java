@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 import org.bukkit.Server;
 
 public class ZoneServer implements ZoneSubject {
-	public final Logger logger = Logger.getLogger(("Minecraft"));
+	public static final Logger logger = Logger.getLogger(("Minecraft"));
 	private List<ZoneObserver> _observers;
 	private Server _server;
 	private Thread _thread;
@@ -18,12 +18,13 @@ public class ZoneServer implements ZoneSubject {
 	protected ZoneServer() {
 		_observers = new ArrayList<ZoneObserver>();
 		_thread = new Thread(new ZoneProber());
-		_thread.start();		
+		_thread.start();
 	}
 	
 	public static ZoneServer getInstance() {
 		if (_instance ==  null) {
 			_instance = new ZoneServer();
+			logger.info("ZONE SERVER GETINSTANCE!!!!");
 		}
 		return _instance;
 	}
