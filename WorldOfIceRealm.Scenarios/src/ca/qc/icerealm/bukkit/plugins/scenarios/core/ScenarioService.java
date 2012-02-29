@@ -80,8 +80,8 @@ public class ScenarioService {
 	
 	public LivingEntity spawnCreature(World w, Location l, CreatureType t, boolean burn) {
 		LivingEntity creature = this.spawnCreature(w, l, t);
-		StrongerMonster m = new StrongerMonster(creature, creature.getMaxHealth(), burn);
-		_plugin.getServer().getPluginManager().registerEvents(m, _plugin);
+		//StrongerMonster m = new StrongerMonster(creature, creature.getMaxHealth(), burn);
+		//_plugin.getServer().getPluginManager().registerEvents(m, _plugin);
 		return creature;
 	}
 	
@@ -96,15 +96,15 @@ public class ScenarioService {
 	public LivingEntity spawnCreature(World w, Location l, CreatureType t, double modifier, boolean burn) {
 		LivingEntity creature = this.spawnCreature(w, l, t);
 		int maxHealth = creature.getMaxHealth() + (int)(modifier * creature.getMaxHealth());
-		StrongerMonster m = new StrongerMonster(creature, maxHealth, burn);
-		_plugin.getServer().getPluginManager().registerEvents(m, _plugin);
+		//StrongerMonster m = new StrongerMonster(creature, maxHealth, burn);
+		//_plugin.getServer().getPluginManager().registerEvents(m, _plugin);
 		return creature;
 	}
 	
 	public LivingEntity spawnCreature(World w, Location l, CreatureType t, int maxHealth, boolean burn) {
 		LivingEntity creature = this.spawnCreature(w, l, t);
-		StrongerMonster m = new StrongerMonster(creature, maxHealth, burn);
-		_plugin.getServer().getPluginManager().registerEvents(m, _plugin);
+		//StrongerMonster m = new StrongerMonster(creature, maxHealth, burn);
+		//_plugin.getServer().getPluginManager().registerEvents(m, _plugin);
 		return creature;
 	}
 	

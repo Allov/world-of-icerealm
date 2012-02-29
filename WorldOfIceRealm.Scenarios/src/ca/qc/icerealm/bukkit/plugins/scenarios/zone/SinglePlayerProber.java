@@ -66,7 +66,7 @@ public class SinglePlayerProber implements Runnable {
 				
 				for (Player p : listcopy) {
 					if (!zone.getWorldZone().isInside(p.getLocation())) {
-						Executors.newSingleThreadExecutor().execute((new PlayerLeftExecutor(zone, _player)));
+						Executors.newSingleThreadExecutor().execute((new PlayerLeftExecutor(zone, p)));
 						//zone.playerLeft(p);
 						this.logger.info("Must remove player from zone");
 						_prober.getZoneObservers().get(zone).remove(p);

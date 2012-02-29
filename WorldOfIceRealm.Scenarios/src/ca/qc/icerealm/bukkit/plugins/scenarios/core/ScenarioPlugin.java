@@ -2,6 +2,8 @@ package ca.qc.icerealm.bukkit.plugins.scenarios.core;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
@@ -14,6 +16,8 @@ import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.DefaultEventListener;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFury;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFuryConfiguration;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.RegularSpawnWave;
+import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneProber;
+import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneServer;
 
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
@@ -23,7 +27,7 @@ public class ScenarioPlugin extends JavaPlugin {
 	private MonsterFury _hauntedOutpost = null;
 	private Infestation _ruinsPlateform = null;
 	private ZoneSubject _zoneServer;
-	//private ScenarioZoneProber _prober;
+	private ScenarioZoneProber _prober;
 
 	@Override
 	public void onDisable() {
@@ -34,9 +38,10 @@ public class ScenarioPlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		// enable zoneserver
-		//_zoneServer = new ScenarioZoneServer(getServer());
-		_zoneServer = ZoneServer.getInstance();
-		//_prober = new ScenarioZoneProber(_zoneServer);
+		_zoneServer = new ScenarioZoneServer(getServer());
+		//_zoneServer = ZoneServer.getInstance();
+		_prober = new ScenarioZoneProber(_zoneServer);
+		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(_prober, 0, 20, TimeUnit.MILLISECONDS);
 		//this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new ScenarioZoneProber(_zoneServer), 0L, 10L);
 		
 		getCommand("sc").setExecutor(new ScenarioCommander());
@@ -50,7 +55,7 @@ public class ScenarioPlugin extends JavaPlugin {
 		// configuration de la plate forme
 		if (_ruinsPlateform == null) {
 			InfestationConfiguration config = new InfestationConfiguration();
-			config.InfestedZone = "25,-75,117,25,98,127";
+			config.InfestedZone = "26,-75,118,26,92,127";
 			config.BurnDuringDaylight = false;
 			config.RegenerateExplodedBlocks = true;
 			config.DelayBeforeRegeneration = 300;
@@ -72,7 +77,7 @@ public class ScenarioPlugin extends JavaPlugin {
 			config.Server = getServer();
 			
 			_ruinsPlateform = new Infestation(this, config, _zoneServer);
-			ZoneServer.getInstance().addListener(_ruinsPlateform);
+			_zoneServer.addListener(_ruinsPlateform);
 			getServer().getPluginManager().registerEvents(_ruinsPlateform, this);
 		}
 	}

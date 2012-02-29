@@ -28,12 +28,8 @@ public class ScenarioZoneProber implements Runnable {
 	
 	@Override
 	public void run() {
-		Timer t = new Timer(true);
 		for (Player player : _subject.getServer().getOnlinePlayers()) {
 			Executors.newSingleThreadExecutor().execute(new SinglePlayerProber(player, _subject, this));
 		}
-		t.finish();
-		//logger.info("prob: " + t.getResult() + " ms");
-
 	}
 }

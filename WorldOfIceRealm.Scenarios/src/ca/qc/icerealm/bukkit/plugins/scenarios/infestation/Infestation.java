@@ -16,7 +16,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -104,7 +106,6 @@ public class Infestation implements ZoneObserver, Listener {
 				_spawners.clear();
 				this.logger.info("resetting the spawner");
 			}
-			this.logger.info(_config.LeaveZoneMessage);
 			p.sendMessage(_config.LeaveZoneMessage);	
 		}
 		
@@ -143,5 +144,13 @@ public class Infestation implements ZoneObserver, Listener {
 			BlockRestore restore = new BlockRestore(_world, _blocks);
 			TimeServer.getInstance().addListener(restore, _config.DelayBeforeRegeneration);
 		}		
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onMonsterBurning(EntityDamageEvent e) {
+		if (_zone.isInside(e.getEntity().getLocation()) && e.getCause() == DamageCause.FIRE_TICK) {
+			e.setCancelled(true);
+			e.getEntity().setFireTicks(0);
+		}
 	}
 }
