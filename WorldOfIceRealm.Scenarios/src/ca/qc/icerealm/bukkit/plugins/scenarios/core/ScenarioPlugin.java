@@ -15,8 +15,8 @@ import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.InfestationConfigurat
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.DefaultEventListener;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFury;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFuryConfiguration;
-import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.RegularSpawnWave;
-import ca.qc.icerealm.bukkit.plugins.scenarios.tools.EntityWave;
+import ca.qc.icerealm.bukkit.plugins.scenarios.waves.EntityWave;
+import ca.qc.icerealm.bukkit.plugins.scenarios.waves.RegularSpawnWave;
 import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneProber;
 import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneServer;
 

@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury;
+package ca.qc.icerealm.bukkit.plugins.scenarios.waves;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -10,6 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
@@ -17,8 +18,9 @@ import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioEventsListener;
+import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFury;
 
-public class MonsterWave {
+public class BasicMonsterWave implements EntityWave {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private int _nbMonsters = 0;
 	private double _armorModifier = 0.0;
@@ -26,16 +28,18 @@ public class MonsterWave {
 	private MonsterFury _scenario;
 	private WorldZone _exclude;
 	private String[] possibleMonsters = new String[] { "zombie", "skeleton", "spider" };
+	private ScenarioEventsListener _eventsListener;
 	
-	public MonsterWave(int qty, double armorModifier, MonsterFury s, WorldZone greater, WorldZone exclude) {
+	public BasicMonsterWave(int qty, double armorModifier, MonsterFury s, WorldZone greater, WorldZone exclude, ScenarioEventsListener listener) {
 		_scenario = s;
 		_monstersTable = new HashSet<Entity>();
 		_nbMonsters = qty;
 		_armorModifier = armorModifier;
 		_exclude = exclude;
+		_eventsListener = listener;
 	}
 	
-	public int getMonstersSize() {
+	public int getNbOfEntities() {
 		return _monstersTable.size();
 	}
 	
@@ -46,28 +50,17 @@ public class MonsterWave {
 				Location loc = _scenario.getWorldZone().getRandomLocationOutsideThisZone(_scenario.getWorld(), _exclude);
 				CreatureType type = EntityUtilities.getCreatureType(possibleMonsters[RandomUtil.getRandomInt(possibleMonsters.length)]);			
 				LivingEntity living = _scenario.getWorld().spawnCreature(loc, type);
+				
+				if (living instanceof Monster) {
+					Monster m = (Monster)living;
+					m.setTarget(_scenario.pickRandomPlayer());
+				}
+				
 				// adding to the table
 				_monstersTable.add(living);
 			}
 		}
 		
-		
-	}
-	
-	public void processEntityDeath(Entity e, ScenarioEventsListener l) {
-		if (_scenario.isActive()) {
-			if (_monstersTable != null && _monstersTable.contains(e)) {
-				_monstersTable.remove(e);
-				
-				if (l != null) {
-					l.monsterDied(e, _monstersTable.size());
-				}
-				
-				if (_monstersTable.size() == 0) {
-					_scenario.waveIsDone();
-				}
-			}
-		}
 		
 	}
 	
@@ -84,7 +77,13 @@ public class MonsterWave {
 		
 	}
 	
-	public void removeMonsters() {
+	@Override
+	public void setSpawnLocation(List<Location> l) {
+		// les location sont généré lors de la creation des waves
+	}
+
+	
+	public void cancelWave() {
 		if (_monstersTable != null && _monstersTable.size() > 0) {
 			 for (Entity l : _monstersTable) {
 				 l.remove();
@@ -98,5 +97,39 @@ public class MonsterWave {
 			list.add(l);
 		}
 		return list;
+	}
+
+	@Override
+	public void processEntityDeath(Entity e) {
+		if (_scenario.isActive()) {
+			if (_monstersTable != null && _monstersTable.contains(e)) {
+				_monstersTable.remove(e);
+				
+				if (_eventsListener != null) {
+					_eventsListener.monsterDied(e, _monstersTable.size());
+				}
+				
+				if (_monstersTable.size() == 0) {
+					_scenario.waveIsDone();
+				}
+			}
+		}
+	}
+
+	@Override
+	public void setMonsters(String monsters) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getMaxNbOfEntities() {
+		// TODO Auto-generated method stub
+		return _nbMonsters;
+	}
+
+	@Override
+	public String[] getMonsters() {
+		return possibleMonsters;
 	}
 }

@@ -12,7 +12,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import ca.qc.icerealm.bukkit.plugins.scenarios.tools.EntityWave;
+import ca.qc.icerealm.bukkit.plugins.scenarios.waves.EntityWave;
 
 public class MonsterFuryListener implements Listener {
 

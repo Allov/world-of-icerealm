@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.scenarios.tools;
+package ca.qc.icerealm.bukkit.plugins.scenarios.waves;
 
 import java.util.List;
 

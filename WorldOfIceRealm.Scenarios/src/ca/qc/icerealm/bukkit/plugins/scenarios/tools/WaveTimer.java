@@ -2,6 +2,7 @@ package ca.qc.icerealm.bukkit.plugins.scenarios.tools;
 
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.Scenario;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioEventsListener;
+import ca.qc.icerealm.bukkit.plugins.scenarios.waves.EntityWave;
 import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
 
 
