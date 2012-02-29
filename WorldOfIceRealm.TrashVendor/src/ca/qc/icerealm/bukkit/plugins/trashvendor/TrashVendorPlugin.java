@@ -1,6 +1,7 @@
 package ca.qc.icerealm.bukkit.plugins.trashvendor;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.Economy;
@@ -9,6 +10,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
@@ -29,7 +33,7 @@ import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 
 
 
-public class TrashVendorPlugin extends JavaPlugin implements TimeObserver, Listener, ZoneObserver {
+public class TrashVendorPlugin extends JavaPlugin implements TimeObserver, Listener, ZoneObserver, CommandExecutor {
 
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private Location _location;
@@ -40,6 +44,26 @@ public class TrashVendorPlugin extends JavaPlugin implements TimeObserver, Liste
 	private String _vendorName = "SmokeySteve";
 	private RegisteredServiceProvider<Economy> economyProvider;
 	private HashMap<Material, Double> _tradeTable;
+	
+	@Override
+	public boolean onCommand(CommandSender sender, Command arg1, String arg2, String[] params) {
+		
+		if (sender.isOp()) {
+			if (params.length == 1 && params[0].contains("reset")) {
+				_villager.teleport(_location);
+				sender.sendMessage("vendor teleport to " + _location.getX() + "," + _location.getY() + "," + _location.getZ());
+			}
+			else {
+				sender.sendMessage("type /tv reset to teleport vendor to origin location");
+			}
+		}
+		else {
+			sender.sendMessage("You're not an OP!");
+			return false;
+		}
+		
+		return true;
+	}
 	
 	@Override
 	public void onDisable() {
@@ -62,9 +86,11 @@ public class TrashVendorPlugin extends JavaPlugin implements TimeObserver, Liste
 		_zone = new WorldZone(_location, 5);
 		//_zone = new WorldZone(getServer().getWorld("world"), "-167,140,-159,150,69,75");
 		_villager = (Villager)getServer().getWorld("world").spawnCreature(_location, EntityUtilities.getCreatureType("Villager"));
-		_lastPosition = _villager.getLocation(); 
-		timeHasCome(System.currentTimeMillis());
+		_location = _villager.getLocation(); 		
 		getServer().getPluginManager().registerEvents(this, this);
+		getCommand("tv").setExecutor(this);
+		
+		TimeServer.getInstance().addListener(this, 1000);
 		ZoneServer.getInstance().addListener(this);
 		
 		
@@ -95,16 +121,6 @@ public class TrashVendorPlugin extends JavaPlugin implements TimeObserver, Liste
 	
 	@Override
 	public void timeHasCome(long time) {
-		/*
-		if (!_zone.isInside(_villager.getLocation())) {
-			_villager.teleport(_location);	
-		}
-		*/
-		/*
-		else {
-			_lastPosition = _villager.getLocation();
-		}
-		*/
 		_villager.teleport(_location);	
 		TimeServer.getInstance().addListener(this, 100);
 		
