@@ -9,6 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.EntityWave;
@@ -52,6 +53,13 @@ public class MonsterFuryListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onDisconnectPlayer(PlayerQuitEvent quit) {
 		_scenario.removePlayerFromScenario(quit.getPlayer());
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onJoinedPlayer(PlayerJoinEvent join) {
+		if (_scenario.getWorldZone().isInside(join.getPlayer().getLocation())) {
+			_scenario.addPlayerToScenario(join.getPlayer());
+		}
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
