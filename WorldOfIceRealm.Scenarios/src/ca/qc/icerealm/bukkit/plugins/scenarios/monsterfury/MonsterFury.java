@@ -14,6 +14,8 @@ import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.Scenario;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioEventsListener;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.CoolDown;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.CoolDownTimer;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.EntityWave;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PlayerOutTimer;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.WaveTimer;
@@ -21,7 +23,7 @@ import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 
-public class MonsterFury implements ZoneObserver, Scenario {
+public class MonsterFury implements ZoneObserver, Scenario, CoolDown {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 
 	// objet de plus haut niveau
@@ -254,6 +256,7 @@ public class MonsterFury implements ZoneObserver, Scenario {
 		_isActive = false;
 	}
 
+	@Override
 	public boolean isCoolDownActive() {
 		return _coolDownActive;
 	}
@@ -262,6 +265,7 @@ public class MonsterFury implements ZoneObserver, Scenario {
 		return _isActive;
 	}
 	
+	@Override
 	public void setCoolDownActive(boolean active) {
 			
 		_coolDownActive = active;

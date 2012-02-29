@@ -1,20 +1,19 @@
-package ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury;
+package ca.qc.icerealm.bukkit.plugins.scenarios.tools;
 
 import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
 
 public class CoolDownTimer implements TimeObserver {
 
 	private long _alarm;
-	private MonsterFury _fury;
+	private CoolDown _down;
 	
-	public CoolDownTimer(MonsterFury fury) {
-		_fury = fury;
+	public CoolDownTimer(CoolDown f) {
+		_down = f;
 	}
 	
 	@Override
 	public void timeHasCome(long time) {
-		// TODO Auto-generated method stub
-		_fury.setCoolDownActive(false);
+		_down.setCoolDownActive(false);
 	}
 
 	@Override
