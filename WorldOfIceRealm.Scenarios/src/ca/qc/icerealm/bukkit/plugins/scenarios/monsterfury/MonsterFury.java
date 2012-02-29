@@ -23,6 +23,7 @@ import ca.qc.icerealm.bukkit.plugins.scenarios.waves.EntityWave;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
+import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
 
 public class MonsterFury implements ZoneObserver, Scenario, CoolDown {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
@@ -44,6 +45,7 @@ public class MonsterFury implements ZoneObserver, Scenario, CoolDown {
 	private CommandExecutor _commander;
 	private WaveTimer _waveTimer;
 	private List<PlayerOutTimer> _playerOutTimers;
+	private ZoneSubject _zoneServer;
 
 	// propriete modifiable de l'externe
 	private long _timeoutWhenLeaving;
@@ -128,6 +130,7 @@ public class MonsterFury implements ZoneObserver, Scenario, CoolDown {
 		_coolDownActive = false;
 		_nbWaveDone = 0;
 		_playerOutTimers = new ArrayList<PlayerOutTimer>();
+		_zoneServer = c.ZoneServer;
 		
 		// parametre modifiable
 		_coolDownTime = c.CoolDownTime;
@@ -146,10 +149,10 @@ public class MonsterFury implements ZoneObserver, Scenario, CoolDown {
 		// set la zone d'activation et enregistre le zone observer
 		_activationZoneObserver = new ActivationZoneObserver(_plugin.getServer(), this);
 		_activationZoneObserver.setWorldZone(_activationZone);
-		ZoneServer.getInstance().addListener(_activationZoneObserver);
+		_zoneServer.addListener(_activationZoneObserver);
 		
 		// on veut ajouter les joueurs dans le scenario
-		ZoneServer.getInstance().addListener(this);
+		_zoneServer.addListener(this);
 				
 		// set les listener bukkit
 		_listener = new MonsterFuryListener(this);
@@ -163,9 +166,9 @@ public class MonsterFury implements ZoneObserver, Scenario, CoolDown {
 	 * Appelle les methode remove des different observers.
 	 */
 	public void removeAllListener() {
-		ZoneServer.getInstance().removeListener(_activationZoneObserver);
+		_zoneServer.removeListener(_activationZoneObserver);
 		TimeServer.getInstance().removeListener(_coolDownTimer);
-		ZoneServer.getInstance().removeListener(this);
+		_zoneServer.removeListener(this);
 		TimeServer.getInstance().removeListener(_waveTimer);
 		for (PlayerOutTimer t : _playerOutTimers) {
 			TimeServer.getInstance().removeListener(t);

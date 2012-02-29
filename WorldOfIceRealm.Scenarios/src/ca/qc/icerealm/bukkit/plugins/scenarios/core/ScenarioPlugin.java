@@ -81,6 +81,10 @@ public class ScenarioPlugin extends JavaPlugin {
 			_zoneServer.addListener(_ruinsPlateform);
 			getServer().getPluginManager().registerEvents(_ruinsPlateform, this);
 		}
+		
+		if (_ruinsPlateform != null) {
+			logger.info("Ruins Plateform is created!");
+		}
 	}
 	
 	private void releaseRuinsPlateform() {
@@ -104,6 +108,7 @@ public class ScenarioPlugin extends JavaPlugin {
 			_defaultConfig.TimeBetweenWave = 10000;										// 10 sec
 			_defaultConfig.ActivationZoneCoords = "366,181,369,184,0,128";				// zone d'Activation
 			_defaultConfig.ScenarioZoneCoords = "347,168,386,201,0,128";				// zone du scenario
+			_defaultConfig.ZoneServer = _zoneServer;
 			
 			_hauntedOutpost = new MonsterFury(this, _defaultConfig, new DefaultEventListener(), null);
 			
@@ -121,6 +126,10 @@ public class ScenarioPlugin extends JavaPlugin {
 			
 			_hauntedOutpost.setEntityWaves(waves);
 			ScenarioService.getInstance().addScenario(_hauntedOutpost);	
+		}
+		
+		if (_hauntedOutpost != null) {
+			logger.info("Haunted Outpost is created!");
 		}
 	}
 	

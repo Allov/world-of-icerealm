@@ -90,7 +90,7 @@ public class DefaultEventListener implements ScenarioEventsListener {
 	
 	@Override
 	public void playerRewared(Player p, int exp) {
-		sendMessageToPlayers(ChatColor.GREEN + "Scenario reward: " + ChatColor.GRAY + "> " + ChatColor.YELLOW + String.valueOf(exp) + " level of XP!");
+		p.sendMessage(ChatColor.GREEN + "Scenario reward: " + ChatColor.GRAY + "> " + ChatColor.YELLOW + String.valueOf(exp) + " level of XP!");
 	}
 	
 	private void sendMessageToPlayers(String info) {
@@ -111,17 +111,13 @@ public class DefaultEventListener implements ScenarioEventsListener {
 
 	@Override
 	public void playerAdded(Player p, Scenario s) {
-		
-		StringBuffer buf = new StringBuffer();
-		buf.append(ChatColor.GREEN + "[" + s.getName() + "] " + ChatColor.LIGHT_PURPLE + " You are inside a scenario zone. ");
+		p.sendMessage(ChatColor.GREEN + "[" + s.getName() + "] " + ChatColor.LIGHT_PURPLE + " You are inside a scenario zone. ");
 		
 		if (s.isCooldownActive()) {
-			buf.append(ChatColor.RED + "Will be available in " + ChatColor.GOLD + s.timeBeforeActivationPossible() / 1000 + " sec");
+			p.sendMessage(ChatColor.RED + "Will be available in " + ChatColor.GOLD + s.timeBeforeActivationPossible() / 1000 + " sec");
 		}
 		else {
-			buf.append(ChatColor.GREEN + "Can be activated now");
+			p.sendMessage(ChatColor.GREEN + "Can be activated now");
 		}
-		
-		p.sendMessage(buf.toString());
 	}
 }
