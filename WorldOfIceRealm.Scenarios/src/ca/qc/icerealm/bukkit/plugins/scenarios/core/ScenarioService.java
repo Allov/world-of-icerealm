@@ -17,6 +17,7 @@ public class ScenarioService {
 	private List<Scenario> _registeredScenario;
 	private JavaPlugin _plugin;
 	
+	
 	private static ScenarioService _instance;
 	
 	protected ScenarioService() {
@@ -94,6 +95,7 @@ public class ScenarioService {
 	}
 	
 	public LivingEntity spawnCreature(World w, Location l, CreatureType t, double modifier, boolean burn) {
+		
 		LivingEntity creature = this.spawnCreature(w, l, t);
 		int maxHealth = creature.getMaxHealth() + (int)(modifier * creature.getMaxHealth());
 		//StrongerMonster m = new StrongerMonster(creature, maxHealth, burn);

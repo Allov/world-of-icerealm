@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.command.CommandExecutor;
@@ -13,11 +12,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
-import ca.qc.icerealm.bukkit.plugins.scenarios.core.EntityWave;
-import ca.qc.icerealm.bukkit.plugins.scenarios.core.PlayerOutTimer;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.Scenario;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioEventsListener;
-import ca.qc.icerealm.bukkit.plugins.scenarios.core.WaveTimer;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.EntityWave;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PlayerOutTimer;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.WaveTimer;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
@@ -165,6 +164,10 @@ public class MonsterFury implements ZoneObserver, Scenario {
 		TimeServer.getInstance().removeListener(_coolDownTimer);
 		ZoneServer.getInstance().removeListener(this);
 		TimeServer.getInstance().removeListener(_waveTimer);
+		for (PlayerOutTimer t : _playerOutTimers) {
+			TimeServer.getInstance().removeListener(t);
+		}
+		
 		
 		for (EntityWave w : _waves) {
 			w.cancelWave();

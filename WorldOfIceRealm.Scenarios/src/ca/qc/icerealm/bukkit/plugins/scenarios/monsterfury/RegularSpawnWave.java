@@ -14,8 +14,8 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
-import ca.qc.icerealm.bukkit.plugins.scenarios.core.EntityWave;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.Scenario;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.EntityWave;
 import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 

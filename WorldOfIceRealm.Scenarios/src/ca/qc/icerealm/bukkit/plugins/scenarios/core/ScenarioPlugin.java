@@ -16,6 +16,7 @@ import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.DefaultEventListener;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFury;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFuryConfiguration;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.RegularSpawnWave;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.EntityWave;
 import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneProber;
 import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneServer;
 
@@ -37,16 +38,16 @@ public class ScenarioPlugin extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		// enable zoneserver
+		// part le zone server pour les scenarios
 		_zoneServer = new ScenarioZoneServer(getServer());
-		//_zoneServer = ZoneServer.getInstance();
 		_prober = new ScenarioZoneProber(_zoneServer);
 		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(_prober, 0, 20, TimeUnit.MILLISECONDS);
-		//this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new ScenarioZoneProber(_zoneServer), 0L, 10L);
-		
+
+		// part le scenario commander
 		getCommand("sc").setExecutor(new ScenarioCommander());
 		ScenarioService.getInstance().setPlugin(this);
 		
+		// creation des different scenario
 		createHauntedOutpost();
 		createRuinsPlateform();
 	}
