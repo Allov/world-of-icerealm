@@ -25,7 +25,7 @@ public class ScenarioZoneServer implements ZoneSubject, Runnable {
 		if (obs != null) {
 			synchronized (this) {
 				_observers.add(obs);
-				logger.info("add observer sc zone server");
+				//logger.info("add observer sc zone server");
 			}
 			
 		}
@@ -37,7 +37,7 @@ public class ScenarioZoneServer implements ZoneSubject, Runnable {
 			
 			synchronized (this) {
 				_observers.remove(obs);
-				logger.info("remove observer sc zone server");
+				//logger.info("remove observer sc zone server");
 			}
 			
 		}

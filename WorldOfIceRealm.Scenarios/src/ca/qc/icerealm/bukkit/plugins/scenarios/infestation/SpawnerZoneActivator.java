@@ -43,7 +43,7 @@ public class SpawnerZoneActivator implements ZoneObserver {
 		}
 		
 		_countPlayer++;
-		this.logger.info(p.getName() + " enter spawner zone");
+		//this.logger.info(p.getName() + " enter spawner zone");
 	}
 
 	@Override
@@ -52,10 +52,10 @@ public class SpawnerZoneActivator implements ZoneObserver {
 		if (_countPlayer == 0) {
 			_spawner.setPlayerAround(false);
 			_spawner.resetLocation();
-			this.logger.info("resettting a spawner zone");
+			//this.logger.info("resettting a spawner zone");
 			
 		}
-		this.logger.info(p.getName() + " leaves a spawner zone");
+		//this.logger.info(p.getName() + " leaves a spawner zone");
 	}
 
 	@Override

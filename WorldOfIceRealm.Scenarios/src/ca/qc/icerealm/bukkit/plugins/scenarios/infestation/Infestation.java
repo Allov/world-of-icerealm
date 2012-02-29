@@ -87,7 +87,7 @@ public class Infestation implements ZoneObserver, Listener {
 		_players.add(p);
 		if (_spawners.size() == 0) {
 			createRandomSpawners();
-			this.logger.info("create random spawners");
+			//this.logger.info("create random spawners");
 		}			
 	}
 
@@ -103,8 +103,11 @@ public class Infestation implements ZoneObserver, Listener {
 					s.clearRemainingMonsters();
 				}
 				*/
+				for (Spawner s : _spawners) {
+					s.removeListener();
+				}
 				_spawners.clear();
-				this.logger.info("resetting the spawner");
+				//this.logger.info("resetting the spawner");
 			}
 			p.sendMessage(_config.LeaveZoneMessage);	
 		}
@@ -118,7 +121,7 @@ public class Infestation implements ZoneObserver, Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		this.logger.info("player joined");
+		//this.logger.info("player joined");
 		if (_zone.isInside(event.getPlayer().getLocation())) {
 			playerEntered(event.getPlayer());
 		}
@@ -126,7 +129,7 @@ public class Infestation implements ZoneObserver, Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDisconnect(PlayerQuitEvent event) {
-		this.logger.info("player disconnect");
+		//this.logger.info("player disconnect");
 		playerLeft(event.getPlayer());
 	}
 	

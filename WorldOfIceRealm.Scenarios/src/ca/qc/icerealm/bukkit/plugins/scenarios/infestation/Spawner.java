@@ -90,7 +90,7 @@ public class Spawner implements TimeObserver, Listener {
 				m.setTarget(_target);
 			}
 			_entities.add(l);
-			this.logger.info(creature.toString() + " at " + l.getLocation().getX() + "," + l.getLocation().getY() + "," + l.getLocation().getZ());
+			//this.logger.info(creature.toString() + " at " + l.getLocation().getX() + "," + l.getLocation().getY() + "," + l.getLocation().getZ());
 		}
 
 		
@@ -108,7 +108,14 @@ public class Spawner implements TimeObserver, Listener {
 		}
 	}
 	
+	public void removeListener() {
+		TimeServer.getInstance().removeListener(this);
+		_zoneServer.removeListener(_activator);
+	}
+	
 	public void resetLocation() {
+		
+		
 		
 		if (_config.DelayBeforeRespawn == 0) {
 			_entities.clear();

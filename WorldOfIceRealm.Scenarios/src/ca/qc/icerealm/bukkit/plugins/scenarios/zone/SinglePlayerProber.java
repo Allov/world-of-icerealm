@@ -40,7 +40,7 @@ public class SinglePlayerProber implements Runnable {
 				if (_prober.getZoneObservers().containsKey(zone) && _prober.getZoneObservers().get(zone) != null) {
 					
 					if (!_prober.getZoneObservers().get(zone).contains(_player)) {
-						this.logger.info("must add plauyer");
+						//this.logger.info("must add plauyer");
 						Executors.newSingleThreadExecutor().execute((new PlayerEnteredExecutor(zone, _player)));
 						//zone.playerEntered(_player);
 						_prober.getZoneObservers().get(zone).add(_player);
@@ -48,7 +48,7 @@ public class SinglePlayerProber implements Runnable {
 
 				}
 				else if (_prober.getZoneObservers().get(zone) == null) {
-					this.logger.info("the list of player need to be created!");
+					//this.logger.info("the list of player need to be created!");
 					Executors.newSingleThreadExecutor().execute((new PlayerEnteredExecutor(zone, _player)));
 					//zone.playerEntered(_player);
 					List<Player> list = new ArrayList<Player>();
@@ -68,9 +68,9 @@ public class SinglePlayerProber implements Runnable {
 					if (!zone.getWorldZone().isInside(p.getLocation())) {
 						Executors.newSingleThreadExecutor().execute((new PlayerLeftExecutor(zone, p)));
 						//zone.playerLeft(p);
-						this.logger.info("Must remove player from zone");
+						//this.logger.info("Must remove player from zone");
 						_prober.getZoneObservers().get(zone).remove(p);
-						this.logger.info("After remove player from zone");
+						//this.logger.info("After remove player from zone");
 					}
 				}
 			}
