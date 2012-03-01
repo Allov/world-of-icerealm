@@ -69,7 +69,7 @@ public class ScenarioPlugin extends JavaPlugin {
 			config.HealthModifier = 0.0;
 			config.IntervalBetweenSpawn = 1500;
 			config.SpawnerRadiusActivation = 20;
-			config.DelayBeforeRespawn = 0;
+			config.DelayBeforeRespawn = 30000;
 
 			config.EnterZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.YELLOW + "You are entering an infested zone. " + ChatColor.RED + "Watch your back!";
 			config.LeaveZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.DARK_AQUA + "You are leaving the infested zone";
