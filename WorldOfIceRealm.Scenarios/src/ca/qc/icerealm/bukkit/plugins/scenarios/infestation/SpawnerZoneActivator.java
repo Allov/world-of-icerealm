@@ -44,7 +44,7 @@ public class SpawnerZoneActivator implements ZoneObserver {
 		}
 		
 		_countPlayer++;
-		ScenarioPlugin.logger.fine(p.getName() + " enter spawner zone" + _spawner.getLocation());
+		ScenarioPlugin.logger.fine(p.getName() + " enter spawner zone" +  _spawner.getLocation().getX() + "," + _spawner.getLocation().getY() + _spawner.getLocation().getZ() + " cooldown:" + _spawner.isCoolDownActive());
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class SpawnerZoneActivator implements ZoneObserver {
 			_spawner.moveSpawnerToAnotherLocation();
 			
 		}
-		ScenarioPlugin.logger.fine(p.getName() + " leaves a spawner zone " + _spawner.getLocation());
+		ScenarioPlugin.logger.fine(p.getName() + " leaves a spawner zone " +  _spawner.getLocation().getX() + "," + _spawner.getLocation().getY() + _spawner.getLocation().getZ() + " cooldown:" + _spawner.isCoolDownActive());
 	}
 
 	@Override
