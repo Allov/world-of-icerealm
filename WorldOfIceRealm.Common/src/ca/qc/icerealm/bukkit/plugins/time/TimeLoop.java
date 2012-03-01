@@ -15,30 +15,26 @@ public class TimeLoop implements Runnable {
 	
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
-		while (!_stop) {
+
+		try {
+			List<TimeObserver> observers = _timeServer.getDueListener(System.currentTimeMillis());
+			
+			for (TimeObserver ob : observers) {
+				_timeServer.removeListener(ob);
+				Executors.newSingleThreadExecutor().execute(new TimeExecutor(ob));
+				//ob.timeHasCome(System.currentTimeMillis());
+			}
 			
 			try {
-				List<TimeObserver> observers = _timeServer.getDueListener(System.currentTimeMillis());
-				
-				for (final TimeObserver ob : observers) {
-					_timeServer.removeListener(ob);
-					Executors.newSingleThreadExecutor().execute(new TimeExecutor(ob));
-					//ob.timeHasCome(System.currentTimeMillis());
-				}
-				
-				try {
-					Thread.sleep(50);
-				}
-				catch (Exception ex) {
-					this.logger.info("Exception in TimeLoop: " + ex.toString());
-				}
+				Thread.sleep(50);
 			}
 			catch (Exception ex) {
-				this.logger.info(ex.getMessage());
+				this.logger.info("Exception in TimeLoop: " + ex.toString());
 			}
-			
 		}
-		
+		catch (Exception ex) {
+			ex.printStackTrace();
+			this.logger.throwing("TimeLoop", "run()", ex);
+		}
 	}
 }

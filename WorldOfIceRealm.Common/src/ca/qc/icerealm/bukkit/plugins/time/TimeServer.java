@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public class TimeServer implements TimeSubject {
@@ -11,16 +13,14 @@ public class TimeServer implements TimeSubject {
 	private static TimeServer _instance = null;
 	private List<TimeObserver> _observers;
 	private TimeLoop _loop;
-	private Thread _thread;
-	
 	
 	protected TimeServer() {
 		_observers = new ArrayList<TimeObserver>();
 		// creating the loop thread and starting it
 		_loop = new TimeLoop();
 		_loop.setTimeServer(this);
-		_thread = new Thread(_loop);
-		_thread.start();
+		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(_loop, 0, 50, TimeUnit.MILLISECONDS);
+
 	}
 	
 	public static TimeServer getInstance() {
@@ -58,8 +58,8 @@ public class TimeServer implements TimeSubject {
 	@Override
 	public List<TimeObserver> getDueListener(long timeStamp)  {
 		List<TimeObserver> list = new ArrayList<TimeObserver>();
-		for (TimeObserver t : _observers) {
-			if (t.getAlarm() < System.currentTimeMillis()) {
+		for (TimeObserver t : _observers) {			
+			if (t != null && t.getAlarm() < System.currentTimeMillis()) {
 				list.add(t);
 			}
 		}
