@@ -85,4 +85,9 @@ public class FixedSpawner implements TimeObserver, Spawner {
 		TimeServer.getInstance().removeListener(this);
 	}
 
+	@Override
+	public Location getLocation() {
+		return _spawningLocation;
+	}
+
 }

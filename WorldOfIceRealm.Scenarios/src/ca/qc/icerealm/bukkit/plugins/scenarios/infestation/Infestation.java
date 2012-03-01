@@ -88,7 +88,6 @@ public class Infestation implements ZoneObserver, Listener {
 		_players.add(p);
 		if (_spawners.size() == 0) {
 			createRandomSpawners();
-			ScenarioPlugin.logger.fine("create random spawners");
 		}			
 	}
 

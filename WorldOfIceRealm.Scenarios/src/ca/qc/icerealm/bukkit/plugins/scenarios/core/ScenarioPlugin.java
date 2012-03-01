@@ -76,13 +76,13 @@ public class ScenarioPlugin extends JavaPlugin {
 			config.UseInfestedZoneAsRadius = false;
 			config.ResetWhenNoPlayerAround = true;
 			config.SpawnerMonsters = "zombie,skeleton,spider";
-			config.SpawnerQuantity = 10;
+			config.SpawnerQuantity = 2;
 			config.ProbabilityToSpawn = 1;
 			config.MaxMonstersPerSpawn = 5;
 			
 			config.HealthModifier = 0.0;
 			config.IntervalBetweenSpawn = 1500;
-			config.SpawnerRadiusActivation = 20;
+			config.SpawnerRadiusActivation = 30;
 			config.DelayBeforeRespawn = 30000;
 
 			config.EnterZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.YELLOW + "You are entering an infested zone. " + ChatColor.RED + "Watch your back!";

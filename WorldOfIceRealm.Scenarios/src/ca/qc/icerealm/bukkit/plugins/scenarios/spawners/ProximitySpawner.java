@@ -166,6 +166,11 @@ public class ProximitySpawner implements TimeObserver, Listener, Spawner, CoolDo
 	public boolean isCoolDownActive() {
 		return _isCoolDownActive;
 	}
+
+	@Override
+	public Location getLocation() {
+		return _startingLocation;
+	}
 	
 
 }
