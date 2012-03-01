@@ -22,7 +22,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
-import ca.qc.icerealm.bukkit.plugins.scenarios.spawners.NormalSpawner;
+import ca.qc.icerealm.bukkit.plugins.scenarios.spawners.ProximitySpawner;
 import ca.qc.icerealm.bukkit.plugins.scenarios.spawners.Spawner;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.BlockContainer;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.BlockRestore;
@@ -61,7 +61,7 @@ public class Infestation implements ZoneObserver, Listener {
 		for (int i = 0; i < _quantity; i++) {		
 			Location l = _zone.getRandomLocation(_world);
 			
-			NormalSpawner spawner = new NormalSpawner(_zone, _config, _zoneSubject);
+			ProximitySpawner spawner = new ProximitySpawner(_zone, _config, _zoneSubject);
 			/*
 			FixedSpawner spawner = new FixedSpawner(l, _config, _players);
 			TimeServer.getInstance().addListener(spawner, _config.IntervalBetweenSpawn);

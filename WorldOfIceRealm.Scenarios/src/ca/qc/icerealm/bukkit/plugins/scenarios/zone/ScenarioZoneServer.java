@@ -40,6 +40,7 @@ public class ScenarioZoneServer implements ZoneSubject, Runnable {
 				//logger.info("remove observer sc zone server");
 			}
 			
+
 		}
 	}
 

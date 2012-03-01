@@ -5,19 +5,19 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
-import ca.qc.icerealm.bukkit.plugins.scenarios.spawners.NormalSpawner;
+import ca.qc.icerealm.bukkit.plugins.scenarios.spawners.ProximitySpawner;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 
 public class SpawnerZoneActivator implements ZoneObserver {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private WorldZone _zone;
 	private Server _server;
-	private NormalSpawner _spawner;
+	private ProximitySpawner _spawner;
 	private int _countPlayer = 0;
 	private InfestationConfiguration _config;
 	
 	
-	public SpawnerZoneActivator(WorldZone z, Server s, NormalSpawner spawn, InfestationConfiguration config) {
+	public SpawnerZoneActivator(WorldZone z, Server s, ProximitySpawner spawn, InfestationConfiguration config) {
 		_zone = z;
 		_server = s;
 		_spawner = spawn;
@@ -37,8 +37,7 @@ public class SpawnerZoneActivator implements ZoneObserver {
 	@Override
 	public void playerEntered(Player p) {
 		_spawner.setTarget(p);
-		if (_countPlayer == 0) {	
-			
+		if (_countPlayer == 0) {		
 			_spawner.setPlayerAround(true);
 			_spawner.timeHasCome(System.currentTimeMillis());
 		}
@@ -52,7 +51,7 @@ public class SpawnerZoneActivator implements ZoneObserver {
 		_countPlayer--;
 		if (_countPlayer == 0) {
 			_spawner.setPlayerAround(false);
-			_spawner.resetLocation();
+			_spawner.moveSpawnerToAnotherLocation();
 			//this.logger.info("resettting a spawner zone");
 			
 		}

@@ -19,8 +19,6 @@ import ca.qc.icerealm.bukkit.plugins.scenarios.waves.EntityWave;
 import ca.qc.icerealm.bukkit.plugins.scenarios.waves.RegularSpawnWave;
 import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneProber;
 import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneServer;
-
-import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
 
 public class ScenarioPlugin extends JavaPlugin {
@@ -71,7 +69,7 @@ public class ScenarioPlugin extends JavaPlugin {
 			config.HealthModifier = 0.0;
 			config.IntervalBetweenSpawn = 1500;
 			config.SpawnerRadiusActivation = 20;
-			config.DelayBeforeRespawn = 0;	
+			config.DelayBeforeRespawn = 0;
 
 			config.EnterZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.YELLOW + "You are entering an infested zone. " + ChatColor.RED + "Watch your back!";
 			config.LeaveZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.DARK_AQUA + "You are leaving the infested zone";
@@ -83,7 +81,7 @@ public class ScenarioPlugin extends JavaPlugin {
 		}
 		
 		if (_ruinsPlateform != null) {
-			logger.info("Ruins Plateform is created!");
+			logger.info("[Scenarios] Ruins Plateform is created!");
 		}
 	}
 	
@@ -129,7 +127,7 @@ public class ScenarioPlugin extends JavaPlugin {
 		}
 		
 		if (_hauntedOutpost != null) {
-			logger.info("Haunted Outpost is created!");
+			logger.info("[Scenarios] Haunted Outpost is created!");
 		}
 	}
 	

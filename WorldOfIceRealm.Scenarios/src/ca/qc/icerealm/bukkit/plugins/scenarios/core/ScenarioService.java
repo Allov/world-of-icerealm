@@ -110,4 +110,8 @@ public class ScenarioService {
 		return creature;
 	}
 	
+	public void logInfo(String m) {
+		this.logger.info(m);
+	}
+	
 }
