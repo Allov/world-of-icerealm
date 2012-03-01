@@ -1,9 +1,13 @@
 package ca.qc.icerealm.bukkit.plugins.scenarios.core;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
@@ -22,7 +26,7 @@ import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneServer;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
 
 public class ScenarioPlugin extends JavaPlugin {
-	public final Logger logger = Logger.getLogger(("Minecraft"));
+	public final static Logger logger = Logger.getLogger(("Scenario"));
 	private MonsterFury _hauntedOutpost = null;
 	private Infestation _ruinsPlateform = null;
 	private ZoneSubject _zoneServer;
@@ -36,6 +40,16 @@ public class ScenarioPlugin extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		// init le logger pour mettre ca dans un fichier
+		try {
+			logger.setLevel(Level.FINE);
+			logger.addHandler(new FileHandler("scenarios.log"));
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		
 		// part le zone server pour les scenarios
 		_zoneServer = new ScenarioZoneServer(getServer());
 		_prober = new ScenarioZoneProber(_zoneServer);
@@ -54,7 +68,7 @@ public class ScenarioPlugin extends JavaPlugin {
 		// configuration de la plate forme
 		if (_ruinsPlateform == null) {
 			InfestationConfiguration config = new InfestationConfiguration();
-			config.InfestedZone = "26,-75,118,26,92,127";
+			config.InfestedZone = "26,-75,118,26,0,128";
 			config.BurnDuringDaylight = false;
 			config.RegenerateExplodedBlocks = true;
 			config.DelayBeforeRegeneration = 300;

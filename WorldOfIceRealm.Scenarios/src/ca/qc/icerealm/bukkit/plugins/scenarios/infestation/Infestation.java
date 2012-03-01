@@ -22,6 +22,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
+import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioPlugin;
 import ca.qc.icerealm.bukkit.plugins.scenarios.spawners.ProximitySpawner;
 import ca.qc.icerealm.bukkit.plugins.scenarios.spawners.Spawner;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.BlockContainer;
@@ -87,7 +88,7 @@ public class Infestation implements ZoneObserver, Listener {
 		_players.add(p);
 		if (_spawners.size() == 0) {
 			createRandomSpawners();
-			//this.logger.info("create random spawners");
+			ScenarioPlugin.logger.fine("create random spawners");
 		}			
 	}
 
@@ -101,7 +102,7 @@ public class Infestation implements ZoneObserver, Listener {
 					s.removeListener();
 				}
 				_spawners.clear();
-				//this.logger.info("resetting the spawner");
+				ScenarioPlugin.logger.fine("clearing the spawners");
 			}
 			p.sendMessage(_config.LeaveZoneMessage);	
 		}
@@ -115,7 +116,7 @@ public class Infestation implements ZoneObserver, Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		//this.logger.info("player joined");
+		
 		if (_zone.isInside(event.getPlayer().getLocation())) {
 			playerEntered(event.getPlayer());
 		}
@@ -123,7 +124,7 @@ public class Infestation implements ZoneObserver, Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDisconnect(PlayerQuitEvent event) {
-		//this.logger.info("player disconnect");
+		
 		playerLeft(event.getPlayer());
 	}
 	
@@ -145,7 +146,7 @@ public class Infestation implements ZoneObserver, Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onMonsterBurning(EntityDamageEvent e) {
-		if (_zone.isInside(e.getEntity().getLocation()) && e.getCause() == DamageCause.FIRE_TICK) {
+		if (!_config.BurnDuringDaylight && _zone.isInside(e.getEntity().getLocation()) && e.getCause() == DamageCause.FIRE_TICK) {
 			e.setCancelled(true);
 			e.getEntity().setFireTicks(0);
 		}

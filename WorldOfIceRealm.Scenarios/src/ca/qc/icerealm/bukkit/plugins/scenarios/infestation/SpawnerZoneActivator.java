@@ -5,6 +5,7 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
+import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioPlugin;
 import ca.qc.icerealm.bukkit.plugins.scenarios.spawners.ProximitySpawner;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 
@@ -43,7 +44,7 @@ public class SpawnerZoneActivator implements ZoneObserver {
 		}
 		
 		_countPlayer++;
-		//this.logger.info(p.getName() + " enter spawner zone");
+		ScenarioPlugin.logger.fine(p.getName() + " enter spawner zone");
 	}
 
 	@Override
@@ -52,10 +53,9 @@ public class SpawnerZoneActivator implements ZoneObserver {
 		if (_countPlayer == 0) {
 			_spawner.setPlayerAround(false);
 			_spawner.moveSpawnerToAnotherLocation();
-			//this.logger.info("resettting a spawner zone");
 			
 		}
-		//this.logger.info(p.getName() + " leaves a spawner zone");
+		ScenarioPlugin.logger.fine(p.getName() + " leaves a spawner zone");
 	}
 
 	@Override
