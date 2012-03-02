@@ -6,9 +6,12 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.FileHandler;
+import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -19,6 +22,7 @@ import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.InfestationConfigurat
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.DefaultEventListener;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFury;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFuryConfiguration;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.LoggerFormater;
 import ca.qc.icerealm.bukkit.plugins.scenarios.waves.EntityWave;
 import ca.qc.icerealm.bukkit.plugins.scenarios.waves.RegularSpawnWave;
 import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneProber;
@@ -31,6 +35,8 @@ public class ScenarioPlugin extends JavaPlugin {
 	private Infestation _ruinsPlateform = null;
 	private ZoneSubject _zoneServer;
 	private ScenarioZoneProber _prober;
+	private FileHandler _logFile; 
+	private Formatter _logFormat;
 
 	@Override
 	public void onDisable() {
@@ -43,7 +49,10 @@ public class ScenarioPlugin extends JavaPlugin {
 		// init le logger pour mettre ca dans un fichier
 		try {
 			logger.setLevel(Level.FINE);
-			logger.addHandler(new FileHandler("scenarios.log"));
+			_logFile = new FileHandler("sc_logs/scenarios.log", true);
+			_logFormat = new LoggerFormater();
+			_logFile.setFormatter(_logFormat);
+			logger.addHandler(_logFile);
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
