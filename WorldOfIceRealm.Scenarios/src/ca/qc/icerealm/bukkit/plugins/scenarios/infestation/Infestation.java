@@ -59,8 +59,9 @@ public class Infestation implements ZoneObserver, Listener {
 	}
 	
 	private void createRandomSpawners() {
+		ScenarioPlugin.logger.fine("creating " + _quantity + " spawners!");
 		for (int i = 0; i < _quantity; i++) {		
-			Location l = _zone.getRandomLocation(_world);
+			//Location l = _zone.getRandomLocation(_world);
 			
 			ProximitySpawner spawner = new ProximitySpawner(_zone, _config, _zoneSubject);
 			/*
@@ -88,7 +89,8 @@ public class Infestation implements ZoneObserver, Listener {
 		_players.add(p);
 		if (_spawners.size() == 0) {
 			createRandomSpawners();
-		}			
+		}
+		ScenarioPlugin.logger.fine(p.getName() + " is entering the infestion");
 	}
 
 	@Override
@@ -105,6 +107,8 @@ public class Infestation implements ZoneObserver, Listener {
 			}
 			p.sendMessage(_config.LeaveZoneMessage);	
 		}
+		
+		ScenarioPlugin.logger.fine(p.getName() + " is leaving the infestion");
 		
 	}
 

@@ -10,7 +10,6 @@ import ca.qc.icerealm.bukkit.plugins.scenarios.spawners.ProximitySpawner;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 
 public class SpawnerZoneActivator implements ZoneObserver {
-	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private WorldZone _zone;
 	private Server _server;
 	private ProximitySpawner _spawner;
@@ -37,6 +36,7 @@ public class SpawnerZoneActivator implements ZoneObserver {
 
 	@Override
 	public void playerEntered(Player p) {
+		ScenarioPlugin.logger.fine(p.getName() + " enter spawner zone " +  _spawner.getLocation().getX() + "," + _spawner.getLocation().getY() + _spawner.getLocation().getZ() + " cooldown: " + _spawner.isCoolDownActive());
 		_spawner.setTarget(p);
 		if (_countPlayer == 0) {		
 			_spawner.setPlayerAround(true);
@@ -44,7 +44,7 @@ public class SpawnerZoneActivator implements ZoneObserver {
 		}
 		
 		_countPlayer++;
-		ScenarioPlugin.logger.fine(p.getName() + " enter spawner zone" +  _spawner.getLocation().getX() + "," + _spawner.getLocation().getY() + _spawner.getLocation().getZ() + " cooldown:" + _spawner.isCoolDownActive());
+		
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class SpawnerZoneActivator implements ZoneObserver {
 			_spawner.moveSpawnerToAnotherLocation();
 			
 		}
-		ScenarioPlugin.logger.fine(p.getName() + " leaves a spawner zone " +  _spawner.getLocation().getX() + "," + _spawner.getLocation().getY() + _spawner.getLocation().getZ() + " cooldown:" + _spawner.isCoolDownActive());
+		ScenarioPlugin.logger.fine(p.getName() + " leaves a spawner zone " +  _spawner.getLocation().getX() + "," + _spawner.getLocation().getY() + _spawner.getLocation().getZ() + " cooldown: " + _spawner.isCoolDownActive());
 	}
 
 	@Override
