@@ -36,13 +36,15 @@ public class SpawnerZoneActivator implements ZoneObserver {
 
 	@Override
 	public void playerEntered(Player p) {
-		ScenarioPlugin.logger.fine(p.getName() + " enter spawner zone " +  _spawner.getLocation().getX() + "," + _spawner.getLocation().getY() + _spawner.getLocation().getZ() + " cooldown: " + _spawner.isCoolDownActive());
+		ScenarioPlugin.logger.fine(p.getName() + " enter spawner zone " +  _spawner.getLocation().getX() + "," + _spawner.getLocation().getY() + _spawner.getLocation().getZ() + " cooldown: " + _spawner.isCoolDownActive() + " count: " + _countPlayer);
 		_spawner.setTarget(p);
+		_spawner.timeHasCome(System.currentTimeMillis());
+		/*
 		if (_countPlayer == 0) {		
 			_spawner.setPlayerAround(true);
 			_spawner.timeHasCome(System.currentTimeMillis());
 		}
-		
+		*/
 		_countPlayer++;
 		
 	}
@@ -50,12 +52,15 @@ public class SpawnerZoneActivator implements ZoneObserver {
 	@Override
 	public void playerLeft(Player p) {
 		_countPlayer--;
+		//_spawner.moveSpawnerToAnotherLocation();
+		/*
 		if (_countPlayer == 0) {
 			_spawner.setPlayerAround(false);
 			_spawner.moveSpawnerToAnotherLocation();
 			
 		}
-		ScenarioPlugin.logger.fine(p.getName() + " leaves a spawner zone " +  _spawner.getLocation().getX() + "," + _spawner.getLocation().getY() + _spawner.getLocation().getZ() + " cooldown: " + _spawner.isCoolDownActive());
+		*/
+		ScenarioPlugin.logger.fine(p.getName() + " leaves a spawner zone " +  _spawner.getLocation().getX() + "," + _spawner.getLocation().getY() + _spawner.getLocation().getZ() + " cooldown: " + _spawner.isCoolDownActive() + " count: " + _countPlayer);
 	}
 
 	@Override
