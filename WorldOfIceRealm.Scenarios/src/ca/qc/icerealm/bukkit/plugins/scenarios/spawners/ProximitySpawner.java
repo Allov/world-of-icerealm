@@ -90,7 +90,7 @@ public class ProximitySpawner implements TimeObserver, Listener, Spawner, CoolDo
 	public void timeHasCome(long time) {
 		boolean draw = RandomUtil.getDrawResult(_prob);	
 		
-		if (draw && !_isCoolDownActive && _entities.size() < _maxMonster && _isPlayerAround) {
+		if (draw && !_isCoolDownActive && _entities.size() < _maxMonster) {
 			Location random = _zoneActivator.getRandomLocation(_zoneActivator.getWorld());
 			random.setY(random.getY() + 2);
 			CreatureType creature = EntityUtilities.getCreatureType(_monstersToSpawn[RandomUtil.getRandomInt(_monstersToSpawn.length)]);
@@ -133,7 +133,6 @@ public class ProximitySpawner implements TimeObserver, Listener, Spawner, CoolDo
 	
 	public void moveSpawnerToAnotherLocation() {
 		if (_config.DelayBeforeRespawn == 0) {
-			
 			_entities.clear();
 			TimeServer.getInstance().removeListener(this);
 			_zoneServer.removeListener(_activator);
