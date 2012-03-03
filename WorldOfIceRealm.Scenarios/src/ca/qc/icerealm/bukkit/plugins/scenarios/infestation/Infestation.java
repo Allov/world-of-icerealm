@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -108,18 +109,52 @@ public class Infestation implements ZoneObserver, Listener {
 			_players.remove(p);
 
 			ScenarioPlugin.logger.fine("playuer removed ");
-			if (_players.size() == 0) {
-				for (Spawner s : _spawners) {
-					s.removeListener();
-				}
-				_spawners.clear();
-				ScenarioPlugin.logger.fine("clearing the spawners");
-			}
+			resetSpawners();
 			p.sendMessage(_config.LeaveZoneMessage);	
 		}
 		
 		ScenarioPlugin.logger.fine(p.getName() + " is leaving the infestion");
 		
+	}
+	
+	public boolean isActive() {
+		return _spawners.size() > 0;
+	}
+	
+	public void stopInfestation() {
+		resetSpawners();
+	}
+	
+	public void startInfestation() {
+		if (_players.size() > 0) {
+			createRandomSpawners();
+		}
+	}
+	
+	public void resetInfestation() {
+		resetInfestation(_config);		
+	}
+	
+	public void resetInfestation(InfestationConfiguration config) {
+		
+		_config = config;
+		
+		for (Player p : _players) {
+			p.sendMessage(ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.LIGHT_PURPLE + "This zone is resetting");
+		}
+		resetSpawners();
+		if (_players.size() > 0) {
+			createRandomSpawners();
+		}
+	}
+	
+	private void resetSpawners() {
+
+		for (Spawner s : _spawners) {
+			s.removeListener();
+		}
+		_spawners.clear();
+		ScenarioPlugin.logger.fine("clearing the spawners");
 	}
 
 	@Override

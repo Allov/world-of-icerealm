@@ -127,6 +127,7 @@ public class ProximitySpawner implements TimeObserver, Listener, Spawner, CoolDo
 		}
 		_entities.clear();
 		TimeServer.getInstance().removeListener(this);
+		TimeServer.getInstance().removeListener(_coolDownTimer);
 		_zoneServer.removeListener(_activator);
 	}
 	
