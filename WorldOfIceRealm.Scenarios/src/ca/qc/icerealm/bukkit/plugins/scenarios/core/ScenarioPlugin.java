@@ -114,7 +114,6 @@ public class ScenarioPlugin extends JavaPlugin {
 			_zoneServer.addListener(_castleSiege);
 			getServer().getPluginManager().registerEvents(_castleSiege, this);
 			getCommand("cs").setExecutor(new InfestationCommander(_castleSiege, "cs"));
-			
 		
 		}
 		

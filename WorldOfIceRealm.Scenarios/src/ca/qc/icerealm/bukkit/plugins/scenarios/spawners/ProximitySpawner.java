@@ -92,13 +92,13 @@ public class ProximitySpawner implements TimeObserver, Listener, Spawner, CoolDo
 			Location random = _zoneActivator.getRandomLocation(_zoneActivator.getWorld());
 			random.setY(random.getY() + 2);
 			CreatureType creature = EntityUtilities.getCreatureType(_monstersToSpawn[RandomUtil.getRandomInt(_monstersToSpawn.length)]);
-			LivingEntity l = ScenarioService.getInstance().spawnCreature(_zone.getWorld(), random, creature, _healthModifier, _burn);
+			LivingEntity l = ScenarioService.getInstance().spawnCreature(_zone.getWorld(), random, creature, _healthModifier);
 			if (l instanceof Monster) {
 				Monster m = (Monster)l;
 				m.setTarget(_target);
 			}
 			_entities.add(l);
-			ScenarioPlugin.logger.fine(creature.toString() + " from spawner " +_startingLocation.getX() + "," + _startingLocation.getY() + "," + _startingLocation.getZ());
+			ScenarioPlugin.logger.fine(creature.toString() + " - " + l.getEntityId()  + " from spawner " +_startingLocation.getX() + "," + _startingLocation.getY() + "," + _startingLocation.getZ());
 		}
 
 		

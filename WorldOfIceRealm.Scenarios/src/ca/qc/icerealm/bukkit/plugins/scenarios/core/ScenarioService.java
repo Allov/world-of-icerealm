@@ -11,17 +11,21 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.CustomMonsterListener;
+
 public class ScenarioService {
 
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private List<Scenario> _registeredScenario;
 	private JavaPlugin _plugin;
+	private CustomMonsterListener _customMonster;
 	
 	
 	private static ScenarioService _instance;
 	
 	protected ScenarioService() {
 		_registeredScenario = new ArrayList<Scenario>();
+
 	}
 
 	public static ScenarioService getInstance() {
@@ -49,6 +53,8 @@ public class ScenarioService {
 	
 	public void setPlugin(JavaPlugin j) {
 		_plugin = j;
+		_customMonster = new CustomMonsterListener();
+		j.getServer().getPluginManager().registerEvents(_customMonster, _plugin);
 	}
 	
 	public List<Scenario> getScenarios() {
@@ -79,13 +85,6 @@ public class ScenarioService {
 		return w.spawnCreature(l, t);
 	}
 	
-	public LivingEntity spawnCreature(World w, Location l, CreatureType t, boolean burn) {
-		LivingEntity creature = this.spawnCreature(w, l, t);
-		//StrongerMonster m = new StrongerMonster(creature, creature.getMaxHealth(), burn);
-		//_plugin.getServer().getPluginManager().registerEvents(m, _plugin);
-		return creature;
-	}
-	
 	public LivingEntity spawnCreature(World w, Location l, CreatureType t, int maxHealth) {
 		return spawnCreature(w, l, t, maxHealth, true);
 	}
@@ -98,15 +97,18 @@ public class ScenarioService {
 		
 		LivingEntity creature = this.spawnCreature(w, l, t);
 		int maxHealth = creature.getMaxHealth() + (int)(modifier * creature.getMaxHealth());
-		//StrongerMonster m = new StrongerMonster(creature, maxHealth, burn);
-		//_plugin.getServer().getPluginManager().registerEvents(m, _plugin);
+		if (_customMonster != null && maxHealth != creature.getMaxHealth()) {
+			_customMonster.addMonster(creature.getEntityId(), maxHealth);
+		}
 		return creature;
 	}
 	
 	public LivingEntity spawnCreature(World w, Location l, CreatureType t, int maxHealth, boolean burn) {
 		LivingEntity creature = this.spawnCreature(w, l, t);
-		//StrongerMonster m = new StrongerMonster(creature, maxHealth, burn);
-		//_plugin.getServer().getPluginManager().registerEvents(m, _plugin);
+		
+		if (_customMonster != null && maxHealth != creature.getMaxHealth()) {
+			_customMonster.addMonster(creature.getEntityId(), maxHealth);
+		}
 		return creature;
 	}
 	
