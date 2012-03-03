@@ -1,6 +1,10 @@
 package ca.qc.icerealm.bukkit.plugins.raremobs;
 
+import java.util.Collections;
 import java.util.logging.Logger;
+
+import ca.qc.icerealm.bukkit.plugins.raremobs.data.RareMob;
+import ca.qc.icerealm.bukkit.plugins.raremobs.data.RareMobsData;
 
 public class RareMobsRandomizer 
 {
@@ -15,16 +19,17 @@ public class RareMobsRandomizer
 	public RareMob randomizeSpawn()
 	{
 		double random = (Math.random() * 100);
-		logger.info(random + "");
+
+		// Randomize the list so every rare mob have equal chances to spawn
+		Collections.shuffle(rareMobsData.getRareMobs());
 		
-		logger.info(random <= 75.00 ? "true":"false");
-		
-		if (random <= 75.00) 
+		// Randomize odds
+		for (RareMob mob : rareMobsData.getRareMobs())
 		{
-			logger.info(rareMobsData == null ? "true":"false");
-			logger.info(rareMobsData.getRareMobs().size() + "");
-			RareMob mob = rareMobsData.getRareMobs().get(0);
-			return mob;
+			if (random <= mob.getSpawnOdds()) 
+			{
+				return mob;
+			}
 		}
 		
 		// No rare mob this time

@@ -1,0 +1,97 @@
+# Enchantments odds presets (level 1, level 2, level 3, level 4, level 5):
+#    low odds = 15.00, 10.00, 5.00
+#    average odds = 25.00, 12.00, 5.00
+#    high odds = 25.00, 18.00, 8.00, 4.00
+#    boss high odds = 18.00, 18.00, 25.00, 12.00, 3.00
+#    sure low odds = 100.00, 50.00, 12.00
+#    sure average odds = 100.00, 50.00, 25.00, 12.00, 3.00
+#    sure high odds = 50.00, 100.00, 50.00, 30.00, 15.00
+#
+# Custom enchantments odds can be used as well (level 1, level 2, etc.)
+
+raremobs:
+    -   type: ZOMBIE
+        name: Mall Roaming Kevin Eubanks
+        health: 120
+        strength multiplier: 2
+        experience: 75
+        odds: 50.00
+        drops:
+            -   name: IRON_BOOTS
+                odds: 25.00
+                enchantments: high odds 
+            -   name: IRON_CHESTPLATE
+                odds: 25.00
+                enchantments: high odds 
+            -   name: IRON_HELMET
+                odds: 25.00
+                enchantments: high odds 
+            -   name: IRON_LEGGINGS
+                odds: 25.00
+                enchantments: high odds    
+            -   name: IRON_AXE               # custom rare weapon
+                custom name: iron battle axe
+                odds: 15.00
+                enchantments: sure high odds
+                enchantments as: IRON_SWORD
+            -   name: DIAMOND_AXE               # custom rare weapon
+                custom name: diamond battle axe
+                odds: 10.00
+                enchantments: sure average odds
+                enchantments as: IRON_SWORD
+            -   name: DIAMOND_SWORD
+                odds: 10.00
+                enchantments: average odds   
+            -   name: GOLDEN_APPLE
+                odds: 75.00
+            -   name: DIAMOND
+                odds: 3.00
+        subordinates:
+            -   type: SKELETON
+            -   type: SKELETON
+            -   type: SKELETON
+            -   type: SKELETON
+    -   type: SKELETON
+        name: Bad to the bones
+        health: 120
+        strength multiplier: 2
+        experience: 75
+        odds: 50.00
+        drops: 
+            -   name: DIAMOND_PICKAXE
+                odds: 15.00
+                enchantments: average odds
+            -   name: DIAMOND_SPADE
+                odds: 15.00
+                enchantments: average odds
+            -   name: DIAMOND_HOE
+                odds: 15.00
+            -   name: DIAMOND_SWORD
+                odds: 15.00
+                enchantments: average odds     
+            -   name: DIAMOND_AXE
+                odds: 15.00
+                enchantments: average odds        
+            -   name: DIAMOND_AXE            # custom rare weapon
+                custom name: diamond battle axe
+                odds: 10.00
+                enchantments: sure high odds
+                enchantments as: DIAMOND_SWORD
+            -   name: SHEARS                 # custom rare weapon
+                custom name: scissors
+                odds: 15.00
+                enchantments: sure high odds
+                enchantments as: IRON_SWORD
+            -   name: BOW
+                odds: 50.00
+                enchantments: high odds    
+            -   name: GOLDEN_APPLE
+                odds: 75.00
+            -   name: DIAMOND_SWORD
+                odds: 15.00
+                enchantments: average odds       
+        subordinates:
+            - type:   ZOMBIE
+            - type:   ZOMBIE
+            - type:   ZOMBIE
+            - type:   ZOMBIE

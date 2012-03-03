@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.raremobs;
+package ca.qc.icerealm.bukkit.plugins.raremobs.data;
 
 import org.bukkit.entity.CreatureType;
 

@@ -1,7 +1,8 @@
-package ca.qc.icerealm.bukkit.plugins.raremobs;
+package ca.qc.icerealm.bukkit.plugins.raremobs.data;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class RareMobsData 
 {

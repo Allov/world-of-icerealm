@@ -4,12 +4,26 @@ import java.util.logging.Logger;
 
 import org.bukkit.Server;
 
+import ca.qc.icerealm.bukkit.plugins.common.ConfigWrapper;
+import ca.qc.icerealm.bukkit.plugins.raremobs.data.RareMob;
 import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 
 public class RareMobsTimeObserver implements TimeObserver
 {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
+	
+	private ConfigWrapper configWrapper = null;
+	
+	public ConfigWrapper getConfigWrapper() 
+	{
+		return configWrapper;
+	}
+
+	public void setConfigWrapper(ConfigWrapper configWrapper) 
+	{
+		this.configWrapper = configWrapper;
+	}
 	
 	private RareMob spawnedRareMob = null;
 	//private long spawnedTimeRareMob = 0;
@@ -27,11 +41,10 @@ public class RareMobsTimeObserver implements TimeObserver
 	@Override
 	public void timeHasCome(long time) 
 	{
-		logger.info("time has come");
 		if (bukkitServer.getOnlinePlayers().length > 0)
 		{
 			spawnedRareMob = randomizer.randomizeSpawn();
-			logger.info("randomized");
+
 			if (spawnedRareMob != null)
 			{
 				RareMobSpawner spawner = new RareMobSpawner(bukkitServer, spawnedRareMob);
@@ -40,7 +53,7 @@ public class RareMobsTimeObserver implements TimeObserver
 			}
 		}
 
-		TimeServer.getInstance().addListener(this, 10000);
+		TimeServer.getInstance().addListener(this, RareMobs.SPAWN_CHECK_INTERVAL);
 	}
 
 	@Override
