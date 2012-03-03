@@ -76,9 +76,11 @@ public class ObjectiveFactory {
 
 		if (!quest.isCompleted()) {
 			quest.addListener(objective);
+			
+			ScheduledObjectiveThreadTracker.getInstance().getScheduledThreads().put(objective, 
+					Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(objective, 1000, 100, TimeUnit.MILLISECONDS));
 		}
 		
-		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(objective, 1000, 100, TimeUnit.MILLISECONDS);
 
 		return objective;
 	}
@@ -94,8 +96,7 @@ public class ObjectiveFactory {
 	private KillObjective createKillObjective(QuestPlugin quests, Player player, MapWrapper map, WorldZone zone) {
 		List<Integer> entityIds = getEntities(map);
 
-		KillObjective objective = new KillObjective(player, map.getString(
-				"name", ""), zone, map.getInt("amount", 0), entityIds);
+		KillObjective objective = new KillObjective(player, map.getString("name", ""), zone, map.getInt("amount", 0), entityIds);
 
 		quests.getServer().getPluginManager().registerEvents(objective, quests);
 		return objective;

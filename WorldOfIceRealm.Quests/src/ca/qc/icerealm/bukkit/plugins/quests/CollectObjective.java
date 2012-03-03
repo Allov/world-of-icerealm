@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
+import ca.qc.icerealm.bukkit.plugins.quests.builder.ScheduledObjectiveThreadTracker;
 import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 
@@ -47,6 +48,7 @@ public class CollectObjective extends CountObjective implements Runnable, QuestL
 		}
 		
 		quest.removeListener(this);
+		ScheduledObjectiveThreadTracker.getInstance().stopObjectiveThread(this);
 	}
 
 	private int checkForItemInPlayerInventory() {
@@ -69,6 +71,15 @@ public class CollectObjective extends CountObjective implements Runnable, QuestL
 		
 		checkForOwnedAmount();
 	}
+	
+	@Override
+	public void unregister(ObjectiveListener listener) {
+		super.unregister(listener);
+		
+		if (listeners.size() == 0) {
+			ScheduledObjectiveThreadTracker.getInstance().stopObjectiveThread(this);
+		}
+	}
 
 	@Override
 	public String getType() {
@@ -86,6 +97,7 @@ public class CollectObjective extends CountObjective implements Runnable, QuestL
 
 	@Override
 	public void run() {
+		Logger.getLogger("Minecraft").info(toString());
 		checkForOwnedAmount();
 	}
 }

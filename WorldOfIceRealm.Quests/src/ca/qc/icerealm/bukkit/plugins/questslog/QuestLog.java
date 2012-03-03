@@ -107,17 +107,14 @@ public class QuestLog {
 	public void unregisterQuests() {
 		for (Quest quest : getDailyQuests()) {
 			unregisterObjectives(quest);
-			//quest.removeListener(QuestLogPersister.getInstance());
 		}
 
 		for (Quest quest : quests) {
 			unregisterObjectives(quest);
-			//quest.removeListener(QuestLogPersister.getInstance());
 		}
 		
 		if (randomQuest != null) {
 			unregisterObjectives(randomQuest);
-			//randomQuest.removeListener(QuestLogPersister.getInstance());
 		}
 	}
 
