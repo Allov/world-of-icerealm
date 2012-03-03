@@ -2,6 +2,8 @@ package ca.qc.icerealm.bukkit.plugins.trashvendor;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.Economy;
@@ -33,7 +35,7 @@ import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 
 
 
-public class TrashVendorPlugin extends JavaPlugin implements TimeObserver, Listener, ZoneObserver, CommandExecutor {
+public class TrashVendorPlugin extends JavaPlugin implements Runnable, Listener, ZoneObserver, CommandExecutor {
 
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private Location _location;
@@ -68,7 +70,6 @@ public class TrashVendorPlugin extends JavaPlugin implements TimeObserver, Liste
 	@Override
 	public void onDisable() {
 		_villager.remove();
-		TimeServer.getInstance().removeListener(this);
 		ZoneServer.getInstance().removeListener(this);
 	}
 
@@ -89,8 +90,9 @@ public class TrashVendorPlugin extends JavaPlugin implements TimeObserver, Liste
 		_location = _villager.getLocation(); 		
 		getServer().getPluginManager().registerEvents(this, this);
 		getCommand("tv").setExecutor(this);
-		
-		TimeServer.getInstance().addListener(this, 1000);
+
+		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(this, 0, 100, TimeUnit.MILLISECONDS);
+
 		ZoneServer.getInstance().addListener(this);
 		
 		
@@ -120,24 +122,10 @@ public class TrashVendorPlugin extends JavaPlugin implements TimeObserver, Liste
 	}
 	
 	@Override
-	public void timeHasCome(long time) {
+	public void run() {
 		_villager.teleport(_location);	
-		TimeServer.getInstance().addListener(this, 100);
-		
 	}
 
-	@Override
-	public void setAlaram(long time) {
-		// TODO Auto-generated method stub
-		_alarm = time;
-		
-	}
-
-	@Override
-	public long getAlarm() {
-		// TODO Auto-generated method stub
-		return _alarm;
-	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void villagerDamage(EntityDamageEvent event) {

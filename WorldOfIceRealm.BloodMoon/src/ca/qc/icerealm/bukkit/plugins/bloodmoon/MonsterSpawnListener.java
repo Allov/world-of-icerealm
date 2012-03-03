@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
+import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.world.WorldEvent;
 
@@ -45,7 +46,7 @@ public class MonsterSpawnListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerJoined(PlayerJoinEvent event) {
 		if (_moon.isActive()) {
-			event.getPlayer().sendMessage(ChatColor.DARK_AQUA + "This is a " + ChatColor.RED + " BLOOD MOON " + ChatColor.DARK_AQUA + "right now! Be courageous son");
+			event.getPlayer().sendMessage(ChatColor.DARK_AQUA + "This is a " + ChatColor.RED + "BLOOD MOON " + ChatColor.DARK_AQUA + "right now! Be courageous son");
 		}
 	}
 	
@@ -53,8 +54,12 @@ public class MonsterSpawnListener implements Listener {
 	public void onPlayerSleep(PlayerBedEnterEvent event) {
 		if (_moon.isActive()) {
 			event.setCancelled(true);
-			event.getPlayer().sendMessage("You cannot sleep during a " + ChatColor.DARK_RED + " BLOOD MOON!");
+			event.getPlayer().sendMessage(ChatColor.YELLOW + "You cannot sleep during a " + ChatColor.DARK_RED + " BLOOD MOON!");
 		}
-		
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerLeaveBed(PlayerBedLeaveEvent event) {
+		_moon.initializeTimer();
 	}
 }
