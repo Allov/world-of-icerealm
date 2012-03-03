@@ -155,9 +155,14 @@ public class Quest implements ObjectiveListener {
 
 	public void reset() {
 		completed = false;
+		completionTime = 0;
 		for (Objective objective : this.objectives) {
 			objective.reset();
 			objective.register(this);
+		}
+		
+		for (QuestListener listener : listeners) {
+			listener.questReseted(this);
 		}
 	}
 

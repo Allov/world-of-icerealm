@@ -15,33 +15,23 @@ import ca.qc.icerealm.bukkit.plugins.quests.QuestListener;
 import ca.qc.icerealm.bukkit.plugins.quests.persistance.QuestLogPersister;
 
 public class QuestLog {
-	private Player player;
 	private List<Quest> quests;
 	private List<Quest> dailyQuests;
 	private Quest randomQuest;
+	private final String playerName;
 	
-	private List<QuestLogListener> listeners = new CopyOnWriteArrayList<QuestLogListener>();
-	
-	public QuestLog(Player player) {
-		this.player = player;
+	public QuestLog(String playerName) {
+		this.playerName = playerName;
 		this.quests = new ArrayList<Quest>();
 		this.dailyQuests = new ArrayList<Quest>();
-	}
-	
-	public void addListener(QuestLogListener questLogListener) {
-		listeners.add(questLogListener);
-	}
-	
-	public void removeListener(QuestLogListener questLogListener) {
-		listeners.remove(questLogListener);
 	}
 	
 	public boolean isRandomQuestFinished() {
 		return randomQuest == null || randomQuest.isCompleted();
 	}
 
-	public Player getPlayer() {
-		return player;
+	public String getPlayerName() {
+		return playerName;
 	}
 
 	public Quest getRandomQuest() {
@@ -59,7 +49,7 @@ public class QuestLog {
 			}
 		}
 
-		for (Quest quest : this.dailyQuests) {
+		for (Quest quest : this.getDailyQuests()) {
 			if (quest.getKey().equals(key)) {
 				return quest;
 			}
@@ -70,21 +60,13 @@ public class QuestLog {
 	
 	public void setRandomQuest(Quest quest) {
 		this.randomQuest = quest;
-		
-		for(QuestLogListener questLogListener : listeners) {
-			questLogListener.randomQuestSet(quest);
-		}
 	}
 	
 	public void addQuest(Quest quest) {
 		if (quest.isDaily()) {
-			this.dailyQuests.add(quest);
+			this.getDailyQuests().add(quest);
 		} else {
 			this.quests.add(quest);
-		}
-
-		for(QuestLogListener questLogListener : listeners) {
-			questLogListener.questAdded(quest);
 		}
 	}
 
@@ -106,11 +88,11 @@ public class QuestLog {
 		}
 
 		player.sendMessage(ChatColor.LIGHT_PURPLE + "Cooldown Quest: ");
-		for (Quest quest : this.dailyQuests) {
+		for (Quest quest : this.getDailyQuests()) {
 			displayQuestText(player, quest);
 		}
 
-		if (this.dailyQuests.size() == 0) {
+		if (this.getDailyQuests().size() == 0) {
 			player.sendMessage("  > " + ChatColor.GRAY + "No cooldown quest in progress or completed.");
 		}
 	}
@@ -123,19 +105,19 @@ public class QuestLog {
 	}
 	
 	public void unregisterQuests() {
-		for (Quest quest : dailyQuests) {
+		for (Quest quest : getDailyQuests()) {
 			unregisterObjectives(quest);
-			quest.removeListener(QuestLogPersister.getInstance());
+			//quest.removeListener(QuestLogPersister.getInstance());
 		}
 
 		for (Quest quest : quests) {
 			unregisterObjectives(quest);
-			quest.removeListener(QuestLogPersister.getInstance());
+			//quest.removeListener(QuestLogPersister.getInstance());
 		}
 		
 		if (randomQuest != null) {
 			unregisterObjectives(randomQuest);
-			randomQuest.removeListener(QuestLogPersister.getInstance());
+			//randomQuest.removeListener(QuestLogPersister.getInstance());
 		}
 	}
 
@@ -151,12 +133,16 @@ public class QuestLog {
 
 	public void removeChildDailyQuests(Quest rootQuest) {
 		
-		Quest[] quests = this.dailyQuests.toArray(new Quest[0]);
+		Quest[] quests = this.getDailyQuests().toArray(new Quest[0]);
 		for (Quest quest : quests) {
 			if (quest.getRequires().equalsIgnoreCase(rootQuest.getKey())) {
 				removeChildDailyQuests(quest);
-				this.dailyQuests.remove(quest);
+				this.getDailyQuests().remove(quest);
 			}
 		}
+	}
+
+	public List<Quest> getDailyQuests() {
+		return dailyQuests;
 	}
 }

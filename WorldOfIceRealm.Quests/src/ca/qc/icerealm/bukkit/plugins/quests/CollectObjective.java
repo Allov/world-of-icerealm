@@ -1,5 +1,8 @@
 package ca.qc.icerealm.bukkit.plugins.quests;
 
+import java.util.logging.Logger;
+import java.util.zip.CheckedOutputStream;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -9,7 +12,7 @@ import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 
-public class CollectObjective extends CountObjective implements TimeObserver, QuestListener {
+public class CollectObjective extends CountObjective implements Runnable, QuestListener {
 
 	private final int materialId;
 	private final boolean keep;
@@ -21,14 +24,20 @@ public class CollectObjective extends CountObjective implements TimeObserver, Qu
 		this.materialId = materialId;
 	}
 	
+	private static final Object lock = new Object();
+	
 	public void checkForOwnedAmount() {
 		int ownedAmount = checkForItemInPlayerInventory();
 		
 		if (isCompleted() && ownedAmount < getAmount()) {
 			setCompleted(false);
 		}
-
-		advance(ownedAmount - getCurrent());
+		
+		if (ownedAmount - getCurrent() != 0) {
+			synchronized(lock) {
+				advance(ownedAmount - getCurrent());
+			}
+		}
 	}
 
 	public void questCompleted(Quest quest) {
@@ -37,7 +46,6 @@ public class CollectObjective extends CountObjective implements TimeObserver, Qu
 			this.getPlayer().getInventory().removeItem(new ItemStack(material.getItemType(), getAmount()));
 		}
 		
-		TimeServer.getInstance().removeListener(this);
 		quest.removeListener(this);
 	}
 
@@ -60,23 +68,6 @@ public class CollectObjective extends CountObjective implements TimeObserver, Qu
 		super.listenerAdded();
 		
 		checkForOwnedAmount();
-		TimeServer.getInstance().addListener(this, 100);
-	}
-
-	@Override
-	public void timeHasCome(long time) {
-		checkForOwnedAmount();
-		TimeServer.getInstance().addListener(this, 100);
-	}
-
-	@Override
-	public void setAlaram(long time) {
-		this.alarm = time;
-	}
-
-	@Override
-	public long getAlarm() {
-		return this.alarm;
 	}
 
 	@Override
@@ -86,5 +77,15 @@ public class CollectObjective extends CountObjective implements TimeObserver, Qu
 
 	@Override
 	public void questProgressed(Quest quest, Objective objective) {
+	}
+
+	@Override
+	public void questReseted(Quest quest) {
+		
+	}
+
+	@Override
+	public void run() {
+		checkForOwnedAmount();
 	}
 }

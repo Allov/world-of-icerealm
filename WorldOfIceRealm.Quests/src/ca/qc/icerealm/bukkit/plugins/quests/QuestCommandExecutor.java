@@ -20,9 +20,9 @@ public class QuestCommandExecutor implements CommandExecutor {
 	private static final String QuestParamList = "list";
 	private static final String QuestParamInfo = "info";
 	private static final String QuestParamGiveAll = "giveall";
-	private final Quests quests;
+	private final QuestPlugin quests;
 
-	public QuestCommandExecutor(Quests quests) {
+	public QuestCommandExecutor(QuestPlugin quests) {
 		this.quests = quests;
 	}
 	
@@ -63,7 +63,7 @@ public class QuestCommandExecutor implements CommandExecutor {
 	}
 
 	private void displayQuestInfo(Player player, String questId) {
-		QuestLog questLog = QuestLogService.getInstance().getQuestLogForPlayer(player);
+		QuestLog questLog = QuestLogService.getInstance().getQuestLogForPlayer(player.getName());
 		Quest quest = questLog.getQuestByKey(questId);
 		
 		if (quest != null) {

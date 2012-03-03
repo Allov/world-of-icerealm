@@ -10,7 +10,7 @@ public class PersistedQuestLog implements Serializable {
 	private static final long serialVersionUID = -7829185117563794085L;
 	
 	private String player;
-	private Map<String, PersistedQuest> quests;
+	private HashMap<String, PersistedQuest> quests;
 	private PersistedQuest random;
 	
 	public String getPlayer() {

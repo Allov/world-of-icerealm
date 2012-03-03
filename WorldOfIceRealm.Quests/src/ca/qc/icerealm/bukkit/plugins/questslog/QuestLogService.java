@@ -26,27 +26,25 @@ public class QuestLogService {
 		this.questLogs = new HashMap<String, QuestLog>();
 	}
 	
-	public boolean isQuestLogCreated(Player player) {
-		return questLogs.containsKey(player.getName());
+	public boolean isQuestLogCreated(String key) {
+		return questLogs.containsKey(key);
 	}
 	
-	public QuestLog getQuestLogForPlayer(Player player) {
+	public QuestLog getQuestLogForPlayer(String key) {
 		QuestLog questLog = null;
 		
-		if (!isQuestLogCreated(player)) {
-			questLog = new QuestLog(player);
-			this.questLogs.put(player.getName(), questLog);
-			
-			questLog.addListener(QuestLogPersister.getInstance());
+		if (!isQuestLogCreated(key)) {
+			questLog = new QuestLog(key);
+			this.questLogs.put(key, questLog);
 		} else {
-			questLog = questLogs.get(player.getName());
+			questLog = questLogs.get(key);
 		}
 		
 		return questLog;		
 	}
 
 	public void displayLogForPlayer(Player player) {
-		QuestLog questLog = getQuestLogForPlayer(player);
+		QuestLog questLog = getQuestLogForPlayer(player.getName());
 		if (questLog != null) {
 			questLog.display(player);
 		} else {

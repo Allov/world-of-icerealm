@@ -22,8 +22,9 @@ import ca.qc.icerealm.bukkit.plugins.quests.MoneyReward;
 import ca.qc.icerealm.bukkit.plugins.quests.Objective;
 import ca.qc.icerealm.bukkit.plugins.quests.Quest;
 import ca.qc.icerealm.bukkit.plugins.quests.QuestReward;
-import ca.qc.icerealm.bukkit.plugins.quests.Quests;
+import ca.qc.icerealm.bukkit.plugins.quests.QuestPlugin;
 import ca.qc.icerealm.bukkit.plugins.quests.ZoneObjective;
+import ca.qc.icerealm.bukkit.plugins.quests.persistance.QuestLogPersister;
 import ca.qc.icerealm.bukkit.plugins.questslog.QuestLog;
 import ca.qc.icerealm.bukkit.plugins.questslog.QuestLogService;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
@@ -32,10 +33,10 @@ public class ScriptedQuestService {
 	private static final long DayInMillis = 1000 * 60 * 60 * 12;
 
 	private final ConfigWrapper config;
-	private final Quests questsPlugin;
+	private final QuestPlugin questsPlugin;
 	private final QuestLogService questLogService;
 
-	public ScriptedQuestService(Quests questsPlugin, QuestLogService questLogService, ConfigWrapper config) {
+	public ScriptedQuestService(QuestPlugin questsPlugin, QuestLogService questLogService, ConfigWrapper config) {
 		this.questsPlugin = questsPlugin;
 		this.questLogService = questLogService;
 		this.config = config;
@@ -68,7 +69,7 @@ public class ScriptedQuestService {
 			return null;
 		}
 
-		QuestLog questLog = questLogService.getQuestLogForPlayer(player);
+		QuestLog questLog = questLogService.getQuestLogForPlayer(player.getName());
 		quest = questLog.getQuestByKey(id);
 
 		if (quest == null) {
@@ -89,7 +90,7 @@ public class ScriptedQuestService {
 						rootQuest.reset();
 					}
 				}
-			} else {
+			} else if (quest.isCompleted()) {
 				displayCannotAssignQuestMessage(player);
 			}
 		}
@@ -238,125 +239,5 @@ public class ScriptedQuestService {
 		for (String key : set) {
 			assignQuest(player, key);
 		}
-	}
-}
-
-class RewardFactory {
-	private static RewardFactory instance;
-
-	public static RewardFactory getInstance() {
-		if (instance == null) {
-			instance = new RewardFactory();
-		}
-
-		return instance;
-	}
-}
-
-class ObjectiveFactory {
-	private static final String ObjectiveTypeCollect = "collect";
-	private static final String ObjectiveTypeKill = "kill";
-	private static final String ObjectiveTypeZone = "zone";
-	private static final String ObjectiveTypeFind = "find";
-	private static final String ObjectiveMonsterFury = "monsterfury";
-	private static ObjectiveFactory instance;
-
-	public static ObjectiveFactory getInstance() {
-		if (instance == null) {
-			instance = new ObjectiveFactory();
-		}
-
-		return instance;
-	}
-
-	public Objective createFromMap(Quests quests, Player player,
-			MapWrapper map, Quest quest) {
-		Objective objective = null;
-		WorldZone zone = getWorldZone(quests, map);
-
-		if (map.getString("type", "").equalsIgnoreCase(ObjectiveTypeKill)) {
-
-			objective = createKillObjective(quests, player, map, zone);
-
-		} else if (map.getString("type", "").equalsIgnoreCase(ObjectiveTypeZone)) {
-
-			objective = createZoneObjective(quests, player, map, zone);
-
-		} else if (map.getString("type", "").equalsIgnoreCase(ObjectiveTypeCollect)) {
-
-			objective = createCollectObjective(quests, player, map, zone, quest);
-
-		} else if (map.getString("type", "").equalsIgnoreCase(ObjectiveTypeFind)) {
-
-			objective = createFindObjective(quests, player, map, zone);
-
-		} else if (map.getString("type", "").equalsIgnoreCase(ObjectiveMonsterFury)) {
-
-		}
-
-		return objective;
-	}
-
-	private FindObjective createFindObjective(Quests quests, Player player, MapWrapper map, WorldZone zone) {
-		FindObjective objective = new FindObjective(player, zone, map.getString("name", ""), map.getInt("amount", 0), map.getInt("what", 0));
-
-		quests.getPluginManager().registerEvents(objective, quests);
-		return objective;
-	}
-
-	private CollectObjective createCollectObjective(Quests quests, Player player, MapWrapper map, WorldZone zone, Quest quest) {
-		CollectObjective objective = new CollectObjective(player, zone,
-				map.getString("name", "N/A"), map.getInt("amount", 0),
-				map.getBoolean("keep", false), map.getInt("what", 0));
-
-		if (!quest.isCompleted()) {
-			quest.addListener(objective);
-		}
-
-		return objective;
-	}
-
-	private ZoneObjective createZoneObjective(Quests quests, Player player, MapWrapper map, WorldZone zone) {
-		ZoneObjective objective = new ZoneObjective(player, zone,
-				map.getString("name", ""), quests.getServer());
-
-		ZoneServer.getInstance().addListener((ZoneObjective) objective);
-		return objective;
-	}
-
-	private KillObjective createKillObjective(Quests quests, Player player, MapWrapper map, WorldZone zone) {
-		List<Integer> entityIds = getEntities(map);
-
-		KillObjective objective = new KillObjective(player, map.getString(
-				"name", ""), zone, map.getInt("amount", 0), entityIds);
-
-		quests.getServer().getPluginManager().registerEvents(objective, quests);
-		return objective;
-	}
-
-	private List<Integer> getEntities(MapWrapper map) {
-		List<Integer> entityIds = new ArrayList<Integer>();
-
-		String ids = map.getString("what", "");
-
-		if (ids != null && ids.length() > 0) {
-			String[] entities = ids.split(",");
-
-			for (int i = 0; i < entities.length; i++) {
-				entityIds.add(Integer.parseInt(entities[i]));
-			}
-		}
-		return entityIds;
-	}
-
-	private WorldZone getWorldZone(Quests quests, MapWrapper map) {
-		WorldZone zone = null;
-		String coords = map.getString("zone", "");
-		String world = map.getString("world", "world");
-
-		if (coords.split(",").length == 6) {
-			zone = new WorldZone(quests.getServer().getWorld(world), coords);
-		}
-		return zone;
 	}
 }

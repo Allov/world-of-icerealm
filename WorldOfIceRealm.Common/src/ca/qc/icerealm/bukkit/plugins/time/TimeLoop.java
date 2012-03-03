@@ -24,17 +24,10 @@ public class TimeLoop implements Runnable {
 				Executors.newSingleThreadExecutor().execute(new TimeExecutor(ob));
 				//ob.timeHasCome(System.currentTimeMillis());
 			}
-			
-			try {
-				Thread.sleep(50);
-			}
-			catch (Exception ex) {
-				this.logger.info("Exception in TimeLoop: " + ex.toString());
-			}
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
-			this.logger.throwing("TimeLoop", "run()", ex);
+			this.logger.info("TimeLoop - run() >> " + ex.getMessage() + " >> " + ex);
 		}
 	}
 }

@@ -77,7 +77,7 @@ public class ScenarioPlugin extends JavaPlugin {
 		// configuration de la plate forme
 		if (_ruinsPlateform == null) {
 			InfestationConfiguration config = new InfestationConfiguration();
-			config.InfestedZone = "26,-75,118,26,0,128";
+			config.InfestedZone = "26,-75,118,26,90,128";
 			config.BurnDuringDaylight = false;
 			config.RegenerateExplodedBlocks = true;
 			config.DelayBeforeRegeneration = 300;
@@ -85,14 +85,14 @@ public class ScenarioPlugin extends JavaPlugin {
 			config.UseInfestedZoneAsRadius = false;
 			config.ResetWhenNoPlayerAround = true;
 			config.SpawnerMonsters = "zombie,skeleton,spider";
-			config.SpawnerQuantity = 2;
+			config.SpawnerQuantity = 10;
 			config.ProbabilityToSpawn = 1;
 			config.MaxMonstersPerSpawn = 5;
 			
 			config.HealthModifier = 0.0;
 			config.IntervalBetweenSpawn = 1500;
-			config.SpawnerRadiusActivation = 30;
-			config.DelayBeforeRespawn = 30000;
+			config.SpawnerRadiusActivation = 20;
+			config.DelayBeforeRespawn = 0;
 
 			config.EnterZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.YELLOW + "You are entering an infested zone. " + ChatColor.RED + "Watch your back!";
 			config.LeaveZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.DARK_AQUA + "You are leaving the infested zone";

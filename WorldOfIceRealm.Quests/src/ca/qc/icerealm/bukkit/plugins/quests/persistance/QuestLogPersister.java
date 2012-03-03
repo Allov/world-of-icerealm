@@ -2,37 +2,29 @@ package ca.qc.icerealm.bukkit.plugins.quests.persistance;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 
 import ca.qc.icerealm.bukkit.plugins.data.DataSerializationService;
 import ca.qc.icerealm.bukkit.plugins.quests.CountObjective;
 import ca.qc.icerealm.bukkit.plugins.quests.Objective;
 import ca.qc.icerealm.bukkit.plugins.quests.Quest;
 import ca.qc.icerealm.bukkit.plugins.quests.QuestListener;
-import ca.qc.icerealm.bukkit.plugins.quests.builder.ScriptedQuestService;
-import ca.qc.icerealm.bukkit.plugins.questslog.QuestLogListener;
+import ca.qc.icerealm.bukkit.plugins.questslog.QuestLog;
 import ca.qc.icerealm.bukkit.plugins.questslog.QuestLogService;
 
-public class QuestLogPersister implements QuestListener, QuestLogListener, Listener {
-	private static QuestLogPersister instance;
-	public static QuestLogPersister getInstance() {
-		if (instance == null) {
-			instance = new QuestLogPersister(new QuestLogRepository(new DataSerializationService()));
-		}
-		
-		return instance;
-	}	
-	
+public class QuestLogPersister implements Runnable {
 	private final QuestLogRepository questLogRepository;
+	private final Server server;
 
-	public QuestLogPersister(QuestLogRepository questLogRepository) {
-		this.questLogRepository = questLogRepository;		
+	public QuestLogPersister(QuestLogRepository questLogRepository, Server server) {
+		this.questLogRepository = questLogRepository;
+		this.server = server;		
 	}
 	
 	private PersistedQuest mapPersistedQuest(Quest quest) {
@@ -72,57 +64,35 @@ public class QuestLogPersister implements QuestListener, QuestLogListener, Liste
 		return po;
 	}
 	
-	private PersistedQuestLog getOrCreatePersistedQuestLog(String key) {
-		PersistedQuestLog pql = questLogRepository.get(key);
+	private PersistedQuestLog mapPersistedQuestLog(QuestLog questLog) {
+		PersistedQuestLog pql = new PersistedQuestLog();
 		
-		if (pql == null) {
-			pql = new PersistedQuestLog();
-		}
-		
-		return pql;		
-	}
-
-	@Override
-	public void questAdded(Quest quest) {
-		Player player = quest.getPlayer();
-		PersistedQuestLog pql = getOrCreatePersistedQuestLog(player.getName());
-		
-		if (!pql.getQuests().containsKey(quest.getKey())) {
+		for (Quest quest : questLog.getDailyQuests()) {
+			pql.setPlayer(questLog.getPlayerName());
 			pql.getQuests().put(quest.getKey(), mapPersistedQuest(quest));
-			questLogRepository.save(pql, player.getName());
 		}
 		
-		quest.addListener(this);
+		return pql;
 	}
 
-	@Override
-	public void randomQuestSet(Quest quest) {
-		Player player = quest.getPlayer();
-		PersistedQuestLog pql = getOrCreatePersistedQuestLog(player.getName());
-		pql.setRandom(mapPersistedQuest(quest));
-		questLogRepository.save(pql, player.getName());
-	}
 
-	@Override
-	public void questCompleted(Quest quest) {
-		Player player = quest.getPlayer();
-		PersistedQuestLog pql = getOrCreatePersistedQuestLog(player.getName());		
+	private static final Object saveLock = new Object();
 
-		PersistedQuest pq = pql.getQuests().get(quest.getKey());
-		pq.setCompletionTime(quest.getCompletionTime());
-		pq.setObjectives(mapObjectives(quest.getObjectives()));
+	public void saveQuestLog(QuestLog questLog) {
+		if (questLog == null) return;
 		
-		questLogRepository.save(pql, player.getName());
+		PersistedQuestLog pql = mapPersistedQuestLog(questLog);
+		
+		synchronized(saveLock) {
+			questLogRepository.save(pql, questLog.getPlayerName());
+		}
 	}
 
 	@Override
-	public void questProgressed(Quest quest, Objective objective) {
-		Player player = quest.getPlayer();
-		PersistedQuestLog pql = getOrCreatePersistedQuestLog(player.getName());
-		
-		PersistedQuest pq = pql.getQuests().get(quest.getKey());
-		pq.setObjectives(mapObjectives(quest.getObjectives()));
-
-		questLogRepository.save(pql, player.getName());
+	public void run() {
+		for (Player player : server.getOnlinePlayers()) {
+			QuestLog questLog = QuestLogService.getInstance().getQuestLogForPlayer(player.getName());
+			saveQuestLog(questLog);
+		}
 	}
 }

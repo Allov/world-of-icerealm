@@ -17,7 +17,7 @@ import ca.qc.icerealm.bukkit.plugins.quests.KillObjective;
 import ca.qc.icerealm.bukkit.plugins.quests.LevelReward;
 import ca.qc.icerealm.bukkit.plugins.quests.MoneyReward;
 import ca.qc.icerealm.bukkit.plugins.quests.Quest;
-import ca.qc.icerealm.bukkit.plugins.quests.Quests;
+import ca.qc.icerealm.bukkit.plugins.quests.QuestPlugin;
 import ca.qc.icerealm.bukkit.plugins.questslog.QuestLog;
 import ca.qc.icerealm.bukkit.plugins.questslog.QuestLogService;
 
@@ -38,18 +38,18 @@ public class RandomQuestService {
 			new ItemReward(Material.IRON_HELMET.getId(), 1), 
 			}; 
 	
-	private final ca.qc.icerealm.bukkit.plugins.quests.Quests questsPlugin;
+	private final ca.qc.icerealm.bukkit.plugins.quests.QuestPlugin questsPlugin;
 	private final QuestLogService questLogService;
 	private Random random;
 	
-	public RandomQuestService(Quests questsPlugin, QuestLogService questLogService) {
+	public RandomQuestService(QuestPlugin questsPlugin, QuestLogService questLogService) {
 		this.questsPlugin = questsPlugin;
 		this.questLogService = questLogService;
 		this.random = new Random(Calendar.getInstance().getTimeInMillis());
 	}
 
 	public void assignRandomQuest(Player player) {
-		QuestLog questLog = questLogService.getQuestLogForPlayer(player);
+		QuestLog questLog = questLogService.getQuestLogForPlayer(player.getName());
 		if (!questLog.isRandomQuestFinished()) {
 			questLog.getRandomQuest().info();
 		} else {

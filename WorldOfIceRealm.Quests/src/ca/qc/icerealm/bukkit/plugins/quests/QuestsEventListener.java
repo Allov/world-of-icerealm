@@ -10,7 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import ca.qc.icerealm.bukkit.plugins.data.DataPersistenceService;
 import ca.qc.icerealm.bukkit.plugins.data.DataSerializationService;
 import ca.qc.icerealm.bukkit.plugins.quests.builder.ScriptedQuestService;
 import ca.qc.icerealm.bukkit.plugins.quests.persistance.PersistedObjective;
@@ -24,9 +23,11 @@ import ca.qc.icerealm.bukkit.plugins.questslog.QuestLogService;
 public class QuestsEventListener implements Listener {
 	
 	private final ScriptedQuestService scriptedQuestService;
+	private final QuestLogPersister questLogPersister;
 
-	public QuestsEventListener(ScriptedQuestService scriptedQuestService) {
+	public QuestsEventListener(ScriptedQuestService scriptedQuestService, QuestLogPersister questLogPersister) {
 		this.scriptedQuestService = scriptedQuestService;
+		this.questLogPersister = questLogPersister;
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -41,19 +42,22 @@ public class QuestsEventListener implements Listener {
 	}
 
 	private void removeAllListeners(Player player) {
-		QuestLog questLog = QuestLogService.getInstance().getQuestLogForPlayer(player);
+		QuestLog questLog = QuestLogService.getInstance().getQuestLogForPlayer(player.getName());
 		
 		if (questLog != null) {
 			questLog.unregisterQuests();
 		}
 		
-		questLog.removeListener(QuestLogPersister.getInstance());
 		QuestLogService.getInstance().removeQuestLog(player);
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDisconnect(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
+
+		QuestLog questLog = QuestLogService.getInstance().getQuestLogForPlayer(player.getName());
+		questLogPersister.saveQuestLog(questLog);
+	
 		removeAllListeners(player);
 	}
 
@@ -62,6 +66,7 @@ public class QuestsEventListener implements Listener {
 		PersistedQuestLog pql = repository.get(player.getName());
 		
 		if (pql != null) {
+			
 			for (PersistedQuest pq : pql.getQuests().values()) {
 				Quest quest = scriptedQuestService.assignQuest(player, pq.getName(), false, pq.getCompletionTime());
 				

@@ -143,7 +143,7 @@ cave:
 cmn:
     group: average
     name: Cry more, noob
-    requires: theportal
+    requires: tp
     messageStart: In this world where fire is predominant reign these flying white creatures that are known to make things explode when they're not happy. But, when attacked and killed, they cry tears that are known to regenerate one's health. You'll need them on your journey, gather as much as you can!   
     messageEnd: Aah the sound of a dying Ghast... A relief, isn't it?    
     daily: true
@@ -196,7 +196,7 @@ tp:
         items:
 pigmen:
     group: average
-    requires: theportal
+    requires: tp
     name: Zombified Pigs and Men!
     messageStart: YOU THINK YOU CAN ENTER THIS PORTAL MORTAL? YOU THINK YOU CAN DEFEAT LIVING NIGHTMARES? I CHALLENGE YOU TO ENTER THE PORTAL AND SURVIVE!!!  
     messageEnd: You've been on the other side? I cannot think of ever going there, it's way to freaky for me...
@@ -319,25 +319,20 @@ inf:
     daily: true
     objectives:
         -   type: kill
-            name: Kill 20 Zombies at the platform
+            name: Kill 25 Zombies at the platform
             what: 54
             zone: 26,-74,116,24,98,127
-            amount: 20
+            amount: 25
         -   type: kill
-            name: Kill 20 Spiders at the platform
+            name: Kill 25 Spiders at the platform
             what: 52
             zone: 26,-74,116,24,98,127
-            amount: 20
+            amount: 25
         -   type: kill
-            name: Kill 20 Skeletons at the platform
+            name: Kill 25 Skeletons at the platform
             what: 51
             zone: 26,-74,116,24,98,127
-            amount: 20
-        -   type: kill
-            name: Kill 20 Creepers at the platform
-            what: 50
-            zone: 26,-74,116,24,98,127
-            amount: 20
+            amount: 25
     rewards:
         money: 750
         level: 8
