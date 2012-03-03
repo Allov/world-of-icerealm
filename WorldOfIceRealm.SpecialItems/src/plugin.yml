@@ -1,0 +1,5 @@
+name: WoI.SpecialItems
+main: ca.qc.icerealm.bukkit.plugins.specialitems.SpecialItemsPlugin
+version: 0.1.0
+description: World of IceRealm rewrites of certain items behavior and stats.
+author: Allov
