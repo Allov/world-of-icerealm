@@ -5,5 +5,10 @@ description: World Of IceRealm Scenarios!
 author: punihser_malade
 
 commands:
+  cs:
+    description: Castle Siege infestation configuration
+  pl:
+    description: Ruins plateform infestation configuration
   sc:
-    description: Enable the scenario mode
+    description: general scenario commands
+ 

@@ -58,16 +58,25 @@ public class Infestation implements ZoneObserver, Listener {
 		_zoneSubject = zones;
 	}
 	
+	public int getSpawnerQuantity() {
+		return _quantity;				
+	}
+	
+	public void setSpawnerQuantity(int i) {
+		_quantity = i;
+	}	
+	
+	public InfestationConfiguration getConfig() {
+		return _config;
+	}
+	
+	
 	private void createRandomSpawners() {
 		ScenarioPlugin.logger.fine("creating " + _quantity + " spawners!");
 		for (int i = 0; i < _quantity; i++) {		
 			//Location l = _zone.getRandomLocation(_world);
 			
 			ProximitySpawner spawner = new ProximitySpawner(_zone, _config, _zoneSubject);
-			/*
-			FixedSpawner spawner = new FixedSpawner(l, _config, _players);
-			TimeServer.getInstance().addListener(spawner, _config.IntervalBetweenSpawn);
-			*/
 			_spawners.add(spawner);
 		}
 	}
@@ -98,6 +107,7 @@ public class Infestation implements ZoneObserver, Listener {
 		if (_players.contains(p)) {
 			_players.remove(p);
 
+			ScenarioPlugin.logger.fine("playuer removed ");
 			if (_players.size() == 0) {
 				for (Spawner s : _spawners) {
 					s.removeListener();

@@ -19,6 +19,7 @@ import org.bukkit.Server;
 import org.bukkit.plugin.java.JavaPlugin;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.Infestation;
+import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.InfestationCommander;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.InfestationConfiguration;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.DefaultEventListener;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFury;
@@ -105,13 +106,15 @@ public class ScenarioPlugin extends JavaPlugin {
 			config.SpawnerRadiusActivation = 15;
 			config.DelayBeforeRespawn = 60000;
 
-			config.EnterZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.YELLOW + "Welcome to the " + ChatColor.DARK_RED + "Infested " + ChatColor.DARK_GRAY + "Castle. " + ChatColor.RED + "Watch your back!";
-			config.LeaveZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.DARK_AQUA + "You are leaving the Infested Castle";
+			config.EnterZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.YELLOW + "Welcome to the " + ChatColor.DARK_GRAY + "Infested Castle." + ChatColor.DARK_RED + " Watch your back!";
+			config.LeaveZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.DARK_AQUA + "You are leaving the " + ChatColor.DARK_GRAY + "Infested Castle.";
 			config.Server = getServer();
 			
 			_castleSiege = new Infestation(this, config, _zoneServer);
 			_zoneServer.addListener(_castleSiege);
 			getServer().getPluginManager().registerEvents(_castleSiege, this);
+			getCommand("cs").setExecutor(new InfestationCommander(_castleSiege, "cs"));
+			
 		
 		}
 		
@@ -152,6 +155,7 @@ public class ScenarioPlugin extends JavaPlugin {
 			_ruinsPlateform = new Infestation(this, config, _zoneServer);
 			_zoneServer.addListener(_ruinsPlateform);
 			getServer().getPluginManager().registerEvents(_ruinsPlateform, this);
+			getCommand("pl").setExecutor(new InfestationCommander(_ruinsPlateform, "pl"));
 		}
 		
 		if (_ruinsPlateform != null) {

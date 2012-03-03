@@ -48,6 +48,7 @@ public class ProximitySpawner implements TimeObserver, Listener, Spawner, CoolDo
 	private String[] _monstersToSpawn;
 	private ZoneSubject _zoneServer;
 	private boolean _isCoolDownActive;
+	private CoolDownTimer _coolDownTimer;
 
 	public ProximitySpawner(WorldZone z, InfestationConfiguration config, ZoneSubject zone) {
 		_zone = z;
@@ -104,7 +105,8 @@ public class ProximitySpawner implements TimeObserver, Listener, Spawner, CoolDo
 		if (_entities.size() == _maxMonster) {
 			if (_config.DelayBeforeRespawn > 0) {
 				_entities.clear();
-				TimeServer.getInstance().addListener(new CoolDownTimer(this), _config.DelayBeforeRespawn);
+				_coolDownTimer = new CoolDownTimer(this);
+				TimeServer.getInstance().addListener(_coolDownTimer, _config.DelayBeforeRespawn);
 				_isCoolDownActive = true;
 				ScenarioPlugin.logger.fine("cool down timer started! at " + _startingLocation.getX() + ","  + _startingLocation.getY() + "," + _startingLocation.getZ());
 			}
