@@ -48,10 +48,7 @@ public class ProximitySpawner implements TimeObserver, Listener, Spawner, CoolDo
 	private String[] _monstersToSpawn;
 	private ZoneSubject _zoneServer;
 	private boolean _isCoolDownActive;
-	
 
-	
-	
 	public ProximitySpawner(WorldZone z, InfestationConfiguration config, ZoneSubject zone) {
 		_zone = z;
 		_startingLocation = _zone.getRandomLocation(_zone.getWorld());
@@ -77,7 +74,7 @@ public class ProximitySpawner implements TimeObserver, Listener, Spawner, CoolDo
 		_monstersToSpawn = _config.SpawnerMonsters.split(",");
 		ScenarioPlugin.logger.fine("new spawner: " + _startingLocation.getX() + ","  + _startingLocation.getY() + "," + _startingLocation.getZ());
 	}
-	
+
 	public void setTarget(Player p) {
 		_target = p;
 	}

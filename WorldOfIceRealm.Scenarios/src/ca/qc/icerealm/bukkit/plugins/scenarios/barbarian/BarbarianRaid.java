@@ -30,9 +30,6 @@ public class BarbarianRaid implements Listener {
 	private WorldZone _zone;
 	private Server _server;
 	private SubScenario _firstHouse;
-	private SubScenario _secondHouse;
-	private SubScenario _thirdHouse;
-	private SubScenario _finalJump;
 	
 	private List<SubScenario> _scenarios;
 	private List<Player> _players;
@@ -43,9 +40,10 @@ public class BarbarianRaid implements Listener {
 		_server = s;
 		_zone = new WorldZone(_server.getWorld("world"), zone);
 		
+		/*
 		WorldZone activation = new WorldZone(_server.getWorld("world"), a);
 		_firstHouse = new SubScenario(s, _server.getWorld("world"), _zone, activation, 4, CreatureType.ZOMBIE);
-		
+		*/
 		
 	}
 	

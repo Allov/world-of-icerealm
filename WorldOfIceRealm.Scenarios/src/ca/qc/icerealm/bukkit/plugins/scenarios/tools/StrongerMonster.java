@@ -1,5 +1,7 @@
 package ca.qc.icerealm.bukkit.plugins.scenarios.tools;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.logging.Logger;
 
 import org.bukkit.Location;
@@ -18,15 +20,26 @@ public class StrongerMonster implements Listener {
 	private int _max;
 	private int _entityId;
 	
+	private static HashMap<Integer, Integer> _trackingEntities;
+	static {
+		_trackingEntities = new HashMap<Integer, Integer>();
+	}
+	
 	public StrongerMonster(Monster m, int max) {
 		this.logger.info("StrongerMonster class");
 		_max = max;
 		_entityId = m.getEntityId();
+		if (!_trackingEntities.containsKey(_entityId)) {
+			_trackingEntities.put(_entityId, max);
+		}
+		
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onMonsterDamage(EntityDamageEvent e) {
-		if (_entityId == e.getEntity().getEntityId()) {
+		if (_entityId == e.getEntity().getEntityId()) 
+		{
+			
 			this.logger.info(String.valueOf(e.getDamage()));
 			
 		}

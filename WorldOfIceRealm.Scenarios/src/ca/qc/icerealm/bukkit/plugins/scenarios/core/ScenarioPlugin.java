@@ -15,6 +15,7 @@ import java.util.logging.SimpleFormatter;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Server;
 import org.bukkit.plugin.java.JavaPlugin;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.Infestation;
@@ -31,8 +32,13 @@ import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
 
 public class ScenarioPlugin extends JavaPlugin {
 	public final static Logger logger = Logger.getLogger(("Scenario"));
+	public final static Logger mainLogger = Logger.getLogger("Minecraft");
+	private String _filename = "sc_logs/scenario.log";
+	
 	private MonsterFury _hauntedOutpost = null;
 	private Infestation _ruinsPlateform = null;
+	private Infestation _castleSiege = null;
+	
 	private ZoneSubject _zoneServer;
 	private ScenarioZoneProber _prober;
 	private FileHandler _logFile; 
@@ -42,35 +48,80 @@ public class ScenarioPlugin extends JavaPlugin {
 	public void onDisable() {
 		releaseHauntedOutpost();	
 		releaseRuinsPlateform();
+		releaseCastleSiege();
 	}
 
 	@Override
 	public void onEnable() {
+		
+		initFileLogger(_filename);
+		initZoneServer(getServer());
+
+		// scenario commander
+		getCommand("sc").setExecutor(new ScenarioCommander());
+		ScenarioService.getInstance().setPlugin(this);
+		
+		// creation des different scenarios
+		createHauntedOutpost();
+		createRuinsPlateform();
+		createCastleSiege();
+	}
+	
+	public void initZoneServer(Server s) {
+		_zoneServer = new ScenarioZoneServer(s);
+		_prober = new ScenarioZoneProber(_zoneServer);
+		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(_prober, 0, 20, TimeUnit.MILLISECONDS);
+	}
+	
+	public void initFileLogger(String name) {
 		// init le logger pour mettre ca dans un fichier
 		try {
 			logger.setLevel(Level.FINE);
-			_logFile = new FileHandler("sc_logs/scenarios.log", true);
+			_logFile = new FileHandler(name, true);
 			_logFormat = new LoggerFormater();
 			_logFile.setFormatter(_logFormat);
 			logger.addHandler(_logFile);
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
+		}	
+	}
+	
+	private void createCastleSiege() {
+		if (_castleSiege == null) {
+			InfestationConfiguration config = new InfestationConfiguration();
+			config.InfestedZone = "-93,762,119,1118,0,128";
+			config.BurnDuringDaylight = false;
+			config.RegenerateExplodedBlocks = true;
+			config.DelayBeforeRegeneration = 60000;
+			config.UseInfestedZoneAsRadius = false;
+			config.SpawnerMonsters = "zombie,skeleton,spider,creeper";
+			config.SpawnerQuantity = 50;
+			config.ProbabilityToSpawn = 1;
+			config.MaxMonstersPerSpawn = 5;
+			
+			config.HealthModifier = 0.0;
+			config.IntervalBetweenSpawn = 1500;
+			config.SpawnerRadiusActivation = 15;
+			config.DelayBeforeRespawn = 60000;
+
+			config.EnterZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.YELLOW + "Welcome to the " + ChatColor.DARK_RED + "Infested " + ChatColor.DARK_GRAY + "Castle. " + ChatColor.RED + "Watch your back!";
+			config.LeaveZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.DARK_AQUA + "You are leaving the Infested Castle";
+			config.Server = getServer();
+			
+			_castleSiege = new Infestation(this, config, _zoneServer);
+			_zoneServer.addListener(_castleSiege);
+			getServer().getPluginManager().registerEvents(_castleSiege, this);
+		
 		}
-
 		
-		// part le zone server pour les scenarios
-		_zoneServer = new ScenarioZoneServer(getServer());
-		_prober = new ScenarioZoneProber(_zoneServer);
-		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(_prober, 0, 20, TimeUnit.MILLISECONDS);
-
-		// part le scenario commander
-		getCommand("sc").setExecutor(new ScenarioCommander());
-		ScenarioService.getInstance().setPlugin(this);
-		
-		// creation des different scenario
-		createHauntedOutpost();
-		createRuinsPlateform();
+		if (_castleSiege != null) {
+			logger.info("[Scenarios] Infested Castle created!");
+		}
+	}
+	
+	private void releaseCastleSiege() {
+		_zoneServer.removeListener(_castleSiege);
 	}
 
 	private void createRuinsPlateform() {
@@ -88,11 +139,11 @@ public class ScenarioPlugin extends JavaPlugin {
 			config.SpawnerQuantity = 10;
 			config.ProbabilityToSpawn = 1;
 			config.MaxMonstersPerSpawn = 5;
-			
 			config.HealthModifier = 0.0;
 			config.IntervalBetweenSpawn = 1500;
 			config.SpawnerRadiusActivation = 20;
-			config.DelayBeforeRespawn = 0;
+			config.DelayBeforeRespawn = 30000;
+
 
 			config.EnterZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.YELLOW + "You are entering an infested zone. " + ChatColor.RED + "Watch your back!";
 			config.LeaveZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.DARK_AQUA + "You are leaving the infested zone";
