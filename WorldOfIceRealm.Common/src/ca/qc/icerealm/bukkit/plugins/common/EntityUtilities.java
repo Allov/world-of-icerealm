@@ -82,13 +82,13 @@ public class EntityUtilities
         // Aggressive
         if(entity instanceof Creeper) return CreatureType.CREEPER;
         if(entity instanceof Skeleton)return CreatureType.SKELETON;
+        if(entity instanceof CaveSpider) return CreatureType.CAVE_SPIDER;
         if(entity instanceof Spider) return CreatureType.SPIDER;
         if(entity instanceof Zombie) return CreatureType.ZOMBIE;
         if(entity instanceof Slime) return CreatureType.SLIME;
         if(entity instanceof Ghast) return CreatureType.GHAST;
         if(entity instanceof Blaze) return CreatureType.BLAZE;
         if(entity instanceof MagmaCube) return CreatureType.MAGMA_CUBE;
-        if(entity instanceof CaveSpider) return CreatureType.CAVE_SPIDER;
         if(entity instanceof Silverfish) return CreatureType.SILVERFISH;
         if(entity instanceof EnderDragon) return CreatureType.ENDER_DRAGON;
 
@@ -144,13 +144,13 @@ public class EntityUtilities
         // Aggressive
         if(entity instanceof Creeper) return "Creeper";
         if(entity instanceof Skeleton)return "Skeleton";
+        if(entity instanceof CaveSpider) return "Cave Spider";
         if(entity instanceof Spider) return "Spider";
         if(entity instanceof Zombie) return "Zombie";
         if(entity instanceof Slime) return "Slime";
         if(entity instanceof Ghast) return "Ghast";
         if(entity instanceof Blaze) return "Blaze";
         if(entity instanceof MagmaCube) return "Magma Cube";
-        if(entity instanceof CaveSpider) return "Cave Spider";
         
         if(entity instanceof Silverfish) return "Silverfish";
         if(entity instanceof EnderDragon) return "Ender Dragon";
