@@ -21,6 +21,8 @@ import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsFactory;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultiplierData;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsOdds;
 import ca.qc.icerealm.bukkit.plugins.raredrops.enchantment.LootingEnchantmentHandler;
+import ca.qc.icerealm.bukkit.plugins.raredrops.randomizer.MultipleRareDropsRandomizer;
+import ca.qc.icerealm.bukkit.plugins.raredrops.randomizer.RareDropsRandomizer;
 
 public class RareDropsEntityListener implements Listener
 {
@@ -68,7 +70,7 @@ public class RareDropsEntityListener implements Listener
         			RareDropsMultiplierData.getInstance().removeEntityRareDropsMultiplier(entity.getEntityId());
         		}
         		
-        		//multiplier = multiplier * 50;
+        		//multiplier = multiplier * 20;
         		
         		// if multiplier equals 0, the drops are handled elsewhere (by another plugin)
         		if (multiplier > 0)
@@ -78,7 +80,7 @@ public class RareDropsEntityListener implements Listener
 		        	RareDropsFactory factory = new RareDropsFactory(materials, multiplier);
 		        	RareDropsOdds odds = factory.createOdds();
 		        	
-		        	RareDropsRandomizer randomizer = new RareDropsRandomizer(odds);
+		        	RareDropsRandomizer randomizer = new MultipleRareDropsRandomizer(odds);
 		        	
 		        	ArrayList<RareDropResult> items =  randomizer.randomize();
 		        	

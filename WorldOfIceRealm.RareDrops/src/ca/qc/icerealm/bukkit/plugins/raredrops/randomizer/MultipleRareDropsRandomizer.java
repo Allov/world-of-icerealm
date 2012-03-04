@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.raredrops;
+package ca.qc.icerealm.bukkit.plugins.raredrops.randomizer;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
@@ -12,7 +12,7 @@ import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsOddsItem;
 import ca.qc.icerealm.bukkit.plugins.raredrops.enchantment.EnchantmentsRandomizer;
 import ca.qc.icerealm.bukkit.plugins.raredrops.enchantment.data.EnchantmentResult;
 
-public class RareDropsRandomizer 
+public class MultipleRareDropsRandomizer implements RareDropsRandomizer
 {
 	private RareDropsOdds odds = null;;
 	public final Logger logger = Logger.getLogger(("Minecraft"));
@@ -22,12 +22,12 @@ public class RareDropsRandomizer
 		this.odds = odds;
 	}
 	
-	public RareDropsRandomizer()
+	public MultipleRareDropsRandomizer()
 	{
 		
 	}
 	
-	public RareDropsRandomizer(RareDropsOdds odds)
+	public MultipleRareDropsRandomizer(RareDropsOdds odds)
 	{
 		this.setOdds(odds);
 	}

@@ -11,12 +11,14 @@ import ca.qc.icerealm.bukkit.plugins.common.ConfigWrapper;
 public class RareDrops extends JavaPlugin
 {
 	@Override
-	public void onDisable() {
+	public void onDisable() 
+	{
 				
 	}
 
 	@Override
-	public void onEnable() {
+	public void onEnable() 
+	{
 		
 		File file = new File(getDataFolder(), "raredrops.yml"); 
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
