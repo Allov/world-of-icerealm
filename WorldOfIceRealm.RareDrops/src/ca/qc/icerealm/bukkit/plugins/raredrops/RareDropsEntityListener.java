@@ -64,6 +64,8 @@ public class RareDropsEntityListener implements Listener
         		if (customMultiplier != null)
         		{
         			multiplier = multiplier * customMultiplier;
+        			// Remove it from the list
+        			RareDropsMultiplierData.getInstance().removeEntityRareDropsMultiplier(entity.getEntityId());
         		}
         		
         		//multiplier = multiplier * 50;
