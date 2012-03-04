@@ -86,6 +86,7 @@ public class MapWrapper {
 		List<MapWrapper> mapValues = null;
 		
 		try	{
+			@SuppressWarnings("unchecked")
 			ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) map.get(path);
 			mapValues = new ArrayList<MapWrapper>();
 			
