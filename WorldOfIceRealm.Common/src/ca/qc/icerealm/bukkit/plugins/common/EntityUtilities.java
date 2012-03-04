@@ -49,13 +49,13 @@ public class EntityUtilities
         // Aggressive
         if(entity instanceof Creeper) return Creeper;
         if(entity instanceof Skeleton)return Skeleton;
+        if(entity instanceof CaveSpider) return CaveSpider;
         if(entity instanceof Spider) return Spider;
         if(entity instanceof Zombie) return Zombie;
         if(entity instanceof Slime) return Slime;
         if(entity instanceof Ghast) return Ghast;
         if(entity instanceof Blaze) return Blaze;
         if(entity instanceof MagmaCube) return MagmaCube;
-        if(entity instanceof CaveSpider) return CaveSpider;
         if(entity instanceof Silverfish) return Silverfish;
         if(entity instanceof EnderDragon) return EnderDragon;
         

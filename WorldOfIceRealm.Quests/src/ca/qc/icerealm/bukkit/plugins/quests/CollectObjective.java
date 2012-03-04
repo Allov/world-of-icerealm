@@ -97,7 +97,6 @@ public class CollectObjective extends CountObjective implements Runnable, QuestL
 
 	@Override
 	public void run() {
-		Logger.getLogger("Minecraft").info(toString());
 		checkForOwnedAmount();
 	}
 }
