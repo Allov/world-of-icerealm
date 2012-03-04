@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.raredrops;
+package ca.qc.icerealm.bukkit.plugins.raredrops.data;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 import org.bukkit.Material;
 
 import ca.qc.icerealm.bukkit.plugins.common.MapWrapper;
-import ca.qc.icerealm.bukkit.plugins.raredrops.enchantment.EnchantmentsOdds;
+import ca.qc.icerealm.bukkit.plugins.raredrops.enchantment.data.EnchantmentsOdds;
 
 public class RareDropsFactory 
 {
@@ -39,8 +39,6 @@ public class RareDropsFactory
 	{
 		RareDropsOdds odds = new RareDropsOdds();	
 		
-		//List<MapWrapper> materials = configWrapper.getMapList("mobs." + entityName + ".materials", new ArrayList<MapWrapper>());
-
 		for (MapWrapper material : materials) 
 		{
 			RareDropsOddsItem item = new RareDropsOddsItem();

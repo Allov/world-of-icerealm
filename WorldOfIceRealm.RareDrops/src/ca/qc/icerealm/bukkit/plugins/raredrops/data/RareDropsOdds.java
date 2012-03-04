@@ -1,8 +1,9 @@
-package ca.qc.icerealm.bukkit.plugins.raredrops;
+package ca.qc.icerealm.bukkit.plugins.raredrops.data;
 
 import java.util.ArrayList;
 
 import org.bukkit.entity.Monster;
+
 
 public class RareDropsOdds 
 {

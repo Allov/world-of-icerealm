@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.raredrops.enchantment;
+package ca.qc.icerealm.bukkit.plugins.raredrops.enchantment.data;
 
 import org.bukkit.enchantments.Enchantment;
 

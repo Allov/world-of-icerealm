@@ -1,6 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.raredrops.enchantment;
-
-import org.bukkit.Material;
+package ca.qc.icerealm.bukkit.plugins.raredrops.enchantment.data;
 
 public class EnchantmentsOdds 
 {

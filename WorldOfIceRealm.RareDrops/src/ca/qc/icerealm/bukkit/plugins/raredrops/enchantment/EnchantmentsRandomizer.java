@@ -7,6 +7,8 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 
 import ca.qc.icerealm.bukkit.plugins.common.MaterialUtil;
+import ca.qc.icerealm.bukkit.plugins.raredrops.enchantment.data.EnchantmentResult;
+import ca.qc.icerealm.bukkit.plugins.raredrops.enchantment.data.EnchantmentsOdds;
 
 public class EnchantmentsRandomizer 
 {

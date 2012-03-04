@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.raredrops;
+package ca.qc.icerealm.bukkit.plugins.raredrops.data;
 
 import org.bukkit.inventory.ItemStack;
 
