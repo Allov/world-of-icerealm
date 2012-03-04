@@ -15,13 +15,10 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.common.WorldClock;
-import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
-import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 
-public class FishingTournament {
+public class FishingTournament implements Runnable {
 
-	private static final int MineCraftHourInMillis = 50000;
-
+	private static final int Chances = 8; 
 	private static final int Sunset = 0;
 
 	private HashMap<Player, Catches> playersInTournament;
@@ -39,9 +36,6 @@ public class FishingTournament {
 	
 	private final FishingTournamentPlugin plugin;
 	private final Server server;
-	private TimeChecker timeChecker;
-
-	private long alarm;
 	
 	public FishingTournament(FishingTournamentPlugin plugin) {
 		this.plugin = plugin;
@@ -61,7 +55,9 @@ public class FishingTournament {
 	}
 
 	private void startTournament() {
-		boolean draw = RandomUtil.getDrawResult(8);
+		boolean draw = RandomUtil.getDrawResult(Chances);
+		
+		Logger.getLogger("Minecraft").info("Fishing Tournament >> Draw result : " + draw);
 		if (draw && server.getOnlinePlayers().length > 1) {
 			if (fishingEventListener == null) {
 				fishingEventListener = new FishingEventListener(this);
@@ -167,13 +163,14 @@ public class FishingTournament {
 		player.sendMessage(ChatColor.YELLOW + "You caught " + ChatColor.GREEN + catches.getCatches() + ChatColor.YELLOW + " fish! Keep going!");
 	}
 	
-	public void start() {
-		setupAlarm(10000);
+	@Override
+	public void run() {
+		progress();
 	}
 
 	public void progress() {
 		int currentWorldTime = WorldClock.getHour(plugin.getServer().getWorld("world"));
-
+		
 		if (this.lastWorldTime != currentWorldTime) {
 			this.lastWorldTime = currentWorldTime;
 			
@@ -187,16 +184,5 @@ public class FishingTournament {
 				EndTournament();
 			}
 		}
-		
-		setupAlarm(1000);
-	}
-
-	private void setupAlarm(long when) {
-		timeChecker = new TimeChecker(this);
-		TimeServer.getInstance().addListener(getTimeChecker(), when);
-	}
-
-	public TimeChecker getTimeChecker() {
-		return timeChecker;
 	}
 }
