@@ -18,27 +18,19 @@ import ca.qc.icerealm.bukkit.plugins.common.WorldClock;
 
 public class FishingTournament implements Runnable {
 
-	private static final int Chances = 8; 
-	private static final int Sunset = 0;
-
 	private HashMap<Player, Catches> playersInTournament;
 	private boolean inProgress;
 	private int lastWorldTime;
 	private FishingEventListener fishingEventListener;
 	private RegisteredServiceProvider<Economy> economyProvider;
 	
-	// Configurations
-	private final int Span = 6;
-	private final int End = Sunset + Span;
-	private final int Half = End / 2;
-	private final int NearEnd = End - 1;
-	private final int Reward = 300; 
-	
 	private final FishingTournamentPlugin plugin;
 	private final Server server;
+	private final FishingTournamentConfig configuration;
 	
-	public FishingTournament(FishingTournamentPlugin plugin) {
+	public FishingTournament(FishingTournamentPlugin plugin, FishingTournamentConfig configuration) {
 		this.plugin = plugin;
+		this.configuration = configuration;
 		this.server = plugin.getServer();
 	}
 
@@ -55,10 +47,10 @@ public class FishingTournament implements Runnable {
 	}
 
 	private void startTournament() {
-		boolean draw = RandomUtil.getDrawResult(Chances);
+		boolean draw = RandomUtil.getDrawResult(configuration.getChances());
 		
 		Logger.getLogger("Minecraft").info("Fishing Tournament >> Draw result : " + draw);
-		if (draw && server.getOnlinePlayers().length > 1) {
+		if (draw && server.getOnlinePlayers().length > configuration.getPlayerNumberNeeded()) {
 			if (fishingEventListener == null) {
 				fishingEventListener = new FishingEventListener(this);
 				server.getPluginManager().registerEvents(fishingEventListener, plugin);
@@ -70,7 +62,7 @@ public class FishingTournament implements Runnable {
 			
 			server.broadcastMessage(ChatColor.LIGHT_PURPLE + "A fishing tournament is now " + ChatColor.GREEN + "STARTED" + ChatColor.LIGHT_PURPLE + "! " +
 										 "Get your " + ChatColor.YELLOW + "fishing rod " + ChatColor.LIGHT_PURPLE + "and catch some " + ChatColor.YELLOW + "fish! "+
-										 ChatColor.LIGHT_PURPLE + "The " + ChatColor.GREEN + " reward " + ChatColor.LIGHT_PURPLE + "will be " + ChatColor.YELLOW + Reward + ChatColor.LIGHT_PURPLE + " golds!");
+										 ChatColor.LIGHT_PURPLE + "The " + ChatColor.GREEN + " reward " + ChatColor.LIGHT_PURPLE + "will be " + ChatColor.YELLOW + configuration.getReward() + ChatColor.LIGHT_PURPLE + " golds!");
 		}
 	}
 	
@@ -85,7 +77,7 @@ public class FishingTournament implements Runnable {
 			server.broadcastMessage(ChatColor.LIGHT_PURPLE + "The winner " + (winners.size() > 1 ? "are" : "is") + 
 									ChatColor.YELLOW + " " + getWinnerNames(winners) + 
 									ChatColor.LIGHT_PURPLE + " with " + ChatColor.GREEN + winners.get(0).getValue().getCatches() + ChatColor.LIGHT_PURPLE + " catch! " + 
-									ChatColor.YELLOW + Reward / winners.size() + " golds " + ChatColor.LIGHT_PURPLE + " has been awarded" + 
+									ChatColor.YELLOW + configuration.getReward() / winners.size() + " golds " + ChatColor.LIGHT_PURPLE + " has been awarded" + 
 									(winners.size() > 1 ? " to them" : " to him") + "! Congratulations!");
 			giveMoneyReward(winners);
 		}
@@ -139,7 +131,7 @@ public class FishingTournament implements Runnable {
 		if (economyProvider != null) {
 			Economy economy = economyProvider.getProvider();
 			
-			int reward = Reward / winners.size();
+			int reward = configuration.getReward() / winners.size();
 	
 			for (Entry<Player, Catches> entry : winners) {
 				if (economy.bankBalance(entry.getKey().getName()) != null) 
@@ -174,13 +166,13 @@ public class FishingTournament implements Runnable {
 		if (this.lastWorldTime != currentWorldTime) {
 			this.lastWorldTime = currentWorldTime;
 			
-			if (currentWorldTime == Sunset) {
+			if (currentWorldTime == configuration.getStarts()) {
 				startTournament();
-			} else if (isInProgress() && currentWorldTime == Half) {
+			} else if (isInProgress() && currentWorldTime == configuration.getHalfTime()) {
 				notifyHalf();
-			} else if (isInProgress() && currentWorldTime == NearEnd) {
+			} else if (isInProgress() && currentWorldTime == configuration.getNearEnd()) {
 				notifyNearEnd();				
-			} else if (isInProgress() && currentWorldTime == End) {
+			} else if (isInProgress() && currentWorldTime == configuration.getEnd()) {
 				EndTournament();
 			}
 		}
