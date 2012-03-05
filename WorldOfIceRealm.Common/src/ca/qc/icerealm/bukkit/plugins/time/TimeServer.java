@@ -1,9 +1,8 @@
 package ca.qc.icerealm.bukkit.plugins.time;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
@@ -15,7 +14,7 @@ public class TimeServer implements TimeSubject {
 	private TimeLoop _loop;
 	
 	protected TimeServer() {
-		_observers = new ArrayList<TimeObserver>();
+		_observers = new CopyOnWriteArrayList<TimeObserver>();
 		// creating the loop thread and starting it
 		_loop = new TimeLoop();
 		_loop.setTimeServer(this);
@@ -57,7 +56,7 @@ public class TimeServer implements TimeSubject {
 
 	@Override
 	public List<TimeObserver> getDueListener(long timeStamp)  {
-		List<TimeObserver> list = new ArrayList<TimeObserver>();
+		List<TimeObserver> list = new CopyOnWriteArrayList<TimeObserver>();
 		for (TimeObserver t : _observers) {			
 			if (t != null && t.getAlarm() < System.currentTimeMillis()) {
 				list.add(t);
