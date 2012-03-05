@@ -49,6 +49,7 @@ public class RareMobs extends JavaPlugin
 		RareMobsRandomizer randomizer = new RareMobsRandomizer(data);
 		RareMobsTimeObserver observer = new RareMobsTimeObserver(getServer(), randomizer);
 		TimeServer.getInstance().addListener(observer, SPAWN_CHECK_INTERVAL);
-		//getServer().getPluginManager().registerEvents(new DropsListener(), this);
+		
+		getServer().getPluginManager().registerEvents(new RareMobsEntityListener(), this);
 	}
 }

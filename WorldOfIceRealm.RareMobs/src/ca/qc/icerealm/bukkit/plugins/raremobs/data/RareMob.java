@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.bukkit.entity.CreatureType;
 
-import ca.qc.icerealm.bukkit.plugins.raredrops.RareDropsOdds;
+import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsOdds;
 
 public class RareMob 
 {

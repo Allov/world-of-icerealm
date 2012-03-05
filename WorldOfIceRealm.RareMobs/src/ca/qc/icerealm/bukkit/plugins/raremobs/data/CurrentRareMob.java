@@ -1,7 +1,7 @@
 package ca.qc.icerealm.bukkit.plugins.raremobs.data;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 
 public class CurrentRareMob 
@@ -9,12 +9,13 @@ public class CurrentRareMob
 	private static final CurrentRareMob instance = new CurrentRareMob();
 	private RareMob rareMob = null;
 	
-	private long rareMobEntityId = 0;
-	private List<Long> subordinatesEntityId = new ArrayList<Long>();
+	private long rareMobEntityId = -1;
+	private List<Integer> subordinatesEntityId = new CopyOnWriteArrayList<Integer>();
+	private long timeSpawned = 0;
 
     private CurrentRareMob() 
     {
-
+		
     }
    
     public static synchronized CurrentRareMob getInstance() 
@@ -32,12 +33,12 @@ public class CurrentRareMob
 		this.rareMobEntityId = rareMobEntityId;
 	}
 
-	public List<Long> getSubordinatesEntityId() 
+	public List<Integer> getSubordinatesEntityId() 
 	{
 		return subordinatesEntityId;
 	}
 
-	public void setSubordinatesEntityId(List<Long> subordinatesEntityId) 
+	public void setSubordinatesEntityId(List<Integer> subordinatesEntityId) 
 	{
 		this.subordinatesEntityId = subordinatesEntityId;
 	}
@@ -50,5 +51,22 @@ public class CurrentRareMob
 	public void setRareMob(RareMob rareMob) 
 	{
 		this.rareMob = rareMob;
+	}
+
+	public long getTimeSpawned() 
+	{
+		return timeSpawned;
+	}
+
+	public void setTimeSpawned(long timeSpawned) 
+	{
+		this.timeSpawned = timeSpawned;
+	}
+	
+	public void clear()
+	{
+    	setRareMob(null);
+    	setRareMobEntityId(-1);
+    	setSubordinatesEntityId(null);
 	}
 }

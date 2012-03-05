@@ -7,8 +7,8 @@ import java.util.logging.Logger;
 import org.bukkit.entity.CreatureType;
 
 import ca.qc.icerealm.bukkit.plugins.common.MapWrapper;
-import ca.qc.icerealm.bukkit.plugins.raredrops.RareDropsFactory;
-import ca.qc.icerealm.bukkit.plugins.raredrops.RareDropsOdds;
+import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsFactory;
+import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsOdds;
 
 public class RareMobsFactory 
 {
@@ -87,8 +87,8 @@ public class RareMobsFactory
 				List<MapWrapper> raredrops = mob.getMapList("drops", new ArrayList<MapWrapper>());
 				
 				if (raredrops.size() != 0)
-				{
-					RareDropsFactory rardropsFactory = new RareDropsFactory(raredrops, 50);
+				{		
+					RareDropsFactory rardropsFactory = new RareDropsFactory(raredrops, 1);
 					
 					RareDropsOdds dropsOdd = rardropsFactory.createOdds();
 					raremob.setRaredropsOdds(dropsOdd);
