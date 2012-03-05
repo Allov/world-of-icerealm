@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,7 +14,6 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import ca.qc.icerealm.bukkit.plugins.common.ConfigWrapper;
 import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 import ca.qc.icerealm.bukkit.plugins.common.MapWrapper;
-import ca.qc.icerealm.bukkit.plugins.common.MaterialUtil;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropResult;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsFactory;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultiplierData;
@@ -52,7 +50,7 @@ public class RareDropsEntityListener implements Listener
         { 
         	Monster entity = (Monster)event.getEntity();
         	
-        	if (entity.getKiller() instanceof Player)
+        	if (entity.getKiller() != null)
         	{  
         		double multiplier = 1.00;
         		
@@ -97,22 +95,15 @@ public class RareDropsEntityListener implements Listener
 		        	items.add(t);
 					*/
 		        	
-		        	// Notify the player for all obtained rare drops
+		        	// Add drops
 		        	for (int i = 0; i < items.size(); i++)
 		        	{
 		        		RareDropResult raredrop = items.get(i);
-		        		
-		        		String itemName = raredrop.getItemStack().getType().name();
-		        		
-		        		// If no enchantment, this isn't a custom item.
-		        		if (raredrop.getCustomName() != null && raredrop.getItemStack().getEnchantments() != null && !raredrop.getItemStack().getEnchantments().isEmpty())
-		        		{
-		        			itemName = raredrop.getCustomName();
-		        		}
-		        		
-		        		entity.getKiller().sendMessage( ChatColor.YELLOW + EntityUtilities.getEntityName(entity) + " dropped a " + ChatColor.DARK_PURPLE + MaterialUtil.getMaterialFriendName(itemName) + (raredrop.getItemStack().getEnchantments().size() != 0 ? " (enchanted)":""));
 		        		event.getDrops().add(raredrop.getItemStack());
-		        	}	
+		        	}
+		        	
+		        	// Notify the player for all obtained rare drops
+		        	RareDropsChat.notifyPlayer(items, entity.getKiller(), EntityUtilities.getEntityName(entity));        	
         		}
         	}
         }
