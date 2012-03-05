@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Recipes extends JavaPlugin {
@@ -58,6 +59,14 @@ public class Recipes extends JavaPlugin {
         netherBrickFenceB.shape("   ","NNN","NNN");
         netherBrickFenceB.setIngredient('N', Material.NETHER_BRICK);
         server.addRecipe(netherBrickFenceB);
+
+        //
+        // Mycel Block
+        ShapelessRecipe mycelBlock = new ShapelessRecipe( new ItemStack( Material.MYCEL, 1 ) );
+        mycelBlock.addIngredient(1, Material.DIRT);
+        mycelBlock.addIngredient(1, Material.BROWN_MUSHROOM);
+        mycelBlock.addIngredient(1, Material.RED_MUSHROOM);
+        server.addRecipe(mycelBlock);
 
         //TODO: Add recipes to list of custom additions
         
