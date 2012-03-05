@@ -8,8 +8,6 @@ import org.bukkit.entity.Player;
 import ca.qc.icerealm.bukkit.plugins.advancedcompass.data.CompassMode;
 import ca.qc.icerealm.bukkit.plugins.advancedcompass.data.CompassPlayersInfo;
 import ca.qc.icerealm.bukkit.plugins.advancedcompass.data.PlayerCompassData;
-import ca.qc.icerealm.bukkit.plugins.data.DataPersistenceService;
-import ca.qc.icerealm.bukkit.plugins.data.DataSerializationService;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 
 public class CompassToggler 

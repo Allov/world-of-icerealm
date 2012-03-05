@@ -1,7 +1,6 @@
 package ca.qc.icerealm.bukkit.plugins.advancedcompass.data;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Hashtable;
 import java.util.logging.Logger;
 
 import org.bukkit.Location;
@@ -11,7 +10,7 @@ public class CompassPlayersInfo
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 	
    private static final CompassPlayersInfo instance = new CompassPlayersInfo();
-   private Map<String, PlayerCompassData> playersCurrentComppassDataList = new HashMap<String, PlayerCompassData>();
+   private Hashtable<String, PlayerCompassData> playersCurrentComppassDataList = new Hashtable<String, PlayerCompassData>();
 
    private CompassPlayersInfo() 
    {

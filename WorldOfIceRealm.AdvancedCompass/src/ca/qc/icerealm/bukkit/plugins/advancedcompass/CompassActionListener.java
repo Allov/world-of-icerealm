@@ -9,8 +9,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 
-import ca.qc.icerealm.bukkit.plugins.advancedcompass.data.CompassPlayersInfo;
-import ca.qc.icerealm.bukkit.plugins.advancedcompass.data.PlayerCompassData;
 import ca.qc.icerealm.bukkit.plugins.common.LocationUtil;
 
 public class CompassActionListener implements Listener
