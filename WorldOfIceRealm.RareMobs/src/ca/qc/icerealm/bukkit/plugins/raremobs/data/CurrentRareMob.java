@@ -3,6 +3,12 @@ package ca.qc.icerealm.bukkit.plugins.raremobs.data;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+
+import ca.qc.icerealm.bukkit.plugins.raremobs.RareMobZone;
+import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
+
 
 public class CurrentRareMob 
 {
@@ -12,6 +18,10 @@ public class CurrentRareMob
 	private long rareMobEntityId = -1;
 	private List<Integer> subordinatesEntityId = new CopyOnWriteArrayList<Integer>();
 	private long timeSpawned = 0;
+	private Location rareMobLocation = null;
+	private List<Player> fighters = new CopyOnWriteArrayList<Player>();
+	private RareMobZone raremobZone;
+	private int currentHealth = 0;
 
     private CurrentRareMob() 
     {
@@ -63,10 +73,58 @@ public class CurrentRareMob
 		this.timeSpawned = timeSpawned;
 	}
 	
+	public synchronized Location getRareMobLocation() 
+	{
+		return rareMobLocation;
+	}
+
+	public void setRareMobLocation(Location rareMobLocation) 
+	{
+		this.rareMobLocation = rareMobLocation;
+	}
+
 	public void clear()
 	{
     	setRareMob(null);
     	setRareMobEntityId(-1);
-    	setSubordinatesEntityId(null);
+    //	setSubordinatesEntityId(null);
+    	setRareMobLocation(null);
+    	
+    	if (raremobZone != null)
+    	{
+	    	ZoneServer.getInstance().removeListener(getRaremobZone());
+	    	raremobZone = null;
+    	}
 	}
+
+	public List<Player> getFighters() 
+	{
+		return fighters;
+	}
+
+	public void setFighters(List<Player> fighters) 
+	{
+		this.fighters = fighters;
+	}
+
+	public RareMobZone getRaremobZone() 
+	{
+		return raremobZone;
+	}
+
+	public void setRaremobZone(RareMobZone raremobZone) 
+	{
+		this.raremobZone = raremobZone;
+	}
+
+	public int getCurrentHealth() 
+	{
+		return currentHealth;
+	}
+
+	public void setCurrentHealth(int currentHealth) 
+	{
+		this.currentHealth = currentHealth;
+	}
+
 }

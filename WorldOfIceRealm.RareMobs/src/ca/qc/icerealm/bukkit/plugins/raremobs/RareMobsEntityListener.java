@@ -50,6 +50,9 @@ public class RareMobsEntityListener implements Listener
 	        		event.getDrops().add(raredrop.getItemStack());
 	        	}
 	        	
+	        	// Add levels
+	        	event.setDroppedExp(0);
+	        	
 	        	List<Entity> nearbyEntities = entity.getNearbyEntities(50, 50, 50);
 	        	
 	        	// Notify the players in range for all obtained rare drops

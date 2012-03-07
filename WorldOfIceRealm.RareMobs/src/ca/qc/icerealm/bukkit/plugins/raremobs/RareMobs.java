@@ -51,5 +51,6 @@ public class RareMobs extends JavaPlugin
 		TimeServer.getInstance().addListener(observer, SPAWN_CHECK_INTERVAL);
 		
 		getServer().getPluginManager().registerEvents(new RareMobsEntityListener(), this);
+		getServer().getPluginManager().registerEvents(new RareMobDamageListener(), this);
 	}
 }

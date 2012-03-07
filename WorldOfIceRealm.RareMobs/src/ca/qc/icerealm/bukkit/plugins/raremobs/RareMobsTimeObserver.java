@@ -1,16 +1,23 @@
 package ca.qc.icerealm.bukkit.plugins.raremobs;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
+import ca.qc.icerealm.bukkit.plugins.advancedcompass.CustomCompassManager;
 import ca.qc.icerealm.bukkit.plugins.common.ConfigWrapper;
+import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.raremobs.data.CurrentRareMob;
 import ca.qc.icerealm.bukkit.plugins.raremobs.data.RareMob;
 import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
+import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 
 public class RareMobsTimeObserver implements TimeObserver
 {
@@ -48,24 +55,54 @@ public class RareMobsTimeObserver implements TimeObserver
 		if (bukkitServer.getOnlinePlayers().length > 0)
 		{
 			// Attempt to spawn a rare mob only if there's no living rare mob at the moment
-			if (current.getRareMobEntityId() == -1)
+			if (current.getRareMobLocation() == null)
 			{
 				spawnedRareMob = randomizer.randomizeSpawn();
 	
 				if (spawnedRareMob != null)
-				{
-					RareMobSpawner spawner = new RareMobSpawner(bukkitServer, spawnedRareMob);
-					logger.info("attempt to spawn mob");
-					spawner.spawnMobWithSubordinates();
+				{					
+					// Choose a player randomly
+					List<Player> players = bukkitServer.getWorld("World").getPlayers(); 
+					
+					// Don's spawn if all players left
+					if (players.size() != 0)
+					{	
+						bukkitServer.broadcastMessage(ChatColor.RED + "You hear rumors about a rare monster in nearby areas.");
+								
+						// Spawn near a player randomly
+						Collections.shuffle(players);
+						Player p = players.get(0);
+						
+						Location locPlayer = p.getLocation();
+					
+						WorldZone spawnZone = new WorldZone(locPlayer, 100, 20, 100);
+						Location loc = spawnZone.getRandomHighestLocation(bukkitServer.getWorld("World"));
+						
+						// Set the compass so it points on our raremob	
+						for (Player player : bukkitServer.getWorld("World").getPlayers())
+						{
+				        	CustomCompassManager manager = new CustomCompassManager("RareMobs", player);
+				        	manager.setCustomLocation(loc, "Your compass is now pointing at " + ChatColor.RED + spawnedRareMob.getMobName());	
+						}
+						
+						current.setRareMobLocation(loc);
+						current.setRareMob(spawnedRareMob);
+						current.setTimeSpawned(System.currentTimeMillis());
+						
+						WorldZone spawnedZone = new WorldZone(loc, 20);
+						RareMobZone rareMobZone = new RareMobZone(bukkitServer);
+						rareMobZone.setWorldZone(spawnedZone);
+						ZoneServer.getInstance().addListener(rareMobZone);	
+					}
 				}
 			}
 		}
 
 		// Attempt to remove a mob if it was alive for more than 12 minecraft hours
-		if (current.getRareMobEntityId() != -1)
+		if (current.getRareMobLocation() != null)
 		{
 			// Remove it
-			if (System.currentTimeMillis() > current.getTimeSpawned() + 30000)
+			if (System.currentTimeMillis() > current.getTimeSpawned() + 600000)
 			{
 				for (Entity entity : bukkitServer.getWorld("World").getEntities())
 				{

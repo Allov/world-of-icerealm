@@ -12,8 +12,8 @@
 raremobs:
     -   type: ZOMBIE
         name: Mall Roaming Kevin Eubanks
-        health: 120
-        strength multiplier: 2
+        health: 240
+        strength multiplier: 10
         experience: 75
         odds: 50.00
         drops:
@@ -53,8 +53,8 @@ raremobs:
             -   type: SKELETON
     -   type: SKELETON
         name: Bad to the bones
-        health: 120
-        strength multiplier: 2
+        health: 300
+        strength multiplier: 10
         experience: 75
         odds: 50.00
         drops: 
