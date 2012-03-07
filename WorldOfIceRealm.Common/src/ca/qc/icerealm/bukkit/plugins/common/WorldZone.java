@@ -33,6 +33,16 @@ public class WorldZone {
 		_relativeRightBottom = getRelativeBottomRight();
 	}
 	
+	public WorldZone(Location l, double xRadius, double yRadius, double zRadius) {
+		_leftTop = new Location(l.getWorld(), l.getX() - xRadius, l.getY(), l.getZ() - zRadius);
+		_rightBottom = new Location(l.getWorld(), l.getX() + xRadius, l.getY(), l.getZ() + zRadius);
+		_leftTop.setY(l.getY() + yRadius);
+		_rightBottom.setY(l.getY() - yRadius);
+		_world = l.getWorld();
+		setNBlock();		
+		_relativeRightBottom = getRelativeBottomRight();
+	}
+	
 	public WorldZone(Location lt, Location rb) {
 		_leftTop = lt;
 		_rightBottom = rb;
