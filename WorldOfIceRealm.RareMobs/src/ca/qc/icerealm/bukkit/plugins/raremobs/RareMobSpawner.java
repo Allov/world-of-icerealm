@@ -1,6 +1,7 @@
 package ca.qc.icerealm.bukkit.plugins.raremobs;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -49,11 +50,12 @@ public class RareMobSpawner
 				CurrentRareMob currentRareMob = CurrentRareMob.getInstance();
 				currentRareMob.setRareMobEntityId(mob.getEntityId());
 				currentRareMob.setCurrentHealth(currentRareMob.getRareMob().getHealth());
-					
+						
 				// Cancel base raredrops for this type of monster, we handle the drops ourselves
 				RareDropsMultiplierData.getInstance().addEntityRareDropsMultiplier(mob.getEntityId(), 0);
 				List<Integer> subordinatesIds = new CopyOnWriteArrayList<Integer>();
-					
+				Hashtable<Integer, Integer> subHealth = new Hashtable<Integer, Integer>();	
+				
 				if (rareMob.getSubordinates().size() != 0)
 				{
 					double radius = Math.ceil(Math.sqrt(rareMob.getSubordinates().size())) * 2;
@@ -83,9 +85,12 @@ public class RareMobSpawner
 						LivingEntity subordinate = bukkitServer.getWorld("World").spawnCreature(locSub, rareMob.getSubordinates().get(i).getCreatureType());	
 						spawnedLocations.add(locSub.toString());
 						subordinatesIds.add(subordinate.getEntityId());
+						
+						subHealth.put(subordinate.getEntityId(), subordinate.getHealth() * 2);
 					}
 				}
 				
+				currentRareMob.setCurrentSubordinateHealth(subHealth);
 				currentRareMob.setSubordinatesEntityId(subordinatesIds);
 			}
 		}

@@ -1,5 +1,6 @@
 package ca.qc.icerealm.bukkit.plugins.raremobs.data;
 
+import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -22,6 +23,7 @@ public class CurrentRareMob
 	private List<Player> fighters = new CopyOnWriteArrayList<Player>();
 	private RareMobZone raremobZone;
 	private int currentHealth = 0;
+	private Hashtable<Integer, Integer> currentSubordinateHealth = new Hashtable<Integer, Integer>();
 
     private CurrentRareMob() 
     {
@@ -83,20 +85,6 @@ public class CurrentRareMob
 		this.rareMobLocation = rareMobLocation;
 	}
 
-	public void clear()
-	{
-    	setRareMob(null);
-    	setRareMobEntityId(-1);
-    //	setSubordinatesEntityId(null);
-    	setRareMobLocation(null);
-    	
-    	if (raremobZone != null)
-    	{
-	    	ZoneServer.getInstance().removeListener(getRaremobZone());
-	    	raremobZone = null;
-    	}
-	}
-
 	public List<Player> getFighters() 
 	{
 		return fighters;
@@ -127,4 +115,27 @@ public class CurrentRareMob
 		this.currentHealth = currentHealth;
 	}
 
+	public Hashtable<Integer, Integer> getCurrentSubordinateHealth() 
+	{
+		return currentSubordinateHealth;
+	}
+
+	public void setCurrentSubordinateHealth(Hashtable<Integer, Integer> currentSubordinateHealth) 
+	{
+		this.currentSubordinateHealth = currentSubordinateHealth;
+	}
+
+	public void clear()
+	{
+    	setRareMob(null);
+    	setRareMobEntityId(-1);
+    //	setSubordinatesEntityId(null);
+    	setRareMobLocation(null);
+    	
+    	if (raremobZone != null)
+    	{
+	    	ZoneServer.getInstance().removeListener(getRaremobZone());
+	    	raremobZone = null;
+    	}
+	}
 }

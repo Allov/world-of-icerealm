@@ -55,19 +55,27 @@ public class RareMobsEntityListener implements Listener
 	        	// Experience levels will be devided
 	        	event.setDroppedExp(0);
 	        	
-	        	int levels = raremob.getRareMob().getMoney() / raremob.getFighters().size();
+	        	int levels = raremob.getRareMob().getExperienceLevels() / raremob.getFighters().size();
 	        	int money = raremob.getRareMob().getMoney() / raremob.getFighters().size();
 	        	
     			for (Player p : raremob.getFighters())
     			{
-    				economy.depositPlayer(p.getName(), levels);
     				p.setLevel(p.getLevel() + levels);
     				
-    				p.sendMessage((ChatColor.GRAY + "Reward: " + ChatColor.GOLD
-    				+ money + ChatColor.GRAY + " gold and " + ChatColor.GOLD + levels + ChatColor.GRAY + " levels."));
+    				if (economy != null)
+    				{
+	    				economy.depositPlayer(p.getName(), levels);
+	
+	    				p.sendMessage(ChatColor.GRAY + "Reward: " + ChatColor.GOLD
+	    				+ money + ChatColor.GRAY + " gold and " + ChatColor.GOLD + levels + ChatColor.GRAY + " levels.");
+    				}
+    				else
+    				{
+	    				p.sendMessage(ChatColor.GRAY + "Rewards: " + ChatColor.GOLD + levels + ChatColor.GRAY + " levels.");
+    				}
     			}
 	        	
-	        	List<Entity> nearbyEntities = entity.getNearbyEntities(50, 50, 50);
+	        	List<Entity> nearbyEntities = entity.getNearbyEntities(100, 100, 100);
 	        	
 	        	// Notify the players in range for all obtained rare drops
 	        	for (Entity nearbyEntity : nearbyEntities)

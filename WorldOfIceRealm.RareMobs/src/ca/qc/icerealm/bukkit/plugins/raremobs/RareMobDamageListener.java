@@ -2,12 +2,14 @@ package ca.qc.icerealm.bukkit.plugins.raremobs;
 
 import java.util.logging.Logger;
 
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
@@ -52,6 +54,26 @@ public class RareMobDamageListener implements Listener
 	{
 		CurrentRareMob raremob = CurrentRareMob.getInstance();
 		
+		// Cancel fire from sun
+		if(raremob.getRareMobLocation() != null && event.getEntity() instanceof Monster 
+				&& (event.getEntity().getEntityId() == raremob.getRareMobEntityId()) 
+				&& event.getCause() == DamageCause.FIRE_TICK)
+		{
+			event.setCancelled(true);
+			event.getEntity().setFireTicks(0);
+			return;
+		}
+		
+		// Cancel fire from sun for subordinates
+		if((raremob.getSubordinatesEntityId() != null
+				&& raremob.getSubordinatesEntityId().contains(event.getEntity().getEntityId()))
+				 && event.getCause() == DamageCause.FIRE_TICK)
+		{
+			event.setCancelled(true);
+			event.getEntity().setFireTicks(0);
+			return; 
+		}	
+		
 	    if (event instanceof EntityDamageByEntityEvent)
 	    {
 	    	EntityDamageByEntityEvent entityDamageByEntityEvent = (EntityDamageByEntityEvent) event;
@@ -62,7 +84,30 @@ public class RareMobDamageListener implements Listener
 	        	event.setDamage((int)Math.rint(event.getDamage() * raremob.getRareMob().getStrengthMultiplier()));
 	        }
 	        
-	        // Add fighters
+	        // If this is a subordinate, override damage
+	        if(event.getEntity() instanceof Player && raremob.getSubordinatesEntityId() != null && raremob.getSubordinatesEntityId().contains(entityDamageByEntityEvent.getDamager().getEntityId()))
+	        { 
+	        	event.setDamage((int)Math.rint(event.getDamage() * 2));
+	        } 
+	        
+	        // Override damage for arrows as well (skeletons)
+	        if(event.getEntity() instanceof Player && entityDamageByEntityEvent.getDamager() instanceof Arrow) 
+	        {
+	        	Arrow a = (Arrow) entityDamageByEntityEvent.getDamager();
+	        	
+	        	if (a.getShooter().getEntityId() == raremob.getRareMobEntityId())
+	        	{
+	        		event.setDamage((int)Math.rint(event.getDamage() * raremob.getRareMob().getStrengthMultiplier()));
+	        	}
+	        	
+	        	// Subordinates
+	        	if (raremob.getSubordinatesEntityId().contains(a.getShooter().getEntityId()))
+	        	{
+	        		event.setDamage((int)Math.rint(event.getDamage() * 2));
+	        	} 
+	        }
+	        
+	        // Add fighters to the list for rewards
 	        if(entityDamageByEntityEvent.getDamager() instanceof Player && raremob.getRareMobLocation() != null && entityDamageByEntityEvent.getEntity().getEntityId() == raremob.getRareMobEntityId())
 	        {
 	        	Player player = (Player)entityDamageByEntityEvent.getDamager();
@@ -71,43 +116,40 @@ public class RareMobDamageListener implements Listener
 	        	{
 	        		raremob.getFighters().add(player);
 	        	}
+	        	
+	        	// Also reset spawn timer
+	        	raremob.setTimeSpawned(System.currentTimeMillis());
 	        }
 	    }
-		
-		//CustomMonster custom = _customMonsters.get(event.getEntity().getEntityId());		
-		
+	    	
+	    // Handle health for rare mob
 		if(raremob.getRareMobLocation() != null && event.getEntity() instanceof Monster && event.getEntity().getEntityId() == raremob.getRareMobEntityId())
 		{
-		//if (custom != null && event.getEntity() instanceof Monster) {	
 			raremob.setCurrentHealth(raremob.getCurrentHealth() - event.getDamage());
 			Monster m = (Monster)event.getEntity();
 			
 			if (raremob.getCurrentHealth() < 0) 
 			{
 				m.damage(m.getMaxHealth());
-				//_customMonsters.remove(event.getEntity().getEntityId());
 			}
 			else {
 				m.setHealth(m.getMaxHealth());
 			}
 		}
 		
-		// Cancel fire from sun
-		if(raremob.getRareMobLocation() != null && event.getEntity() instanceof Monster 
-				&& (event.getEntity().getEntityId() == raremob.getRareMobEntityId()) 
-				&& event.getCause() == DamageCause.FIRE_TICK)
+		// Handle health for his subordinates
+		if(raremob.getSubordinatesEntityId() != null && event.getEntity() instanceof Monster && raremob.getSubordinatesEntityId().contains(event.getEntity().getEntityId()))
 		{
-		//if (!_config.BurnDuringDaylight && _zone.isInside(e.getEntity().getLocation()) && e.getCause() == DamageCause.FIRE_TICK) {
-			event.setCancelled(true);
-			event.getEntity().setFireTicks(0);
+			raremob.getCurrentSubordinateHealth().put(event.getEntity().getEntityId(), raremob.getCurrentSubordinateHealth().get(event.getEntity().getEntityId()) - event.getDamage());
+			Monster m = (Monster)event.getEntity();
+			logger.info(event.getDamage() + "");
+			if (raremob.getCurrentSubordinateHealth().get(event.getEntity().getEntityId()) < 0) 
+			{
+				m.damage(m.getMaxHealth());
+			}
+			else {
+				m.setHealth(m.getMaxHealth());
+			}
 		}
-		
-		if((raremob.getSubordinatesEntityId() != null
-				&& raremob.getSubordinatesEntityId().contains(event.getEntity().getEntityId()))
-				 && event.getCause() == DamageCause.FIRE_TICK)
-		{
-			event.setCancelled(true);
-			event.getEntity().setFireTicks(0);
-		}	
 	}
 }
