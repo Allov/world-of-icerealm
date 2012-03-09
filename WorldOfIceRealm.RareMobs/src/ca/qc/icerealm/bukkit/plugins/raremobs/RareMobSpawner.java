@@ -3,6 +3,7 @@ package ca.qc.icerealm.bukkit.plugins.raremobs;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
 import org.bukkit.Location;
@@ -43,9 +44,7 @@ public class RareMobSpawner
 			// Cancel if no spawning loc was found
 			if (loc != null)
 			{
-				//logger.info("spawned a mob near: " + loc.toString());
 				LivingEntity mob = bukkitServer.getWorld("World").spawnCreature(loc, rareMob.getCreatureType());
-				//mob.setHealth(rareMob.getHealth());
 				
 				CurrentRareMob currentRareMob = CurrentRareMob.getInstance();
 				currentRareMob.setRareMobEntityId(mob.getEntityId());
@@ -53,7 +52,7 @@ public class RareMobSpawner
 					
 				// Cancel base raredrops for this type of monster, we handle the drops ourselves
 				RareDropsMultiplierData.getInstance().addEntityRareDropsMultiplier(mob.getEntityId(), 0);
-				List<Integer> subordinatesIds = new Vector<Integer>();
+				List<Integer> subordinatesIds = new CopyOnWriteArrayList<Integer>();
 					
 				if (rareMob.getSubordinates().size() != 0)
 				{

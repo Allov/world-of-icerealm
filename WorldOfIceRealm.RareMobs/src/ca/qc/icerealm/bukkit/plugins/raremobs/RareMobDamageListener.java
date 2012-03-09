@@ -22,30 +22,6 @@ public class RareMobDamageListener implements Listener
 
 	}
 
-/*	@EventHandler(priority = EventPriority.NORMAL)
-	public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event)
-	{     
-		CurrentRareMob raremob = CurrentRareMob.getInstance();
-		logger.info("INNNNNNNN");
-		// If this is our rare mob, override damage
-        if(event.getEntity() instanceof Monster && raremob.getRareMobLocation() != null && event.getEntity().getEntityId() == raremob.getRareMobEntityId())
-        { 
-        	logger.info("new damage");
-        	event.setDamage((int)Math.rint(event.getDamage() * raremob.getRareMob().getStrengthMultiplier()));
-        }
-        
-        // Add fighters
-        if(event.getEntity() instanceof Player && raremob.getRareMobLocation() != null && event.getDamager().getEntityId() == raremob.getRareMobEntityId())
-        {
-        	Player player = (Player)event.getEntity();
-        	
-        	if (!raremob.getFighters().contains(player))
-        	{
-        		logger.info("add player");
-        		raremob.getFighters().add(player);
-        	}
-        }
-	}*/
 	/*
 	private HashMap<Integer, CustomMonster> _customMonsters;
 	
@@ -134,27 +110,4 @@ public class RareMobDamageListener implements Listener
 			event.getEntity().setFireTicks(0);
 		}	
 	}
-	
-	/*@EventHandler(priority = EventPriority.NORMAL)
-	public void onMonsterBurning(EntityDamageEvent event) 
-	{
-		CurrentRareMob raremob = CurrentRareMob.getInstance();
-		
-		if(raremob.getRareMobLocation() != null && event.getEntity() instanceof Monster 
-				&& (event.getEntity().getEntityId() == raremob.getRareMobEntityId()) 
-				&& event.getCause() == DamageCause.FIRE_TICK)
-		{
-		//if (!_config.BurnDuringDaylight && _zone.isInside(e.getEntity().getLocation()) && e.getCause() == DamageCause.FIRE_TICK) {
-			event.setCancelled(true);
-			event.getEntity().setFireTicks(0);
-		}
-		
-		if((raremob.getSubordinatesEntityId() != null
-				&& raremob.getSubordinatesEntityId().contains(event.getEntity().getEntityId()))
-				 && event.getCause() == DamageCause.FIRE_TICK)
-		{
-			event.setCancelled(true);
-			event.getEntity().setFireTicks(0);
-		}		
-	}*/
 }

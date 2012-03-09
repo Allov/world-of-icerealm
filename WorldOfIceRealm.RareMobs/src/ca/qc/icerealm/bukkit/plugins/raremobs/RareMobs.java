@@ -4,8 +4,13 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+
+import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import ca.qc.icerealm.bukkit.plugins.common.ConfigWrapper;
@@ -17,6 +22,9 @@ import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 public class RareMobs extends JavaPlugin
 {
 	public static final int SPAWN_CHECK_INTERVAL = 10000;
+	private PluginManager pluginManager;
+	private RegisteredServiceProvider<Economy> economyProvider;
+	public final Logger logger = Logger.getLogger(("Minecraft"));
 	
 	@Override
 	public void onDisable() 
@@ -50,7 +58,22 @@ public class RareMobs extends JavaPlugin
 		RareMobsTimeObserver observer = new RareMobsTimeObserver(getServer(), randomizer);
 		TimeServer.getInstance().addListener(observer, SPAWN_CHECK_INTERVAL);
 		
-		getServer().getPluginManager().registerEvents(new RareMobsEntityListener(), this);
+		pluginManager = getServer().getPluginManager();
+		
+		if(pluginManager.isPluginEnabled("Vault")) {
+			economyProvider = getServer()
+					.getServicesManager()
+					.getRegistration(net.milkbowl.vault.economy.Economy.class);
+			logger.info("gnu: " + economyProvider.toString());
+		}
+		else
+		{
+			logger.info("bleh");
+		}
+		
+		logger.info("ECO: " + economyProvider.getProvider().getName());
+		
+		getServer().getPluginManager().registerEvents(new RareMobsEntityListener(economyProvider.getProvider()), this);
 		getServer().getPluginManager().registerEvents(new RareMobDamageListener(), this);
 	}
 }

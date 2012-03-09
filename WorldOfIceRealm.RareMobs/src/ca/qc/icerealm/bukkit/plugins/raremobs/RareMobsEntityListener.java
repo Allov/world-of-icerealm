@@ -19,14 +19,16 @@ import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropResult;
 import ca.qc.icerealm.bukkit.plugins.raredrops.randomizer.MultipleRareDropsRandomizer;
 import ca.qc.icerealm.bukkit.plugins.raredrops.randomizer.RareDropsRandomizer;
 import ca.qc.icerealm.bukkit.plugins.raremobs.data.CurrentRareMob;
+import net.milkbowl.vault.economy.Economy;
 
 public class RareMobsEntityListener implements Listener
 {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
+	private final Economy economy;
 	
-	public RareMobsEntityListener()
+	public RareMobsEntityListener(Economy economy)
 	{
-
+		this.economy = economy;
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -50,8 +52,20 @@ public class RareMobsEntityListener implements Listener
 	        		event.getDrops().add(raredrop.getItemStack());
 	        	}
 	        	
-	        	// Add levels
+	        	// Experience levels will be devided
 	        	event.setDroppedExp(0);
+	        	
+	        	int levels = raremob.getRareMob().getMoney() / raremob.getFighters().size();
+	        	int money = raremob.getRareMob().getMoney() / raremob.getFighters().size();
+	        	
+    			for (Player p : raremob.getFighters())
+    			{
+    				economy.depositPlayer(p.getName(), levels);
+    				p.setLevel(p.getLevel() + levels);
+    				
+    				p.sendMessage((ChatColor.GRAY + "Reward: " + ChatColor.GOLD
+    				+ money + ChatColor.GRAY + " gold and " + ChatColor.GOLD + levels + ChatColor.GRAY + " levels."));
+    			}
 	        	
 	        	List<Entity> nearbyEntities = entity.getNearbyEntities(50, 50, 50);
 	        	
@@ -71,7 +85,7 @@ public class RareMobsEntityListener implements Listener
 	        	}
 	        	else
 	        	{
-	        		entity.getServer().broadcastMessage(ChatColor.GREEN + raremob.getRareMob().getMobName() + " was slain by " + ChatColor.GREEN + entity.getKiller().getName());
+	        		entity.getServer().broadcastMessage(ChatColor.GREEN + raremob.getRareMob().getMobName() + " was slain by " + ChatColor.GOLD + entity.getKiller().getName());
 	        	}
 	        	
 	        	// Reset current mob

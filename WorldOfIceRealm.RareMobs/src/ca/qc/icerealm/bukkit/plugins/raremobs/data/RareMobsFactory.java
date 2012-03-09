@@ -57,7 +57,8 @@ public class RareMobsFactory
 				raremob.setCreatureType(CreatureType.valueOf(mob.getString("type", null)));		
 				raremob.setMobName(mob.getString("name", null));
 				raremob.setSpawnOdds(mob.getDouble("odds", 0.00) * oddsMultiplier);
-				raremob.setExperience(mob.getInt("experience", 0));
+				raremob.setExperienceLevels(mob.getInt("experienceLevels", 0));
+				raremob.setMoney(mob.getInt("money", 0));
 				raremob.setHealth(mob.getInt("health", 1));
 				raremob.setStrengthMultiplier(mob.getInt("strength multiplier", 1));
 				

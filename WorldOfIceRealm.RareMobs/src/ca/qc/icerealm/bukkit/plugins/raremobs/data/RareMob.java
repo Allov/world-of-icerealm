@@ -13,7 +13,8 @@ public class RareMob
 	private CreatureType creatureType = null;
 	private int health = 0;
 	private double strengthMultiplier = 0.00;
-	private int experience = 0;
+	private int experienceLevels = 0;
+	private int money = 0;
 	private List<Subordinate> subordinates;
 	private RareDropsOdds raredropsOdds;
 
@@ -77,14 +78,14 @@ public class RareMob
 		this.strengthMultiplier = strengthMultiplier;
 	}
 
-	public int getExperience() 
+	public int getExperienceLevels() 
 	{
-		return experience;
+		return experienceLevels;
 	}
 
-	public void setExperience(int experience) 
+	public void setExperienceLevels(int experienceLevels) 
 	{
-		this.experience = experience;
+		this.experienceLevels = experienceLevels;
 	}
 
 	public RareDropsOdds getRaredropsOdds() 
@@ -95,5 +96,15 @@ public class RareMob
 	public void setRaredropsOdds(RareDropsOdds raredropsOdds) 
 	{
 		this.raredropsOdds = raredropsOdds;
+	}
+
+	public int getMoney() 
+	{
+		return money;
+	}
+
+	public void setMoney(int money) 
+	{
+		this.money = money;
 	}
 }
