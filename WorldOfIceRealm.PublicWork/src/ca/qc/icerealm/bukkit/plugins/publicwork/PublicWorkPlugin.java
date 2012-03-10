@@ -45,7 +45,7 @@ public class PublicWorkPlugin extends JavaPlugin implements CommandExecutor, Lis
 	public void onEnable() {
 		
 		_zones = new ArrayList<WorldZone>();
-		
+		_shoveling = new ArrayList<ShovelingZone>();
 		
 		// commande console
 		getCommand("pw").setExecutor(this);
