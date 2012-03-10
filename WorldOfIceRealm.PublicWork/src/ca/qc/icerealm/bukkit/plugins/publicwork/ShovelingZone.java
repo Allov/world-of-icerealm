@@ -32,7 +32,7 @@ public class ShovelingZone implements ZoneObserver {
 
 	@Override
 	public void playerEntered(Player p) {
-		p.sendMessage(ChatColor.GREEN + "You are inside a shoveling zone! Dig it!");
+		p.sendMessage(ChatColor.GRAY + "[Public Works]" + ChatColor.GREEN + " Mr Plow, that's my name, again, it's Mr Plow");
 	}
 
 	@Override

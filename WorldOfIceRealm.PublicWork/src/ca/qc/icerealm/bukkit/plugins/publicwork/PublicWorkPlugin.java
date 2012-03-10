@@ -52,17 +52,19 @@ public class PublicWorkPlugin extends JavaPlugin implements CommandExecutor, Lis
 
 		// zone de pelletage
 					
-		WorldZone roadToBattleField = new WorldZone(getServer().getWorld("world"), "736,245,814,272,0,128");
+		WorldZone roadToBattleField = new WorldZone(getServer().getWorld("world"), "736,245,814,272,50,128");
 		_zones.add(roadToBattleField);
 		ShovelingZone battle = new ShovelingZone(getServer(), roadToBattleField);
 		_zoneServer.addListener(battle);
 		_shoveling.add(battle);
 		
-		WorldZone village = new WorldZone(getServer().getWorld("world"), "617,214,744,298,40,128");
+		WorldZone village = new WorldZone(getServer().getWorld("world"), "603,192,750,328,50,128");
 		_zones.add(village);
 		ShovelingZone shov = new ShovelingZone(getServer(), village);
 		_zoneServer.addListener(shov);
 		_shoveling.add(shov);
+		
+		
 		
 		
 		// listener pour savoir ce qui est pelleté
