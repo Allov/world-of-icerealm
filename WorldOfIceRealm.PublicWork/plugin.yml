@@ -1,0 +1,11 @@
+name: WoI.PublicWork
+main: ca.qc.icerealm.bukkit.plugins.publicwork.PublicWorkPlugin
+version: 1.0.0
+description: A simple vendor to get rid of useless item
+
+commands:
+  pw:
+    description: able to control the price and the location of it
+
+     
+       
