@@ -14,7 +14,7 @@ raremobs:
         name: Mall Roaming Kevin Eubanks
         health: 400
         strength multiplier: 3
-        odds: 2.00
+        odds: 0.60
         rewards:   
             experienceLevels: 10 
             money: 2000           
@@ -59,7 +59,7 @@ raremobs:
         name: Bad to the bones
         health: 500
         strength multiplier: 3
-        odds: 1.00
+        odds: 0.40
         rewards:
             experienceLevels: 12
             money: 2400
@@ -109,7 +109,7 @@ raremobs:
         name: Boner Danny
         health: 1000
         strength multiplier: 10
-        odds: 1.00
+        odds: 0.25
         rewards:         
             experienceLevels: 15
             money: 3000    

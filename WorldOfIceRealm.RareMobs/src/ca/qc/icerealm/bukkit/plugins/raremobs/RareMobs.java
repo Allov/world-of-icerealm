@@ -21,7 +21,7 @@ import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 
 public class RareMobs extends JavaPlugin
 {
-	public static final int SPAWN_CHECK_INTERVAL = 10000;
+	public static final int SPAWN_CHECK_INTERVAL = 50000;
 	private PluginManager pluginManager;
 	private RegisteredServiceProvider<Economy> economyProvider;
 	public final Logger logger = Logger.getLogger(("Minecraft"));

@@ -90,10 +90,10 @@ public class RareMobsFactory
 				}
 				
 				// Load raredrops for this raremob
-				List<MapWrapper> raredrops = mob.getMapList("rewards.drops", new ArrayList<MapWrapper>());
+				List<MapWrapper> raredrops = rawards.getMapList("drops", new ArrayList<MapWrapper>());
 				
 				if (raredrops.size() != 0)
-				{		
+				{	
 					RareDropsFactory rardropsFactory = new RareDropsFactory(raredrops, 1);
 					
 					RareDropsOdds dropsOdd = rardropsFactory.createOdds();
