@@ -31,11 +31,14 @@ public class PublicWorkPlugin extends JavaPlugin implements CommandExecutor, Lis
 	private List<WorldZone> _zones;
 	private RegisteredServiceProvider<Economy> economyProvider;
 	private Double _amountPerSnow = 1.0;
+	private List<ShovelingZone> _shoveling;
 	
 	@Override
 	public void onDisable() {
 		// TODO Auto-generated method stub
-		
+		for (ShovelingZone z : _shoveling) {
+			_zoneServer.removeListener(z);
+		}
 	}
 
 	@Override
@@ -53,11 +56,13 @@ public class PublicWorkPlugin extends JavaPlugin implements CommandExecutor, Lis
 		_zones.add(roadToBattleField);
 		ShovelingZone battle = new ShovelingZone(getServer(), roadToBattleField);
 		_zoneServer.addListener(battle);
+		_shoveling.add(battle);
 		
 		WorldZone village = new WorldZone(getServer().getWorld("world"), "617,214,744,298,40,128");
 		_zones.add(village);
 		ShovelingZone shov = new ShovelingZone(getServer(), village);
 		_zoneServer.addListener(shov);
+		_shoveling.add(shov);
 		
 		
 		// listener pour savoir ce qui est pelleté
