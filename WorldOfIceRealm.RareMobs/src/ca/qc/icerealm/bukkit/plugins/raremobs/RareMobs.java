@@ -64,14 +64,7 @@ public class RareMobs extends JavaPlugin
 			economyProvider = getServer()
 					.getServicesManager()
 					.getRegistration(net.milkbowl.vault.economy.Economy.class);
-			logger.info("gnu: " + economyProvider.toString());
 		}
-		else
-		{
-			logger.info("bleh");
-		}
-		
-		logger.info("ECO: " + economyProvider.getProvider().getName());
 		
 		getServer().getPluginManager().registerEvents(new RareMobsEntityListener(economyProvider.getProvider()), this);
 		getServer().getPluginManager().registerEvents(new RareMobDamageListener(), this);

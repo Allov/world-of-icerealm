@@ -23,7 +23,7 @@ public class CurrentRareMob
 	private List<Player> fighters = new CopyOnWriteArrayList<Player>();
 	private RareMobZone raremobZone;
 	private int currentHealth = 0;
-	private Hashtable<Integer, Integer> currentSubordinateHealth = new Hashtable<Integer, Integer>();
+	private Hashtable<Integer, Double> currentSubordinateHealth = new Hashtable<Integer, Double>();
 
     private CurrentRareMob() 
     {
@@ -115,12 +115,12 @@ public class CurrentRareMob
 		this.currentHealth = currentHealth;
 	}
 
-	public Hashtable<Integer, Integer> getCurrentSubordinateHealth() 
+	public Hashtable<Integer, Double> getCurrentSubordinateHealth() 
 	{
 		return currentSubordinateHealth;
 	}
 
-	public void setCurrentSubordinateHealth(Hashtable<Integer, Integer> currentSubordinateHealth) 
+	public void setCurrentSubordinateHealth(Hashtable<Integer, Double> currentSubordinateHealth) 
 	{
 		this.currentSubordinateHealth = currentSubordinateHealth;
 	}

@@ -2,6 +2,7 @@ package ca.qc.icerealm.bukkit.plugins.raremobs.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.bukkit.entity.CreatureType;
@@ -45,8 +46,6 @@ public class RareMobsFactory
 		{
 			RareMob raremob = new RareMob();
 			
-			logger.info("Type: " +  mob.getString("type", null));
-			
 			// Make sure the mob exists
 			if (CreatureType.valueOf(mob.getString("type", null)) == null)
 			{
@@ -57,10 +56,16 @@ public class RareMobsFactory
 				raremob.setCreatureType(CreatureType.valueOf(mob.getString("type", null)));		
 				raremob.setMobName(mob.getString("name", null));
 				raremob.setSpawnOdds(mob.getDouble("odds", 0.00) * oddsMultiplier);
-				raremob.setExperienceLevels(mob.getInt("experienceLevels", 0));
-				raremob.setMoney(mob.getInt("money", 0));
-				raremob.setHealth(mob.getInt("health", 1));
+				
+				Map<String, Object> temp = mob.getMap();
+				MapWrapper rawards = new MapWrapper((Map<String, Object>)temp.get("rewards"));
+								
+				raremob.setExperienceLevels(rawards.getInt("experienceLevels", 0));
+				raremob.setMoney(rawards.getInt("money", 0));
+				raremob.setHealth(mob.getInt("health", 20));
 				raremob.setStrengthMultiplier(mob.getInt("strength multiplier", 1));
+				raremob.setSubordinatesHealthMultiplier(mob.getDouble("subordinates health multiplier", 1));
+				raremob.setSubordinatesDamageMultiplier(mob.getDouble("subordinates strength multiplier", 1));
 				
 				// Load subordinates (mobs' friends)
 				ArrayList<Subordinate> subList = new ArrayList<Subordinate>();
@@ -85,7 +90,7 @@ public class RareMobsFactory
 				}
 				
 				// Load raredrops for this raremob
-				List<MapWrapper> raredrops = mob.getMapList("drops", new ArrayList<MapWrapper>());
+				List<MapWrapper> raredrops = mob.getMapList("rewards.drops", new ArrayList<MapWrapper>());
 				
 				if (raredrops.size() != 0)
 				{		
@@ -93,7 +98,6 @@ public class RareMobsFactory
 					
 					RareDropsOdds dropsOdd = rardropsFactory.createOdds();
 					raremob.setRaredropsOdds(dropsOdd);
-					logger.info("adding raredrops");
 				}
 				
 				data.addRareMob(raremob);

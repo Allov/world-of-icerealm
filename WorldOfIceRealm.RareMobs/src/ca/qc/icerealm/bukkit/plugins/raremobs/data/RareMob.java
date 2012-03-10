@@ -15,6 +15,8 @@ public class RareMob
 	private double strengthMultiplier = 0.00;
 	private int experienceLevels = 0;
 	private int money = 0;
+	private double subordinatesDamageMultiplier = 0;
+	private double subordinatesHealthMultiplier = 0;
 	private List<Subordinate> subordinates;
 	private RareDropsOdds raredropsOdds;
 
@@ -106,5 +108,25 @@ public class RareMob
 	public void setMoney(int money) 
 	{
 		this.money = money;
+	}
+
+	public double getSubordinatesDamageMultiplier() 
+	{
+		return subordinatesDamageMultiplier;
+	}
+
+	public void setSubordinatesDamageMultiplier(double subordinatesDamageMultiplier) 
+	{
+		this.subordinatesDamageMultiplier = subordinatesDamageMultiplier;
+	}
+
+	public double getSubordinatesHealthMultiplier() 
+	{
+		return subordinatesHealthMultiplier;
+	}
+
+	public void setSubordinatesHealthMultiplier(double subordinatesHealthMultiplier) 
+	{
+		this.subordinatesHealthMultiplier = subordinatesHealthMultiplier;
 	}
 }

@@ -87,7 +87,7 @@ public class RareMobDamageListener implements Listener
 	        // If this is a subordinate, override damage
 	        if(event.getEntity() instanceof Player && raremob.getSubordinatesEntityId() != null && raremob.getSubordinatesEntityId().contains(entityDamageByEntityEvent.getDamager().getEntityId()))
 	        { 
-	        	event.setDamage((int)Math.rint(event.getDamage() * 2));
+	        	event.setDamage((int)Math.rint(event.getDamage() * raremob.getRareMob().getSubordinatesDamageMultiplier()));
 	        } 
 	        
 	        // Override damage for arrows as well (skeletons)
@@ -97,18 +97,20 @@ public class RareMobDamageListener implements Listener
 	        	
 	        	if (a.getShooter().getEntityId() == raremob.getRareMobEntityId())
 	        	{
-	        		event.setDamage((int)Math.rint(event.getDamage() * raremob.getRareMob().getStrengthMultiplier()));
+	        		event.setDamage((int)Math.rint(event.getDamage() * raremob.getRareMob().getStrengthMultiplier()));	
 	        	}
 	        	
 	        	// Subordinates
 	        	if (raremob.getSubordinatesEntityId().contains(a.getShooter().getEntityId()))
 	        	{
-	        		event.setDamage((int)Math.rint(event.getDamage() * 2));
+	        		event.setDamage((int)Math.rint(event.getDamage() * raremob.getRareMob().getSubordinatesDamageMultiplier()));
 	        	} 
 	        }
 	        
 	        // Add fighters to the list for rewards
-	        if(entityDamageByEntityEvent.getDamager() instanceof Player && raremob.getRareMobLocation() != null && entityDamageByEntityEvent.getEntity().getEntityId() == raremob.getRareMobEntityId())
+	        if(entityDamageByEntityEvent.getDamager() instanceof Player && raremob.getRareMobLocation() != null 
+	        		&& (entityDamageByEntityEvent.getEntity().getEntityId() == raremob.getRareMobEntityId()
+	        		|| raremob.getSubordinatesEntityId().contains(entityDamageByEntityEvent.getEntity().getEntityId())))
 	        {
 	        	Player player = (Player)entityDamageByEntityEvent.getDamager();
 	        	
@@ -142,7 +144,7 @@ public class RareMobDamageListener implements Listener
 		{
 			raremob.getCurrentSubordinateHealth().put(event.getEntity().getEntityId(), raremob.getCurrentSubordinateHealth().get(event.getEntity().getEntityId()) - event.getDamage());
 			Monster m = (Monster)event.getEntity();
-			logger.info(event.getDamage() + "");
+
 			if (raremob.getCurrentSubordinateHealth().get(event.getEntity().getEntityId()) < 0) 
 			{
 				m.damage(m.getMaxHealth());

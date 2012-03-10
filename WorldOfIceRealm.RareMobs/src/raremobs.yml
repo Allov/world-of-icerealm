@@ -12,41 +12,44 @@
 raremobs:
     -   type: ZOMBIE
         name: Mall Roaming Kevin Eubanks
-        health: 600
-        strength multiplier: 5
-        experienceLevels: 10
-        money: 1500
-        odds: 25.00
-        drops:
-            -   name: IRON_BOOTS
-                odds: 25.00
-                enchantments: high odds 
-            -   name: IRON_CHESTPLATE
-                odds: 25.00
-                enchantments: high odds 
-            -   name: IRON_HELMET
-                odds: 25.00
-                enchantments: high odds 
-            -   name: IRON_LEGGINGS
-                odds: 25.00
-                enchantments: high odds    
-            -   name: IRON_AXE               # custom rare weapon
-                custom name: iron battle axe
-                odds: 15.00
-                enchantments: sure high odds
-                enchantments as: IRON_SWORD
-            -   name: DIAMOND_AXE               # custom rare weapon
-                custom name: diamond battle axe
-                odds: 10.00
-                enchantments: sure average odds
-                enchantments as: IRON_SWORD
-            -   name: DIAMOND_SWORD
-                odds: 10.00
-                enchantments: average odds   
-            -   name: GOLDEN_APPLE
-                odds: 75.00
-            -   name: DIAMOND
-                odds: 3.00
+        health: 400
+        strength multiplier: 3
+        odds: 2.00
+        rewards:   
+            experienceLevels: 10 
+            money: 2000           
+            drops:
+                -   name: IRON_BOOTS
+                    odds: 25.00
+                    enchantments: high odds 
+                -   name: IRON_CHESTPLATE
+                    odds: 25.00
+                    enchantments: high odds 
+                -   name: IRON_HELMET
+                    odds: 25.00
+                    enchantments: high odds 
+                -   name: IRON_LEGGINGS
+                    odds: 25.00
+                    enchantments: high odds    
+                -   name: IRON_AXE               # custom rare weapon
+                    custom name: iron battle axe
+                    odds: 15.00
+                    enchantments: sure high odds
+                    enchantments as: IRON_SWORD
+                -   name: DIAMOND_AXE               # custom rare weapon
+                    custom name: diamond battle axe
+                    odds: 10.00
+                    enchantments: sure average odds
+                    enchantments as: IRON_SWORD
+                -   name: DIAMOND_SWORD
+                    odds: 10.00
+                    enchantments: average odds   
+                -   name: GOLDEN_APPLE
+                    odds: 75.00
+                -   name: DIAMOND
+                    odds: 3.00
+        subordinates health multiplier: 3
+        subordinates strength multiplier: 2
         subordinates:
             -   type: SKELETON
             -   type: SKELETON
@@ -54,95 +57,87 @@ raremobs:
             -   type: SKELETON
     -   type: SKELETON
         name: Bad to the bones
-        health: 800
-        strength multiplier: 8
-        experienceLevels: 12
-        money: 1800
-        odds: 25.00
-        drops: 
-            -   name: DIAMOND_PICKAXE
-                odds: 15.00
-                enchantments: average odds
-            -   name: DIAMOND_SPADE
-                odds: 15.00
-                enchantments: average odds
-            -   name: DIAMOND_HOE
-                odds: 15.00
-            -   name: DIAMOND_SWORD
-                odds: 15.00
-                enchantments: average odds     
-            -   name: DIAMOND_AXE
-                odds: 15.00
-                enchantments: average odds        
-            -   name: DIAMOND_AXE            # custom rare weapon
-                custom name: diamond battle axe
-                odds: 10.00
-                enchantments: sure high odds
-                enchantments as: DIAMOND_SWORD
-            -   name: SHEARS                 # custom rare weapon
-                custom name: scissors
-                odds: 15.00
-                enchantments: sure high odds
-                enchantments as: IRON_SWORD
-            -   name: BOW
-                odds: 50.00
-                enchantments: high odds    
-            -   name: GOLDEN_APPLE
-                odds: 75.00
-            -   name: DIAMOND_SWORD
-                odds: 15.00
-                enchantments: average odds       
+        health: 500
+        strength multiplier: 3
+        odds: 1.00
+        rewards:
+            experienceLevels: 12
+            money: 2400
+            drops: 
+                -   name: DIAMOND_PICKAXE
+                    odds: 15.00
+                    enchantments: average odds
+                -   name: DIAMOND_SPADE
+                    odds: 15.00
+                    enchantments: average odds
+                -   name: DIAMOND_HOE
+                    odds: 15.00
+                -   name: DIAMOND_SWORD
+                    odds: 15.00
+                    enchantments: average odds     
+                -   name: DIAMOND_AXE
+                    odds: 15.00
+                    enchantments: average odds        
+                -   name: DIAMOND_AXE            # custom rare weapon
+                    custom name: diamond battle axe
+                    odds: 10.00
+                    enchantments: sure high odds
+                    enchantments as: DIAMOND_SWORD
+                -   name: SHEARS                 # custom rare weapon
+                    custom name: scissors
+                    odds: 15.00
+                    enchantments: sure high odds
+                    enchantments as: IRON_SWORD
+                -   name: BOW
+                    odds: 50.00
+                    enchantments: high odds    
+                -   name: GOLDEN_APPLE
+                    odds: 75.00
+                -   name: DIAMOND_SWORD
+                    odds: 15.00
+                    enchantments: average odds     
+        subordinates health multiplier: 2
+        subordinates strength multiplier: 2
         subordinates:
-            - type:   ZOMBIE
-            - type:   ZOMBIE
-            - type:   ZOMBIE
-            - type:   ZOMBIE
-            - type:   ZOMBIE
-            - type:   ZOMBIE
+            - type: ZOMBIE
+            - type: ZOMBIE
+            - type: ZOMBIE
+            - type: ZOMBIE
+            - type: ZOMBIE
+            - type: ZOMBIE
     -   type: SKELETON
         name: Boner Danny
         health: 1000
         strength multiplier: 10
-        experienceLevels: 15
-        money: 2400
-        odds: 25.00
-        drops: 
-            -   name: DIAMOND_PICKAXE
-                odds: 15.00
-                enchantments: average odds
-            -   name: DIAMOND_SPADE
-                odds: 15.00
-                enchantments: average odds
-            -   name: DIAMOND_HOE
-                odds: 15.00
-            -   name: DIAMOND_SWORD
-                odds: 15.00
-                enchantments: average odds     
-            -   name: DIAMOND_AXE
-                odds: 15.00
-                enchantments: average odds        
-            -   name: DIAMOND_AXE            # custom rare weapon
-                custom name: diamond battle axe
-                odds: 10.00
-                enchantments: sure high odds
-                enchantments as: DIAMOND_SWORD
-            -   name: SHEARS                 # custom rare weapon
-                custom name: scissors
-                odds: 15.00
-                enchantments: sure high odds
-                enchantments as: IRON_SWORD
-            -   name: BOW
-                odds: 50.00
-                enchantments: high odds    
-            -   name: GOLDEN_APPLE
-                odds: 75.00
-            -   name: DIAMOND_SWORD
-                odds: 15.00
-                enchantments: average odds       
+        odds: 1.00
+        rewards:         
+            experienceLevels: 15
+            money: 3000    
+            drops: 
+                -   name: DIAMOND_BOOTS
+                    odds: 5.00
+                    enchantments: high odds 
+                -   name: DIAMOND_CHESTPLATE
+                    odds: 5.00
+                    enchantments: high odds 
+                -   name: DIAMOND_HELMET
+                    odds: 5.00
+                    enchantments: high odds 
+                -   name: DIAMOND_LEGGINGS
+                    odds: 5.00
+                    enchantments: high odds        
+                -   name: BOW
+                    odds: 50.00
+                    enchantments: high odds    
+                -   name: GOLDEN_APPLE
+                    odds: 75.00
+                -   name: DIAMOND_SWORD
+                    odds: 10.00
+                    enchantments: average odds      
+        subordinates health multiplier: 3
+        subordinates strength multiplier: 2.5
         subordinates:
-            - type: SPIDER
-            - type: SPIDER
-            - type: SPIDER
-            - type: SPIDER
-            - type: SPIDER
-            - type: SPIDER
+            - type: CAVE_SPIDER
+            - type: CAVE_SPIDER
+            - type: CAVE_SPIDER
+            - type: CAVE_SPIDER

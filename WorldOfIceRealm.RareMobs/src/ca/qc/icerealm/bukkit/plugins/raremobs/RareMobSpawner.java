@@ -54,7 +54,7 @@ public class RareMobSpawner
 				// Cancel base raredrops for this type of monster, we handle the drops ourselves
 				RareDropsMultiplierData.getInstance().addEntityRareDropsMultiplier(mob.getEntityId(), 0);
 				List<Integer> subordinatesIds = new CopyOnWriteArrayList<Integer>();
-				Hashtable<Integer, Integer> subHealth = new Hashtable<Integer, Integer>();	
+				Hashtable<Integer, Double> subHealth = new Hashtable<Integer, Double>();	
 				
 				if (rareMob.getSubordinates().size() != 0)
 				{
@@ -86,7 +86,7 @@ public class RareMobSpawner
 						spawnedLocations.add(locSub.toString());
 						subordinatesIds.add(subordinate.getEntityId());
 						
-						subHealth.put(subordinate.getEntityId(), subordinate.getHealth() * 2);
+						subHealth.put(subordinate.getEntityId(), subordinate.getHealth() * rareMob.getSubordinatesHealthMultiplier());
 					}
 				}
 				
