@@ -1,10 +1,13 @@
 package ca.qc.icerealm.bukkit.plugins.publicwork;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -25,7 +28,7 @@ public class PublicWorkPlugin extends JavaPlugin implements CommandExecutor, Lis
 
 	private Logger _logger = Logger.getLogger("Minecraft");
 	private ZoneSubject _zoneServer = ZoneServer.getInstance();
-	private WorldZone _zone;
+	private List<WorldZone> _zones;
 	private RegisteredServiceProvider<Economy> economyProvider;
 	private Double _amountPerSnow = 1.0;
 	
@@ -37,13 +40,25 @@ public class PublicWorkPlugin extends JavaPlugin implements CommandExecutor, Lis
 
 	@Override
 	public void onEnable() {
+		
+		_zones = new ArrayList<WorldZone>();
+		
+		
 		// commande console
 		getCommand("pw").setExecutor(this);
 
 		// zone de pelletage
-		_zone = new WorldZone(getServer().getWorld("world"), "617,214,744,298,66,128");
-		ShovelingZone shov = new ShovelingZone(getServer(), _zone);
+					
+		WorldZone roadToBattleField = new WorldZone(getServer().getWorld("world"), "736,245,814,272,0,128");
+		_zones.add(roadToBattleField);
+		ShovelingZone battle = new ShovelingZone(getServer(), roadToBattleField);
+		_zoneServer.addListener(battle);
+		
+		WorldZone village = new WorldZone(getServer().getWorld("world"), "617,214,744,298,40,128");
+		_zones.add(village);
+		ShovelingZone shov = new ShovelingZone(getServer(), village);
 		_zoneServer.addListener(shov);
+		
 		
 		// listener pour savoir ce qui est pelleté
 		getServer().getPluginManager().registerEvents(this, this);
@@ -64,7 +79,7 @@ public class PublicWorkPlugin extends JavaPlugin implements CommandExecutor, Lis
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void playerShoveling(BlockBreakEvent event) {
 		
-		if (_zone.isInside(event.getBlock().getLocation()) && event.getBlock().getType() == Material.SNOW) {
+		if (isInsideMultipleZone(_zones, event.getBlock().getLocation()) && event.getBlock().getType() == Material.SNOW) {
 			
 			if (economyProvider != null) {
 				giveMoneyReward(event.getPlayer(), _amountPerSnow);
@@ -76,6 +91,15 @@ public class PublicWorkPlugin extends JavaPlugin implements CommandExecutor, Lis
 			
 		}
 		
+	}
+	
+	public boolean isInsideMultipleZone(List<WorldZone> zone, Location loc) {
+		for (WorldZone z : zone) {
+			if (z.isInside(loc)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public void giveMoneyReward(Player player, double money) {

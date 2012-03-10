@@ -1,5 +1,7 @@
 package ca.qc.icerealm.bukkit.plugins.publicwork;
 
+import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -11,12 +13,13 @@ public class ShovelingZone implements ZoneObserver {
 
 	private Server _server;
 	private WorldZone _zone;
+	private List<WorldZone> _zones;
 	
 	public ShovelingZone(Server s, WorldZone z) {
 		_server = s;
 		_zone = z;
 	}
-	
+		
 	@Override
 	public Server getCurrentServer() {
 		return _server;
