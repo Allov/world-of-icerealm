@@ -38,35 +38,25 @@ public class Recipes extends JavaPlugin {
         netherBrickBR.setIngredient('N', Material.NETHERRACK);
         server.addRecipe(netherBrickBR);
         
-        // Nether Brick Stairs
-        ShapedRecipe netherBrickStairsL = new ShapedRecipe( new ItemStack( Material.NETHER_BRICK_STAIRS, 4 ) );
-        netherBrickStairsL.shape("N  ","NN ","NNN");
-        netherBrickStairsL.setIngredient('N', Material.NETHER_BRICK);
-        server.addRecipe(netherBrickStairsL);
-
-        ShapedRecipe netherBrickStairsR = new ShapedRecipe( new ItemStack( Material.NETHER_BRICK_STAIRS, 4 ) );
-        netherBrickStairsR.shape("  N"," NN","NNN");
-        netherBrickStairsR.setIngredient('N', Material.NETHER_BRICK);
-        server.addRecipe(netherBrickStairsR);
-
-        // Nether Brick Fences
-        ShapedRecipe netherBrickFenceT = new ShapedRecipe( new ItemStack( Material.NETHER_FENCE, 4 ) );
-        netherBrickFenceT.shape("NNN","NNN","   ");
-        netherBrickFenceT.setIngredient('N', Material.NETHER_BRICK);
-        server.addRecipe(netherBrickFenceT);
-
-        ShapedRecipe netherBrickFenceB = new ShapedRecipe( new ItemStack( Material.NETHER_FENCE, 4 ) );
-        netherBrickFenceB.shape("   ","NNN","NNN");
-        netherBrickFenceB.setIngredient('N', Material.NETHER_BRICK);
-        server.addRecipe(netherBrickFenceB);
-
-        //
         // Mycel Block
         ShapelessRecipe mycelBlock = new ShapelessRecipe( new ItemStack( Material.MYCEL, 1 ) );
         mycelBlock.addIngredient(1, Material.DIRT);
         mycelBlock.addIngredient(1, Material.BROWN_MUSHROOM);
         mycelBlock.addIngredient(1, Material.RED_MUSHROOM);
         server.addRecipe(mycelBlock);
+
+        // Ice Block 
+        ShapedRecipe iceBlock = new ShapedRecipe( new ItemStack( Material.ICE, 16 ) );
+        iceBlock.shape("SSS","SWS","SSS");
+        iceBlock.setIngredient('S', Material.SNOW_BALL);
+        iceBlock.setIngredient('W', Material.WATER_BUCKET);
+        server.addRecipe(iceBlock);
+
+        ShapedRecipe iceBlockBucketBack = new ShapedRecipe( new ItemStack( Material.BUCKET, 1 ) );
+        iceBlockBucketBack.shape("SSS","SWS","SSS");
+        iceBlockBucketBack.setIngredient('S', Material.SNOW_BALL);
+        iceBlockBucketBack.setIngredient('W', Material.WATER_BUCKET);
+        server.addRecipe(iceBlockBucketBack);
 
         //TODO: Add recipes to list of custom additions
         
