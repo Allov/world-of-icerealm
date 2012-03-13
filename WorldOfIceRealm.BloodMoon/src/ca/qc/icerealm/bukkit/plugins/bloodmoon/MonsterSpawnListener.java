@@ -46,7 +46,7 @@ public class MonsterSpawnListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerJoined(PlayerJoinEvent event) {
 		if (_moon.isActive()) {
-			event.getPlayer().sendMessage(ChatColor.DARK_AQUA + "This is a " + ChatColor.RED + "BLOOD MOON " + ChatColor.DARK_AQUA + "right now! Be courageous son");
+			event.getPlayer().sendMessage(ChatColor.DARK_GREEN + "This is a " + ChatColor.RED + "BLOOD MOON " + ChatColor.DARK_GREEN + "right now! Be courageous son");
 		}
 	}
 	
