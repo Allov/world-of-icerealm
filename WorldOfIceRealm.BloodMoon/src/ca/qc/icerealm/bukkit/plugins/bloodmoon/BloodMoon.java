@@ -26,13 +26,15 @@ public class BloodMoon extends JavaPlugin {
 	private long _delay = 20000; // 20 sec
 
 	// le id des blocks valides
+	// 79 = snow
 	// 2 = grass
 	// 12 = sand
 	// 3 = dirt
 	// 18 = leaf
 	// 31 = tall grass
 	// 13 = gravel
-	private final int[] _validBlockRaw = new int[] { 2, 12, 3, 18, 31, 13 };
+	// 80 = snow block
+	private final int[] _validBlockRaw = new int[] { 79, 2, 12, 3, 18, 31, 13, 80 };
 		
 	// variable du serveur
 	private World _world;
@@ -86,6 +88,11 @@ public class BloodMoon extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		/*
+		for (int i = 0; i < 500; i++) {
+			TimeServer.getInstance().addListener(new UselessTimer(i), 2000);
+		}
+		*/
 		getCommand("bm").setExecutor(new BloodMoonCommander(this));
 		initializeTimer();
 		
