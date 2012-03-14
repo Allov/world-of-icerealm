@@ -62,6 +62,33 @@ public class EntityUtilities
         return -1;
     }
 	
+	public static EntityType getEntityType(String s) {
+		if (s.equalsIgnoreCase("sheep")) { return EntityType.SHEEP; }
+		if (s.equalsIgnoreCase("Cow")) { return EntityType.COW; }
+		if (s.equalsIgnoreCase("Pig")) { return EntityType.PIG; }
+		if (s.equalsIgnoreCase("Creeper")) { return EntityType.CREEPER; }
+		if (s.equalsIgnoreCase("PigZombie")) { return EntityType.PIG_ZOMBIE; }
+		if (s.equalsIgnoreCase("Skeleton")) { return EntityType.SKELETON; }
+		if (s.equalsIgnoreCase("Spider")) { return EntityType.SPIDER; }
+		if (s.equalsIgnoreCase("Squid")) { return EntityType.SQUID; }
+		if (s.equalsIgnoreCase("Zombie")) { return EntityType.ZOMBIE; }
+		if (s.equalsIgnoreCase("Ghast")) { return EntityType.GHAST; }
+		if (s.equalsIgnoreCase("Slime")) { return EntityType.SLIME; }
+		if (s.equalsIgnoreCase("Giant")) { return EntityType.GIANT; }
+		if (s.equalsIgnoreCase("Blaze")) { return EntityType.BLAZE; }
+		if (s.equalsIgnoreCase("CaveSpider")) { return EntityType.CAVE_SPIDER; }
+		if (s.equalsIgnoreCase("Chicken")) { return EntityType.CHICKEN; }
+		if (s.equalsIgnoreCase("Enderman")) { return EntityType.ENDERMAN; }
+		if (s.equalsIgnoreCase("MagmaCube")) { return EntityType.MAGMA_CUBE; }
+		if (s.equalsIgnoreCase("MushroomCow")) { return EntityType.MUSHROOM_COW; }
+		if (s.equalsIgnoreCase("Wolf")) { return EntityType.WOLF; }
+		if (s.equalsIgnoreCase("Silverfish")) { return EntityType.SILVERFISH; }
+		if (s.equalsIgnoreCase("EnderDragon")) { return EntityType.ENDER_DRAGON; }
+		if (s.equalsIgnoreCase("Snowman")) { return EntityType.SNOWMAN; }
+		return EntityType.VILLAGER;
+	}
+	
+	
 	public static CreatureType getEntityCreatureType(Entity entity)
 	{
 		// Friendly
