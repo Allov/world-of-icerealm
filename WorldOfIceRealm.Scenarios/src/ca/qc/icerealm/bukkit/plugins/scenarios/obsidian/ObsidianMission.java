@@ -7,7 +7,11 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.enchantments.EnchantmentWrapper;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -17,6 +21,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
+
+import com.sun.xml.internal.stream.Entity;
 
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
@@ -28,6 +34,7 @@ public class ObsidianMission implements Listener {
 	private ZoneSubject _zoneServer;
 	private int _blocksLeft;
 	private int[] _rewardObject;
+	private int[] _enchantmentPossible;
 	
 	
 	public ObsidianMission(ZoneSubject zone) {
@@ -38,11 +45,16 @@ public class ObsidianMission implements Listener {
 		_rewardObject = ids;
 	}
 	
-	public void giveReward(Location l, int qty) {
+	public void setPossibleEnchantment(int[] id) {
+		_enchantmentPossible = id;
+	}
+	
+	public Item giveReward(Location l, int qty) {
 		
 		int id = _rewardObject[RandomUtil.getRandomInt(_rewardObject.length)];
-		l.getWorld().dropItemNaturally(l, new ItemStack(id, qty));
+		Item i = l.getWorld().dropItemNaturally(l, new ItemStack(id, qty));
 		_blocksLeft = _breaks.size();
+		return i;
 	}
 
 	
@@ -73,9 +85,20 @@ public class ObsidianMission implements Listener {
 				_blocksLeft--;
 				
 				if (_blocksLeft == 0) {
-					giveReward(s.getBlockLocation(), 1);
+					Item i = giveReward(s.getBlockLocation(), 1);
+					notifyPlayersAround(event.getPlayer(), 20, "A " + i.toString() + " has been dropped for reward");
 					_logger.info("obsidian mission is over!");
 				}
+			}
+		}
+	}
+	
+	private void notifyPlayersAround(Player p, double radius, String msg) {
+		
+		List<org.bukkit.entity.Entity> entities = p.getNearbyEntities(radius, radius, radius);
+		for (org.bukkit.entity.Entity e : entities) {
+			if (e instanceof Player) {
+				((Player)e).sendMessage(msg);
 			}
 		}
 	}

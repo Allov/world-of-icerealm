@@ -10,7 +10,6 @@ import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.CreatureType;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -46,6 +45,7 @@ public class BreakBlockSession implements ZoneObserver, CoolDown {
 	private String _header;
 	private boolean _resetWhenPlayerLeaving;
 	private String _msgWhenBlockBroken;
+	private List<Player> _players;
 	
 	public BreakBlockSession(Location l, Material m, double r, int qty, String monsters) {
 		_locations = l;
@@ -61,6 +61,7 @@ public class BreakBlockSession implements ZoneObserver, CoolDown {
 		_coolDownTime = 0;
 		_header = ChatColor.LIGHT_PURPLE + "[" + ChatColor.DARK_PURPLE + "Obsidian" + ChatColor.LIGHT_PURPLE + "] ";
 		_resetWhenPlayerLeaving = false;
+		_players = new ArrayList<Player>();
 	}
 	
 	public void setCooldownTime(long time) {
@@ -171,6 +172,9 @@ public class BreakBlockSession implements ZoneObserver, CoolDown {
 	}
 	
 	public void playerEntered(Player p) {
+		
+		_players.add(p);
+		
 		if (_isCooldownActive) {
 			p.sendMessage(ChatColor.GOLD + "Active in " + (_coolDownDueTimestamp - System.currentTimeMillis() + " ms"));
 		}
@@ -198,7 +202,8 @@ public class BreakBlockSession implements ZoneObserver, CoolDown {
 	}
 	
 	public void playerLeft(Player p) {
-		if (_resetWhenPlayerLeaving) {
+		_players.remove(p);
+		if (_resetWhenPlayerLeaving && _players.size() <= 0) {
 			p.sendMessage(_header + ChatColor.RED + "You cancelled the project...");
 			resetToInitialState();	
 		}
