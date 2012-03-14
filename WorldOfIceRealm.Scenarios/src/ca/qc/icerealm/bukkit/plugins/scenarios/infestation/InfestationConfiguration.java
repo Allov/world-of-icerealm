@@ -15,12 +15,14 @@ public class InfestationConfiguration {
 		config.RegenerateExplodedBlocks = c.RegenerateExplodedBlocks;
 		config.SpawnerMonsters = c.SpawnerMonsters;
 		config.SpawnerQuantity = c.SpawnerQuantity;
-		config.UseLowestBlock = c.UseLowestBlock;
 		config.Server = c.Server;
 		config.DelayBeforeRespawn = c.DelayBeforeRespawn;
 		config.SpawnerRadiusActivation = c.SpawnerRadiusActivation;
 		config.UseInfestedZoneAsRadius = c.UseInfestedZoneAsRadius;
-		config.ResetWhenNoPlayerAround = c.ResetWhenNoPlayerAround;
+		config.EnterZoneMessage = c.EnterZoneMessage;
+		config.LeaveZoneMessage = c.LeaveZoneMessage;
+		config.RareDropMultiplier = c.RareDropMultiplier;
+		config.ResetWhenPlayerLeave = c.ResetWhenPlayerLeave;
 		return config;
 	}
 	
@@ -36,12 +38,12 @@ public class InfestationConfiguration {
 	public boolean RegenerateExplodedBlocks;
 	public long DelayBeforeRegeneration;
 	public int MaxHealth;
-	public boolean UseLowestBlock;
 	public org.bukkit.Server Server;
 	public long DelayBeforeRespawn;
 	public double SpawnerRadiusActivation;
-	public boolean ResetWhenNoPlayerAround;
 	public String EnterZoneMessage;
 	public String LeaveZoneMessage;
+	public double RareDropMultiplier;
+	public boolean ResetWhenPlayerLeave;
 	// faire un objet pour changer l'algorithme de random location
 }

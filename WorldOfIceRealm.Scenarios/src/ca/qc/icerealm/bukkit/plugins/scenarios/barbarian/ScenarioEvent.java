@@ -13,7 +13,7 @@ import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 
-public class SubScenario {
+public class ScenarioEvent {
 	
 	private WorldZone _spawnZone;
 	private WorldZone _activation;
@@ -24,7 +24,7 @@ public class SubScenario {
 	private CreatureType _creature;
 	private ZoneObserver _activationObserver;
 	
-	public SubScenario(Server s, World w, WorldZone scenario, WorldZone activation, int qty, CreatureType t) {
+	public ScenarioEvent(Server s, World w, WorldZone scenario, WorldZone activation, int qty, CreatureType t) {
 		_server = s;
 		_spawnZone = scenario;
 		_activation = activation;
@@ -34,7 +34,7 @@ public class SubScenario {
 		_isActive = false;
 		
 		if (_activation != null) {
-			//_activationObserver = new ActivationZone(this, _activation);
+			_activationObserver = new ActivationZone(this, _activation);
 		}
 	}
 	

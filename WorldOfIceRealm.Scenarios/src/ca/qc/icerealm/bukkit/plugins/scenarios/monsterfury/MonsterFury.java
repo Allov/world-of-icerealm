@@ -228,7 +228,7 @@ public class MonsterFury implements ZoneObserver, Scenario, CoolDown {
 				}
 			}
 			
-			getPlayers().clear();
+			//getPlayers().clear();
 			
 			if (_waves != null) {
 				for (EntityWave wave : _waves) {
@@ -247,7 +247,7 @@ public class MonsterFury implements ZoneObserver, Scenario, CoolDown {
 	 */
 	public void abortScenario() {
 		if (_isActive) {
-			getPlayers().clear();
+			//getPlayers().clear();
 			
 			if (_waves != null) {
 				for (EntityWave wave : _waves) {

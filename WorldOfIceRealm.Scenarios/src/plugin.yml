@@ -10,5 +10,4 @@ commands:
   pl:
     description: Ruins plateform infestation configuration
   sc:
-    description: general scenario commands
- 
+    description: general scenario commands 

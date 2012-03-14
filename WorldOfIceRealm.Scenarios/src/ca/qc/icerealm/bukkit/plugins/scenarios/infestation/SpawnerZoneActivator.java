@@ -14,14 +14,12 @@ public class SpawnerZoneActivator implements ZoneObserver {
 	private Server _server;
 	private ProximitySpawner _spawner;
 	private int _countPlayer = 0;
-	private InfestationConfiguration _config;
 	
 	
-	public SpawnerZoneActivator(WorldZone z, Server s, ProximitySpawner spawn, InfestationConfiguration config) {
+	public SpawnerZoneActivator(WorldZone z, Server s, ProximitySpawner spawn) {
 		_zone = z;
 		_server = s;
 		_spawner = spawn;
-		_config = config;
 	}
 	
 	@Override

@@ -109,12 +109,26 @@ public class Infestation implements ZoneObserver, Listener {
 			_players.remove(p);
 
 			ScenarioPlugin.logger.fine("playuer removed ");
-			resetSpawners();
+			if (_players.size() == 0) {
+				resetSpawners();
+			}
+			
 			p.sendMessage(_config.LeaveZoneMessage);	
 		}
 		
 		ScenarioPlugin.logger.fine(p.getName() + " is leaving the infestion");
 		
+	}
+	
+	public List<Player> getPlayers() {
+		return _players;
+	}
+	
+	public void flushPlayers() {
+		for (Player p : _players) {
+			p.sendMessage(ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.LIGHT_PURPLE + "You are kicked out from the zone");
+			playerLeft(p);
+		}		
 	}
 	
 	public boolean isActive() {
@@ -150,9 +164,12 @@ public class Infestation implements ZoneObserver, Listener {
 	
 	private void resetSpawners() {
 
-		for (Spawner s : _spawners) {
-			s.removeListener();
+		if (_config.ResetWhenPlayerLeave) {
+			for (Spawner s : _spawners) {
+				s.removeListener();
+			}	
 		}
+		
 		_spawners.clear();
 		ScenarioPlugin.logger.fine("clearing the spawners");
 	}

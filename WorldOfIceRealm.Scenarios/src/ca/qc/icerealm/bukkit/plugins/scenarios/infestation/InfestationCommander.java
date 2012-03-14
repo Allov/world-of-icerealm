@@ -45,7 +45,8 @@ public class InfestationCommander implements CommandExecutor {
 				sender.sendMessage(ChatColor.DARK_GREEN + "/" + _name + " radius [double] - " + ChatColor.YELLOW + "Activation Radius per spawner");
 				sender.sendMessage(ChatColor.DARK_GREEN + "/" + _name + " prob [int] - " + ChatColor.YELLOW + "Prob. for monsters to spawn");
 				sender.sendMessage(ChatColor.DARK_GREEN + "/" + _name + " interval [long] - " + ChatColor.YELLOW + "Interval between monster spawn");
-				sender.sendMessage(ChatColor.DARK_GREEN + "/" + _name + " health [double] - " + ChatColor.YELLOW + "Health modifier (1 = 100% stronger");
+				sender.sendMessage(ChatColor.DARK_GREEN + "/" + _name + " health [double] - " + ChatColor.YELLOW + "Health modifier (1 = 100% stronger)");
+				sender.sendMessage(ChatColor.DARK_GREEN + "/" + _name + " rare [double] - " + ChatColor.YELLOW + "RareDrop modifier (0 = none");
 				sender.sendMessage(ChatColor.DARK_GREEN + "/" + _name + " regen [long] - " + ChatColor.YELLOW + "Delay before respawn blocks");
 				sender.sendMessage(ChatColor.DARK_GREEN + "/" + _name + " activeregen [bool] - " + ChatColor.YELLOW + "Enable/disable block regen");
 				sender.sendMessage(ChatColor.DARK_GREEN + "/" + _name + " burn [bool] - " + ChatColor.YELLOW + "Enable/disable burn during day");
@@ -218,6 +219,30 @@ public class InfestationCommander implements CommandExecutor {
 				}			
 			}
 			
+			if (arg3.length == 1 && arg3[0].contains("rare")) {
+				sender.sendMessage(ChatColor.GRAY + "Rare Drop Multiplier: " + ChatColor.YELLOW + _config.RareDropMultiplier);
+			}
+			if (arg3.length == 2 && arg3[0].contains("rare")) {
+				try {
+					double qty = Double.parseDouble(arg3[1]);
+					_config.RareDropMultiplier = qty;
+					sender.sendMessage(ChatColor.GRAY + "Rare Drop Multiplier: " + ChatColor.YELLOW + _config.RareDropMultiplier);
+				}
+				catch (Exception ex) {
+					sender.sendMessage(ChatColor.GRAY + "Value was not valid");
+				}			
+			}
+			
+			if (arg3.length == 1 && arg3[0].contains("players")) {
+				sender.sendMessage(ChatColor.GRAY + "Players: " + ChatColor.YELLOW + _infestation.getPlayers().size());
+			}
+			
+			if (arg3.length == 1 && arg3[0].contains("flush")) {
+				_infestation.flushPlayers();
+				sender.sendMessage(ChatColor.GRAY + "You flushed the players from the zone");
+			}
+			
+			
 			return true;
 		}
 		else {
@@ -230,6 +255,7 @@ public class InfestationCommander implements CommandExecutor {
 	
 	private void displayActiveConfig(CommandSender sender) {
 		sender.sendMessage(ChatColor.GRAY + "Infestion active: " + ChatColor.YELLOW + _infestation.isActive());
+		sender.sendMessage(ChatColor.GRAY + "Players: " + ChatColor.YELLOW + _infestation.getPlayers().size());
 		sender.sendMessage(ChatColor.GRAY + "Spawner quantity: " + ChatColor.YELLOW + _infestation.getSpawnerQuantity());
 		sender.sendMessage(ChatColor.GRAY + "Monster per spawner: " + ChatColor.YELLOW + _config.MaxMonstersPerSpawn);
 		sender.sendMessage(ChatColor.GRAY + "Spawner CoolDown: " + ChatColor.YELLOW + _config.DelayBeforeRespawn);
@@ -237,6 +263,7 @@ public class InfestationCommander implements CommandExecutor {
 		sender.sendMessage(ChatColor.GRAY + "Spawner Prob: " + ChatColor.YELLOW + "1/" + _config.ProbabilityToSpawn);
 		sender.sendMessage(ChatColor.GRAY + "Spawner monsters: " + ChatColor.YELLOW + _config.SpawnerMonsters);
 		sender.sendMessage(ChatColor.GRAY + "Health Modifier: " + ChatColor.YELLOW + _config.HealthModifier);
+		sender.sendMessage(ChatColor.GRAY + "RareDrop Modifier: " + ChatColor.YELLOW + _config.RareDropMultiplier);
 		sender.sendMessage(ChatColor.GRAY + "Block Regen Delay: " + ChatColor.YELLOW + _config.RegenerateExplodedBlocks);
 		sender.sendMessage(ChatColor.GRAY + "Block Regen: " + ChatColor.YELLOW + _config.DelayBeforeRegeneration);
 		sender.sendMessage(ChatColor.GRAY + "Interval between monsters: " + ChatColor.YELLOW + _config.IntervalBetweenSpawn);

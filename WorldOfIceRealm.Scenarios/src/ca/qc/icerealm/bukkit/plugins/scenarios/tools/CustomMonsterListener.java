@@ -1,18 +1,11 @@
 package ca.qc.icerealm.bukkit.plugins.scenarios.tools;
 
 import java.util.HashMap;
-
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.event.EventHandler;
-
-
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-
-import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioPlugin;
 
 public class CustomMonsterListener implements Listener {
 
@@ -26,6 +19,7 @@ public class CustomMonsterListener implements Listener {
 		CustomMonster c = new CustomMonster();
 		c.Health = health;
 		c.Burn = true;
+		c.Invincible = false;
 		_customMonsters.put(entityId, c);
 	}
 	
@@ -33,6 +27,15 @@ public class CustomMonsterListener implements Listener {
 		CustomMonster c = new CustomMonster();
 		c.Health = health;
 		c.Burn = burn;
+		c.Invincible = false;
+		_customMonsters.put(entityId, c);
+	}
+	
+	public void addMonster(Integer entityId, Integer health, boolean burn, boolean inv) {
+		CustomMonster c = new CustomMonster();
+		c.Health = health;
+		c.Burn = burn;
+		c.Invincible = inv;
 		_customMonsters.put(entityId, c);
 	}
 	
@@ -63,5 +66,6 @@ class CustomMonster {
 	public int EntityId;
 	public int Health;
 	public boolean Burn;
+	public boolean Invincible;
 	
 }

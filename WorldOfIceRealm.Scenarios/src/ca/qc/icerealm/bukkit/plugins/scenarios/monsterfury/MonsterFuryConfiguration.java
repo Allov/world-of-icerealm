@@ -15,4 +15,5 @@ public class MonsterFuryConfiguration {
 	public String Name;
 	public long TimeoutWhenLeaving;
 	public ZoneSubject ZoneServer;
+	public double HealthModifier;
 }

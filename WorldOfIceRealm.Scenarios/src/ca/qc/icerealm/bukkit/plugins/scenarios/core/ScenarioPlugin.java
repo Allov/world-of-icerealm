@@ -15,15 +15,20 @@ import java.util.logging.SimpleFormatter;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Server;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
+import ca.qc.icerealm.bukkit.plugins.scenarios.barbarian.BarbarianRaid;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.Infestation;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.InfestationCommander;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.InfestationConfiguration;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.DefaultEventListener;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFury;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFuryConfiguration;
+import ca.qc.icerealm.bukkit.plugins.scenarios.obsidian.BreakBlockSession;
+import ca.qc.icerealm.bukkit.plugins.scenarios.obsidian.ObsidianMission;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.LoggerFormater;
 import ca.qc.icerealm.bukkit.plugins.scenarios.waves.EntityWave;
 import ca.qc.icerealm.bukkit.plugins.scenarios.waves.RegularSpawnWave;
@@ -39,7 +44,10 @@ public class ScenarioPlugin extends JavaPlugin {
 	private MonsterFury _hauntedOutpost = null;
 	private Infestation _ruinsPlateform = null;
 	private Infestation _castleSiege = null;
-	
+	private MonsterFury _moonTemple = null;
+	private BarbarianRaid _raid = null;
+	private ObsidianMission _obsidianMission = null;
+		
 	private ZoneSubject _zoneServer;
 	private ScenarioZoneProber _prober;
 	private FileHandler _logFile; 
@@ -50,6 +58,7 @@ public class ScenarioPlugin extends JavaPlugin {
 		releaseHauntedOutpost();	
 		releaseRuinsPlateform();
 		releaseCastleSiege();
+		releaseObsidianMission();
 	}
 
 	@Override
@@ -57,7 +66,10 @@ public class ScenarioPlugin extends JavaPlugin {
 		
 		initFileLogger(_filename);
 		initZoneServer(getServer());
-
+		/*
+		_invicibleMonsters = new InvicibleMonsterServer();
+		getServer().getPluginManager().registerEvents(_invicibleMonsters, this);
+		*/
 		// scenario commander
 		getCommand("sc").setExecutor(new ScenarioCommander());
 		ScenarioService.getInstance().setPlugin(this);
@@ -66,6 +78,9 @@ public class ScenarioPlugin extends JavaPlugin {
 		createHauntedOutpost();
 		createRuinsPlateform();
 		createCastleSiege();
+		//createObsidianMission();
+		//createBarbarianRaid();
+		//createMoonTemple();
 	}
 	
 	public void initZoneServer(Server s) {
@@ -88,6 +103,138 @@ public class ScenarioPlugin extends JavaPlugin {
 		}	
 	}
 	
+	private void createObsidianMission() {
+		
+		_obsidianMission = new ObsidianMission(_zoneServer);
+		
+		List<BreakBlockSession> session = new ArrayList<BreakBlockSession>();
+		Location obsidianLocation = new Location(getServer().getWorld("world"), 205,69,1007);
+		BreakBlockSession desert = new BreakBlockSession(obsidianLocation, Material.GLOWSTONE, 10, 0, "zombie");
+		session.add(desert);
+		
+		_obsidianMission.setReward(new int[] { 314, 315, 316, 317 });
+		
+		_obsidianMission.setBreakBlockSession(session);
+		_obsidianMission.activateBlockZone();
+		
+		getServer().getPluginManager().registerEvents(_obsidianMission, this);
+		
+		if (_obsidianMission != null) {
+			logger.info("[Scenarios] Obsidian Mission created and activated");
+		}
+	}
+	
+	private void releaseObsidianMission() {
+		
+	}
+	
+	private void createBarbarianRaid() {
+		if (_raid == null) {
+			_raid  = new BarbarianRaid(this, _zoneServer);
+		}
+	}
+	
+	private void createMoonTemple() {
+		
+		MonsterFuryConfiguration _defaultConfig = new MonsterFuryConfiguration();
+		_defaultConfig.ExperienceReward = 5;										// 100 level d'exp
+		_defaultConfig.CoolDownTime = 600000; 										// 10 min
+		_defaultConfig.InitialTimeBeforeFirstWave = 10000;							// 10 sec
+		_defaultConfig.TimeoutWhenLeaving = 30000;									// 30 sec
+		_defaultConfig.MinimumPlayer = 1;											// 1 joueur requis
+		_defaultConfig.MonstersPerWave = 3;							    		 	// 10 monstres par wave
+		_defaultConfig.Name = "moon_temple";										// le nom du scénario 
+		_defaultConfig.NumberOfWaves = 1;											// 3 waves
+		_defaultConfig.TimeBetweenWave = 10000;										// 10 sec
+		_defaultConfig.HealthModifier = 10;											//
+		_defaultConfig.ActivationZoneCoords = "284,-381,289,-376,0,128";			// zone d'Activation
+		_defaultConfig.ScenarioZoneCoords = "277,-388,296,-369,0,128";				// zone du scenario
+		_defaultConfig.ZoneServer = _zoneServer;
+		
+		_moonTemple = new MonsterFury(this, _defaultConfig, new DefaultEventListener(), null);
+		
+		// creation de plusieurs wave
+		List<EntityWave> waves = new ArrayList<EntityWave>();
+		WorldZone scenarioZone = new WorldZone(getServer().getWorld("world"), _defaultConfig.ScenarioZoneCoords);
+		List<Location> locations = scenarioZone.getFourSide(2);
+		
+		for (int i = 0; i < _defaultConfig.NumberOfWaves; i++) {
+			EntityWave wave = new RegularSpawnWave(1000, _moonTemple, _defaultConfig.MonstersPerWave, _defaultConfig.HealthModifier);
+			wave.setMonsters("skeleton,zombie,spider");
+			wave.setSpawnLocation(locations);
+			waves.add(wave);
+		}
+		
+		EntityWave wave = new RegularSpawnWave(1000, _moonTemple, 2, 20);
+		wave.setMonsters("zombie");
+		wave.setSpawnLocation(scenarioZone.getRandomLocation(getServer().getWorld("world"), 1));
+		waves.add(wave);
+		_moonTemple.setEntityWaves(waves);
+		ScenarioService.getInstance().addScenario(_moonTemple);	
+		
+		/*
+		if (_moonTemple == null) {
+			InfestationConfiguration config = new InfestationConfiguration();
+			config.InfestedZone = "277,-388,296,-369,0,128";
+			config.BurnDuringDaylight = false;
+			config.RegenerateExplodedBlocks = true;
+			config.DelayBeforeRegeneration = 100;
+			config.UseInfestedZoneAsRadius = true;
+			config.SpawnerMonsters = "zombie";
+			config.SpawnerQuantity = 1;
+			config.ProbabilityToSpawn = 1;
+			config.MaxMonstersPerSpawn = 1;
+			config.RareDropMultiplier = 5.0;
+			
+			config.HealthModifier = 40.0;
+			config.IntervalBetweenSpawn = 1500;
+			config.SpawnerRadiusActivation = 15;
+			config.DelayBeforeRespawn = 500000;
+
+			config.EnterZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.YELLOW + "Welcome to the " + ChatColor.DARK_GRAY + "Infested Castle." + ChatColor.DARK_RED + " Watch your back!";
+			config.LeaveZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.DARK_AQUA + "You are leaving the " + ChatColor.DARK_GRAY + "Infested Castle.";
+			config.Server = getServer();
+			
+			_moonTemple = new Infestation(this, config, _zoneServer);
+			_zoneServer.addListener(_moonTemple);
+			getServer().getPluginManager().registerEvents(_moonTemple, this);
+			
+			InfestationConfiguration subordinates = new InfestationConfiguration();
+			subordinates.InfestedZone = "277,-388,296,-369,0,128";
+			subordinates.BurnDuringDaylight = false;
+			subordinates.RegenerateExplodedBlocks = true;
+			subordinates.DelayBeforeRegeneration = 100;
+			subordinates.UseInfestedZoneAsRadius = true;
+			subordinates.SpawnerMonsters = "skeleton,spider";
+			subordinates.SpawnerQuantity = 3;
+			subordinates.ProbabilityToSpawn = 1;
+			subordinates.MaxMonstersPerSpawn = 1;
+			subordinates.RareDropMultiplier = 0.0;
+			
+			subordinates.HealthModifier = 2;
+			subordinates.IntervalBetweenSpawn = 1500;
+			subordinates.SpawnerRadiusActivation = 10;
+			subordinates.DelayBeforeRespawn = 30000;
+
+			subordinates.EnterZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.YELLOW + "Welcome to the " + ChatColor.DARK_GRAY + "Infested Castle." + ChatColor.DARK_RED + " Watch your back!";
+			subordinates.LeaveZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.DARK_AQUA + "You are leaving the " + ChatColor.DARK_GRAY + "Infested Castle.";
+			subordinates.Server = getServer();
+			
+			Infestation subordinatesInf = new Infestation(this, subordinates, _zoneServer);
+			_zoneServer.addListener(subordinatesInf);
+			getServer().getPluginManager().registerEvents(subordinatesInf, this);
+			
+			getCommand("mt").setExecutor(new InfestationCommander(_moonTemple, "mt"));
+			getCommand("sbmt").setExecutor(new InfestationCommander(_moonTemple, "sbmt"));
+		}
+		
+
+		if (_moonTemple != null) {
+			logger.info("[Scenarios] Moon Temple created!");
+		}
+		*/
+	}
+	
 	private void createCastleSiege() {
 		if (_castleSiege == null) {
 			InfestationConfiguration config = new InfestationConfiguration();
@@ -100,6 +247,7 @@ public class ScenarioPlugin extends JavaPlugin {
 			config.SpawnerQuantity = 50;
 			config.ProbabilityToSpawn = 1;
 			config.MaxMonstersPerSpawn = 5;
+			config.RareDropMultiplier = 2.0;
 			
 			config.HealthModifier = 0.0;
 			config.IntervalBetweenSpawn = 1500;
@@ -118,7 +266,7 @@ public class ScenarioPlugin extends JavaPlugin {
 		}
 		
 		if (_castleSiege != null) {
-			logger.info("[Scenarios] Infested Castle created!");
+			logger.info("[Scenarios] Infested Castle created");
 		}
 	}
 	
@@ -134,19 +282,16 @@ public class ScenarioPlugin extends JavaPlugin {
 			config.BurnDuringDaylight = false;
 			config.RegenerateExplodedBlocks = true;
 			config.DelayBeforeRegeneration = 300;
-			config.UseLowestBlock = true;
 			config.UseInfestedZoneAsRadius = false;
-			config.ResetWhenNoPlayerAround = true;
 			config.SpawnerMonsters = "zombie,skeleton,spider";
 			config.SpawnerQuantity = 10;
 			config.ProbabilityToSpawn = 1;
 			config.MaxMonstersPerSpawn = 5;
+			config.RareDropMultiplier = 2.0;
 			config.HealthModifier = 0.0;
 			config.IntervalBetweenSpawn = 1500;
 			config.SpawnerRadiusActivation = 20;
 			config.DelayBeforeRespawn = 30000;
-
-
 			config.EnterZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.YELLOW + "You are entering an infested zone. " + ChatColor.RED + "Watch your back!";
 			config.LeaveZoneMessage = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Infestation" +  ChatColor.GREEN + "] " + ChatColor.DARK_AQUA + "You are leaving the infested zone";
 			config.Server = getServer();
@@ -158,7 +303,7 @@ public class ScenarioPlugin extends JavaPlugin {
 		}
 		
 		if (_ruinsPlateform != null) {
-			logger.info("[Scenarios] Ruins Plateform is created!");
+			logger.info("[Scenarios] Ruins Plateform is created");
 		}
 	}
 	
@@ -181,6 +326,7 @@ public class ScenarioPlugin extends JavaPlugin {
 			_defaultConfig.Name = "haunted_outpost";									// le nom du scénario 
 			_defaultConfig.NumberOfWaves = 5;											// 3 waves
 			_defaultConfig.TimeBetweenWave = 10000;										// 10 sec
+			_defaultConfig.HealthModifier = 0.0;
 			_defaultConfig.ActivationZoneCoords = "366,181,369,184,0,128";				// zone d'Activation
 			_defaultConfig.ScenarioZoneCoords = "347,168,386,201,0,128";				// zone du scenario
 			_defaultConfig.ZoneServer = _zoneServer;
@@ -193,7 +339,7 @@ public class ScenarioPlugin extends JavaPlugin {
 			List<Location> locations = scenarioZone.getFourSide(2);
 			
 			for (int i = 0; i < _defaultConfig.NumberOfWaves; i++) {
-				EntityWave wave = new RegularSpawnWave(1000, _hauntedOutpost, _defaultConfig.MonstersPerWave);
+				EntityWave wave = new RegularSpawnWave(1000, _hauntedOutpost, _defaultConfig.MonstersPerWave, _defaultConfig.HealthModifier);
 				wave.setMonsters("skeleton,zombie,spider");
 				wave.setSpawnLocation(locations);
 				waves.add(wave);
@@ -204,7 +350,7 @@ public class ScenarioPlugin extends JavaPlugin {
 		}
 		
 		if (_hauntedOutpost != null) {
-			logger.info("[Scenarios] Haunted Outpost is created!");
+			logger.info("[Scenarios] Haunted Outpost is created");
 		}
 	}
 	

@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
+import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioPlugin;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.InfestationConfiguration;
 import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
@@ -30,8 +31,7 @@ public class FixedSpawner implements TimeObserver, Spawner {
 	private boolean _burn;
 	private List<Player> _players;
 	private WorldZone _spawningZone;
-	
-	
+
 	public FixedSpawner(Location l, InfestationConfiguration config, List<Player> players) {
 		_spawningLocation = l;
 		_monsters = config.SpawnerMonsters.split(",");
@@ -52,7 +52,7 @@ public class FixedSpawner implements TimeObserver, Spawner {
 			Monster m = (Monster)ScenarioService.getInstance().spawnCreature(_spawningLocation.getWorld(), random, creature, _healthModifier, _burn);
 			m.setTarget(_players.get(RandomUtil.getRandomInt(_players.size())));
 			
-			this.logger.info("Spawner at: " + _spawningLocation.getX() + "," + _spawningLocation.getZ() + " high: " + _spawningLocation.getY() + " - " + creature.toString() + " -> " + m.getTarget().getEntityId());
+			ScenarioPlugin.logger.fine("Spawner at: " + _spawningLocation.getX() + "," + _spawningLocation.getZ() + " high: " + _spawningLocation.getY() + " - " + creature.toString() + " -> " + m.getTarget().getEntityId());
 			
 			_monsterSpawned.add(m);
 			TimeServer.getInstance().addListener(this, _delayBetweenMonster);

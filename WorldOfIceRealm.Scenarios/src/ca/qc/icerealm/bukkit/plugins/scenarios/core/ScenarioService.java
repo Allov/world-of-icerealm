@@ -11,6 +11,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultiplierData;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.CustomMonsterListener;
 
 public class ScenarioService {
@@ -110,6 +111,14 @@ public class ScenarioService {
 			_customMonster.addMonster(creature.getEntityId(), maxHealth);
 		}
 		return creature;
+	}
+	
+	public void attachRareDropMultiplierToEntity(int id, double d) {
+		
+		if (_plugin.getServer().getPluginManager().isPluginEnabled("WoI.RareDrops")) {
+			RareDropsMultiplierData.getInstance().addEntityRareDropsMultiplier(id, d);	
+		}
+		
 	}
 	
 	public void logInfo(String m) {

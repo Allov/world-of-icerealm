@@ -15,6 +15,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.Scenario;
+import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
 import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 
@@ -29,12 +30,14 @@ public class RegularSpawnWave implements EntityWave, TimeObserver {
 	private String[] _arrayPossibleMonster;
 	private Scenario _scenario;
 	private int _maxMonster;
+	private double _healthModifier;
 	
-	public RegularSpawnWave(long timeBetweenSpawn, Scenario s, int maxMonster) {
+	public RegularSpawnWave(long timeBetweenSpawn, Scenario s, int maxMonster, double healthmodifier) {
 		_timeBetweenSpawn = timeBetweenSpawn;
 		_scenario = s;
 		_maxMonster = maxMonster;
 		_monsters = new ArrayList<LivingEntity>();
+		_healthModifier = healthmodifier;
 	}
 	
 	
@@ -62,7 +65,8 @@ public class RegularSpawnWave implements EntityWave, TimeObserver {
 				
 				if (getNbOfEntities() < _maxMonster) {
 					CreatureType c = EntityUtilities.getCreatureType(_arrayPossibleMonster[RandomUtil.getRandomInt(_arrayPossibleMonster.length)]);
-					LivingEntity e = _scenario.getWorld().spawnCreature(l, c);
+					//LivingEntity e = _scenario.getWorld().spawnCreature(l, c);
+					LivingEntity e = ScenarioService.getInstance().spawnCreature(l.getWorld(), l, c, _healthModifier);
 					_monsters.add(e);
 					if (e instanceof Monster) {
 						Monster m = (Monster)e;

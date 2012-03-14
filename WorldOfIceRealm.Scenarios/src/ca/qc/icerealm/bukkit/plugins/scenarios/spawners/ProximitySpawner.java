@@ -49,7 +49,7 @@ public class ProximitySpawner implements TimeObserver, Listener, Spawner, CoolDo
 	private ZoneSubject _zoneServer;
 	private boolean _isCoolDownActive;
 	private CoolDownTimer _coolDownTimer;
-
+	
 	public ProximitySpawner(WorldZone z, InfestationConfiguration config, ZoneSubject zone) {
 		_zone = z;
 		_startingLocation = _zone.getRandomLocation(_zone.getWorld());
@@ -70,7 +70,7 @@ public class ProximitySpawner implements TimeObserver, Listener, Spawner, CoolDo
 			_zoneActivator = new WorldZone(_startingLocation, _config.SpawnerRadiusActivation);	
 		}
 		
-		_activator = new SpawnerZoneActivator(_zoneActivator, config.Server, this, _config);
+		_activator = new SpawnerZoneActivator(_zoneActivator, config.Server, this);
 		_zoneServer.addListener(_activator);
 		_monstersToSpawn = _config.SpawnerMonsters.split(",");
 		ScenarioPlugin.logger.fine("new spawner: " + _startingLocation.getX() + ","  + _startingLocation.getY() + "," + _startingLocation.getZ());
@@ -93,6 +93,11 @@ public class ProximitySpawner implements TimeObserver, Listener, Spawner, CoolDo
 			random.setY(random.getY() + 2);
 			CreatureType creature = EntityUtilities.getCreatureType(_monstersToSpawn[RandomUtil.getRandomInt(_monstersToSpawn.length)]);
 			LivingEntity l = ScenarioService.getInstance().spawnCreature(_zone.getWorld(), random, creature, _healthModifier);
+			
+			if (_config.RareDropMultiplier != 1.0) {
+				ScenarioService.getInstance().attachRareDropMultiplierToEntity(l.getEntityId(), _config.RareDropMultiplier);
+			}
+			
 			if (l instanceof Monster) {
 				Monster m = (Monster)l;
 				m.setTarget(_target);
@@ -122,9 +127,12 @@ public class ProximitySpawner implements TimeObserver, Listener, Spawner, CoolDo
 	}
 	
 	public void removeListener() {
-		for (LivingEntity l : _entities) {
-			l.remove();
+		if (_config.ResetWhenPlayerLeave) {
+			for (LivingEntity l : _entities) {
+				l.remove();
+			}
 		}
+		
 		_entities.clear();
 		TimeServer.getInstance().removeListener(this);
 		TimeServer.getInstance().removeListener(_coolDownTimer);
@@ -139,7 +147,12 @@ public class ProximitySpawner implements TimeObserver, Listener, Spawner, CoolDo
 			_startingLocation = _zone.getRandomLocation(_zone.getWorld());
 			WorldZone activator = new WorldZone(_startingLocation, _config.SpawnerRadiusActivation);
 			_zoneActivator = activator;
-			_activator = new SpawnerZoneActivator(_zoneActivator, _config.Server, this, _config);
+			
+			if (_config.UseInfestedZoneAsRadius) {
+				_zoneActivator = _zone;
+			}
+			
+			_activator = new SpawnerZoneActivator(_zoneActivator, _config.Server, this);
 			_zoneServer.addListener(_activator);
 			ScenarioPlugin.logger.fine("moving spawner elsewhere! at " + _startingLocation.getX() + "," + _startingLocation.getZ());
 		}
@@ -159,6 +172,10 @@ public class ProximitySpawner implements TimeObserver, Listener, Spawner, CoolDo
 	public void setCoolDownActive(boolean v) {
 		_isCoolDownActive = v;
 		ScenarioPlugin.logger.fine("cool down changed to " + v + " at " + _startingLocation.getX() + "," + _startingLocation.getY() + _startingLocation.getZ());
+		if (!_isCoolDownActive) {
+			timeHasCome(System.currentTimeMillis());
+		}
+			
 	}
 
 	@Override
