@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
@@ -84,6 +85,8 @@ public class BloodMoon extends JavaPlugin {
 		TimeServer.getInstance().removeListener(_starter);
 		TimeServer.getInstance().removeListener(_stopper);
 		TimeServer.getInstance().removeListener(_draw);
+		
+		
 	}
 
 	@Override
@@ -181,8 +184,9 @@ public class BloodMoon extends JavaPlugin {
 		}
 		
 		if (maxTry < 3) {
-			CreatureType type = EntityUtilities.getCreatureType(monsters[RandomUtil.getRandomInt(monsters.length)]);
-			_world.spawnCreature(newLoc, type);	
+			//CreatureType type = EntityUtilities.getCreatureType(monsters[RandomUtil.getRandomInt(monsters.length)]);
+			//_world.spawnCreature(newLoc, type);	
+			_world.spawnEntity(newLoc, EntityUtilities.getEntityType(monsters[RandomUtil.getRandomInt(monsters.length)]));
 		}	
 	}
 	
