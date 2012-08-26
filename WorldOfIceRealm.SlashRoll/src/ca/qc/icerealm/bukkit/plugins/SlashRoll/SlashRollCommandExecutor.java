@@ -13,7 +13,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import ca.qc.icerealm.bukkit.plugins.Twitter.TweetFacade;
 
 public class SlashRollCommandExecutor implements CommandExecutor {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
