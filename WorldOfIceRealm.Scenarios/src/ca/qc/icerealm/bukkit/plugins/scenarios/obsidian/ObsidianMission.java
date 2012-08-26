@@ -7,8 +7,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -19,10 +17,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.inventory.ItemStack;
 
-import com.sun.xml.internal.stream.Entity;
+import org.bukkit.inventory.ItemStack;
 
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
@@ -35,10 +31,12 @@ public class ObsidianMission implements Listener {
 	private int _blocksLeft;
 	private int[] _rewardObject;
 	private int[] _enchantmentPossible;
+	private long _coolDownTime;
 	
 	
 	public ObsidianMission(ZoneSubject zone) {
 		_zoneServer = zone;
+		_coolDownTime = 0;
 	}
 	
 	public void setReward(int[] ids) {
@@ -53,8 +51,11 @@ public class ObsidianMission implements Listener {
 		
 		int id = _rewardObject[RandomUtil.getRandomInt(_rewardObject.length)];
 		Item i = l.getWorld().dropItemNaturally(l, new ItemStack(id, qty));
-		_blocksLeft = _breaks.size();
 		return i;
+	}
+	
+	public void setCooldownTime(long time) {
+		_coolDownTime = time;
 	}
 
 	
@@ -80,14 +81,29 @@ public class ObsidianMission implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockBreak(BlockBreakEvent event) {
+		boolean mustReinitialise = false;
 		for (BreakBlockSession s : _breaks) {
 			if (s.onBlockBroken(event)) {
 				_blocksLeft--;
-				
+				s.setCoolDownActive(true);
 				if (_blocksLeft == 0) {
 					Item i = giveReward(s.getBlockLocation(), 1);
 					notifyPlayersAround(event.getPlayer(), 20, "A " + i.toString() + " has been dropped for reward");
 					_logger.info("obsidian mission is over!");
+					_blocksLeft = _breaks.size();
+					mustReinitialise = true;
+				}
+			}
+			
+			
+		}
+		
+		if (mustReinitialise) {
+			for (BreakBlockSession s : _breaks) {
+				s.resetToInitialState();
+				if (_coolDownTime > 0) {
+					s.setCooldownTime(_coolDownTime);
+					s.activateCooldownTimer();
 				}
 			}
 		}

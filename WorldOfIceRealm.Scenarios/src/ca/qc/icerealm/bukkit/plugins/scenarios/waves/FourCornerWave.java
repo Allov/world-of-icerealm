@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -23,7 +24,7 @@ public class FourCornerWave implements EntityWave, TimeObserver {
 
 	private WorldZone _zone;
 	private World _world;
-	private List<LivingEntity> _monsters;
+	private List<Entity> _monsters;
 	private Scenario _scenario;
 	private String[] possibleMonsters = new String[] { "zombie", "skeleton", "spider" };
 	private int _maxMonster;
@@ -35,7 +36,7 @@ public class FourCornerWave implements EntityWave, TimeObserver {
 		_zone = z;
 		_world = w;
 		_scenario = s;
-		_monsters = new ArrayList<LivingEntity>();
+		_monsters = new ArrayList<Entity>();
 		_maxMonster = maxMonster;
 		_radius = radius;
 		_delayBetweenSpawn = delay;
@@ -47,8 +48,8 @@ public class FourCornerWave implements EntityWave, TimeObserver {
 		if (_monsters.size() <= _maxMonster) {
 			List<Location> corners = _zone.getFourCorner(_radius);
 			for (int i = 0; i < corners.size(); i++) {
-				CreatureType type = EntityUtilities.getCreatureType(possibleMonsters[RandomUtil.getRandomInt(possibleMonsters.length)]);		
-				_monsters.add(_world.spawnCreature(corners.get(i), type));
+				EntityType type = EntityUtilities.getEntityType(possibleMonsters[RandomUtil.getRandomInt(possibleMonsters.length)]);		
+				_monsters.add(_world.spawnEntity(corners.get(i), type));
 			}
 			
 			// c'est une wave qui spawn des mosntres a chaque demi secon (500ms)
@@ -61,7 +62,7 @@ public class FourCornerWave implements EntityWave, TimeObserver {
 		// TODO Auto-generated method stub
 		if (_scenario.isActive()) {
 			if (e instanceof Monster) {
-				_monsters.remove((LivingEntity)e);
+				_monsters.remove((Entity)e);
 			}
 		}
 		
@@ -83,7 +84,7 @@ public class FourCornerWave implements EntityWave, TimeObserver {
 	public void cancelWave() {
 		// TODO Auto-generated method stub
 		if (_scenario.isActive()) {
-			for (LivingEntity e : _monsters) {
+			for (Entity e : _monsters) {
 				e.remove();
 			}
 		}

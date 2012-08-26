@@ -75,8 +75,8 @@ public class ScenarioPlugin extends JavaPlugin {
 		ScenarioService.getInstance().setPlugin(this);
 		
 		// creation des different scenarios
-		createHauntedOutpost();
-		createRuinsPlateform();
+		//createHauntedOutpost();
+		//createRuinsPlateform();
 		createCastleSiege();
 		//createObsidianMission();
 		//createBarbarianRaid();
@@ -108,12 +108,23 @@ public class ScenarioPlugin extends JavaPlugin {
 		_obsidianMission = new ObsidianMission(_zoneServer);
 		
 		List<BreakBlockSession> session = new ArrayList<BreakBlockSession>();
+		
+		// desert 1
 		Location obsidianLocation = new Location(getServer().getWorld("world"), 205,69,1007);
-		BreakBlockSession desert = new BreakBlockSession(obsidianLocation, Material.GLOWSTONE, 10, 0, "zombie");
+		BreakBlockSession desert = new BreakBlockSession(obsidianLocation, Material.STONE, 10, 1, "zombie");
 		session.add(desert);
 		
-		_obsidianMission.setReward(new int[] { 314, 315, 316, 317 });
+		// desert 2
+		Location obsidianLocation1 = new Location(getServer().getWorld("world"), 247,70,1033);
+		BreakBlockSession desert1 = new BreakBlockSession(obsidianLocation1, Material.GLOWSTONE, 10, 1, "zombie");
+		session.add(desert1);
 		
+		Location obsidianLocation2 = new Location(getServer().getWorld("world"), 254,68,1011);
+		BreakBlockSession desert2 = new BreakBlockSession(obsidianLocation2, Material.OBSIDIAN, 10, 1, "zombie");
+		session.add(desert2);
+		
+		_obsidianMission.setCooldownTime(60000);
+		_obsidianMission.setReward(new int[] { 314, 315, 316, 317 });
 		_obsidianMission.setBreakBlockSession(session);
 		_obsidianMission.activateBlockZone();
 		
@@ -238,13 +249,13 @@ public class ScenarioPlugin extends JavaPlugin {
 	private void createCastleSiege() {
 		if (_castleSiege == null) {
 			InfestationConfiguration config = new InfestationConfiguration();
-			config.InfestedZone = "-93,762,119,1118,0,128";
+			config.InfestedZone = "147,270,163,289,0,128";
 			config.BurnDuringDaylight = false;
 			config.RegenerateExplodedBlocks = true;
 			config.DelayBeforeRegeneration = 60000;
 			config.UseInfestedZoneAsRadius = false;
-			config.SpawnerMonsters = "zombie,skeleton,spider,creeper";
-			config.SpawnerQuantity = 50;
+			config.SpawnerMonsters = "zombie,skeleton,spider";
+			config.SpawnerQuantity = 2;
 			config.ProbabilityToSpawn = 1;
 			config.MaxMonstersPerSpawn = 5;
 			config.RareDropMultiplier = 2.0;

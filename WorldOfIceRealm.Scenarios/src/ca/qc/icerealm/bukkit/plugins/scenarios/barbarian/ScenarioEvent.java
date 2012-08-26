@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
@@ -21,10 +22,10 @@ public class ScenarioEvent {
 	private Server _server;
 	private boolean _isActive;
 	private int _quantity;
-	private CreatureType _creature;
+	private EntityType _creature;
 	private ZoneObserver _activationObserver;
 	
-	public ScenarioEvent(Server s, World w, WorldZone scenario, WorldZone activation, int qty, CreatureType t) {
+	public ScenarioEvent(Server s, World w, WorldZone scenario, WorldZone activation, int qty, EntityType t) {
 		_server = s;
 		_spawnZone = scenario;
 		_activation = activation;

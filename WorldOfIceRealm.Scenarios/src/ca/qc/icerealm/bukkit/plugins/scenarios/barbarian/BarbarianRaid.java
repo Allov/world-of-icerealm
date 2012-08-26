@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -90,7 +91,7 @@ public class BarbarianRaid implements Listener {
 		for (int i = 0; i < zones.length; i++) {
 			WorldZone z = new WorldZone(s.getWorld("world"), zones[i]);
 			WorldZone a = new WorldZone(s.getWorld("world"), activation[i]);
-			ScenarioEvent sc = new ScenarioEvent(s, s.getWorld("world"), z, a, 4, CreatureType.ZOMBIE);
+			ScenarioEvent sc = new ScenarioEvent(s, s.getWorld("world"), z, a, 4, EntityType.ZOMBIE);
 			_scenarios.add(sc);
 		}
 	}

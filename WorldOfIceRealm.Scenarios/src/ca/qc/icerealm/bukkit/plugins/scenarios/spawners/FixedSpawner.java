@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import org.bukkit.Location;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 
@@ -48,7 +49,7 @@ public class FixedSpawner implements TimeObserver, Spawner {
 	public void timeHasCome(long time) {
 		if (_monsterSpawned.size() < _maxMonster) {
 			Location random = _spawningZone.getRandomLocation(_spawningLocation.getWorld());
-			CreatureType creature = EntityUtilities.getCreatureType(_monsters[RandomUtil.getRandomInt(_monsters.length)]);
+			EntityType creature = EntityUtilities.getEntityType(_monsters[RandomUtil.getRandomInt(_monsters.length)]);
 			Monster m = (Monster)ScenarioService.getInstance().spawnCreature(_spawningLocation.getWorld(), random, creature, _healthModifier, _burn);
 			m.setTarget(_players.get(RandomUtil.getRandomInt(_players.size())));
 			

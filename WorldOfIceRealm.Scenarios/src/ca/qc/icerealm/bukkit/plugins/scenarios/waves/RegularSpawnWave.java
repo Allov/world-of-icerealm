@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.Location;
-import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -25,7 +25,7 @@ public class RegularSpawnWave implements EntityWave, TimeObserver {
 	private long _timeBetweenSpawn;
 	private long _alarm;
 	private List<Location> _locations;
-	private List<LivingEntity> _monsters;
+	private List<Entity> _monsters;
 	private String _typeMonsters;
 	private String[] _arrayPossibleMonster;
 	private Scenario _scenario;
@@ -36,7 +36,7 @@ public class RegularSpawnWave implements EntityWave, TimeObserver {
 		_timeBetweenSpawn = timeBetweenSpawn;
 		_scenario = s;
 		_maxMonster = maxMonster;
-		_monsters = new ArrayList<LivingEntity>();
+		_monsters = new ArrayList<Entity>();
 		_healthModifier = healthmodifier;
 	}
 	
@@ -64,9 +64,9 @@ public class RegularSpawnWave implements EntityWave, TimeObserver {
 			for (Location l : _locations) {
 				
 				if (getNbOfEntities() < _maxMonster) {
-					CreatureType c = EntityUtilities.getCreatureType(_arrayPossibleMonster[RandomUtil.getRandomInt(_arrayPossibleMonster.length)]);
+					EntityType c = EntityUtilities.getEntityType(_arrayPossibleMonster[RandomUtil.getRandomInt(_arrayPossibleMonster.length)]);
 					//LivingEntity e = _scenario.getWorld().spawnCreature(l, c);
-					LivingEntity e = ScenarioService.getInstance().spawnCreature(l.getWorld(), l, c, _healthModifier);
+					Entity e = ScenarioService.getInstance().spawnCreature(l.getWorld(), l, c, _healthModifier);
 					_monsters.add(e);
 					if (e instanceof Monster) {
 						Monster m = (Monster)e;
@@ -115,7 +115,7 @@ public class RegularSpawnWave implements EntityWave, TimeObserver {
 
 	@Override
 	public void cancelWave() {
-		for (LivingEntity l : _monsters) {
+		for (Entity l : _monsters) {
 			l.remove();
 		}
 		

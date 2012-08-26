@@ -5,6 +5,8 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -49,8 +51,8 @@ public class InfiniteSpawner implements Spawner, TimeObserver {
 	}
 	
 	public void spawnMonster() {
-		CreatureType c = getRandomMonsters();
-		LivingEntity l = ScenarioService.getInstance().spawnCreature(_world, _location, c, _health);
+		EntityType c = getRandomMonsters();
+		Entity l = ScenarioService.getInstance().spawnCreature(_world, _location, c, _health);
 		if (l instanceof Monster) {
 			setRandomPlayerAsTarget((Monster)l);
 		}
@@ -86,8 +88,8 @@ public class InfiniteSpawner implements Spawner, TimeObserver {
 		return _alarm;
 	}
 
-	private CreatureType getRandomMonsters() {
-		return EntityUtilities.getCreatureType(_arrayMonsters[RandomUtil.getRandomInt(_arrayMonsters.length)]);
+	private EntityType getRandomMonsters() {
+		return EntityUtilities.getEntityType(_arrayMonsters[RandomUtil.getRandomInt(_arrayMonsters.length)]);
 	}
 	
 	private void setRandomPlayerAsTarget(Monster m) {

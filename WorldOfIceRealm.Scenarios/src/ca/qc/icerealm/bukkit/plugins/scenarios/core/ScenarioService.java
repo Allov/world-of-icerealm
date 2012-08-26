@@ -7,6 +7,8 @@ import java.util.logging.Logger;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -82,34 +84,36 @@ public class ScenarioService {
 		return list;
 	}
 	
-	public LivingEntity spawnCreature(World w, Location l, CreatureType t) {
-		return w.spawnCreature(l, t);
+	public Entity spawnCreature(World w, Location l, EntityType t) {
+		return w.spawnEntity(l, t);
 	}
 	
-	public LivingEntity spawnCreature(World w, Location l, CreatureType t, int maxHealth) {
+	public Entity spawnCreature(World w, Location l, EntityType t, int maxHealth) {
 		return spawnCreature(w, l, t, maxHealth, true);
 	}
 	
-	public LivingEntity spawnCreature(World w, Location l, CreatureType t, double modifier) {
+	public Entity spawnCreature(World w, Location l, EntityType t, double modifier) {
 		return spawnCreature(w, l, t, modifier, true);
 	}
 	
-	public LivingEntity spawnCreature(World w, Location l, CreatureType t, double modifier, boolean burn) {
+	public Entity spawnCreature(World w, Location l, EntityType t, double modifier, boolean burn) {
 		
-		LivingEntity creature = this.spawnCreature(w, l, t);
+		Entity creature = this.spawnCreature(w, l, t);
+		/*
 		int maxHealth = creature.getMaxHealth() + (int)(modifier * creature.getMaxHealth());
 		if (_customMonster != null && maxHealth != creature.getMaxHealth()) {
 			_customMonster.addMonster(creature.getEntityId(), maxHealth);
-		}
+		}*/
 		return creature;
 	}
 	
-	public LivingEntity spawnCreature(World w, Location l, CreatureType t, int maxHealth, boolean burn) {
-		LivingEntity creature = this.spawnCreature(w, l, t);
-		
+	public Entity spawnCreature(World w, Location l, EntityType t, int maxHealth, boolean burn) {
+		//LivingEntity creature = this.spawnCreature(w, l, t);
+		Entity creature = this.spawnCreature(w, l, t);
+		/*
 		if (_customMonster != null && maxHealth != creature.getMaxHealth()) {
 			_customMonster.addMonster(creature.getEntityId(), maxHealth);
-		}
+		}*/
 		return creature;
 	}
 	

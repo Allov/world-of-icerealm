@@ -7,6 +7,8 @@ import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -35,7 +37,7 @@ public class ProximitySpawner implements TimeObserver, Listener, Spawner, CoolDo
 	private long _interval;
 	private int _prob;
 	private int _maxMonster;
-	private List<LivingEntity> _entities;
+	private List<Entity> _entities;
 	private boolean _burn;
 	private double _healthModifier;
 	private WorldZone _zone;
@@ -55,7 +57,7 @@ public class ProximitySpawner implements TimeObserver, Listener, Spawner, CoolDo
 		_startingLocation = _zone.getRandomLocation(_zone.getWorld());
 		_interval = config.IntervalBetweenSpawn;
 		_prob = config.ProbabilityToSpawn;
-		_entities = new ArrayList<LivingEntity>();
+		_entities = new ArrayList<Entity>();
 		_burn = config.BurnDuringDaylight;
 		_healthModifier = config.HealthModifier;
 		_maxMonster = config.MaxMonstersPerSpawn;
@@ -91,8 +93,8 @@ public class ProximitySpawner implements TimeObserver, Listener, Spawner, CoolDo
 		if (draw && !_isCoolDownActive && _entities.size() < _maxMonster) {
 			Location random = _zoneActivator.getRandomLocation(_zoneActivator.getWorld());
 			random.setY(random.getY() + 2);
-			CreatureType creature = EntityUtilities.getCreatureType(_monstersToSpawn[RandomUtil.getRandomInt(_monstersToSpawn.length)]);
-			LivingEntity l = ScenarioService.getInstance().spawnCreature(_zone.getWorld(), random, creature, _healthModifier);
+			EntityType creature = EntityUtilities.getEntityType(_monstersToSpawn[RandomUtil.getRandomInt(_monstersToSpawn.length)]);
+			Entity l = ScenarioService.getInstance().spawnCreature(_zone.getWorld(), random, creature, _healthModifier);
 			
 			if (_config.RareDropMultiplier != 1.0) {
 				ScenarioService.getInstance().attachRareDropMultiplierToEntity(l.getEntityId(), _config.RareDropMultiplier);
@@ -128,7 +130,7 @@ public class ProximitySpawner implements TimeObserver, Listener, Spawner, CoolDo
 	
 	public void removeListener() {
 		if (_config.ResetWhenPlayerLeave) {
-			for (LivingEntity l : _entities) {
+			for (Entity l : _entities) {
 				l.remove();
 			}
 		}

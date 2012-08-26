@@ -10,6 +10,8 @@ import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -86,8 +88,8 @@ public class BreakBlockSession implements ZoneObserver, CoolDown {
 			for (int i = 0; i < _qty; i++) {
 				Location loc = _locations.clone();
 				loc.setY(loc.getY() + 2);
-				CreatureType t = EntityHelper.getRandomEntity(_monsters);
-				LivingEntity l = _world.spawnCreature(loc, t);
+				EntityType t = EntityHelper.getRandomEntity(_monsters);
+				Entity l = _world.spawnCreature(loc, t);
 				if (l instanceof Monster) {
 					_spawnedMonsters.add((Monster)l);
 					_logger.info(l.getEntityId() + " spawned at " + l.getLocation());
@@ -174,30 +176,32 @@ public class BreakBlockSession implements ZoneObserver, CoolDown {
 	public void playerEntered(Player p) {
 		
 		_players.add(p);
-		
-		if (_isCooldownActive) {
+		long activateIn =_coolDownDueTimestamp - System.currentTimeMillis();
+		if (_isCooldownActive && activateIn > 0) {
 			p.sendMessage(ChatColor.GOLD + "Active in " + (_coolDownDueTimestamp - System.currentTimeMillis() + " ms"));
 		}
-		else {
+		else if (!_isCooldownActive){
 			
 			if (_blockBroken) {
-				p.sendMessage(_header + ChatColor.GREEN + "Break the Obsidian block");
+				p.sendMessage(_header + ChatColor.GREEN + "Break the " + _material.toString()  + " block");
 				activateBreakingZone();	
 			}
 			else {
 				p.sendMessage(ChatColor.GRAY + "entering the zone");
 			}
 			
-			if (_coolDownTime > 0) {
-				setCoolDownActive(true);
-				_coolDownTimer = new CoolDownTimer(this);
-				TimeServer.getInstance().addListener(_coolDownTimer, _coolDownTime);
-				_coolDownDueTimestamp = System.currentTimeMillis() + _coolDownTime;
-				_logger.info(_coolDownDueTimestamp + "cool down to be");
-			}
-			
-			
-			
+		}
+	}
+	
+	public void activateCooldownTimer() {
+		_logger.info("activatetimer!");
+		if (_coolDownTime > 0) {
+			_logger.info(_coolDownDueTimestamp + " cool down to be");
+			setCoolDownActive(true);
+			_coolDownTimer = new CoolDownTimer(this);
+			TimeServer.getInstance().addListener(_coolDownTimer, _coolDownTime);
+			_coolDownDueTimestamp = System.currentTimeMillis() + _coolDownTime;
+			_logger.info(_coolDownDueTimestamp + " cool down to be");
 		}
 	}
 	

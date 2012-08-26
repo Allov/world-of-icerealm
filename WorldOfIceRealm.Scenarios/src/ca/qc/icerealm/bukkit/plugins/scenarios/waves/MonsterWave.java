@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import org.bukkit.Location;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -45,8 +46,8 @@ public class MonsterWave {
 			for (int i = 0; i < _nbMonsters; i++) {
 				// creation de la location et du monstre
 				Location loc = _scenario.getWorldZone().getRandomLocationOutsideThisZone(_scenario.getWorld(), _exclude);
-				CreatureType type = EntityUtilities.getCreatureType(possibleMonsters[RandomUtil.getRandomInt(possibleMonsters.length)]);			
-				LivingEntity living = _scenario.getWorld().spawnCreature(loc, type);
+				EntityType type = EntityUtilities.getEntityType(possibleMonsters[RandomUtil.getRandomInt(possibleMonsters.length)]);			
+				Entity living = _scenario.getWorld().spawnEntity(loc, type);
 				// adding to the table
 				_monstersTable.add(living);
 			}
