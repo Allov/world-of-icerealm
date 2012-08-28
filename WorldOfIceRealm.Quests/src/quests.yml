@@ -149,14 +149,14 @@ cmn:
     daily: true
     objectives:
         -   type: collect
-            name: Collect 5 Ghast Tears 
+            name: Collect 1 Ghast Tears 
             what: 370
-            amount: 5
+            amount: 1
             keep: true
         -   type: kill
-            name: Kill 5 Ghast
+            name: Kill 2 Ghast
             what: 56
-            amount: 5
+            amount: 2
     rewards:
         money: 400
         level: 3

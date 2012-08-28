@@ -1,6 +1,7 @@
 package ca.qc.icerealm.bukkit.plugins.specialitems;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,27 @@ public class SpecialItemsPlugin extends JavaPlugin implements Listener {
 	private final short IronLeggingsAugmentedDurability = (short)(Material.IRON_LEGGINGS.getMaxDurability() / 2);
 	private final short IronBootsAugmentedDurability = (short)(Material.IRON_BOOTS.getMaxDurability() / 2);
 	private final short IronHelmetAugmentedDurability = (short)(Material.IRON_HELMET.getMaxDurability() / 2);
+	private final short DiamondChestplateAugmentedDurability = (short)(Material.DIAMOND_CHESTPLATE.getMaxDurability() / 2);
+	private final short DiamondLeggingsAugmentedDurability = (short)(Material.DIAMOND_LEGGINGS.getMaxDurability() / 2);
+	private final short DiamondBootsAugmentedDurability = (short)(Material.DIAMOND_BOOTS.getMaxDurability() / 2);
+	private final short DiamondHelmetAugmentedDurability = (short)(Material.DIAMOND_HELMET.getMaxDurability() / 2);
+	
+	private final Material[] AllowedDurabilityMaterialInfo = new Material[] {
+																				Material.IRON_CHESTPLATE,
+																				Material.IRON_LEGGINGS,
+																				Material.IRON_BOOTS,
+																				Material.IRON_HELMET,
+																				Material.GOLD_CHESTPLATE,
+																				Material.GOLD_LEGGINGS,
+																				Material.GOLD_BOOTS,
+																				Material.GOLD_HELMET,
+																				Material.DIAMOND_CHESTPLATE,
+																				Material.DIAMOND_LEGGINGS,
+																				Material.DIAMOND_BOOTS,
+																				Material.DIAMOND_HELMET
+																			};
+	
+	private List<Material> allowedListOfMaterials;
 	
 	private Map<Player, Boolean> playerEating = new HashMap<Player, Boolean>();
 	
@@ -37,10 +59,55 @@ public class SpecialItemsPlugin extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(this, this);
 
 		setGoldDurability();
-		addDurabilityRecipe();
+		addIronDurabilityRecipe();
+		addDiamondDurabilityRecipe();
+		
+		allowedListOfMaterials = Arrays.asList(AllowedDurabilityMaterialInfo); 
 	}
 
-	private void addDurabilityRecipe() {
+	private void addDiamondDurabilityRecipe() {
+		ItemStack chestStack = new ItemStack(Material.DIAMOND_CHESTPLATE, 1);
+		chestStack.setDurability((short)-DiamondChestplateAugmentedDurability);
+		
+		ShapedRecipe chestRecipe = new ShapedRecipe( chestStack );
+        chestRecipe.shape("LLL","DID","LLL");
+        chestRecipe.setIngredient('L', Material.OBSIDIAN);
+        chestRecipe.setIngredient('D', Material.DIAMOND);
+        chestRecipe.setIngredient('I', Material.DIAMOND_CHESTPLATE);
+        getServer().addRecipe(chestRecipe);
+
+        ItemStack leggingsStack = new ItemStack(Material.DIAMOND_LEGGINGS, 1);
+        leggingsStack.setDurability((short)-DiamondLeggingsAugmentedDurability);
+
+		ShapedRecipe leggingsRecipe = new ShapedRecipe( leggingsStack );
+		leggingsRecipe.shape("LLL","DID","LLL");
+		leggingsRecipe.setIngredient('L', Material.OBSIDIAN);
+		leggingsRecipe.setIngredient('D', Material.DIAMOND);
+		leggingsRecipe.setIngredient('I', Material.DIAMOND_LEGGINGS);
+        getServer().addRecipe(leggingsRecipe);
+
+        ItemStack bootsStack = new ItemStack(Material.DIAMOND_BOOTS, 1);
+        bootsStack.setDurability((short)-DiamondBootsAugmentedDurability);
+
+		ShapedRecipe bootsRecipe = new ShapedRecipe( bootsStack );
+		bootsRecipe.shape("LLL","DID","LLL");
+		bootsRecipe.setIngredient('L', Material.OBSIDIAN);
+		bootsRecipe.setIngredient('D', Material.DIAMOND);
+		bootsRecipe.setIngredient('I', Material.DIAMOND_BOOTS);
+        getServer().addRecipe(bootsRecipe);
+
+        ItemStack helmetStack = new ItemStack(Material.DIAMOND_HELMET, 1);
+        helmetStack.setDurability((short)-DiamondHelmetAugmentedDurability);
+
+		ShapedRecipe helmetRecipe = new ShapedRecipe( helmetStack );
+		helmetRecipe.shape("LLL","DID","LLL");
+		helmetRecipe.setIngredient('L', Material.OBSIDIAN);
+		helmetRecipe.setIngredient('D', Material.DIAMOND);
+		helmetRecipe.setIngredient('I', Material.DIAMOND_HELMET);
+        getServer().addRecipe(helmetRecipe);
+	}
+
+	private void addIronDurabilityRecipe() {
 		ItemStack chestStack = new ItemStack(Material.IRON_CHESTPLATE, 1);
 		chestStack.setDurability((short)-IronChestplateAugmentedDurability);
 		
@@ -51,7 +118,7 @@ public class SpecialItemsPlugin extends JavaPlugin implements Listener {
         getServer().addRecipe(chestRecipe);
 
         ItemStack leggingsStack = new ItemStack(Material.IRON_LEGGINGS, 1);
-		chestStack.setDurability((short)-IronLeggingsAugmentedDurability);
+        leggingsStack.setDurability((short)-IronLeggingsAugmentedDurability);
 
 		ShapedRecipe leggingsRecipe = new ShapedRecipe( leggingsStack );
 		leggingsRecipe.shape("LLL","LIL","LLL");
@@ -60,7 +127,7 @@ public class SpecialItemsPlugin extends JavaPlugin implements Listener {
         getServer().addRecipe(leggingsRecipe);
 
         ItemStack bootsStack = new ItemStack(Material.IRON_BOOTS, 1);
-		chestStack.setDurability((short)-IronBootsAugmentedDurability);
+        bootsStack.setDurability((short)-IronBootsAugmentedDurability);
 
 		ShapedRecipe bootsRecipe = new ShapedRecipe( bootsStack );
 		bootsRecipe.shape("LLL","LIL","LLL");
@@ -69,7 +136,7 @@ public class SpecialItemsPlugin extends JavaPlugin implements Listener {
         getServer().addRecipe(bootsRecipe);
 
         ItemStack helmetStack = new ItemStack(Material.IRON_HELMET, 1);
-		chestStack.setDurability((short)-IronHelmetAugmentedDurability);
+        helmetStack.setDurability((short)-IronHelmetAugmentedDurability);
 
 		ShapedRecipe helmetRecipe = new ShapedRecipe( helmetStack );
 		helmetRecipe.shape("LLL","LIL","LLL");
@@ -89,7 +156,7 @@ public class SpecialItemsPlugin extends JavaPlugin implements Listener {
 	public void onPlayerRightClick(PlayerInteractEvent event) {
 		ItemStack item = event.getItem();
 		
-		if (item != null && (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
+		if (item != null && (event.getAction().equals(Action.RIGHT_CLICK_AIR)) && allowedListOfMaterials.contains(item.getType())) {
 			net.minecraft.server.Item nmsItem = net.minecraft.server.Item.byId[item.getType().getId()];
 			
 			int maxDurability = nmsItem.getMaxDurability();

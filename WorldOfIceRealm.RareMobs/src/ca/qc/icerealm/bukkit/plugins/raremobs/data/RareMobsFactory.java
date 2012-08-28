@@ -57,8 +57,8 @@ public class RareMobsFactory
 				raremob.setMobName(mob.getString("name", null));
 				raremob.setSpawnOdds(mob.getDouble("odds", 0.00) * oddsMultiplier);
 				
-				Map<String, Object> temp = mob.getMap();
-				MapWrapper rawards = new MapWrapper((Map<String, Object>)temp.get("rewards"));
+				Map<?, ?> temp = mob.getMap();
+				MapWrapper rawards = new MapWrapper((Map<?, ?>)temp.get("rewards"));
 								
 				raremob.setExperienceLevels(rawards.getInt("experienceLevels", 0));
 				raremob.setMoney(rawards.getInt("money", 0));

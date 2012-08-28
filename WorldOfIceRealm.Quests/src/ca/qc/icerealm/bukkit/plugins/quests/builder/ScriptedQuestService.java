@@ -202,11 +202,13 @@ public class ScriptedQuestService {
 		}
 
 		// Money Rewards
-		int money = config.getInt(id + ".rewards.money", 0);
-		if (money > 0) {
-			quest.getRewards().add(
-					new MoneyReward(this.questsPlugin.getEconomyProvider()
-							.getProvider(), money));
+		if (this.questsPlugin.getEconomyProvider() != null) {
+			int money = config.getInt(id + ".rewards.money", 0);
+			if (money > 0) {
+				quest.getRewards().add(
+						new MoneyReward(this.questsPlugin.getEconomyProvider()
+								.getProvider(), money));
+			}
 		}
 
 		// Items Rewards

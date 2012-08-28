@@ -7,13 +7,13 @@ import java.util.logging.Logger;
 
 public class MapWrapper {
 	public final Logger logger = Logger.getLogger(("RareMobsFactory"));
-	private final Map<String, Object> map;
+	private final Map<?, ?> map;
 
-	public MapWrapper(Map<String, Object> map) {
+	public MapWrapper(Map<?, ?> map) {
 		this.map = map;		
 	}
 	
-	public Map<String, Object> getMap(){
+	public Map<?, ?> getMap(){
 		return map;
 	}
 	

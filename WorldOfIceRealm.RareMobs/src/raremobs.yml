@@ -55,6 +55,54 @@ raremobs:
             -   type: SKELETON
             -   type: SKELETON
             -   type: SKELETON
+    -   type: ZOMBIE
+        name: Markus the Flesheater
+        health: 600
+        strength multiplier: 3
+        odds: 0.01
+        rewards:   
+            experienceLevels: 15 
+            money: 2500           
+            drops:
+                -   name: DIAMOND_BOOTS
+                    odds: 25.00
+                    enchantments: high odds 
+                -   name: IRON_CHESTPLATE
+                    odds: 25.00
+                    enchantments: high odds 
+                -   name: IRON_HELMET
+                    odds: 25.00
+                    enchantments: high odds 
+                -   name: IRON_LEGGINGS
+                    odds: 25.00
+                    enchantments: high odds    
+                -   name: IRON_AXE               # custom rare weapon
+                    custom name: iron battle axe
+                    odds: 15.00
+                    enchantments: sure high odds
+                    enchantments as: IRON_SWORD
+                -   name: DIAMOND_AXE               # custom rare weapon
+                    custom name: diamond battle axe
+                    odds: 10.00
+                    enchantments: sure average odds
+                    enchantments as: IRON_SWORD
+                -   name: DIAMOND_SWORD
+                    odds: 10.00
+                    enchantments: average odds   
+                -   name: GOLDEN_APPLE
+                    odds: 75.00
+                -   name: DIAMOND
+                    odds: 3.00
+                -   name: BLAZE_POWDER
+                    odds: 3.00
+        subordinates health multiplier: 3
+        subordinates strength multiplier: 3
+        subordinates:
+            -   type: CAVE_SPIDER
+            -   type: CAVE_SPIDER
+            -   type: SKELETON
+            -   type: SKELETON
+            -   type: SKELETON
     -   type: SKELETON
         name: Bad to the bones
         health: 500

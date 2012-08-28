@@ -57,7 +57,7 @@ public class ConfigWrapper {
 		
 		List<MapWrapper> mapValues = new ArrayList<MapWrapper>();
 		
-		for (Map<String, Object> map : getConfig().getMapList(path)) {
+		for (Map<?, ?> map : getConfig().getMapList(path)) {
 			mapValues.add(new MapWrapper(map));
 		}
 		

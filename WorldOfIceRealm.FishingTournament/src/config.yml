@@ -1,0 +1,14 @@
+# 0 = sunset, 14 = night
+starts: 0
+
+# number of minecraft hours the tournament last. 
+span: 6
+
+# number chances (1 / n) the tournament starts, 1 = always.
+chances: 8
+
+# Only support money reward (using vault)
+reward: 300
+
+# Players needed to start a tournament
+playerNumberNeeded: 2

@@ -86,7 +86,10 @@ public class RandomQuestService {
 
 	private void assignRewards(Quest quest) {
 		quest.getRewards().add(new LevelReward(BaseLevelReward));
-		quest.getRewards().add(new MoneyReward(this.questsPlugin.getEconomyProvider().getProvider(), BaseMoneyReward));
+		
+		if (this.questsPlugin.getEconomyProvider() != null) {
+			quest.getRewards().add(new MoneyReward(this.questsPlugin.getEconomyProvider().getProvider(), BaseMoneyReward));
+		}
 		
 		// Item reward;
 		if (RandomUtil.getDrawResult(ItemRewardChances)) {
