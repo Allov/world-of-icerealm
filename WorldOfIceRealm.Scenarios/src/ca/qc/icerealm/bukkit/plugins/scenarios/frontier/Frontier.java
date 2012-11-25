@@ -74,14 +74,15 @@ public class Frontier implements Listener, CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command arg1, String arg2, String[] arg3) {
 
 		if (sender.isOp()) {
+			
 			if (arg3.length == 0) {
 				sender.sendMessage(ChatColor.GRAY + "Frontier active: " + ChatColor.YELLOW + _activated);
 			}
 			
-			if (arg3.length == 1 && arg3[0] == "divider") {
+			if (arg3.length == 1 && arg3[0].contains("divider")) {
 				sender.sendMessage(ChatColor.GRAY + "Frontier divider: " + ChatColor.YELLOW + _divider);
 			}
-			if (arg3.length == 2 && arg3[0] == "divider") {
+			if (arg3.length == 2 && arg3[0].contains("divider")) {
 				double divider = Double.parseDouble(arg3[1]);
 				if (divider > 0.0) {
 					_divider = divider;
@@ -93,10 +94,10 @@ public class Frontier implements Listener, CommandExecutor {
 				sender.sendMessage(ChatColor.GRAY + "Frontier active: " + ChatColor.YELLOW + _activated);
 			}
 			
-			if (arg3.length == 1 && arg3[0] == "status") {
+			if (arg3.length == 1 && arg3[0].contains("status")) {
 				sender.sendMessage(ChatColor.GRAY + "Frontier active: " + ChatColor.YELLOW + _activated);
 			}
-			if (arg3.length == 2 && arg3[0] == "status") {
+			if (arg3.length == 2 && arg3[0].contains("status")) {
 				boolean activation = Boolean.parseBoolean(arg3[1]);
 				_activated = activation;
 				sender.sendMessage(ChatColor.GRAY + "Frontier active: " + ChatColor.YELLOW + _activated);

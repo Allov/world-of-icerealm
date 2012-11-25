@@ -123,6 +123,7 @@ public class ScenarioPlugin extends JavaPlugin {
 	
 	private void createAmbush() {
 		_ambush = new Ambush(this, 100000, 20, 25);
+		getCommand("am").setExecutor(_ambush);
 		logger.info("[Scenarios] Ambush feature is enabled");
 	}
 	
