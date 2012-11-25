@@ -81,7 +81,7 @@ public class ScenarioPlugin extends JavaPlugin {
 		// creation des different scenarios
 		//createHauntedOutpost();
 		//createRuinsPlateform();
-		createCastleSiege();
+		//createCastleSiege();
 		//createObsidianMission();
 		//createBarbarianRaid();
 		//createMoonTemple();
@@ -122,7 +122,7 @@ public class ScenarioPlugin extends JavaPlugin {
 	}
 	
 	private void createAmbush() {
-		_ambush = new Ambush(this, 100000, 20);
+		_ambush = new Ambush(this, 100000, 20, 25);
 		logger.info("[Scenarios] Ambush feature is enabled");
 	}
 	

@@ -26,12 +26,14 @@ public class Ambush implements Runnable {
 	private int _interval = 0;
 	private int _prob = 0;
 	private JavaPlugin _plugin;
+	private int _radius = 32;
 	
-	public Ambush(JavaPlugin plugin, int interval, int prob) {
+	public Ambush(JavaPlugin plugin, int interval, int prob, int radius) {
 		_server = plugin.getServer();
 		_interval = interval;
 		_prob = prob;
 		_plugin = plugin;
+		_radius = radius;
 		
 		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(this, 0, interval, TimeUnit.MILLISECONDS);
 	}
@@ -49,7 +51,7 @@ public class Ambush implements Runnable {
 				logger.info("creating an ambush!");
 				
 				World world = _server.getWorld("world");
-				WorldZone zone = new WorldZone(p.getLocation(), 50);
+				WorldZone zone = new WorldZone(p.getLocation(), _radius);
 							
 				InfestationConfiguration config = new InfestationConfiguration();
 				config.BurnDuringDaylight = false;
@@ -65,7 +67,7 @@ public class Ambush implements Runnable {
 				config.ResetWhenPlayerLeave = true;
 				config.RegenerateExplodedBlocks = false;
 				config.DelayBeforeRegeneration = 0;
-				config.SpawnerMonsters = "zombie,spider,skeleton";
+				config.SpawnerMonsters = "zombie,spider,skeleton,enderman,pigzombie";
 				config.RareDropMultiplier = 0.0;
 				config.EnterZoneMessage = ChatColor.GREEN + "You have been ambushed! Escape or kill the monsters!";
 				config.LeaveZoneMessage = ChatColor.YELLOW + "You escaped an ambush!";
