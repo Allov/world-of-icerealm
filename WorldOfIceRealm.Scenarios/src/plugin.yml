@@ -11,3 +11,7 @@ commands:
     description: Ruins plateform infestation configuration
   sc:
     description: general scenario commands 
+  fr:
+    description: frontier activation command
+  am:
+    description: ambush activation command
