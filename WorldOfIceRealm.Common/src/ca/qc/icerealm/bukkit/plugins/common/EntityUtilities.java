@@ -27,6 +27,7 @@ public class EntityUtilities
 	public static final int Silverfish = 60;
 	public static final int EnderDragon = 63;
 	public static final int Snowman = 97;
+	public static final int IronGolem = 99;
 	
 	public static int getEntityId(Entity entity)
     {
@@ -58,6 +59,7 @@ public class EntityUtilities
         if(entity instanceof MagmaCube) return MagmaCube;
         if(entity instanceof Silverfish) return Silverfish;
         if(entity instanceof EnderDragon) return EnderDragon;
+        if(entity instanceof IronGolem) return IronGolem;
         
         return -1;
     }
@@ -85,6 +87,7 @@ public class EntityUtilities
 		if (s.equalsIgnoreCase("Silverfish")) { return EntityType.SILVERFISH; }
 		if (s.equalsIgnoreCase("EnderDragon")) { return EntityType.ENDER_DRAGON; }
 		if (s.equalsIgnoreCase("Snowman")) { return EntityType.SNOWMAN; }
+		if (s.equalsIgnoreCase("IronGolem")) { return EntityType.IRON_GOLEM; }
 		return EntityType.VILLAGER;
 	}
 	

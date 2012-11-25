@@ -81,7 +81,8 @@ public class ZoneProber implements Runnable {
 				
 			}
 			catch (Exception ex) {
-				this.logger.info("[ZoneProber] - TimeLoop: " + ex.getMessage());
+				this.logger.info("[ZoneProber] - Exception: ");
+				ex.printStackTrace();
 			}					
 		}
 	}
