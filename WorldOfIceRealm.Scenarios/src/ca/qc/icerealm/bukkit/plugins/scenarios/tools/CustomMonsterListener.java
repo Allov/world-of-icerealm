@@ -4,9 +4,11 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
@@ -29,6 +31,7 @@ public class CustomMonsterListener implements Listener {
 		c.Burn = true;
 		c.Invincible = false;
 		c.EntityId = entityId;
+		c.DamageModifier = 0.0;
 		_customMonsters.put(entityId, c);
 		logInfo(c);
 	}
@@ -39,6 +42,7 @@ public class CustomMonsterListener implements Listener {
 		c.Burn = burn;
 		c.Invincible = false;
 		c.EntityId = entityId;
+		c.DamageModifier = 0.0;
 		_customMonsters.put(entityId, c);
 		logInfo(c);
 	}
@@ -49,6 +53,18 @@ public class CustomMonsterListener implements Listener {
 		c.Burn = burn;
 		c.Invincible = inv;
 		c.EntityId = entityId;
+		c.DamageModifier = 0.0;
+		_customMonsters.put(entityId, c);
+		logInfo(c);
+	}
+	
+	public void addMonster(Integer entityId, Integer health, boolean burn, boolean inv, double damage) {
+		CustomMonster c = new CustomMonster();
+		c.Health = health;
+		c.Burn = burn;
+		c.Invincible = inv;
+		c.EntityId = entityId;
+		c.DamageModifier = damage;
 		_customMonsters.put(entityId, c);
 		logInfo(c);
 	}
@@ -80,13 +96,25 @@ public class CustomMonsterListener implements Listener {
 					m.setHealth(m.getMaxHealth());
 				}	
 			}
+		}
+
+		if (event instanceof EntityDamageByEntityEvent) {
 			
+			EntityDamageByEntityEvent damageEvent = (EntityDamageByEntityEvent)event;
+			CustomMonster damager = _customMonsters.get(damageEvent.getDamager().getEntityId());
+			//logger.info("damager is " + (damager != null) + " and hitting a " + event.getEntityType());
 			
+			if (damager != null && damageEvent.getDamager() instanceof Monster && event.getEntity() instanceof Player) {
+				Player p = (Player)event.getEntity();
+				int damageDone = event.getDamage() + (int)(event.getDamage() * damager.DamageModifier);
+				//logger.info("damage done: " + damageDone + " base damage: " + event.getDamage() + " additional damage: " + additionalDamage);
+				event.setDamage(damageDone);
+			}
 		}
 	}
-	
+
 	private void logInfo(CustomMonster c) {
-		//logger.info("Custom Monster: " + c.Health + " health - " + c.EntityId + " id");
+		//logger.info("Custom Monster: " + c.Health + " health - " + c.EntityId + " id" + " damage: " + c.DamageModifier);
 	}
 }
 
@@ -95,5 +123,6 @@ class CustomMonster {
 	public int Health;
 	public boolean Burn;
 	public boolean Invincible;
+	public double DamageModifier;
 	
 }

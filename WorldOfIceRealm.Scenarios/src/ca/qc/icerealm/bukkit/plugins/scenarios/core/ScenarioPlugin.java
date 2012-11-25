@@ -111,7 +111,7 @@ public class ScenarioPlugin extends JavaPlugin {
 	
 	private void createFrontier() {
 		
-		_frontier = new Frontier(getServer().getWorld("world"), 50);
+		_frontier = new Frontier(getServer().getWorld("world"), 50, 3);
 		getServer().getPluginManager().registerEvents(_frontier, this);
 		getCommand("fr").setExecutor(_frontier);
 		

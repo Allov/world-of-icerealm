@@ -133,8 +133,12 @@ public class ScenarioService {
 	}
 	
 	public void addExistingEntity(Integer id, int health, boolean burn) {
+		_customMonster.addMonster(id, health, burn, false, 0.0);
+	}
+	
+	public void addExistingEntity(Integer id, int health, boolean burn, double damage) {
 		if (_customMonster != null) {
-			_customMonster.addMonster(id, health, burn);
+			_customMonster.addMonster(id, health, burn, false, damage);
 		}
 	}
 	

@@ -25,12 +25,14 @@ public class Frontier implements Listener, CommandExecutor {
 	private World _world = null;
 	private double _divider;
 	private boolean _activated = false;
+	private double _damage;
 	
-	public Frontier(World w, double divider) {
+	public Frontier(World w, double divider, double damage) {
 		_scenarioService = ScenarioService.getInstance();
 		_world = w;
 		_activated = true;
 		_divider = divider;
+		_damage = damage;
 	}
 	
 	public void setActivated(boolean activate) {
@@ -65,7 +67,7 @@ public class Frontier implements Listener, CommandExecutor {
 			if (modifier > 0 && !_scenarioService.monsterAlreadyPresent(event.getEntity().getEntityId())) {
 				LivingEntity creature = event.getEntity();
 				int maxHealth = creature.getMaxHealth() + (int)(modifier * creature.getMaxHealth());
-				_scenarioService.addExistingEntity(creature.getEntityId(), maxHealth);
+				_scenarioService.addExistingEntity(creature.getEntityId(), maxHealth, false, modifier / _damage);
 			}
 		}
 	}
@@ -101,6 +103,21 @@ public class Frontier implements Listener, CommandExecutor {
 				boolean activation = Boolean.parseBoolean(arg3[1]);
 				_activated = activation;
 				sender.sendMessage(ChatColor.GRAY + "Frontier active: " + ChatColor.YELLOW + _activated);
+			}
+			
+			if (arg3.length == 1 && arg3[0].contains("damage")) {
+				sender.sendMessage(ChatColor.GRAY + "Frontier damage: " + ChatColor.YELLOW + _damage);
+			}
+			if (arg3.length == 2 && arg3[0].contains("damage")) {
+				double divider = Double.parseDouble(arg3[1]);
+				if (divider > 0.0) {
+					_damage = divider;
+					sender.sendMessage(ChatColor.GRAY + "Frontier damage: " + ChatColor.YELLOW + _damage);
+				}
+				else {
+					sender.sendMessage(ChatColor.GRAY + "Frontier damage: " + ChatColor.RED + divider + " value not valid (must be > 0.0");
+				}
+				sender.sendMessage(ChatColor.GRAY + "Frontier damage: " + ChatColor.YELLOW + _damage);
 			}
 		}
 		else {
