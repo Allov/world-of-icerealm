@@ -249,18 +249,20 @@ public class ScenarioPlugin extends JavaPlugin {
 	private void createCastleSiege() {
 		if (_castleSiege == null) {
 			InfestationConfiguration config = new InfestationConfiguration();
-			config.InfestedZone = "147,270,163,289,0,128";
+			//config.InfestedZone = "147,270,163,289,0,128";
+			config.InfestedZone = "-250,70,-233,84,0,128";
+			config.ResetWhenPlayerLeave = true;
 			config.BurnDuringDaylight = false;
 			config.RegenerateExplodedBlocks = true;
 			config.DelayBeforeRegeneration = 60000;
 			config.UseInfestedZoneAsRadius = false;
 			config.SpawnerMonsters = "zombie,skeleton,spider";
-			config.SpawnerQuantity = 2;
+			config.SpawnerQuantity = 1;
 			config.ProbabilityToSpawn = 1;
-			config.MaxMonstersPerSpawn = 5;
+			config.MaxMonstersPerSpawn = 1;
 			config.RareDropMultiplier = 2.0;
 			
-			config.HealthModifier = 0.0;
+			config.HealthModifier = 20.0;
 			config.IntervalBetweenSpawn = 1500;
 			config.SpawnerRadiusActivation = 15;
 			config.DelayBeforeRespawn = 60000;

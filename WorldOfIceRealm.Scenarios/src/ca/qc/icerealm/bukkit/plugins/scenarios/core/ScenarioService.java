@@ -98,22 +98,22 @@ public class ScenarioService {
 	
 	public Entity spawnCreature(World w, Location l, EntityType t, double modifier, boolean burn) {
 		
-		Entity creature = this.spawnCreature(w, l, t);
-		/*
+		LivingEntity creature = (LivingEntity)this.spawnCreature(w, l, t);
+
 		int maxHealth = creature.getMaxHealth() + (int)(modifier * creature.getMaxHealth());
 		if (_customMonster != null && maxHealth != creature.getMaxHealth()) {
-			_customMonster.addMonster(creature.getEntityId(), maxHealth);
-		}*/
+			_customMonster.addMonster(creature.getEntityId(), maxHealth, burn);
+		}
 		return creature;
 	}
 	
 	public Entity spawnCreature(World w, Location l, EntityType t, int maxHealth, boolean burn) {
-		//LivingEntity creature = this.spawnCreature(w, l, t);
-		Entity creature = this.spawnCreature(w, l, t);
-		/*
+
+		LivingEntity creature = (LivingEntity)this.spawnCreature(w, l, t);
+
 		if (_customMonster != null && maxHealth != creature.getMaxHealth()) {
-			_customMonster.addMonster(creature.getEntityId(), maxHealth);
-		}*/
+			_customMonster.addMonster(creature.getEntityId(), maxHealth, burn);
+		}
 		return creature;
 	}
 	

@@ -1,14 +1,18 @@
 package ca.qc.icerealm.bukkit.plugins.scenarios.tools;
 
 import java.util.HashMap;
+import java.util.logging.Logger;
+
 import org.bukkit.entity.Monster;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 public class CustomMonsterListener implements Listener {
 
+	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private HashMap<Integer, CustomMonster> _customMonsters;
 	
 	public CustomMonsterListener() {
@@ -47,17 +51,28 @@ public class CustomMonsterListener implements Listener {
 	public void onMonsterDamage(EntityDamageEvent event) {		
 		CustomMonster custom = _customMonsters.get(event.getEntity().getEntityId());
 		
-		if (custom != null && event.getEntity() instanceof Monster) {	
-			custom.Health -= event.getDamage();
-			Monster m = (Monster)event.getEntity();
+		if (custom != null && event.getEntity() instanceof Monster) {
 			
-			if (custom.Health < 0) {
-				m.damage(m.getMaxHealth());
-				_customMonsters.remove(event.getEntity().getEntityId());
+			if (event.getCause() == DamageCause.FIRE_TICK && !custom.Burn) {
+				event.setCancelled(true);
+				event.getEntity().setFireTicks(0);
+				logger.info("cancel fire damage");
 			}
 			else {
-				m.setHealth(m.getMaxHealth());
+				custom.Health -= event.getDamage();
+				Monster m = (Monster)event.getEntity();
+				
+				if (custom.Health < 0) {
+					m.damage(m.getMaxHealth());
+					_customMonsters.remove(event.getEntity().getEntityId());
+					
+				}
+				else {
+					m.setHealth(m.getMaxHealth());
+				}	
 			}
+			
+			
 		}
 	}
 }
