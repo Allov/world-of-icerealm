@@ -20,7 +20,9 @@ import org.bukkit.Server;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
+import ca.qc.icerealm.bukkit.plugins.scenarios.ambush.Ambush;
 import ca.qc.icerealm.bukkit.plugins.scenarios.barbarian.BarbarianRaid;
+import ca.qc.icerealm.bukkit.plugins.scenarios.frontier.Frontier;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.Infestation;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.InfestationCommander;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.InfestationConfiguration;
@@ -47,6 +49,8 @@ public class ScenarioPlugin extends JavaPlugin {
 	private MonsterFury _moonTemple = null;
 	private BarbarianRaid _raid = null;
 	private ObsidianMission _obsidianMission = null;
+	private Frontier _frontier = null;
+	private Ambush _ambush = null;
 		
 	private ZoneSubject _zoneServer;
 	private ScenarioZoneProber _prober;
@@ -81,6 +85,8 @@ public class ScenarioPlugin extends JavaPlugin {
 		//createObsidianMission();
 		//createBarbarianRaid();
 		//createMoonTemple();
+		createFrontier();
+		createAmbush();
 	}
 	
 	public void initZoneServer(Server s) {
@@ -101,6 +107,23 @@ public class ScenarioPlugin extends JavaPlugin {
 		catch (Exception e) {
 			e.printStackTrace();
 		}	
+	}
+	
+	private void createFrontier() {
+		
+		_frontier = new Frontier(getServer().getWorld("world"), 50);
+		getServer().getPluginManager().registerEvents(_frontier, this);
+		getCommand("fr").setExecutor(_frontier);
+		
+		if (_frontier != null) {
+			ScenarioService.getInstance().setFrontier(_frontier);
+			logger.info("[Scenarios] Frontier feature is enabled");
+		}
+	}
+	
+	private void createAmbush() {
+		_ambush = new Ambush(this, 100000, 20);
+		logger.info("[Scenarios] Ambush feature is enabled");
 	}
 	
 	private void createObsidianMission() {

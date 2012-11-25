@@ -19,12 +19,18 @@ public class CustomMonsterListener implements Listener {
 		_customMonsters = new HashMap<Integer, CustomMonster>();
 	}
 	
+	public boolean monsterAlreadyAdded(Integer entityId) {
+		return _customMonsters.containsKey(entityId);
+	}
+	
 	public void addMonster(Integer entityId, Integer health) {
 		CustomMonster c = new CustomMonster();
 		c.Health = health;
 		c.Burn = true;
 		c.Invincible = false;
+		c.EntityId = entityId;
 		_customMonsters.put(entityId, c);
+		logInfo(c);
 	}
 	
 	public void addMonster(Integer entityId, Integer health, boolean burn) {
@@ -32,7 +38,9 @@ public class CustomMonsterListener implements Listener {
 		c.Health = health;
 		c.Burn = burn;
 		c.Invincible = false;
+		c.EntityId = entityId;
 		_customMonsters.put(entityId, c);
+		logInfo(c);
 	}
 	
 	public void addMonster(Integer entityId, Integer health, boolean burn, boolean inv) {
@@ -40,7 +48,9 @@ public class CustomMonsterListener implements Listener {
 		c.Health = health;
 		c.Burn = burn;
 		c.Invincible = inv;
+		c.EntityId = entityId;
 		_customMonsters.put(entityId, c);
+		logInfo(c);
 	}
 	
 	public void removeMonster(Integer entityId) {
@@ -56,7 +66,6 @@ public class CustomMonsterListener implements Listener {
 			if (event.getCause() == DamageCause.FIRE_TICK && !custom.Burn) {
 				event.setCancelled(true);
 				event.getEntity().setFireTicks(0);
-				logger.info("cancel fire damage");
 			}
 			else {
 				custom.Health -= event.getDamage();
@@ -74,6 +83,10 @@ public class CustomMonsterListener implements Listener {
 			
 			
 		}
+	}
+	
+	private void logInfo(CustomMonster c) {
+		//logger.info("Custom Monster: " + c.Health + " health - " + c.EntityId + " id");
 	}
 }
 

@@ -171,6 +171,11 @@ public class Infestation implements ZoneObserver, Listener {
 		}
 		
 		_spawners.clear();
+		
+		if (!_config.KeepInMemory) {
+			_zoneSubject.removeListener(this);
+		}
+		
 		ScenarioPlugin.logger.fine("clearing the spawners");
 	}
 

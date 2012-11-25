@@ -23,6 +23,7 @@ public class InfestationConfiguration {
 		config.LeaveZoneMessage = c.LeaveZoneMessage;
 		config.RareDropMultiplier = c.RareDropMultiplier;
 		config.ResetWhenPlayerLeave = c.ResetWhenPlayerLeave;
+		config.KeepInMemory = c.KeepInMemory;
 		return config;
 	}
 	
@@ -45,5 +46,6 @@ public class InfestationConfiguration {
 	public String LeaveZoneMessage;
 	public double RareDropMultiplier;
 	public boolean ResetWhenPlayerLeave;
+	public boolean KeepInMemory = true;
 	// faire un objet pour changer l'algorithme de random location
 }
