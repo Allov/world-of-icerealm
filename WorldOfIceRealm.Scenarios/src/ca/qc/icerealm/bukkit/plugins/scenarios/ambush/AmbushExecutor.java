@@ -18,7 +18,19 @@ import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
 
 public class AmbushExecutor implements Runnable {
 
-	private final int[] _validBlockRaw = new int[] { 79, 2, 12, 3, 18, 31, 13, 80 };
+	// le id des blocks valides
+	// 79 = snow
+	// 2 = grass
+	// 12 = sand
+	// 3 = dirt
+	// 18 = leaf
+	// 31 = tall grass
+	// 13 = gravel
+	// 80 = snow block
+	// 82 = clay block
+	// 110 = mycelinum
+	// 111 = lilly pad
+	private final int[] _validBlockRaw = new int[] { 79, 2, 12, 3, 18, 31, 13, 80, 82, 110, 111 };
 	private String _monsters = "spider,skeleton,zombie,pigzombie,enderman";
 	private String[] _monstersArray;
 	private World _world;
