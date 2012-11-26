@@ -1,23 +1,17 @@
 package ca.qc.icerealm.bukkit.plugins.scenarios.core;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
-import java.util.logging.Handler;
 import java.util.logging.Level;
-import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.ambush.Ambush;
@@ -105,12 +99,13 @@ public class ScenarioPlugin extends JavaPlugin {
 			logger.addHandler(_logFile);
 		} 
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.info("[Scenarios] Could not create the log file " + name);
 		}	
 	}
 	
 	private void createFrontier() {
 		
+		// a chaque 50m du spawn point, 100% plus fort, 33% plus de dommage
 		_frontier = new Frontier(getServer().getWorld("world"), 50, 3);
 		getServer().getPluginManager().registerEvents(_frontier, this);
 		getCommand("fr").setExecutor(_frontier);
@@ -122,7 +117,8 @@ public class ScenarioPlugin extends JavaPlugin {
 	}
 	
 	private void createAmbush() {
-		_ambush = new Ambush(this, 100000, 20, 25);
+		// tirage au sort chaque 5 minutes, 1/15 de probabilité, radius de 25m, 10 sec avant spawn, 4 monstres
+		_ambush = new Ambush(this, 300000, 15, 25, 10000, 4);
 		getCommand("am").setExecutor(_ambush);
 		logger.info("[Scenarios] Ambush feature is enabled");
 	}

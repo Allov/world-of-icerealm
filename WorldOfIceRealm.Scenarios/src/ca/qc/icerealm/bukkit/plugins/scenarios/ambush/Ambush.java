@@ -6,20 +6,12 @@ import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import ca.qc.icerealm.bukkit.plugins.common.LocationUtil;
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
-import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
-import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
-import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.Infestation;
-import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.InfestationConfiguration;
-import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 
 
 public class Ambush implements Runnable, CommandExecutor {
@@ -31,13 +23,17 @@ public class Ambush implements Runnable, CommandExecutor {
 	private JavaPlugin _plugin;
 	private int _radius = 32;
 	private boolean _active = false;
+	private int _intervalBeforeSpawn;
+	private int _numberOfMonster;
 	
-	public Ambush(JavaPlugin plugin, int interval, int prob, int radius) {
+	public Ambush(JavaPlugin plugin, int interval, int prob, int radius, int intervalBeforeSpawn, int nb) {
 		_server = plugin.getServer();
 		_interval = interval;
 		_prob = prob;
 		_plugin = plugin;
 		_radius = radius;
+		_intervalBeforeSpawn = intervalBeforeSpawn;
+		_numberOfMonster = nb;
 		
 		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(this, 0, interval, TimeUnit.MILLISECONDS);
 		_active = true;
@@ -47,47 +43,21 @@ public class Ambush implements Runnable, CommandExecutor {
 	public void run() {
 		
 		if (_active) {
+			
 			Player[] players = _server.getOnlinePlayers();
 			for (Player p : players) {
 				
 				// ajouté un calcul de probablité selon l'inventaire du joueurs
 				boolean createAmbush = RandomUtil.getDrawResult(_prob);
 				if (createAmbush) {
-					
-					logger.info("creating an ambush!");
-					
-					World world = _server.getWorld("world");
-					WorldZone zone = new WorldZone(p.getLocation(), _radius);
-								
-					InfestationConfiguration config = new InfestationConfiguration();
-					config.BurnDuringDaylight = false;
-					config.HealthModifier = ScenarioService.getInstance().calculateHealthModifierWithFrontier(p.getLocation(), world.getSpawnLocation());
-					config.InfestedZone = zone.toString();
-					config.ProbabilityToSpawn = 1;
-					config.DelayBeforeRespawn = 100000;
-					config.UseInfestedZoneAsRadius = true;
-					config.IntervalBetweenSpawn = 500;
-					config.MaxMonstersPerSpawn = 5;
-					config.SpawnerQuantity = 2;
-					config.Server = _server;
-					config.ResetWhenPlayerLeave = true;
-					config.RegenerateExplodedBlocks = false;
-					config.DelayBeforeRegeneration = 0;
-					config.SpawnerMonsters = "zombie,spider,skeleton,enderman,pigzombie";
-					config.RareDropMultiplier = 0.0;
-					config.EnterZoneMessage = ChatColor.GREEN + "You have been ambushed! Escape or kill the monsters!";
-					config.LeaveZoneMessage = ChatColor.YELLOW + "You escaped an ambush!";
-					config.KeepInMemory = false;
-					
-					Infestation infest = new Infestation(_plugin, config, ZoneServer.getInstance());
-					infest.playerEntered(p);
-					_server.broadcastMessage(ChatColor.YELLOW + p.getDisplayName() + ChatColor.GOLD + " has been ambushed! Help him!");
+					logger.info("creating an ambush for " + p.getDisplayName());
+					AmbushExecutor executor = new AmbushExecutor(_radius, p, _numberOfMonster);
+					Executors.newSingleThreadScheduledExecutor().schedule(executor, _intervalBeforeSpawn, TimeUnit.MILLISECONDS);
+					_server.broadcastMessage(ChatColor.YELLOW + p.getDisplayName() + ChatColor.GREEN + " has been ambushed! Help him!");
 					break;
-					
 				}
 			}	
 		}
-		
 	}
 
 	@Override
@@ -97,6 +67,15 @@ public class Ambush implements Runnable, CommandExecutor {
 			
 			if (arg3.length == 0) {
 				sender.sendMessage(ChatColor.GRAY + "Ambush active: " + ChatColor.YELLOW + _active);
+			}
+			
+			if (arg3.length == 1 && (arg3[0].contains("help") || arg3[0].contains("?"))) {
+				sender.sendMessage(ChatColor.DARK_GREEN + "/am prob [int] - " + ChatColor.YELLOW + "Probability to create an ambush");
+				sender.sendMessage(ChatColor.DARK_GREEN + "/am active [bool] - " + ChatColor.YELLOW + "Activate/Deactivate ambushes");
+				sender.sendMessage(ChatColor.DARK_GREEN + "/am delay [int] - " + ChatColor.YELLOW + "Interval before spawns");
+				sender.sendMessage(ChatColor.DARK_GREEN + "/am nbmonsters [int] - " + ChatColor.YELLOW + "Number of monsters");
+				sender.sendMessage(ChatColor.DARK_GREEN + "/am interval [int] - " + ChatColor.YELLOW + "Interval between each draw to create an ambush (1 = always)");
+				sender.sendMessage(ChatColor.DARK_GREEN + "/am radius [int] - " + ChatColor.YELLOW + "Radius to spawn monsters (recommended < 30)");
 			}
 			
 			if (arg3.length == 1 && arg3[0].contains("prob")) {
@@ -120,6 +99,62 @@ public class Ambush implements Runnable, CommandExecutor {
 				boolean active = Boolean.parseBoolean(arg3[1]);
 				_active = active;
 				sender.sendMessage(ChatColor.GRAY + "Ambush active: " + ChatColor.YELLOW + _active);
+			}
+			
+			if (arg3.length == 1 && arg3[0].contains("delay")) {
+				sender.sendMessage(ChatColor.GRAY + "Ambush delay: " + ChatColor.YELLOW + _intervalBeforeSpawn);
+			}
+			if (arg3.length == 2 && arg3[0].contains("delay")) {
+				try {
+					int delay = Integer.parseInt(arg3[1]);
+					_intervalBeforeSpawn = delay;
+					sender.sendMessage(ChatColor.GRAY + "Ambush delay: " + ChatColor.YELLOW + _intervalBeforeSpawn);
+				}
+				catch (Exception ex) {
+					sender.sendMessage(ChatColor.GRAY + "Ambush delay:" + ChatColor.RED + " value not valid");
+				}
+			}
+			
+			if (arg3.length == 1 && arg3[0].contains("nbmonsters")) {
+				sender.sendMessage(ChatColor.GRAY + "Ambush nbmonsters: " + ChatColor.YELLOW + _numberOfMonster);
+			}
+			if (arg3.length == 2 && arg3[0].contains("nbmonsters")) {
+				try {
+					int delay = Integer.parseInt(arg3[1]);
+					_numberOfMonster = delay;
+					sender.sendMessage(ChatColor.GRAY + "Ambush nbmonsters: " + ChatColor.YELLOW + _numberOfMonster);
+				}
+				catch (Exception ex) {
+					sender.sendMessage(ChatColor.GRAY + "Ambush nbmonsters:" + ChatColor.RED + " value not valid");
+				}
+			}
+			
+			if (arg3.length == 1 && arg3[0].contains("interval")) {
+				sender.sendMessage(ChatColor.GRAY + "Ambush interval: " + ChatColor.YELLOW + _interval);
+			}
+			if (arg3.length == 2 && arg3[0].contains("interval")) {
+				try {
+					int delay = Integer.parseInt(arg3[1]);
+					_interval = delay;
+					sender.sendMessage(ChatColor.GRAY + "Ambush interval: " + ChatColor.YELLOW + _interval);
+				}
+				catch (Exception ex) {
+					sender.sendMessage(ChatColor.GRAY + "Ambush interval:" + ChatColor.RED + " value not valid");
+				}
+			}
+			
+			if (arg3.length == 1 && arg3[0].contains("radius")) {
+				sender.sendMessage(ChatColor.GRAY + "Ambush radius: " + ChatColor.YELLOW + _radius);
+			}
+			if (arg3.length == 2 && arg3[0].contains("radius")) {
+				try {
+					int delay = Integer.parseInt(arg3[1]);
+					_radius = delay;
+					sender.sendMessage(ChatColor.GRAY + "Ambush radius: " + ChatColor.YELLOW + _radius);
+				}
+				catch (Exception ex) {
+					sender.sendMessage(ChatColor.GRAY + "Ambush radius:" + ChatColor.RED + " value not valid");
+				}
 			}
 			
 		}

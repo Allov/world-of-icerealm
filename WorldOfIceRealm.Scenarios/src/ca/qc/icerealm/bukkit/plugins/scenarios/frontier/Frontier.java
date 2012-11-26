@@ -81,6 +81,12 @@ public class Frontier implements Listener, CommandExecutor {
 				sender.sendMessage(ChatColor.GRAY + "Frontier active: " + ChatColor.YELLOW + _activated);
 			}
 			
+			if (arg3.length == 1 && (arg3[0].contains("help") || arg3[0].contains("?"))) {
+				sender.sendMessage(ChatColor.DARK_GREEN + "/fr divider [double] - " + ChatColor.YELLOW + "Divider to determine the strengh (smaller value means stronger)");
+				sender.sendMessage(ChatColor.DARK_GREEN + "/fr status [bool] - " + ChatColor.YELLOW + "Activate/Deactivate frontier feature");
+				sender.sendMessage(ChatColor.DARK_GREEN + "/fr damage [double] - " + ChatColor.YELLOW + "Divide the health modifier for damage (1 = health modifier value)");
+			}
+			
 			if (arg3.length == 1 && arg3[0].contains("divider")) {
 				sender.sendMessage(ChatColor.GRAY + "Frontier divider: " + ChatColor.YELLOW + _divider);
 			}
