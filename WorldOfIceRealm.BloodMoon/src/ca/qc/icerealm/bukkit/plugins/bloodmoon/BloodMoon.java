@@ -35,7 +35,10 @@ public class BloodMoon extends JavaPlugin {
 	// 31 = tall grass
 	// 13 = gravel
 	// 80 = snow block
-	private final int[] _validBlockRaw = new int[] { 79, 2, 12, 3, 18, 31, 13, 80 };
+	// 82 = clay block
+	// 110 = mycelinum
+	// 111 = lilly pad
+	private final int[] _validBlockRaw = new int[] { 79, 2, 12, 3, 18, 31, 13, 80, 82, 110, 111 };
 		
 	// variable du serveur
 	private World _world;
