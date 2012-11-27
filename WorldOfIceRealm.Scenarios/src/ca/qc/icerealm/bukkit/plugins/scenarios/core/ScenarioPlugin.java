@@ -113,7 +113,7 @@ public class ScenarioPlugin extends JavaPlugin {
 	
 	private void createArena() {
 		MonsterFuryConfiguration config = new MonsterFuryConfiguration();
-		config.ScenarioZoneCoords = "-28,168,-10,55,61";
+		config.ScenarioZoneCoords = "-28,168,-10,186,55,61";
 		config.ActivationZoneCoords = "-19,176,-18,177,55,61";
 		config.MinimumPlayer = 1;
 		config.CoolDownTime = 480000;
