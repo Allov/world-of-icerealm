@@ -133,4 +133,9 @@ public class BasicMonsterWave implements EntityWave {
 	public String[] getMonsters() {
 		return possibleMonsters;
 	}
+	
+	@Override
+	public void setNbMonster(int nb) {
+		_nbMonsters = nb;
+	}
 }

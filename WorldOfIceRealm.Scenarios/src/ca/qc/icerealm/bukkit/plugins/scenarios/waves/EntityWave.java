@@ -16,4 +16,5 @@ public interface EntityWave {
 	void setMonsters(String monsters);
 	String[] getMonsters();
 	int getMaxNbOfEntities();
+	void setNbMonster(int nb);
 }

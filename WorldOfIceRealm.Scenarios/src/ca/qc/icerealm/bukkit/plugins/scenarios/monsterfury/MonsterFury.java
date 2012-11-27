@@ -46,6 +46,7 @@ public class MonsterFury implements ZoneObserver, Scenario, CoolDown {
 	private WaveTimer _waveTimer;
 	private List<PlayerOutTimer> _playerOutTimers;
 	private ZoneSubject _zoneServer;
+	private RandomWaveGenerator _waveGenerator = null;
 
 	// propriete modifiable de l'externe
 	private long _timeoutWhenLeaving;
@@ -57,6 +58,7 @@ public class MonsterFury implements ZoneObserver, Scenario, CoolDown {
 	private int _experience;
 	private int _minimumPlayer;
 	private List<EntityWave> _waves;
+	private double _healthModifier;
 	
 	// propriete sur le status du scenario
 	private boolean _coolDownActive;
@@ -72,7 +74,7 @@ public class MonsterFury implements ZoneObserver, Scenario, CoolDown {
 	 */
 	public MonsterFury(JavaPlugin plugin, MonsterFuryConfiguration config) {
 		initializeParameter(plugin, config, new DefaultEventListener());
-		createBasicWaves();		
+		//createBasicWaves();		
 	}
 	
 	/**
@@ -84,7 +86,7 @@ public class MonsterFury implements ZoneObserver, Scenario, CoolDown {
 	 */
 	public MonsterFury(JavaPlugin plugin, MonsterFuryConfiguration config, ScenarioEventsListener event) {
 		initializeParameter(plugin, config, event);
-		createBasicWaves();
+		//createBasicWaves();
 	}
 	
 	/**
@@ -111,7 +113,7 @@ public class MonsterFury implements ZoneObserver, Scenario, CoolDown {
 		initializeParameter(plugin, config, event);
 		_waves = wave;
 	}
-	
+
 	private void createBasicWaves() {
 		for (int i = 0; i < _nbWavesTotal; i++) {
 			_waves.add(new BasicMonsterWave(_nbMonsters, 0.0, this, _scenarioZone, _activationZone, _eventsListener));
@@ -141,6 +143,7 @@ public class MonsterFury implements ZoneObserver, Scenario, CoolDown {
 		_timeBetween = c.TimeBetweenWave;
 		_timeoutWhenLeaving = c.TimeoutWhenLeaving;
 		_name = c.Name;
+		_healthModifier = c.HealthModifier;
 		
 		// activation des zones
 		_activationZone = new WorldZone(_world, c.ActivationZoneCoords);
@@ -180,6 +183,7 @@ public class MonsterFury implements ZoneObserver, Scenario, CoolDown {
 		}
 		_waves.clear();
 		_waves = null;
+		_nbWaveDone = 0;
 		
 	}
 	
@@ -188,7 +192,14 @@ public class MonsterFury implements ZoneObserver, Scenario, CoolDown {
 	 */
 	public void triggerScenario() {
 		
+		if (_waveGenerator != null) {
+			_waves = _waveGenerator.createNewWaves();
+		}
+		
 		if (_waves != null && _waves.size() > 0) {
+			
+			_nbWaveDone = 0;
+			
 			// démarrage du cooldown
 			setCoolDownActive(true);
 							
@@ -236,9 +247,10 @@ public class MonsterFury implements ZoneObserver, Scenario, CoolDown {
 				}
 			}
 			
-			_nbWaveDone = 0;	
-			_isActive = false;
 		}
+		
+		_isActive = false;
+		_nbWaveDone = 0;
 		
 	}
 	
@@ -286,7 +298,7 @@ public class MonsterFury implements ZoneObserver, Scenario, CoolDown {
 				_eventsListener.coolDownChanged(active, _coolDownTime, this);
 			}
 		}
-		else if (!_coolDownActive && !_isActive && _players.size() >= _minimumPlayer) {
+		else if (!_coolDownActive && !_isActive && _activationZoneObserver.getNbPlayerPresent() >= _minimumPlayer) {
 			triggerScenario();
 		}
 	}
@@ -351,6 +363,7 @@ public class MonsterFury implements ZoneObserver, Scenario, CoolDown {
 	
 	public void waveIsDone() {
 		_nbWaveDone++;
+		logger.info("nbWaveDone value: " + _nbWaveDone + " waves size: " + _waves.size());
 		if (_nbWaveDone < _waves.size()) {	
 			
 			// on load la prochaine wave!
@@ -365,6 +378,8 @@ public class MonsterFury implements ZoneObserver, Scenario, CoolDown {
 		else {
 			terminateScenario();
 		}
+		logger.info("end of wave is done");
+		
 	}
 	
 	public ScenarioEventsListener getEventListener() {
@@ -461,6 +476,22 @@ public class MonsterFury implements ZoneObserver, Scenario, CoolDown {
 			return 0;
 		}
 		
+	}
+	
+	public int getMaxMonsters() {
+		return _nbMonsters;
+	}
+	
+	public int getTotalWaves() {
+		return _nbWavesTotal;
+	}
+	
+	public void setWaveGenerator(RandomWaveGenerator gen) {
+		_waveGenerator = gen;
+	}
+	
+	public double getHealthModifier() {
+		return _healthModifier;
 	}
 	
 }

@@ -65,8 +65,7 @@ public class RegularSpawnWave implements EntityWave, TimeObserver {
 				
 				if (getNbOfEntities() < _maxMonster) {
 					EntityType c = EntityUtilities.getEntityType(_arrayPossibleMonster[RandomUtil.getRandomInt(_arrayPossibleMonster.length)]);
-					//LivingEntity e = _scenario.getWorld().spawnCreature(l, c);
-					Entity e = ScenarioService.getInstance().spawnCreature(l.getWorld(), l, c, _healthModifier);
+					Entity e = ScenarioService.getInstance().spawnCreature(l.getWorld(), l, c, _healthModifier, false);
 					_monsters.add(e);
 					if (e instanceof Monster) {
 						Monster m = (Monster)e;
@@ -104,13 +103,15 @@ public class RegularSpawnWave implements EntityWave, TimeObserver {
 	}
 
 	@Override
-	public void processDamage(EntityDamageEvent e) {
+		public void processDamage(EntityDamageEvent e) {
+		/*
 		if (_scenario.isActive() &&_monsters != null && _monsters.contains(e.getEntity())) {
 			if (e.getCause() == DamageCause.FIRE_TICK) {
 				e.setCancelled(true);
 				e.getEntity().setFireTicks(0);
 			}						
 		}
+		*/
 	}
 
 	@Override
@@ -151,6 +152,11 @@ public class RegularSpawnWave implements EntityWave, TimeObserver {
 	@Override
 	public String[] getMonsters() {
 		return _arrayPossibleMonster;
+	}
+	
+	@Override
+	public void setNbMonster(int nb) {
+		_maxMonster = nb;
 	}
 
 }

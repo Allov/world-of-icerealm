@@ -1,7 +1,9 @@
 package ca.qc.icerealm.bukkit.plugins.scenarios.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.FileHandler;
@@ -12,7 +14,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.ambush.Ambush;
 import ca.qc.icerealm.bukkit.plugins.scenarios.barbarian.BarbarianRaid;
@@ -23,6 +28,7 @@ import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.InfestationConfigurat
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.DefaultEventListener;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFury;
 import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.MonsterFuryConfiguration;
+import ca.qc.icerealm.bukkit.plugins.scenarios.monsterfury.RandomWaveGenerator;
 import ca.qc.icerealm.bukkit.plugins.scenarios.obsidian.BreakBlockSession;
 import ca.qc.icerealm.bukkit.plugins.scenarios.obsidian.ObsidianMission;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.LoggerFormater;
@@ -30,6 +36,7 @@ import ca.qc.icerealm.bukkit.plugins.scenarios.waves.EntityWave;
 import ca.qc.icerealm.bukkit.plugins.scenarios.waves.RegularSpawnWave;
 import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneProber;
 import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneServer;
+import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
 
 public class ScenarioPlugin extends JavaPlugin {
@@ -81,6 +88,7 @@ public class ScenarioPlugin extends JavaPlugin {
 		//createMoonTemple();
 		createFrontier();
 		createAmbush();
+		createArena();
 	}
 	
 	public void initZoneServer(Server s) {
@@ -103,10 +111,46 @@ public class ScenarioPlugin extends JavaPlugin {
 		}	
 	}
 	
+	private void createArena() {
+		MonsterFuryConfiguration config = new MonsterFuryConfiguration();
+		config.ScenarioZoneCoords = "-28,168,-10,55,61";
+		config.ActivationZoneCoords = "-19,176,-18,177,55,61";
+		config.MinimumPlayer = 1;
+		config.CoolDownTime = 480000;
+		config.InitialTimeBeforeFirstWave = 5000;
+		config.MonstersPerWave = 3;
+		config.NumberOfWaves = 5;
+		config.TimeBetweenWave = 10000;
+		config.TimeoutWhenLeaving = 40000;
+		config.ZoneServer = ZoneServer.getInstance();
+		config.HealthModifier = 0.33;
+		config.ExperienceReward = 10;
+		config.Name = "Arena";
+		
+		MonsterFury arena = new MonsterFury(this, config, new DefaultEventListener());
+		
+		World world = getServer().getWorld("world");
+		Location first = new Location(world, -11, 59, 184);
+		Location second = new Location(world, -11, 59, 169);
+		Location third = new Location(world, -25, 59, 184);
+		Location fourth = new Location(world, -25, 59, 169);
+		List<Location> locations = new ArrayList<Location>();
+		locations.add(first);
+		locations.add(second);
+		locations.add(third);
+		locations.add(fourth);
+		
+		String[] possibleMix = new String[] { "zombie,spider", "zombie", "pigzombie", "cavespider,spider", "zombie,spider,pigzombie" };
+		RandomWaveGenerator generator = new RandomWaveGenerator(arena, locations, possibleMix, true);
+		arena.setWaveGenerator(generator);
+		ScenarioService.getInstance().addScenario(arena);
+		
+	}
+	
 	private void createFrontier() {
 		
 		// a chaque 50m du spawn point, 100% plus fort, 33% plus de dommage
-		_frontier = new Frontier(getServer().getWorld("world"), 50, 3);
+		_frontier = new Frontier(getServer().getWorld("world"), 400, 3);
 		getServer().getPluginManager().registerEvents(_frontier, this);
 		getCommand("fr").setExecutor(_frontier);
 		

@@ -42,6 +42,10 @@ public class ActivationZoneObserver implements ZoneObserver {
 		}
 		
 	}
+	
+	public int getNbPlayerPresent() {
+		return _playerPresent;
+	}
 
 	@Override
 	public void playerLeft(Player p) {

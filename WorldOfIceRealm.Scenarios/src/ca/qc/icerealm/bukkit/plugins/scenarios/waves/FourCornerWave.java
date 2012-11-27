@@ -137,4 +137,9 @@ public class FourCornerWave implements EntityWave, TimeObserver {
 	public String[] getMonsters() {
 		return possibleMonsters;
 	}
+	
+	@Override
+	public void setNbMonster(int nb) {
+		_maxMonster = nb;
+	}
 }
