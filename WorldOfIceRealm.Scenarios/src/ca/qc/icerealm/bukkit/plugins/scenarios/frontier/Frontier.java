@@ -67,7 +67,7 @@ public class Frontier implements Listener, CommandExecutor {
 			if (modifier > 0 && !_scenarioService.monsterAlreadyPresent(event.getEntity().getEntityId())) {
 				LivingEntity creature = event.getEntity();
 				int maxHealth = creature.getMaxHealth() + (int)(modifier * creature.getMaxHealth());
-				_scenarioService.addExistingEntity(creature.getEntityId(), maxHealth, false, modifier / _damage);
+				_scenarioService.addExistingEntity(creature.getEntityId(), maxHealth, true, modifier / _damage);
 			}
 		}
 	}

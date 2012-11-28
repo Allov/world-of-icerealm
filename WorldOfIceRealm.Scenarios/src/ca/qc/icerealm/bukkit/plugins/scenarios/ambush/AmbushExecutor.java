@@ -27,7 +27,7 @@ public class AmbushExecutor implements Runnable {
 	// 110 = mycelinum
 	// 111 = lilly pad
 	private final int[] _validBlockRaw = new int[] { 79, 2, 12, 3, 18, 31, 13, 80, 82, 110, 111 };
-	private String _monsters = "spider,skeleton,zombie,pigzombie,enderman";
+	private String _monsters = "spider,skeleton,zombie,pigzombie,enderman,irongolem";
 	private String[] _monstersArray;
 	private World _world;
 	private Player _player = null;
