@@ -13,13 +13,16 @@ public class FishingTournamentConfig {
 	private final int nearEnd;
 	private final int end;
 	private final int playerNumberNeeded;
-	
+	private final int itemId;
+	private final int itemCount;
 
-	public FishingTournamentConfig(int starts, int span, int chances, int reward, int playerNumberNeeded) {
+	public FishingTournamentConfig(int starts, int span, int chances, int reward, int itemId, int itemCount, int playerNumberNeeded) {
 		this.starts = starts;
 		this.span = span;
 		this.chances = chances;
 		this.reward = reward;
+		this.itemId = itemId;
+		this.itemCount = itemCount;
 		this.playerNumberNeeded = playerNumberNeeded;
 		
 		this.halfTime = span / 2;
@@ -35,6 +38,8 @@ public class FishingTournamentConfig {
 				wrapper.getInt("span", 6),
 				wrapper.getInt("chances", 8),
 				wrapper.getInt("reward", 300),
+				wrapper.getInt("item-id", 388),
+				wrapper.getInt("item-count", 5),
 				wrapper.getInt("playerNumberNeeded", 2));
 	}
 
@@ -53,7 +58,7 @@ public class FishingTournamentConfig {
 	public int getReward() {
 		return reward;
 	}
-
+	
 	public int getHalfTime() {
 		return halfTime;
 	}
@@ -68,5 +73,13 @@ public class FishingTournamentConfig {
 
 	public int getPlayerNumberNeeded() {
 		return playerNumberNeeded;
+	}
+	
+	public int getItemId() {
+		return itemId;
+	}
+	
+	public int getItemCount() {
+		return itemCount;
 	}
 }

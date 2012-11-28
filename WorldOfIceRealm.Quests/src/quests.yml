@@ -27,6 +27,8 @@ squid:
         money: 300
         level: 3
         items:
+            -   id: 388
+                amount: 3                    
 bg:
     group: normal
     name: A bone to gnaw on
@@ -47,6 +49,8 @@ bg:
         money: 300
         level: 2
         items:
+            -   id: 388
+                amount: 3                  
 sd:
     group: normal
     name: A spider's delight
@@ -77,6 +81,8 @@ sd:
         money: 300
         level: 2
         items:
+            -   id: 388
+                amount: 3                    
 os:
     group: normal
     name: Repairing an old shoe
@@ -97,6 +103,8 @@ os:
         money: 300
         level: 2
         items:
+            -   id: 388
+                amount: 3                    
 tb:
     group: normal
     name: Things that goes BOOM!
@@ -120,6 +128,8 @@ tb:
         items:
             -   id: 46
                 amount: 1
+            -   id: 388
+                amount: 5                    
 cave:
     group: average
     name: Cave
@@ -140,10 +150,11 @@ cave:
                 amount: 2
             -   id: 322
                 amount: 2
+            -   id: 388
+                amount: 5                    
 cmn:
     group: average
     name: Cry more, noob
-    requires: tp
     messageStart: In this world where fire is predominant reign these flying white creatures that are known to make things explode when they're not happy. But, when attacked and killed, they cry tears that are known to regenerate one's health. You'll need them on your journey, gather as much as you can!   
     messageEnd: Aah the sound of a dying Ghast... A relief, isn't it?    
     daily: true
@@ -163,10 +174,11 @@ cmn:
         items:
             -   id: 322
                 amount: 3
+            -   id: 388
+                amount: 4                    
 fire:
     group: average
     name: Fire starter
-    requires: tb
     messageStart: Son, thank you for your work, but I think I'll need more fire power than that. Blaze could be the answer. Take this device and gather their soul inside of it. I'll make a powerful explosive from this.  
     messageEnd: It seems really unstable, let's see what it can do...    
     daily: true
@@ -179,24 +191,12 @@ fire:
         money: 400
         level: 3
         items:
-tp:
-    group: easy
-    name: The Portal
-    messageStart: Eeeew! Can you believe it! I actually saw a zombie that looked like a half-man, half-pig. This is disgusting! I saw it carry much gold with them... someone has to capitalize on them. If I wasn't affraid of this portal...  
-    messageEnd: Listen to the voice in the echoes...
-    daily: true
-    objectives:
-        -   type: zone
-            name: Investigate the portal
-            zone:  625,262,633,271,0,128
-    rewards:
-        money: 0
-        level: 0
-        quests: pigmen
-        items:
+            -   id: 388
+                amount: 1                    
+            -   id: 388
+                amount: 4                   
 pigmen:
     group: average
-    requires: tp
     name: Zombified Pigs and Men!
     messageStart: YOU THINK YOU CAN ENTER THIS PORTAL MORTAL? YOU THINK YOU CAN DEFEAT LIVING NIGHTMARES? I CHALLENGE YOU TO ENTER THE PORTAL AND SURVIVE!!!  
     messageEnd: You've been on the other side? I cannot think of ever going there, it's way to freaky for me...
@@ -220,6 +220,8 @@ pigmen:
                 amount: 1
             -   id: 322
                 amount: 3
+            -   id: 388
+                amount: 5                    
 dia:
     group: normal-adventure
     name: Diamonds!
@@ -256,21 +258,8 @@ blue:
         money: 500
         level: 5
         items:
-#valentines:
-#    group: normal-adventure
-#    name: Aaaw love...
-#    messageStart: Are you in love? Well, you should because it's Valentines Day! Get your love some Cocoa Beans, chocolate is always good!    
-#    messageEnd: Run to your choosen one young flibus!!!
-#    daily: true
-#    objectives:
-#        -   type: collect
-#            name: Collect 1 Lapis Lazuli block
-#            what: 22
-#            amount: 1
-#    rewards:
-#        money: 500
-#        level: 5
-#        items:
+            -   id: 388
+                amount: 5                    
 ender:
     group: normal
     name: Creepy, creepy things
@@ -293,73 +282,77 @@ ender:
         items:
             -   id: 322
                 amount: 5
-cs:
-    group: hard
-    name: Castle under siege
-    messageStart: Crazy I tell you, he wouldn't listen to me and now it's out of control. He opened the portal; He did it! Now the sky is filled with obsidian and darkness reign on the kingdom. Please noble warrior, help us drive the evil force out this place!   
-    messageEnd: What? An ender dragon? It can't be... I need to warn everyone! WE'RE DOOMED!
-    daily: true
-    objectives:
-        -   type: kill
-            name: Kill 50 monsters at the castle
-            what: 50,51,52,54,58
-            zone: -71,752,127,1121,0,128
-            amount: 50
-    rewards:
-        money: 750
-        level: 8
-        items:
-            - id: 322
-              amount: 5
-inf:
-    group: hard
-    name: Infestation
-    messageStart: Above an old village, a platform was built to bring darkness to the villagers by evil doers. But, a greater soul have been able to turn the tides and bring the evil monsters to them. Now, they are crying for help and need your assistance!   
-    messageEnd: An endless stream of monsters you say? Oh my ... they got what they deserve I guess!
-    daily: true
-    objectives:
-        -   type: kill
-            name: Kill 25 Zombies at the platform
-            what: 54
-            zone: 26,-74,116,24,98,127
-            amount: 25
-        -   type: kill
-            name: Kill 25 Spiders at the platform
-            what: 52
-            zone: 26,-74,116,24,98,127
-            amount: 25
-        -   type: kill
-            name: Kill 25 Skeletons at the platform
-            what: 51
-            zone: 26,-74,116,24,98,127
-            amount: 25
-    rewards:
-        money: 750
-        level: 8
-        items:
-            - id: 322
-              amount: 5
+            -   id: 388
+                amount: 3                    
+#cs:
+#    group: hard
+#    name: Castle under siege
+#    messageStart: Crazy I tell you, he wouldn't listen to me and now it's out of control. He opened the portal; He did it! Now the sky is filled with obsidian and darkness reign on the kingdom. Please noble warrior, help us drive the evil force out this place!   
+#    messageEnd: What? An ender dragon? It can't be... I need to warn everyone! WE'RE DOOMED!
+#    daily: true
+#    objectives:
+#        -   type: kill
+#            name: Kill 50 monsters at the castle
+#            what: 50,51,52,54,58
+#            zone: -71,752,127,1121,0,128
+#            amount: 50
+#    rewards:
+#        money: 750
+#        level: 8
+#        items:
+#            - id: 322
+#              amount: 5
+#            -   id: 388
+#                amount: 7                    
+#inf:
+#    group: hard
+#    name: Infestation
+#    messageStart: Above an old village, a platform was built to bring darkness to the villagers by evil doers. But, a greater soul have been able to turn the tides and bring the evil monsters to them. Now, they are crying for help and need your assistance!   
+#    messageEnd: An endless stream of monsters you say? Oh my ... they got what they deserve I guess!
+#    daily: true
+#    objectives:
+#        -   type: kill
+#            name: Kill 25 Zombies at the platform
+#            what: 54
+#            zone: 26,-74,116,24,98,127
+#            amount: 25
+#        -   type: kill
+#            name: Kill 25 Spiders at the platform
+#            what: 52
+#            zone: 26,-74,116,24,98,127
+#            amount: 25
+#        -   type: kill
+#            name: Kill 25 Skeletons at the platform
+#            what: 51
+#            zone: 26,-74,116,24,98,127
+#            amount: 25
+#    rewards:
+#        money: 750
+#        level: 8
+#        items:
+#            - id: 322
+#              amount: 5
 
 # scenario based quests        
-hop:
-    group: haunted-outpost
-    name: A haunted outpost
-    messageStart: Have you ever heard of a haunted outpost? Not so far away from here is a post that is known to be haunted. HAUNTED I TELL YOU!! Go there at your own risk. 
-    messageEnd: You've shown a lot of courage there son.
-    daily: true
-    objectives:
-        -   type: zone
-            name: Investigate Haunted Outpost
-            zone: 366,181,369,184,0,128
-        -   type: kill
-            name: Kill 25 monsters
-            zone: 347,168,386,201,0,128
-            what: 51,52,54,58
-            amount: 25
-    rewards:
-        money: 400
-        level: 5
-        items:
+#hop:
+#    group: haunted-outpost
+#    name: A haunted outpost
+#    messageStart: Have you ever heard of a haunted outpost? Not so far away from here is a post that is known to be haunted. HAUNTED I TELL YOU!! Go there at your own risk. 
+#    messageEnd: You've shown a lot of courage there son.
+#    daily: true
+#    objectives:
+#        -   type: zone
+#            name: Investigate Haunted Outpost
+#            zone: 366,181,369,184,0,128
+#        -   type: kill
+#            name: Kill 25 monsters
+#            zone: 347,168,386,201,0,128
+#            what: 51,52,54,58
+#            amount: 25
+#    rewards:
+#        money: 400
+#        level: 5
+#        items:
 
 #moon_temple:
 #    group: desert-temples

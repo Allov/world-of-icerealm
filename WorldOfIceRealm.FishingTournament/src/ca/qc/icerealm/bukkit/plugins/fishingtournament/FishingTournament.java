@@ -9,8 +9,11 @@ import java.util.logging.Logger;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
@@ -74,12 +77,17 @@ public class FishingTournament implements Runnable {
 		if (winners.size() == 0) {
 			server.broadcastMessage(ChatColor.LIGHT_PURPLE + "No one caught anything =( See you next time!");
 		} else {
+			Material material = Material.getMaterial(configuration.getItemId());
+			
+			
 			server.broadcastMessage(ChatColor.LIGHT_PURPLE + "The winner " + (winners.size() > 1 ? "are" : "is") + 
 									ChatColor.YELLOW + " " + getWinnerNames(winners) + 
 									ChatColor.LIGHT_PURPLE + " with " + ChatColor.GREEN + winners.get(0).getValue().getCatches() + ChatColor.LIGHT_PURPLE + " catch! " + 
-									ChatColor.YELLOW + configuration.getReward() / winners.size() + " golds " + ChatColor.LIGHT_PURPLE + " has been awarded" + 
+									economyProvider != null ? "" + ChatColor.YELLOW + configuration.getReward() / winners.size() + " golds " + ChatColor.LIGHT_PURPLE + " has been awarded" : "" +
+									economyProvider == null ? "" + ChatColor.YELLOW + configuration.getItemCount() / winners.size() + " " + material.toString() + " " + ChatColor.LIGHT_PURPLE + " has been awarded" : "" +
 									(winners.size() > 1 ? " to them" : " to him") + "! Congratulations!");
 			giveMoneyReward(winners);
+			giveItemReward(winners, material);
 		}
 		
 		inProgress = false;
@@ -117,6 +125,22 @@ public class FishingTournament implements Runnable {
 		}
 		
 		return winners;
+	}
+	
+	public void giveItemReward(List<Entry<Player,Catches>> winners, Material material) {
+		int rewardCount = configuration.getItemCount() / winners.size();
+		
+		for (Entry<Player, Catches> entry : winners) {
+			ItemStack stack = new ItemStack(material, rewardCount);
+			Player player = entry.getKey();
+			
+			Inventory inventory = player.getInventory();
+			if (inventory.firstEmpty() == -1) {
+				player.getWorld().dropItem(player.getLocation(), stack);
+			} else {
+				inventory.addItem(stack);
+			}
+		}			
 	}
 
 	public void giveMoneyReward(List<Entry<Player,Catches>> winners) {

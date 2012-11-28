@@ -36,7 +36,8 @@ public class ScriptedQuestService {
 	private final QuestPlugin questsPlugin;
 	private final QuestLogService questLogService;
 
-	public ScriptedQuestService(QuestPlugin questsPlugin, QuestLogService questLogService, ConfigWrapper config) {
+	public ScriptedQuestService(QuestPlugin questsPlugin,
+			QuestLogService questLogService, ConfigWrapper config) {
 		this.questsPlugin = questsPlugin;
 		this.questLogService = questLogService;
 		this.config = config;
@@ -56,36 +57,41 @@ public class ScriptedQuestService {
 			}
 		}
 	}
-	
+
 	public Quest assignQuest(Player player, String id) {
 		return assignQuest(player, id, true, 0);
 	}
-	
-	public Quest assignQuest(Player player, String id, boolean checkRequirements, long completionTime) {
+
+	public Quest assignQuest(Player player, String id,
+			boolean checkRequirements, long completionTime) {
 		Quest quest = null;
 
 		if (!config.exists(id)) {
-			player.sendMessage(ChatColor.RED + "No such quest [" + ChatColor.YELLOW + id + ChatColor.RED + "].");
+			player.sendMessage(ChatColor.RED + "No such quest ["
+					+ ChatColor.YELLOW + id + ChatColor.RED + "].");
 			return null;
 		}
 
-		QuestLog questLog = questLogService.getQuestLogForPlayer(player.getName());
+		QuestLog questLog = questLogService.getQuestLogForPlayer(player
+				.getName());
 		quest = questLog.getQuestByKey(id);
 
 		if (quest == null) {
-			quest = createAndAssignQuest(player, id, questLog, checkRequirements, completionTime);
+			quest = createAndAssignQuest(player, id, questLog,
+					checkRequirements, completionTime);
 		} else {
 			if (completionTime > 0) {
 				quest.setCompletionTime(completionTime);
 			}
-			
+
 			if (quest.isCompleted() && quest.isDaily()) {
 				if (!quest.isDailyCooldownOver()) {
 					displayDailyResetMessage(player, quest);
 				} else {
 					Quest rootQuest = getRootQuest(quest, questLog);
 
-					if (rootQuest.isDailyCooldownOver() && rootQuest.isCompleted()) {
+					if (rootQuest.isDailyCooldownOver()
+							&& rootQuest.isCompleted()) {
 						questLog.removeChildDailyQuests(rootQuest);
 						rootQuest.reset();
 					}
@@ -94,7 +100,7 @@ public class ScriptedQuestService {
 				displayCannotAssignQuestMessage(player);
 			}
 		}
-		
+
 		return quest;
 	}
 
@@ -112,14 +118,16 @@ public class ScriptedQuestService {
 				+ "This quest is completed and cannot be assigned.");
 	}
 
-	private Quest createAndAssignQuest(Player player, String id, QuestLog questLog, boolean checkRequirements, long completionTime) {
+	private Quest createAndAssignQuest(Player player, String id,
+			QuestLog questLog, boolean checkRequirements, long completionTime) {
 		String requiredQuests = config.getString(id + ".requires", "");
 		Quest quest = null;
 
 		if (!requiredQuests.isEmpty() && checkRequirements) {
 			Quest requiredQuest = questLog.getQuestByKey(requiredQuests);
 			if (requiredQuest != null && requiredQuest.isCompleted()) {
-				quest = createAndAddToQuestLog(player, id, questLog, completionTime);
+				quest = createAndAddToQuestLog(player, id, questLog,
+						completionTime);
 			} else {
 				player.sendMessage(ChatColor.RED
 						+ "You do not meet the requirement for that quest. Complete "
@@ -129,20 +137,22 @@ public class ScriptedQuestService {
 		} else {
 			quest = createAndAddToQuestLog(player, id, questLog, completionTime);
 		}
-		
+
 		return quest;
 	}
 
-	private Quest createAndAddToQuestLog(Player player, String id, QuestLog questLog, long completionTime) {
+	private Quest createAndAddToQuestLog(Player player, String id,
+			QuestLog questLog, long completionTime) {
 		Quest quest;
 		quest = createQuest(player, id, completionTime);
 		questLog.addQuest(quest);
-		
+
 		return quest;
 	}
 
 	private void displayDailyResetMessage(Player player, Quest quest) {
-		Date availableDate = new Date(quest.getCompletionTime() + quest.getCooldown());
+		Date availableDate = new Date(quest.getCompletionTime()
+				+ quest.getCooldown());
 		Date current = new Date(System.currentTimeMillis());
 
 		long diffInSeconds = (availableDate.getTime() - current.getTime()) / 1000;
@@ -237,7 +247,7 @@ public class ScriptedQuestService {
 
 	public void giveAll(Player player) {
 		Set<String> set = config.getConfig().getKeys(false);
-		
+
 		for (String key : set) {
 			assignQuest(player, key);
 		}

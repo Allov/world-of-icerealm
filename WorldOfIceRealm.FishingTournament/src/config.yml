@@ -7,8 +7,12 @@ span: 6
 # number chances (1 / n) the tournament starts, 1 = always.
 chances: 8
 
-# Only support money reward (using vault)
+# Money reward (using vault)
 reward: 300
+
+# Item reward
+item-id: 388
+item-count: 5
 
 # Players needed to start a tournament
 playerNumberNeeded: 2
