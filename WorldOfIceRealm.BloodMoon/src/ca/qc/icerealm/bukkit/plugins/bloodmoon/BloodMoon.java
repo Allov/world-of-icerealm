@@ -176,7 +176,7 @@ public class BloodMoon extends JavaPlugin {
 	}
 	
 	public void spawnMonsterCloseToPlayer(Location l) {
-		String[] monsters = new String[] { "zombie", "skeleton", "spider" };
+		String[] monsters = new String[] { "zombie", "skeleton", "spider", "irongolem" };
 		WorldZone exclusion = new WorldZone(l, 7.0);
 		WorldZone area = new WorldZone(l, 15.0);
 		int maxTry = 0;
