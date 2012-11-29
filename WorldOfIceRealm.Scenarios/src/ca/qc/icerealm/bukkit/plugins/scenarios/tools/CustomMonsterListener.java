@@ -16,9 +16,11 @@ public class CustomMonsterListener implements Listener {
 
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private HashMap<Integer, CustomMonster> _customMonsters;
+	private HashMap<Integer, CustomMonster> _noBurnMonsters;
 	
 	public CustomMonsterListener() {
 		_customMonsters = new HashMap<Integer, CustomMonster>();
+		_noBurnMonsters = new HashMap<Integer, CustomMonster>();
 	}
 	
 	public boolean monsterAlreadyAdded(Integer entityId) {
@@ -34,6 +36,13 @@ public class CustomMonsterListener implements Listener {
 		c.DamageModifier = 0.0;
 		_customMonsters.put(entityId, c);
 		logInfo(c);
+	}
+	
+	public void addMonster(Integer entity, boolean burn) {
+		CustomMonster c = new CustomMonster();
+		c.Burn = burn;
+		c.EntityId = entity;
+		_noBurnMonsters.put(entity, c);
 	}
 	
 	public void addMonster(Integer entityId, Integer health, boolean burn) {
@@ -109,6 +118,12 @@ public class CustomMonsterListener implements Listener {
 				//logger.info("damage done: " + damageDone + " base damage: " + event.getDamage() + " additional damage: " + additionalDamage);
 				event.setDamage(damageDone);
 			}
+		}
+		
+		CustomMonster noBurn = _noBurnMonsters.get(event.getEntity().getEntityId());
+		if (noBurn != null && event.getEntity() instanceof Monster && event.getCause() == DamageCause.FIRE_TICK) {
+			event.setCancelled(true);
+			event.getEntity().setFireTicks(0);
 		}
 	}
 

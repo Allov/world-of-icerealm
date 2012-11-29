@@ -12,6 +12,10 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultiplierData;
 import ca.qc.icerealm.bukkit.plugins.scenarios.frontier.Frontier;
@@ -108,7 +112,6 @@ public class ScenarioService {
 		_frontier.setActivated(false);
 		LivingEntity creature = (LivingEntity)this.spawnCreature(w, l, t);
 		_frontier.setActivated(true);
-		
 		int maxHealth = creature.getMaxHealth() + (int)(modifier * creature.getMaxHealth());
 		if (_customMonster != null && ((!burn) || (maxHealth != creature.getMaxHealth()))) {
 			_customMonster.addMonster(creature.getEntityId(), maxHealth, burn);
@@ -142,6 +145,26 @@ public class ScenarioService {
 		}
 	}
 	
+	@Deprecated 
+	public Entity spawnCreatureWithPotion(World w, Location l, EntityType t, PotionEffect p, boolean burn) {
+		List<PotionEffect> potions = new ArrayList<PotionEffect>();
+		return this.spawnCreatureWithPotion(w, l, t, potions, burn);
+	}
+	
+	@Deprecated 
+	public Entity spawnCreatureWithPotion(World w, Location l, EntityType t, List<PotionEffect> p, boolean burn) {
+		_frontier.setActivated(false);
+		LivingEntity entity = (LivingEntity)this.spawnCreature(w, l, t);
+		_frontier.setActivated(true);
+		
+		entity.addPotionEffects(p);
+		if (!burn && _customMonster != null) {
+			_customMonster.addMonster(entity.getEntityId(), burn);
+		}
+		
+		return entity;
+	}
+
 	public void attachRareDropMultiplierToEntity(int id, double d) {
 		
 		if (_plugin.getServer().getPluginManager().isPluginEnabled("WoI.RareDrops")) {

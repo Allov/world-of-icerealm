@@ -1,17 +1,27 @@
 package ca.qc.icerealm.bukkit.plugins.scenarios.ambush;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
+import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
 
 
 public class Ambush implements Runnable, CommandExecutor {
@@ -25,6 +35,8 @@ public class Ambush implements Runnable, CommandExecutor {
 	private boolean _active = false;
 	private int _intervalBeforeSpawn;
 	private int _numberOfMonster;
+	private String _monsters = "zombie,pigzombie,enderman,skeleton,spider";
+
 	
 	public Ambush(JavaPlugin plugin, int interval, int prob, int radius, int intervalBeforeSpawn, int nb) {
 		_server = plugin.getServer();
@@ -44,14 +56,21 @@ public class Ambush implements Runnable, CommandExecutor {
 		
 		if (_active) {
 			
-			Player[] players = _server.getOnlinePlayers();
+			List<Player> players = new ArrayList<Player>();
+			for (Player p : _server.getOnlinePlayers()) {
+				players.add(p);
+			}
+			
+			Collections.shuffle(players);
+			
 			for (Player p : players) {
 				
 				// ajouté un calcul de probablité selon l'inventaire du joueurs
 				boolean createAmbush = RandomUtil.getDrawResult(_prob);
 				if (createAmbush) {
-					logger.info("creating an ambush for " + p.getDisplayName());
-					AmbushExecutor executor = new AmbushExecutor(_radius, p, _numberOfMonster);
+					logger.info("creating an ambush for " + p.getDisplayName() + " " + _monsters);
+					
+					AmbushExecutor executor = new AmbushExecutor(_radius, p, _numberOfMonster, _monsters);
 					Executors.newSingleThreadScheduledExecutor().schedule(executor, _intervalBeforeSpawn, TimeUnit.MILLISECONDS);
 					_server.broadcastMessage(ChatColor.YELLOW + p.getDisplayName() + ChatColor.GREEN + " has been ambushed! Help him!");
 					break;
@@ -76,6 +95,7 @@ public class Ambush implements Runnable, CommandExecutor {
 				sender.sendMessage(ChatColor.DARK_GREEN + "/am nbmonsters [int] - " + ChatColor.YELLOW + "Number of monsters");
 				sender.sendMessage(ChatColor.DARK_GREEN + "/am interval [int] - " + ChatColor.YELLOW + "Interval between each draw to create an ambush (1 = always)");
 				sender.sendMessage(ChatColor.DARK_GREEN + "/am radius [int] - " + ChatColor.YELLOW + "Radius to spawn monsters (recommended < 30)");
+				sender.sendMessage(ChatColor.DARK_GREEN + "/am run - " + ChatColor.YELLOW + "Ambush the command issuer (for debugging)");
 			}
 			
 			if (arg3.length == 1 && arg3[0].contains("prob")) {
@@ -129,6 +149,19 @@ public class Ambush implements Runnable, CommandExecutor {
 				}
 			}
 			
+			if (arg3.length == 1 && arg3[0].contains("monsters")) {
+				sender.sendMessage(ChatColor.GRAY + "Ambush monsters: " + ChatColor.YELLOW + _monsters);
+			}
+			if (arg3.length == 2 && arg3[0].contains("monsters")) {
+				try {
+					_monsters = arg3[1];
+					sender.sendMessage(ChatColor.GRAY + "Ambush monsters: " + ChatColor.YELLOW + _monsters);
+				}
+				catch (Exception ex) {
+					sender.sendMessage(ChatColor.GRAY + "Ambush monsters:" + ChatColor.RED + " value not valid");
+				}
+			}
+			
 			if (arg3.length == 1 && arg3[0].contains("interval")) {
 				sender.sendMessage(ChatColor.GRAY + "Ambush interval: " + ChatColor.YELLOW + _interval);
 			}
@@ -155,6 +188,10 @@ public class Ambush implements Runnable, CommandExecutor {
 				catch (Exception ex) {
 					sender.sendMessage(ChatColor.GRAY + "Ambush radius:" + ChatColor.RED + " value not valid");
 				}
+			}
+			if (arg3.length == 1 && arg3[0].contains("run")) {
+				sender.sendMessage(ChatColor.GRAY + "You started an ambush on a random player!");
+				this.run();
 			}
 			
 		}
