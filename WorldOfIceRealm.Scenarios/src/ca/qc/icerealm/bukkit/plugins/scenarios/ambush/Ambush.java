@@ -67,7 +67,7 @@ public class Ambush implements Runnable, CommandExecutor {
 				
 				// ajouté un calcul de probablité selon l'inventaire du joueurs
 				boolean createAmbush = RandomUtil.getDrawResult(_prob);
-				if (createAmbush) {
+				if (createAmbush && p.getLocation().getY() < p.getWorld().getSeaLevel()) {
 					logger.info("creating an ambush for " + p.getDisplayName() + " " + _monsters);
 					
 					AmbushExecutor executor = new AmbushExecutor(_radius, p, _numberOfMonster, _monsters);
