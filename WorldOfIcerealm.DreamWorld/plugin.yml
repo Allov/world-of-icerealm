@@ -1,0 +1,9 @@
+name: WoI.DreamWorld
+main: ca.qc.icerealm.bukkit.plugins.dreamworld.DreamWorldPlugin
+version: 1.0.0
+description: Generate a dream world very high
+author: punihser_malade
+
+commands:
+  dw:
+    description: affiche de l'information sur le plugin
