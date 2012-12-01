@@ -21,6 +21,8 @@ public class EntityUtilities
 	public static final int CaveSpider = 59;
 	public static final int Chicken = 93;
 	public static final int Enderman = 58;
+	public static final int Bat = 65;
+	public static final int Witch = 66;
 	public static final int MagmaCube = 62;
 	public static final int MushroomCow = 96;
 	public static final int Wolf = 95;
@@ -40,6 +42,7 @@ public class EntityUtilities
         if(entity instanceof Chicken) return Chicken;
         if(entity instanceof Squid) return Squid;
         if(entity instanceof Snowman) return Snowman;
+        if(entity instanceof Bat) return Bat; // ?
 
         // Neutral
         if(entity instanceof Wolf) return Wolf;
@@ -54,6 +57,8 @@ public class EntityUtilities
         if(entity instanceof Spider) return Spider;
         if(entity instanceof Zombie) return Zombie;
         if(entity instanceof Slime) return Slime;
+        if(entity instanceof Witch) return Witch;
+        
         if(entity instanceof Ghast) return Ghast;
         if(entity instanceof Blaze) return Blaze;
         if(entity instanceof MagmaCube) return MagmaCube;
@@ -88,10 +93,15 @@ public class EntityUtilities
 		if (s.equalsIgnoreCase("EnderDragon")) { return EntityType.ENDER_DRAGON; }
 		if (s.equalsIgnoreCase("Snowman")) { return EntityType.SNOWMAN; }
 		if (s.equalsIgnoreCase("IronGolem")) { return EntityType.IRON_GOLEM; }
+		if (s.equalsIgnoreCase("Bat")) { return EntityType.BAT; }
+		if (s.equalsIgnoreCase("Witch")) { return EntityType.WITCH; }
 		return EntityType.VILLAGER;
 	}
 	
-	
+	/*
+	 * @Deprecated Use getEntityId(Entity entity) instead 
+	 */
+	@Deprecated
 	public static CreatureType getEntityCreatureType(Entity entity)
 	{
 		// Friendly
@@ -125,7 +135,10 @@ public class EntityUtilities
         return null;
 	}
 
-
+	/*
+	 * @Deprecated Use getEntityType(String s) instead 
+	 */
+	@Deprecated
 	public static CreatureType getCreatureType(String s) {
 		if (s.equalsIgnoreCase("sheep")) { return CreatureType.SHEEP; }
 		if (s.equalsIgnoreCase("Cow")) { return CreatureType.COW; }
@@ -164,6 +177,7 @@ public class EntityUtilities
         if(entity instanceof Chicken) return "Chicken";
         if(entity instanceof Squid) return "Squid";
         if(entity instanceof Snowman) return "Snowman";
+        if(entity instanceof Bat) return "Bat";
 
         // Neutral
         if(entity instanceof Wolf) return "Wolf";
@@ -180,7 +194,8 @@ public class EntityUtilities
         if(entity instanceof Slime) return "Slime";
         if(entity instanceof Ghast) return "Ghast";
         if(entity instanceof Blaze) return "Blaze";
-        if(entity instanceof MagmaCube) return "Magma Cube";
+        if(entity instanceof MagmaCube) return "Magma Cube";  
+        if(entity instanceof Witch) return "Witch"; 
         
         if(entity instanceof Silverfish) return "Silverfish";
         if(entity instanceof EnderDragon) return "Ender Dragon";
@@ -200,6 +215,7 @@ public class EntityUtilities
         if(id == Chicken) return "Chicken";
         if(id == Squid) return "Squid";
         if(id == Snowman) return "Snowman";
+        if(id == Bat) return "Bat";
 
         // Neutral
         if(id == Wolf) return "Wolf";
@@ -213,6 +229,7 @@ public class EntityUtilities
         if(id == Spider) return "Spider";
         if(id == Zombie) return "Zombie";
         if(id == Slime) return "Slime";
+        if(id == Witch) return "Witch";
         if(id == Ghast) return "Ghast";
         if(id == Blaze) return "Blaze";
         if(id == MagmaCube) return "MagmaCube";
