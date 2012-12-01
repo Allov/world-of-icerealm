@@ -53,7 +53,7 @@ public class FishingTournament implements Runnable {
 		boolean draw = RandomUtil.getDrawResult(configuration.getChances());
 		
 		Logger.getLogger("Minecraft").info("Fishing Tournament >> Draw result : " + draw);
-		if (draw && server.getOnlinePlayers().length > configuration.getPlayerNumberNeeded()) {
+		if (draw && server.getOnlinePlayers().length >= configuration.getPlayerNumberNeeded()) {
 			if (fishingEventListener == null) {
 				fishingEventListener = new FishingEventListener(this);
 				server.getPluginManager().registerEvents(fishingEventListener, plugin);
@@ -65,8 +65,28 @@ public class FishingTournament implements Runnable {
 			
 			server.broadcastMessage(ChatColor.LIGHT_PURPLE + "A fishing tournament is now " + ChatColor.GREEN + "STARTED" + ChatColor.LIGHT_PURPLE + "! " +
 										 "Get your " + ChatColor.YELLOW + "fishing rod " + ChatColor.LIGHT_PURPLE + "and catch some " + ChatColor.YELLOW + "fish! "+
-										 ChatColor.LIGHT_PURPLE + "The " + ChatColor.GREEN + " reward " + ChatColor.LIGHT_PURPLE + "will be " + ChatColor.YELLOW + configuration.getReward() + ChatColor.LIGHT_PURPLE + " golds!");
+										 ChatColor.LIGHT_PURPLE + "The " + ChatColor.GREEN + "reward " + ChatColor.LIGHT_PURPLE + "will be " + 
+										 getRewardMessage());
 		}
+	}
+	
+	private String getRewardMessage() {
+		String message = "";
+		if (economyProvider != null && configuration.getReward() > 0) {
+			message += "" + ChatColor.YELLOW + configuration.getReward() + ChatColor.LIGHT_PURPLE + " golds";			
+		}
+		
+		if (configuration.getItemCount() > 0) {
+			if (message.length() > 0) {
+				message += " and ";
+			}
+			
+			Material material = Material.getMaterial(configuration.getItemId());
+			
+			message += "" + ChatColor.GREEN + configuration.getItemCount() + " " + ChatColor.DARK_GREEN + material.toString(); 
+		}
+			
+		return message;
 	}
 	
 	private void EndTournament() {
@@ -82,15 +102,34 @@ public class FishingTournament implements Runnable {
 			
 			server.broadcastMessage(ChatColor.LIGHT_PURPLE + "The winner " + (winners.size() > 1 ? "are" : "is") + 
 									ChatColor.YELLOW + " " + getWinnerNames(winners) + 
-									ChatColor.LIGHT_PURPLE + " with " + ChatColor.GREEN + winners.get(0).getValue().getCatches() + ChatColor.LIGHT_PURPLE + " catch! " + 
-									economyProvider != null ? "" + ChatColor.YELLOW + configuration.getReward() / winners.size() + " golds " + ChatColor.LIGHT_PURPLE + " has been awarded" : "" +
-									economyProvider == null ? "" + ChatColor.YELLOW + configuration.getItemCount() / winners.size() + " " + material.toString() + " " + ChatColor.LIGHT_PURPLE + " has been awarded" : "" +
+									ChatColor.LIGHT_PURPLE + " with " + ChatColor.GREEN + winners.get(0).getValue().getCatches() + ChatColor.LIGHT_PURPLE + " catch! " +
+									getWinnerRewardMessage(material, winners) + 
 									(winners.size() > 1 ? " to them" : " to him") + "! Congratulations!");
 			giveMoneyReward(winners);
 			giveItemReward(winners, material);
 		}
 		
 		inProgress = false;
+	}
+	
+	private String getWinnerRewardMessage(Material material, List<Entry<Player, Catches>> winners) {
+		String message = "";
+		
+		if (economyProvider != null && configuration.getReward() > 0) {
+			message += "" + ChatColor.YELLOW + configuration.getReward() / winners.size() + " golds " + ChatColor.LIGHT_PURPLE + " has been awarded";
+		}
+		
+		if (configuration.getItemCount() > 0) {
+			if (message.length() > 0) {
+				message += " and ";
+			}
+			
+			message += "" + ChatColor.GREEN + configuration.getItemCount() / winners.size() + " " + ChatColor.DARK_GREEN + material.toString();
+		}
+		
+		message += "" + ChatColor.LIGHT_PURPLE + " has been awarded"; 
+		
+		return message;		
 	}
 
 	private String getWinnerNames(List<Entry<Player, Catches>> winners) {
