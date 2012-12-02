@@ -72,7 +72,7 @@ public class RareDropsEntityListener implements Listener
         		// if multiplier equals 0, the drops are handled elsewhere (by another plugin)
         		if (multiplier > 0)
         		{
-	        		String entityName = EntityUtilities.getEntityCreatureType(entity).name();
+	        		String entityName = entity.getType().name();
 	        		List<MapWrapper> materials = configWrapper.getMapList("mobs." + entityName + ".materials", new ArrayList<MapWrapper>());
 		        	RareDropsFactory factory = new RareDropsFactory(materials, multiplier);
 		        	RareDropsOdds odds = factory.createOdds();
