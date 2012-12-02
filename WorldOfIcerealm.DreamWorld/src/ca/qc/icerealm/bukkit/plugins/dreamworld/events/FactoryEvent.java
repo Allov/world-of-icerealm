@@ -15,7 +15,9 @@ public class FactoryEvent {
 		if (name.equalsIgnoreCase("treasurehunt")) {
 			e = new TreasureHunt();
 		}
-		
+		else if (name.equalsIgnoreCase("killingspree")) {
+			e = new KillingSpree();
+		}
 		
 		return e;
 	}

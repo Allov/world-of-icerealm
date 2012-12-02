@@ -1,5 +1,7 @@
 package ca.qc.icerealm.bukkit.plugins.dreamworld.events;
 
+import java.util.List;
+
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
@@ -8,12 +10,12 @@ import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 
 public class ZoneTrigger implements ZoneObserver {
 
-	private Runnable _runnable;
+	private List<Runnable> _runnable;
 	private Server _server;
 	private WorldZone _zone;
 	private boolean _started = false; 
 	
-	public ZoneTrigger(Runnable run, Server s) {
+	public ZoneTrigger(List<Runnable> run, Server s) {
 		_runnable = run;
 		_server = s;		
 	}
@@ -31,7 +33,9 @@ public class ZoneTrigger implements ZoneObserver {
 	@Override
 	public void playerEntered(Player arg0) {
 		if (!_started) {
-			_runnable.run();
+			for (Runnable r : _runnable) {
+				r.run();
+			}
 			_started = true;
 		}
 	}

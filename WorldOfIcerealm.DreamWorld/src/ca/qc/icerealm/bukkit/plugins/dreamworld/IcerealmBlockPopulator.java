@@ -28,7 +28,7 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 
 	private Logger _logger = Logger.getLogger("Minecraft");
 	private final String WORKING_DIR = "plugins" + System.getProperty("file.separator") + "WoI.DreamWorld" + System.getProperty("file.separator");
-	private boolean _canGenerate = true;
+	private boolean _canGenerate = false;
 	private boolean _ignoreVegetation = true;
 	private int _seaLevel = 0;
 	private Server _server;
@@ -242,9 +242,14 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 	public Event chooseRandomEvent(List<String> event) {
 		Collections.shuffle(event);
 		Event e = null;
+		_logger.info("event size: " + event.size());
+		
 		if (event.size() > 0) {
 			FactoryEvent factory = new FactoryEvent();
 			e = factory.getEvent(event.get(0));
+			if (e == null) {
+				_logger.info("event is null");
+			}
 			
 			if (e != null) {
 				e.setServer(_server);
