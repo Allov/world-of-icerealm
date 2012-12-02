@@ -33,6 +33,11 @@ import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
+import ca.qc.icerealm.bukkit.plugins.dreamworld.events.Event;
+import ca.qc.icerealm.bukkit.plugins.dreamworld.events.FactoryEvent;
+import ca.qc.icerealm.bukkit.plugins.dreamworld.events.TreasureHunt;
+
 public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExecutor {
 
 	private Logger _logger = Logger.getLogger("Minecraft");
@@ -41,15 +46,67 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 	private boolean _generating = false;
 	private StructurePattern _pattern = null;
 	private IcerealmBlockPopulator _populator;
+	private List<Event> _events;
 	
 	@Override
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
 		getCommand("dw").setExecutor(this);
 		World myWorld = getServer().getWorld("world");
-		_populator = new IcerealmBlockPopulator();
-		myWorld.getPopulators().add(_populator);
-		_logger.info("SeaLevel is: " + getServer().getWorld("world").getSeaLevel());
+		_populator = new IcerealmBlockPopulator(getServer(), this);
+		_events = new ArrayList<Event>();
+		myWorld.getPopulators().add(_populator);	
+		
+		// loading
+		try {
+			
+			FactoryEvent factory = new FactoryEvent();
+			BufferedReader reader = new BufferedReader(new FileReader(WORKING_DIR + "events"));
+			String line;
+			
+			while ((line = reader.readLine()) != null) {
+				
+				String[] event = line.split(":");
+				if (event.length > 2) {
+					String eventName = event[0];
+					String structureName = event[1];
+					String[] sourceLocation = event[2].split(",");
+					
+					double locX, locY, locZ;
+					locX = Double.parseDouble(sourceLocation[0]);
+					locY = Double.parseDouble(sourceLocation[1]);
+					locZ = Double.parseDouble(sourceLocation[2]);
+										
+					StructurePattern pattern = new StructurePattern();
+					pattern.readFromFile(WORKING_DIR + structureName);
+					pattern.Source = new Location(myWorld, locX, locY, locZ);
+					
+					Event e = factory.getEvent(eventName);
+					
+					if (e != null) {
+						e.setServer(getServer());
+						e.setSourceLocation(pattern.Source);
+						e.setLootPoints(pattern.LootPoints);
+						e.setPinPoints(pattern.PinPoints);
+						e.setActivateZone(pattern.ActivationZone);
+						getServer().getPluginManager().registerEvents(e, this);
+						e.activateEvent();
+						_events.add(e);
+					}
+				}
+			}
+		}
+		catch (Exception ex) {
+			_logger.info("exception occured while loading generated structure events");
+			ex.printStackTrace(System.err);
+		}
+	}
+	
+	@Override
+	public void onDisable() {
+		for (Event e : _events) {
+			e.releaseEvent();
+		}
 	}
 	
 	@Override
@@ -68,6 +125,8 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 					arg0.sendMessage(ChatColor.GREEN + "/dw acquire [int] [int] [int]: " + ChatColor.YELLOW + ChatColor.GOLD + "/dw acquire help" + ChatColor.YELLOW + " for more info");
 					arg0.sendMessage(ChatColor.GREEN + "/dw create: " + ChatColor.YELLOW + "create the structure in the world");
 					arg0.sendMessage(ChatColor.GREEN + "/dw write [filename]: " + ChatColor.YELLOW + "write the structure in file");
+					arg0.sendMessage(ChatColor.GREEN + "/dw pin: " + ChatColor.YELLOW + "pin point a location");
+					arg0.sendMessage(ChatColor.GREEN + "/dw loot: " + ChatColor.YELLOW + "pin point the loot location");
 					return true;
 				}
 				
@@ -76,9 +135,9 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 					if (arg3.length == 2 && arg3[1].equalsIgnoreCase("help")) {
 						arg0.sendMessage(ChatColor.GREEN + "[DreamWorld] " + ChatColor.YELLOW + "How to acquire structure");
 						arg0.sendMessage(ChatColor.GREEN + "1. " + ChatColor.YELLOW + "Face EAST direction");
-						arg0.sendMessage(ChatColor.GREEN + "2. " + ChatColor.YELLOW + "Count the block to your RIGHT");
-						arg0.sendMessage(ChatColor.GREEN + "3. " + ChatColor.YELLOW + "Count the block in FRONT");
-						arg0.sendMessage(ChatColor.GREEN + "4. " + ChatColor.YELLOW + "Count the HEIGHT");
+						arg0.sendMessage(ChatColor.GREEN + "2. " + ChatColor.YELLOW + "Count the HEIGHT");
+						arg0.sendMessage(ChatColor.GREEN + "3. " + ChatColor.YELLOW + "Count the block to your RIGHT");
+						arg0.sendMessage(ChatColor.GREEN + "4. " + ChatColor.YELLOW + "Count the block in FRONT");
 						arg0.sendMessage(ChatColor.GREEN + "5. " + ChatColor.YELLOW + "/dw acquire HEIGHT RIGHT FRONT ");
 						return true;
 					}
@@ -162,8 +221,8 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 						throw new Exception("the structure pattern is null. Make a acquire operation first");
 					}
 					
-					_populator.generateStructure(_pattern, new Location(world, centerX, centerY, centerZ));
 					_pattern.Source = new Location(world, centerX, centerY, centerZ);
+					_populator.generateStructure(_pattern, new Location(world, centerX, centerY, centerZ));
 					arg0.sendMessage(showMessage("structure created!"));	
 				}
 				
@@ -197,6 +256,62 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 					_pattern.LootPoints.add(pin);
 					arg0.sendMessage(showMessage("loot added: " + pin.X + ", " + pin.Y + ", " + pin.Z));
 				}
+				
+				if (arg3[0].equalsIgnoreCase("zone")) {
+					if (_pattern == null) {
+						throw new Exception("structure pattern not loaded in memory");
+					}
+					
+					if (arg3.length < 4) {
+						throw new Exception("missing argument for zone: /dw zone x y z");
+					}
+					
+					int curX = Integer.parseInt(arg3[1]);
+					int curY = Integer.parseInt(arg3[2]);
+					int curZ = Integer.parseInt(arg3[3]);
+
+					Location source = _pattern.Source;
+					PinPoint lower = new PinPoint((centerX - source.getX()), (centerY - source.getY()), (centerZ - source.getZ()));
+					PinPoint higher =  new PinPoint(curX + lower.X, curY + lower.Y, curZ + lower.Z);
+					
+					if (arg3.length > 4) {
+						higher.Name = arg3[4];
+						lower.Name = arg3[4];
+					}
+					else {
+						higher.Name = _pattern.ActivationZone.size() + "";
+						lower.Name = _pattern.ActivationZone.size() + "";
+					}
+					
+					List<PinPoint> zone = new ArrayList<PinPoint>();
+					zone.add(lower);
+					zone.add(higher);		
+					
+					_pattern.ActivationZone.add(zone);
+					arg0.sendMessage(showMessage("zone added: " + lower.X + ", " + lower.Y + ", " + lower.Z) + " -- " + higher.X + ", " + higher.Y + ", " + higher.Z);
+				}
+				
+				if (arg3[0].equalsIgnoreCase("event")) {
+					if (_pattern == null) {
+						throw new Exception("structure pattern not loaded in memory");
+					}
+					
+					if (arg3.length < 2) {
+						throw new Exception("missing argument for event: /dw event name");
+					}
+					
+					String name = arg3[1];
+					FactoryEvent factory = new FactoryEvent();
+					Event e = factory.getEvent(name);
+					if (e != null) {
+						_pattern.Events.add(name);
+					}
+					else {
+						throw new Exception("event not found: " + name);
+					}
+					
+					arg0.sendMessage(showMessage("event added to pattern: " + name));
+				}
 			}
 			catch (ArrayIndexOutOfBoundsException arrayEx) {
 				arg0.sendMessage(ChatColor.GRAY + "[DreamWorld]" + ChatColor.RED + " Command failed: " + ChatColor.GOLD + "array out of bound, check log for details");
@@ -209,6 +324,10 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 		}
 		return true;
 	}	
+	
+	private Location getLocation(PinPoint pin, World w) {
+		return new Location(w, pin.X, pin.Y, pin.Z);
+	}
 	
 	private String showMessage(String s) {
 		return ChatColor.GREEN + "[DreamWorld] " + ChatColor.YELLOW + s;

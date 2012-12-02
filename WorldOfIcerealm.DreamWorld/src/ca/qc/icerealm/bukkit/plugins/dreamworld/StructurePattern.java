@@ -1,7 +1,10 @@
 package ca.qc.icerealm.bukkit.plugins.dreamworld;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -12,6 +15,9 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
+import ca.qc.icerealm.bukkit.plugins.dreamworld.events.Event;
 
 public class StructurePattern {
 	
@@ -24,16 +30,37 @@ public class StructurePattern {
 	public Integer Layer;
 	public List<PinPoint> PinPoints;
 	public List<PinPoint> LootPoints;
+	public List<List<PinPoint>> ActivationZone;
 	public Location Source;
+	public String Name;
+	public List<String> Events;
+	
+	private Event _event;
 	
 	public StructurePattern() {
 		Blocks = new ArrayList<List<BlockUnit[]>>();
 		PinPoints = new ArrayList<PinPoint>();
 		LootPoints = new ArrayList<PinPoint>();
+		ActivationZone = new ArrayList<List<PinPoint>>();
+		Events = new ArrayList<String>();
 		Layer = 0;
+		Name = "";
+		_event = null;
+	}
+	
+	public StructurePattern(Event e) {
+		Blocks = new ArrayList<List<BlockUnit[]>>();
+		PinPoints = new ArrayList<PinPoint>();
+		LootPoints = new ArrayList<PinPoint>();
+		ActivationZone = new ArrayList<List<PinPoint>>();
+		Layer = 0;
+		Name = "";
+		_event = e;
 	}
 	
 	public void generate(Location location) {
+		
+		// on commence avec les blocks!
 		Source = location;
 		if (Blocks.size() > 0) {
 			for (int j = 0; j < Blocks.size(); j++) {
@@ -49,31 +76,17 @@ public class StructurePattern {
 	    	} 
 		}
 		
-		if (PinPoints.size() > 0) {
-			for (PinPoint p : PinPoints) {
-				/*
-				Location l = new Location(location.getWorld(), location.getX() + p.X, location.getY() + p.Y, location.getZ() + p.Z);
-				Block b = location.getWorld().getBlockAt(l);
-				b.setType(Material.GLOWSTONE);
-				*/
-			}
+		if (_event != null) {
+			_event.setSourceLocation(location);
+			_event.setPinPoints(PinPoints);
+			_event.setActivateZone(ActivationZone);
+			_event.setLootPoints(LootPoints);
+			_event.activateEvent();
 		}
+	}
 		
-		_logger.info(LootPoints.size() + " loot size");
-		for (PinPoint p : LootPoints) {
-			Location l = new Location(location.getWorld(), location.getX() + p.X, location.getY() + p.Y, location.getZ() + p.Z);
-			Block b = location.getWorld().getBlockAt(l);
-			b.setType(Material.CHEST);
-			
-			if (b.getType() == Material.CHEST) {
-				Chest chest = (Chest)b.getState();
-				Inventory inv = chest.getInventory();
-				inv.addItem(new ItemStack(Material.ANVIL, 1));
-			}
-			
-			
-		}
-		
+	public void attachEvent(Event e) {
+		_event = e;
 	}
 	
 	public void readFromFile(String file) throws Exception {
@@ -85,6 +98,7 @@ public class StructurePattern {
 		Column = Integer.parseInt(firstLine[1]);
 		Row = Integer.parseInt(firstLine[2]);
 		PinPoints = new ArrayList<PinPoint>();
+
 		
 		while (!(metadata = reader.readLine()).equalsIgnoreCase("[loot]")) {
 			
@@ -100,7 +114,7 @@ public class StructurePattern {
 			PinPoints.add(pt);				
 		}
 		
-		while (!(metadata = reader.readLine()).equalsIgnoreCase("[blocks]")) {
+		while (!(metadata = reader.readLine()).equalsIgnoreCase("[events]")) {
 			
 			String[] line = metadata.split(":");
 			
@@ -112,11 +126,47 @@ public class StructurePattern {
 				pt.Z = Integer.parseInt(line[3]);
 			}
 			LootPoints.add(pt);
+			
+			
+		}
+		
+		while (!(metadata = reader.readLine()).equalsIgnoreCase("[zones]")) {
+			
+			String[] line = metadata.split(":");
+			for (String s : line) {
+				_logger.info(s);
+				Events.add(s);
+			}
 						
 		}
-
 		
-		
+		while (!(metadata = reader.readLine()).equalsIgnoreCase("[blocks]")) {
+			
+			String[] line = metadata.split(":");
+			List<PinPoint> points = new ArrayList<PinPoint>();
+			if (line.length >= 3) {
+				PinPoint first = new PinPoint();
+				first.Name = line[0];
+				
+				String[] lowerZone = line[1].split(",");
+				if (lowerZone.length == 3) {
+					first.X = Integer.parseInt(lowerZone[0]);
+					first.Y = Integer.parseInt(lowerZone[1]);
+					first.Z = Integer.parseInt(lowerZone[2]);
+					points.add(first);
+				}
+				
+				String[] higherZone = line[2].split(",");
+				if (higherZone.length == 3) {
+					PinPoint higher = new PinPoint();
+					higher.X = Integer.parseInt(higherZone[0]);
+					higher.Y = Integer.parseInt(higherZone[1]);
+					higher.Z = Integer.parseInt(higherZone[2]);
+					points.add(higher);
+				}
+			}
+			ActivationZone.add(points);				
+		}
 
 		int currentLayer = 0;
 		String newLine;
@@ -170,6 +220,25 @@ public class StructurePattern {
 			PinPoint loc = LootPoints.get(i);
 			buf.append(loc.Name + ":" + loc.X + ":" + loc.Y + ":" + loc.Z + ":");
 			buf.append(NEW_LINE);
+		}
+		
+		buf.append("[events]" + NEW_LINE);
+		
+		for (int i = 0; i < Events.size(); i++) {
+			buf.append(Events.get(i));
+			buf.append(NEW_LINE);
+		}
+		
+		buf.append("[zones]" + NEW_LINE);
+		
+		for (int i = 0; i < ActivationZone.size(); i++) {
+			
+			List<PinPoint> loc = ActivationZone.get(i);
+			if (loc.size() == 2) {
+				buf.append(loc.get(0).Name + ":" + loc.get(0).X + "," + loc.get(0).Y + "," + loc.get(0).Z + ":" + 
+						   loc.get(1).X + "," + loc.get(1).Y + "," + loc.get(1).Z);
+				buf.append(NEW_LINE);
+			}
 		}
 		
 		buf.append("[blocks]" + NEW_LINE);

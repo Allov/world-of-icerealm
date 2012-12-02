@@ -1,11 +1,14 @@
 package ca.qc.icerealm.bukkit.plugins.dreamworld;
 
-public class PinPoint {
+import java.io.Serializable;
+
+public class PinPoint implements Serializable {
+	private static final long serialVersionUID = -89092158402917803L;
 	public String Name;
 	public int X;
 	public int Y;
 	public int Z;
-	
+
 	public PinPoint() {
 		X = 0;
 		Y = 0;
@@ -25,5 +28,17 @@ public class PinPoint {
 		Y = y;
 		Z = z;
 		Name = name;
+	}
+	
+	public PinPoint(double x, double y, double z) {
+		X = (int)x;
+		Y = (int)y;
+		Z = (int)z;
+		Name = "";
+	}
+	
+	@Override
+	public String toString() {
+		return X + "," + Y + "," + Z;
 	}
 }

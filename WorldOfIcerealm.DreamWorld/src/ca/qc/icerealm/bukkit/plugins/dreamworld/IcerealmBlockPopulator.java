@@ -1,20 +1,27 @@
 package ca.qc.icerealm.bukkit.plugins.dreamworld;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.logging.Logger;
-
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
-import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.block.CraftBlock;
 import org.bukkit.generator.BlockPopulator;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import ca.qc.icerealm.bukkit.plugins.common.LocationUtil;
+import ca.qc.icerealm.bukkit.plugins.dreamworld.events.Event;
+import ca.qc.icerealm.bukkit.plugins.dreamworld.events.FactoryEvent;
+
 
 public class IcerealmBlockPopulator extends BlockPopulator {
 
@@ -23,11 +30,15 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 	private boolean _canGenerate = false;
 	private boolean _ignoreVegetation = true;
 	private int _seaLevel = 0;
-	private double _timestamp = System.currentTimeMillis();
-	private double _coolDown = 120000; // 5 minute
+	private long _coolDown = 120000; // 5 minute
+	private Server _server;
+	private JavaPlugin _plugin;
+	private HashSet<GenerationEvent> _generatedStructure;
 		
-	public IcerealmBlockPopulator() {
-		
+	public IcerealmBlockPopulator(Server s, JavaPlugin j) {
+		_server = s;
+		_plugin = j;
+		_generatedStructure = new HashSet<GenerationEvent>();
 	}
 	
 	@Override
@@ -80,14 +91,18 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 	        	}
 	        }
 	        
-	        if (valid && System.currentTimeMillis() > _timestamp + _coolDown) {
-	        	_logger.info(centerX + ", " + centerZ + " height: " + centerY + " and building a structure");     
-	        	_timestamp = System.currentTimeMillis();
-	        	generateStructure(new Location(world, centerX, world.getSeaLevel(), centerZ), "castle");
+	        if (valid) {
 	        	
-	        }	
-	        else if (valid && System.currentTimeMillis() < _timestamp + _coolDown) {
-	        	_logger.info(centerX + ", " + centerZ + " height: " + world.getSeaLevel() + " cool down still active!!!");      
+	        	GenerationEvent generation = chooseValidStructure(new Location(world, centerX, world.getSeaLevel(), centerZ), desiredWidthX, desiredWidthZ);
+	        	if (generation != null) {
+	        		generation.NbGeneration++;
+	        		generation.LastLocation.X = centerX;
+	        		generation.LastLocation.Y = world.getSeaLevel();
+	        		generation.LastLocation.Z = centerZ;
+	        		generation.CoolDown = _coolDown + System.currentTimeMillis();
+	        		_logger.info("generating structure: " + generation.Name + " " + generation.NbGeneration + " time at " + generation.LastLocation.toString());
+	        		//generateStructure(new Location(world, centerX, world.getSeaLevel(), centerZ), generation.Name);
+	        	}
 	        }
 		}
 	}
@@ -119,6 +134,34 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 		
 	}
 	
+	private GenerationEvent chooseValidStructure(Location location, int widthX, int widthZ) {
+		
+		List<GenerationEvent> possible = new ArrayList<GenerationEvent>();
+		
+		for (GenerationEvent gen : _generatedStructure) {
+			
+			double currentFromSpawn = LocationUtil.getDistanceBetween(location, location.getWorld().getSpawnLocation());
+			
+			Location lastLocation = new Location(location.getWorld(), gen.LastLocation.X, gen.LastLocation.Y, gen.LastLocation.Z);
+			double lastFromSpawn = LocationUtil.getDistanceBetween(lastLocation, location.getWorld().getSpawnLocation());
+			
+			// la derniere generation est plus proche que la place qu'on vient de trouver
+			// et le cooldown est expiré et les dimensions sont corrects
+			if (currentFromSpawn > lastFromSpawn && gen.CoolDown < System.currentTimeMillis() &&
+				gen.WidthX < widthX && gen.WidthZ < widthZ) {
+				
+				possible.add(gen);				
+			}
+		}
+		
+		Collections.shuffle(possible);
+		if (possible.size() > 0) {
+			return possible.get(0);	
+		}
+		
+		return null;
+	}
+	
 	public void generateStructure(Location location, String file) {
 		
 		StructurePattern pattern = readFromFile(WORKING_DIR + file);
@@ -128,6 +171,17 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 	public void generateStructure(StructurePattern pattern, Location location) {
 		
 		if (pattern != null) {
+		
+			// pogne un event au hasard
+			_logger.info(pattern.Events + "");
+			Event event = chooseRandomEvent(pattern.Events);
+
+			if (event != null) {
+				pattern.attachEvent(event);
+				writePersistentEvent(event.getName(), pattern.Name, location);
+			}
+			
+			// on genere la structure
 			pattern.generate(location);
 		}
 	}
@@ -135,8 +189,8 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 	public StructurePattern readFromFile(String file) {
 		
 		StructurePattern pattern = new StructurePattern();
-		
 		try {
+			pattern.Name = file;
 			pattern.readFromFile(WORKING_DIR + file);
 		}
 		catch (Exception ex) {
@@ -145,6 +199,41 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 		}
 		
 		return pattern;
+	}
+	
+	public Event chooseRandomEvent(List<String> event) {
+		Collections.shuffle(event);
+		Event e = null;
+		if (event.size() > 0) {
+			FactoryEvent factory = new FactoryEvent();
+			e = factory.getEvent(event.get(0));
+			
+			if (e != null) {
+				e.setServer(_server);
+				_server.getPluginManager().registerEvents(e, _plugin);
+			}
+		}
+		
+		return e;
+	}
+	
+	public void writePersistentEvent(String event, String name, Location location) {
+		if (!event.equalsIgnoreCase("")) {
+			try {
+				BufferedWriter writer = new BufferedWriter(new FileWriter(WORKING_DIR + "events", true));
+				StringBuffer buf = new StringBuffer();
+				buf.append(event + ":" + name + ":" + location.getX() + "," + location.getY() + "," + location.getZ());
+				buf.append(System.getProperty("line.separator"));
+				writer.write(buf.toString());
+				writer.flush();
+				writer.close();
+			}
+			catch (Exception ex) {
+				_logger.info("exception occured when trying to register generation and events");
+				ex.printStackTrace();
+			}	
+		}
+		
 	}
 }
 
