@@ -28,6 +28,7 @@ public class EntityUtilities
 	public static final int Wolf = 95;
 	public static final int Silverfish = 60;
 	public static final int EnderDragon = 63;
+	public static final int Wither = 64;
 	public static final int Snowman = 97;
 	public static final int IronGolem = 99;
 	
@@ -58,6 +59,7 @@ public class EntityUtilities
         if(entity instanceof Zombie) return Zombie;
         if(entity instanceof Slime) return Slime;
         if(entity instanceof Witch) return Witch;
+        if(entity instanceof Wither) return Wither;
         
         if(entity instanceof Ghast) return Ghast;
         if(entity instanceof Blaze) return Blaze;
@@ -95,6 +97,7 @@ public class EntityUtilities
 		if (s.equalsIgnoreCase("IronGolem")) { return EntityType.IRON_GOLEM; }
 		if (s.equalsIgnoreCase("Bat")) { return EntityType.BAT; }
 		if (s.equalsIgnoreCase("Witch")) { return EntityType.WITCH; }
+		if (s.equalsIgnoreCase("Wither")) { return EntityType.WITHER; }
 		return EntityType.VILLAGER;
 	}
 	
@@ -136,7 +139,7 @@ public class EntityUtilities
 	}
 
 	/*
-	 * @Deprecated Use getEntityType(String s) instead 
+	 * @Deprecated Use entity.getType() instead 
 	 */
 	@Deprecated
 	public static CreatureType getCreatureType(String s) {
@@ -184,6 +187,7 @@ public class EntityUtilities
         if(entity instanceof Enderman) return "Enderman";
         if(entity instanceof Giant) return "Giant";
         if(entity instanceof PigZombie) return "Pig Zombie";
+        if(entity instanceof IronGolem) return "Iron Golem";
 
         // Aggressive
         if(entity instanceof Creeper) return "Creeper";
@@ -196,6 +200,7 @@ public class EntityUtilities
         if(entity instanceof Blaze) return "Blaze";
         if(entity instanceof MagmaCube) return "Magma Cube";  
         if(entity instanceof Witch) return "Witch"; 
+        if(entity instanceof Wither) return "Wither";
         
         if(entity instanceof Silverfish) return "Silverfish";
         if(entity instanceof EnderDragon) return "Ender Dragon";
@@ -222,6 +227,7 @@ public class EntityUtilities
         if(id == Enderman) return "Enderman";
         if(id == Giant) return "Giant";
         if(id == PigZombie) return "Pig Zombie";
+        if(id == IronGolem) return "Iron Golem";
 
         // Aggressive
         if(id == Creeper) return "Creeper";
@@ -236,6 +242,7 @@ public class EntityUtilities
         if(id == CaveSpider) return "Cave Spider";
         if(id == Silverfish) return "Silverfish";
         if(id == EnderDragon) return "Ender Dragon";
+        if(id == Wither) return "Wither";
 
         return null;
     }
