@@ -61,7 +61,7 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 		try {
 			
 			FactoryEvent factory = new FactoryEvent();
-			BufferedReader reader = new BufferedReader(new FileReader(WORKING_DIR + "events"));
+			BufferedReader reader = new BufferedReader(new FileReader(WORKING_DIR + "events.config"));
 			String line;
 			
 			while ((line = reader.readLine()) != null) {
@@ -112,7 +112,7 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 	@Override
 	public boolean onCommand(CommandSender arg0, Command arg1, String arg2, String[] arg3) {
 		
-		if (arg0 instanceof Player) {
+		if (arg0 instanceof Player && arg0.isOp()) {
 			World world = ((Player) arg0).getWorld();
 			int centerX = (int)((Player) arg0).getLocation().getX();
 			int centerY = (int)((Player) arg0).getLocation().getY();
@@ -121,12 +121,15 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 			try {
 				if (arg3.length == 0 || arg3[0].equalsIgnoreCase("help") || arg3[0].equalsIgnoreCase("?")) {
 					arg0.sendMessage(ChatColor.GREEN + "[DreamWorld] " + ChatColor.LIGHT_PURPLE + "HELP GUIDE");
+					arg0.sendMessage(ChatColor.GREEN + "/dw active [boolean]: " + ChatColor.YELLOW + "activate/deactivate random generation");
 					arg0.sendMessage(ChatColor.GREEN + "/dw read [string]: " + ChatColor.YELLOW + "read a structure in the specified file");
 					arg0.sendMessage(ChatColor.GREEN + "/dw acquire [int] [int] [int]: " + ChatColor.YELLOW + ChatColor.GOLD + "/dw acquire help" + ChatColor.YELLOW + " for more info");
 					arg0.sendMessage(ChatColor.GREEN + "/dw create: " + ChatColor.YELLOW + "create the structure in the world");
 					arg0.sendMessage(ChatColor.GREEN + "/dw write [filename]: " + ChatColor.YELLOW + "write the structure in file");
 					arg0.sendMessage(ChatColor.GREEN + "/dw pin: " + ChatColor.YELLOW + "pin point a location");
 					arg0.sendMessage(ChatColor.GREEN + "/dw loot: " + ChatColor.YELLOW + "pin point the loot location");
+					arg0.sendMessage(ChatColor.GREEN + "/dw zone [int] [int] [int]: " + ChatColor.YELLOW + "create an activation zone");
+					arg0.sendMessage(ChatColor.GREEN + "/dw event [string]: " + ChatColor.YELLOW + "add an event to the structure");
 					return true;
 				}
 				
@@ -312,6 +315,14 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 					
 					arg0.sendMessage(showMessage("event added to pattern: " + name));
 				}
+				
+				if (arg3.length == 1 && arg3[0].contains("active")) {
+					arg0.sendMessage(showMessage(ChatColor.GRAY + "Status: " + ChatColor.YELLOW + _populator.getActive()));
+				}
+				if (arg3.length == 2 && arg3[0].contains("active")) {
+					_populator.setActive(Boolean.parseBoolean(arg3[1]));
+					arg0.sendMessage(showMessage(ChatColor.GRAY + "Status: " + ChatColor.YELLOW + _populator.getActive()));
+				}
 			}
 			catch (ArrayIndexOutOfBoundsException arrayEx) {
 				arg0.sendMessage(ChatColor.GRAY + "[DreamWorld]" + ChatColor.RED + " Command failed: " + ChatColor.GOLD + "array out of bound, check log for details");
@@ -321,6 +332,9 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 				arg0.sendMessage(ChatColor.GRAY + "[DreamWorld]" + ChatColor.RED + " Command failed: " + ChatColor.GOLD + ex.getMessage());
 				ex.printStackTrace();
 			}
+		}
+		else {
+			arg0.sendMessage(showMessage("Only OP can operate this plugin."));
 		}
 		return true;
 	}	

@@ -9,6 +9,24 @@ public class PinPoint implements Serializable {
 	public int Y;
 	public int Z;
 
+	public PinPoint(String s) {
+		try {
+			String[] coord = s.split(",");
+			if (coord.length == 3) {
+				X = Integer.parseInt(coord[0]);
+				Y = Integer.parseInt(coord[1]);
+				Z = Integer.parseInt(coord[2]);
+			}
+		}
+		catch (Exception ex)  {
+			X = 0;
+			Y = 0;
+			Z = 0;
+			Name = "";
+		}
+	
+	}
+	
 	public PinPoint() {
 		X = 0;
 		Y = 0;
