@@ -1,0 +1,8 @@
+name: WoI.Perks
+main: ca.qc.icerealm.bukkit.plugins.perks.PerksPlugin
+version: 0.1.0
+description: World Of IceRealm Perks
+author: Allov
+commands:
+  PERK:
+    description: Purchase and list perks.
