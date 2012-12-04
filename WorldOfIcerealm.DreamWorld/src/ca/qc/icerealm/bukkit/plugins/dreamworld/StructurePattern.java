@@ -1,22 +1,12 @@
 package ca.qc.icerealm.bukkit.plugins.dreamworld;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-
-import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.events.Event;
 
 public class StructurePattern {
@@ -34,6 +24,7 @@ public class StructurePattern {
 	public Location Source;
 	public String Name;
 	public List<String> Events;
+	public Integer GroundLevel = 0;
 	
 	private Event _event;
 	
@@ -45,6 +36,7 @@ public class StructurePattern {
 		Events = new ArrayList<String>();
 		Layer = 0;
 		Name = "";
+		GroundLevel = 0;
 		_event = null;
 	}
 	
@@ -55,6 +47,7 @@ public class StructurePattern {
 		ActivationZone = new ArrayList<List<PinPoint>>();
 		Layer = 0;
 		Name = "";
+		GroundLevel = 0;
 		_event = e;
 	}
 	
@@ -69,7 +62,7 @@ public class StructurePattern {
 
 	    			BlockUnit[] blocks = row.get(x);
 	    			for (int i = 0; i < blocks.length; i++) {
-	    				Block block = location.getWorld().getBlockAt((int)location.getX() + i, (int)location.getY() + j, (int)location.getZ() + x);
+	    				Block block = location.getWorld().getBlockAt((int)location.getX() + i, ((int)location.getY() + j) - GroundLevel, (int)location.getZ() + x);
 	       	        	block.setTypeIdAndData(blocks[i].TypeId, blocks[i].Data, true);
 	    			}
 	    		}
@@ -95,8 +88,9 @@ public class StructurePattern {
 		String metadata = reader.readLine();
 		String[] firstLine =  metadata.split(" ");
 		Layer = Integer.parseInt(firstLine[0]);
-		Column = Integer.parseInt(firstLine[1]);
-		Row = Integer.parseInt(firstLine[2]);
+		Row = Integer.parseInt(firstLine[1]);
+		Column = Integer.parseInt(firstLine[2]);
+		GroundLevel =  Integer.parseInt(firstLine[3]);
 		PinPoints = new ArrayList<PinPoint>();
 
 		
@@ -204,7 +198,7 @@ public class StructurePattern {
 		StringBuffer buf = new StringBuffer();
 		
 		// meta data
-		buf.append(Layer + " " + Column + " " + Row + NEW_LINE);
+		buf.append(Layer + " " + Row + " " + Column + " " + GroundLevel + NEW_LINE);
 		
 		for (int i = 0; i < PinPoints.size(); i++) {
 			

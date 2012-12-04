@@ -127,6 +127,7 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 					arg0.sendMessage(ChatColor.GREEN + "/dw write [filename]: " + ChatColor.YELLOW + "write the structure in file");
 					arg0.sendMessage(ChatColor.GREEN + "/dw pin: " + ChatColor.YELLOW + "pin point a location");
 					arg0.sendMessage(ChatColor.GREEN + "/dw loot: " + ChatColor.YELLOW + "pin point the loot location");
+					arg0.sendMessage(ChatColor.GREEN + "/dw ground: " + ChatColor.YELLOW + "set ground level of structure");
 					arg0.sendMessage(ChatColor.GREEN + "/dw zone [int] [int] [int]: " + ChatColor.YELLOW + "create an activation zone");
 					arg0.sendMessage(ChatColor.GREEN + "/dw event [string]: " + ChatColor.YELLOW + "add an event to the structure");
 					arg0.sendMessage(ChatColor.GREEN + "/dw active [boolean]: " + ChatColor.YELLOW + "activate/deactivate random generation");
@@ -264,6 +265,16 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 					pin.Name = "loot";
 					_pattern.LootPoints.add(pin);
 					arg0.sendMessage(showMessage("loot added: " + pin.X + ", " + pin.Y + ", " + pin.Z));
+				}
+				
+				if (arg3[0].equalsIgnoreCase("ground")) {
+					if (_pattern == null) {
+						throw new Exception("structure pattern not loaded in memory");
+					}
+					
+					Location source = _pattern.Source;
+					_pattern.GroundLevel = (int)(centerY - source.getY());
+					arg0.sendMessage(showMessage("new ground level: " +_pattern.GroundLevel));
 				}
 				
 				if (arg3[0].equalsIgnoreCase("zone")) {
