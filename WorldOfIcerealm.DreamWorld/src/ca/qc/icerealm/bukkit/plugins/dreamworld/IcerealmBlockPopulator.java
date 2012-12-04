@@ -216,6 +216,15 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 		}
 	}
 	
+	public void resetPersistenceGeneration() {
+		for (GenerationEvent event : _generatedStructure) {
+			event.LastLocation = new PinPoint(0,0,0);
+			event.NbGeneration = 0;
+			event.CoolDown = 0;
+		}
+		writePersistenceGeneration();
+	}
+	
 	private HashSet<GenerationEvent> readGeneratedStructure() {
 		_generatedStructure = new HashSet<GenerationEvent>();
 		try {
@@ -279,7 +288,6 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 		if (pattern != null) {
 		
 			// pogne un event au hasard
-			_logger.info(pattern.Events + "");
 			Event event = chooseRandomEvent(pattern.Events);
 
 			if (event != null) {
@@ -310,15 +318,11 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 	public Event chooseRandomEvent(List<String> event) {
 		Collections.shuffle(event);
 		Event e = null;
-		_logger.info("event size: " + event.size());
-		
+
 		if (event.size() > 0) {
 			FactoryEvent factory = new FactoryEvent();
 			e = factory.getEvent(event.get(0));
-			if (e == null) {
-				_logger.info("event is null");
-			}
-			
+
 			if (e != null) {
 				e.setServer(_server);
 				_server.getPluginManager().registerEvents(e, _plugin);

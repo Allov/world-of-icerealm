@@ -381,6 +381,12 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 					_populator.setGlobalCoolDown(Double.parseDouble(arg3[1]));
 					arg0.sendMessage(showMessage(ChatColor.GRAY + "Global cooldown: " + ChatColor.YELLOW + _populator.getGlobalCoolDown()));
 				}
+				
+				if (arg3.length == 1 && arg3[0].contains("resetgen")) {
+					_populator.resetPersistenceGeneration();
+					arg0.sendMessage(showMessage(ChatColor.GRAY + "Generation data reset complete"));
+				}
+				
 			}
 			catch (ArrayIndexOutOfBoundsException arrayEx) {
 				arg0.sendMessage(ChatColor.GRAY + "[DreamWorld]" + ChatColor.RED + " Command failed: " + ChatColor.GOLD + "array out of bound, check log for details");
