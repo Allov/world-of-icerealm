@@ -121,7 +121,6 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 			try {
 				if (arg3.length == 0 || arg3[0].equalsIgnoreCase("help") || arg3[0].equalsIgnoreCase("?")) {
 					arg0.sendMessage(ChatColor.GREEN + "[DreamWorld] " + ChatColor.LIGHT_PURPLE + "HELP GUIDE");
-					arg0.sendMessage(ChatColor.GREEN + "/dw active [boolean]: " + ChatColor.YELLOW + "activate/deactivate random generation");
 					arg0.sendMessage(ChatColor.GREEN + "/dw read [string]: " + ChatColor.YELLOW + "read a structure in the specified file");
 					arg0.sendMessage(ChatColor.GREEN + "/dw acquire [int] [int] [int]: " + ChatColor.YELLOW + ChatColor.GOLD + "/dw acquire help" + ChatColor.YELLOW + " for more info");
 					arg0.sendMessage(ChatColor.GREEN + "/dw create: " + ChatColor.YELLOW + "create the structure in the world");
@@ -130,6 +129,13 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 					arg0.sendMessage(ChatColor.GREEN + "/dw loot: " + ChatColor.YELLOW + "pin point the loot location");
 					arg0.sendMessage(ChatColor.GREEN + "/dw zone [int] [int] [int]: " + ChatColor.YELLOW + "create an activation zone");
 					arg0.sendMessage(ChatColor.GREEN + "/dw event [string]: " + ChatColor.YELLOW + "add an event to the structure");
+					arg0.sendMessage(ChatColor.GREEN + "/dw active [boolean]: " + ChatColor.YELLOW + "activate/deactivate random generation");
+					arg0.sendMessage(ChatColor.GREEN + "/dw customscan [boolean]: " + ChatColor.YELLOW + "activate/deactivate custom scanner");
+					arg0.sendMessage(ChatColor.GREEN + "/dw diff [int]: " + ChatColor.YELLOW + "set the height differential (default = 4)");
+					arg0.sendMessage(ChatColor.GREEN + "/dw surface [int] [int]: " + ChatColor.YELLOW + "set the surface scanned (default = 85 x 85 blocks)");
+					arg0.sendMessage(ChatColor.GREEN + "/dw mindistance [int]: " + ChatColor.YELLOW + "set the min distance before next gen.");
+					arg0.sendMessage(ChatColor.GREEN + "/dw globalcooldown [int]: " + ChatColor.YELLOW + "set the global cool down before next gen.");
+
 					return true;
 				}
 				
@@ -316,12 +322,53 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 					arg0.sendMessage(showMessage("event added to pattern: " + name));
 				}
 				
+				if (arg3.length == 1 && arg3[0].contains("customscan")) {
+					arg0.sendMessage(showMessage(ChatColor.GRAY + "Custom scanner: " + ChatColor.YELLOW + _populator.getUseCustomScanner()));
+				}
+				if (arg3.length == 2 && arg3[0].contains("customscan")) {
+					_populator.setUseCustomScanner(Boolean.parseBoolean(arg3[1]));
+					arg0.sendMessage(showMessage(ChatColor.GRAY + "Custom scanner: " + ChatColor.YELLOW + _populator.getUseCustomScanner()));
+				}
+				
 				if (arg3.length == 1 && arg3[0].contains("active")) {
 					arg0.sendMessage(showMessage(ChatColor.GRAY + "Status: " + ChatColor.YELLOW + _populator.getActive()));
 				}
 				if (arg3.length == 2 && arg3[0].contains("active")) {
 					_populator.setActive(Boolean.parseBoolean(arg3[1]));
 					arg0.sendMessage(showMessage(ChatColor.GRAY + "Status: " + ChatColor.YELLOW + _populator.getActive()));
+				}
+				
+				if (arg3.length == 1 && arg3[0].contains("diff")) {
+					arg0.sendMessage(showMessage(ChatColor.GRAY + "Height diff.: " + ChatColor.YELLOW + _populator.getHeightDifferential()));
+				}
+				if (arg3.length == 2 && arg3[0].contains("diff")) {
+					_populator.setHeightDifferential(Integer.parseInt(arg3[1]));
+					arg0.sendMessage(showMessage(ChatColor.GRAY + "Height diff.: " + ChatColor.YELLOW + _populator.getHeightDifferential()));
+				}
+				
+				if (arg3.length == 1 && arg3[0].contains("surface")) {
+					arg0.sendMessage(showMessage(ChatColor.GRAY + "Surface scanned: " + ChatColor.YELLOW + _populator.getWidthX() + ", " + _populator.getWidthZ()));
+				}
+				if (arg3.length == 3 && arg3[0].contains("surface")) {
+					_populator.setWidthX(Integer.parseInt(arg3[1]));
+					_populator.setWidthZ(Integer.parseInt(arg3[2]));
+					arg0.sendMessage(showMessage(ChatColor.GRAY + "Surface scanned: " + ChatColor.YELLOW + _populator.getWidthX() + ", " + _populator.getWidthZ()));
+				}
+				
+				if (arg3.length == 1 && arg3[0].contains("mindistance")) {
+					arg0.sendMessage(showMessage(ChatColor.GRAY + "Minimum dist.: " + ChatColor.YELLOW + _populator.getMinDistanceFromLastGen()));
+				}
+				if (arg3.length == 3 && arg3[0].contains("mindistance")) {
+					_populator.setMinDistanceFromLastGen(Double.parseDouble(arg3[1]));
+					arg0.sendMessage(showMessage(ChatColor.GRAY + "Minimum dist.: " + ChatColor.YELLOW + _populator.getMinDistanceFromLastGen()));
+				}
+				
+				if (arg3.length == 1 && arg3[0].contains("globalcooldown")) {
+					arg0.sendMessage(showMessage(ChatColor.GRAY + "Global cooldown: " + ChatColor.YELLOW + _populator.getGlobalCoolDown()));
+				}
+				if (arg3.length == 3 && arg3[0].contains("globalcooldown")) {
+					_populator.setGlobalCoolDown(Double.parseDouble(arg3[1]));
+					arg0.sendMessage(showMessage(ChatColor.GRAY + "Global cooldown: " + ChatColor.YELLOW + _populator.getGlobalCoolDown()));
 				}
 			}
 			catch (ArrayIndexOutOfBoundsException arrayEx) {

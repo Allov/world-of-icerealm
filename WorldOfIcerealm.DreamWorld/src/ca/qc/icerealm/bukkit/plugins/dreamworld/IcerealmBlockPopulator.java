@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -22,52 +23,84 @@ import org.bukkit.plugin.java.JavaPlugin;
 import ca.qc.icerealm.bukkit.plugins.common.LocationUtil;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.events.Event;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.events.FactoryEvent;
+import ca.qc.icerealm.bukkit.plugins.dreamworld.scanner.BiomeScanner;
+import ca.qc.icerealm.bukkit.plugins.dreamworld.scanner.CustomScanner;
+import ca.qc.icerealm.bukkit.plugins.dreamworld.scanner.DefaultBiome;
+import ca.qc.icerealm.bukkit.plugins.dreamworld.scanner.DesertBiome;
+import ca.qc.icerealm.bukkit.plugins.dreamworld.scanner.ExtremeHillBiome;
+import ca.qc.icerealm.bukkit.plugins.dreamworld.scanner.ForestBiome;
+import ca.qc.icerealm.bukkit.plugins.dreamworld.scanner.JungleBiome;
+import ca.qc.icerealm.bukkit.plugins.dreamworld.scanner.MarshBiome;
+import ca.qc.icerealm.bukkit.plugins.dreamworld.scanner.PlainBiome;
 
 
 public class IcerealmBlockPopulator extends BlockPopulator {
 
 	private Logger _logger = Logger.getLogger("Minecraft");
 	private final String WORKING_DIR = "plugins" + System.getProperty("file.separator") + "WoI.DreamWorld" + System.getProperty("file.separator");
-	private boolean _canGenerate = false;
+	private boolean _canGenerate = true;
 	private boolean _ignoreVegetation = true;
 	private int _seaLevel = 0;
 	private Server _server;
 	private JavaPlugin _plugin;
 	private HashSet<GenerationEvent> _generatedStructure;
+	private HashMap<String, BiomeScanner> _scanners;
+	private CustomScanner _customScanner;
+	private boolean _useCustomScanner = false;
+	private BiomeScanner _defaultScanner;
+	private Location _lastGenerationLocation;
+	private double _minDistanceFromLastGeneration = 0;
+	private double _globalCoolDown = 0;
+	private double _lastGenerationTime = 0;
+	
 		
 	public IcerealmBlockPopulator(Server s, JavaPlugin j) {
 		_server = s;
 		_plugin = j;
-		_generatedStructure = readGeneratedStructure();		
+		_generatedStructure = readGeneratedStructure();
+		_seaLevel = s.getWorld("world").getSeaLevel();
+		_scanners = fillBiomeScanner();
+		_customScanner = new CustomScanner();
+		_defaultScanner = new DefaultBiome();
+		_globalCoolDown = 60000; // 1 minute
+		
+		_minDistanceFromLastGeneration = 0; // 500m
+		_lastGenerationLocation = s.getWorld("world").getSpawnLocation();
 	}
 	
 	@Override
 	public void populate(World world, Random random, Chunk source) {
 
-		if (_canGenerate) {
-			_seaLevel = world.getSeaLevel();
+		if (_canGenerate && _lastGenerationTime < System.currentTimeMillis()) {
 			boolean valid = true;
 			int centerX = (source.getX() << 4) + random.nextInt(16);
 	        int centerZ = (source.getZ() << 4) + random.nextInt(16);
 	        int centerY = world.getHighestBlockYAt(centerX, centerZ) - 1;
 	        //_logger.info("source block is: " + world.getBlockAt(centerX, centerY, centerZ).getType());
 
-	        if (centerY < world.getSeaLevel()) {
+	        Location currentLocation = new Location(world, centerX, centerY, centerZ);
+	        if (LocationUtil.getDistanceBetween(currentLocation, _lastGenerationLocation) <= _minDistanceFromLastGeneration) {
 	        	valid = false;
 	        }
+
+	        BiomeScanner scanner = getBiomeScanner(world.getBiome(centerX, centerZ).name());
+	        //_logger.info(scanner.getClass().toString());
 	        
-	        if (world.getHighestBlockAt(centerX, centerZ).getType() == Material.WATER) {
-	        	valid = false;
+	        if (valid && centerY < world.getSeaLevel()) {
+	        	return;
 	        }
 	        
-	        if (world.getBiome(centerX, centerZ).name() == Biome.OCEAN.name()) {
-	        	valid = false;
+	        if (valid && world.getHighestBlockAt(centerX, centerZ).getType() == Material.WATER) {
+	        	return;
 	        }
 	        
-	        // on cherche de quoi de flat de 57,56
-	        int desiredWidthX = 70;
-	        int desiredWidthZ = 70;
-	        int desiredDiffY = 4;
+	        if (valid && world.getBiome(centerX, centerZ).name() == Biome.OCEAN.name()) {
+	        	return;
+	        }
+	                
+	        int desiredWidthX = scanner.getDesiredWidthX();
+	        int desiredWidthZ = scanner.getDesiredWidthZ();
+	        int desiredDiffY = scanner.getDesiredDiff();
 	        int minHeightFound = centerY;
 	        
 	        for (int i = 0; i < desiredWidthX && valid; i++) {
@@ -86,7 +119,7 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 	        		int maxHeight = centerY + desiredDiffY;
 	        		//_logger.info("height found was: " + height + " max: " + maxHeight + " min: " + minHeight);
 	        		if (height > maxHeight || height < minHeight) {
-	        			valid = false;
+	        			return;
 	        			//_logger.info("not valid: " + height);
 	        		}
 	        		
@@ -100,13 +133,23 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 	        	
 	        	GenerationEvent generation = chooseValidStructure(new Location(world, centerX, minHeightFound, centerZ), desiredWidthX, desiredWidthZ);
 	        	if (generation != null) {
+	        		
+	        		
+	        		
 	        		generation.NbGeneration++;
 	        		generation.LastLocation.X = centerX;
 	        		generation.LastLocation.Y = minHeightFound;
 	        		generation.LastLocation.Z = centerZ;
 	        		generation.CoolDown = generation.IntervalCoolDown + System.currentTimeMillis();
-	        		generateStructure(new Location(world, centerX, minHeightFound, centerZ), generation.Name);
-	        		_logger.info("generating structure: " + generation.toString());
+	        		_lastGenerationLocation = new Location(world, centerX, world.getSeaLevel() - 1, centerZ);
+	        		generateStructure(_lastGenerationLocation, generation.Name);
+	        		_lastGenerationTime = System.currentTimeMillis() + _globalCoolDown;
+	        		
+	        		if (_minDistanceFromLastGeneration == 0) {
+	        			_minDistanceFromLastGeneration = 500;
+	        		}
+	        		
+	        		_logger.info("generating structure: " + generation.toString() + " found lowest height at: " + minHeightFound + " and sealevel = " +  world.getSeaLevel());
 	        		writePersistenceGeneration();
 	        	}
 	        }
@@ -153,7 +196,7 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 			
 			// la derniere generation est plus proche que la place qu'on vient de trouver
 			// et le cooldown est expiré et les dimensions sont corrects
-			if (currentFromSpawn > lastFromSpawn && currentFromSpawn > gen.MinDistance && gen.CoolDown < System.currentTimeMillis() &&
+			if (currentFromSpawn > lastFromSpawn && (currentFromSpawn - lastFromSpawn) > gen.MinDistance && gen.CoolDown < System.currentTimeMillis() &&
 				gen.WidthX < widthX && gen.WidthZ < widthZ) {
 				
 				possible.add(gen);
@@ -198,6 +241,37 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 			
 		}
 		return _generatedStructure;
+	}
+	
+	private HashMap<String, BiomeScanner> fillBiomeScanner() {
+		HashMap<String, BiomeScanner> biomes = new HashMap<String, BiomeScanner>();
+		biomes.put("default", new DefaultBiome());
+		biomes.put(Biome.FOREST.name(), new ForestBiome());
+		biomes.put(Biome.JUNGLE.name(), new JungleBiome());
+		biomes.put(Biome.DESERT.name(), new DesertBiome());
+		biomes.put(Biome.MUSHROOM_ISLAND.name(), new MarshBiome());
+		biomes.put(Biome.SWAMPLAND.name(), new MarshBiome());
+		biomes.put(Biome.TAIGA.name(), new ForestBiome());
+		biomes.put(Biome.PLAINS.name(), new PlainBiome());
+		biomes.put(Biome.TAIGA_HILLS.name(), new ExtremeHillBiome());
+		biomes.put(Biome.EXTREME_HILLS.name(), new ExtremeHillBiome());
+		biomes.put(Biome.DESERT_HILLS.name(), new ExtremeHillBiome());
+		biomes.put(Biome.JUNGLE_HILLS.name(), new ExtremeHillBiome());
+		biomes.put(Biome.SMALL_MOUNTAINS.name(), new ExtremeHillBiome());
+		return biomes;
+	}
+	
+	private BiomeScanner getBiomeScanner(String name)  {
+		
+		if (_useCustomScanner) {
+			return _customScanner;	
+		}
+		
+		if (_scanners.containsKey(name)) {
+			return _scanners.get(name);
+		}
+
+		return _defaultScanner;
 	}
 	
 	public void generateStructure(Location location, String file) {
@@ -284,6 +358,54 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 	
 	public boolean getActive() {
 		return _canGenerate;
+	}
+	
+	public void setHeightDifferential(int diff) {
+		_customScanner.setDesiredDiff(diff);
+	}
+	
+	public int getHeightDifferential() {
+		return _customScanner.getDesiredDiff();
+	}
+	
+	public int getWidthX() {
+		return _customScanner.getDesiredWidthX();
+	}
+
+	public void setWidthX(int _widthX) {
+		_customScanner.setDesiredWidthX(_widthX);
+	}
+
+	public int getWidthZ() {
+		return _customScanner.getDesiredWidthZ();
+	}
+
+	public void setWidthZ(int _widthZ) {
+		_customScanner.setDesiredWidthZ(_widthZ);
+	}
+
+	public boolean getUseCustomScanner() {
+		return _useCustomScanner;
+	}
+
+	public void setUseCustomScanner(boolean use) {
+		_useCustomScanner = use;
+	}
+	
+	public double getMinDistanceFromLastGen() {
+		return _minDistanceFromLastGeneration;
+	}
+
+	public void setMinDistanceFromLastGen(double use) {
+		_minDistanceFromLastGeneration = use;
+	}
+	
+	public double getGlobalCoolDown() {
+		return _globalCoolDown;
+	}
+
+	public void setGlobalCoolDown(double use) {
+		_globalCoolDown = use;
 	}
 }
 

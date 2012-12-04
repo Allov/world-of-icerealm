@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import org.bukkit.Location;
@@ -42,9 +44,11 @@ public class KillingSpree implements Event {
 	private int _monsterKilled = 0;
 	private double _maxMonster = 0;
 	private boolean _lootCreated = false;
-	
+	private long _lootDisapearInHours = 2;
+
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void monsterDies(EntityDeathEvent event) {
+		
 		if (_monsters.contains(event.getEntity())) {
 			_monsters.remove(event.getEntity());
 			_monsterKilled++;
@@ -56,14 +60,9 @@ public class KillingSpree implements Event {
 					
 					_logger.info("loot created!");
 					generateLoot();
-					
 				}
 			}
 		}
-		
-		
-		
-		
 	}
 	
 	private void generateLoot() {
@@ -80,6 +79,8 @@ public class KillingSpree implements Event {
 				Inventory inv = chest.getInventory();
 				inv.addItem(new ItemStack(Material.DIAMOND, 4));
 				_lootCreated = true;
+				
+				Executors.newSingleThreadScheduledExecutor().schedule(new LootDisapearer(location), _lootDisapearInHours, TimeUnit.HOURS);
 			}
 		}
 	}
@@ -177,5 +178,36 @@ public class KillingSpree implements Event {
 	@Override
 	public String getName() {
 		return _name;
+	}
+
+}
+
+class LootDisapearer implements Runnable {
+	
+	private Location _location;
+	
+	public LootDisapearer(Location location) {
+		_location = location;
+	}
+
+	@Override
+	public void run() {
+		
+		try {
+			if (_location != null) {
+				Block b = _location.getWorld().getBlockAt(_location);
+				
+				if (b.getType() == Material.CHEST) {
+					Chest chest = (Chest)b.getState();
+					Inventory inv = chest.getInventory();
+					inv.clear();
+					b.setType(Material.AIR);
+				}
+			}	
+		}
+		catch (NullPointerException ex) {
+			// on etouffe l'exception
+		}
+		
 	}
 }
