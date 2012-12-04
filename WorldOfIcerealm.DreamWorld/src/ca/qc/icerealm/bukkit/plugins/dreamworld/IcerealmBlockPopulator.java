@@ -23,15 +23,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import ca.qc.icerealm.bukkit.plugins.common.LocationUtil;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.events.Event;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.events.FactoryEvent;
-import ca.qc.icerealm.bukkit.plugins.dreamworld.scanner.BiomeScanner;
-import ca.qc.icerealm.bukkit.plugins.dreamworld.scanner.CustomScanner;
-import ca.qc.icerealm.bukkit.plugins.dreamworld.scanner.DefaultBiome;
-import ca.qc.icerealm.bukkit.plugins.dreamworld.scanner.DesertBiome;
-import ca.qc.icerealm.bukkit.plugins.dreamworld.scanner.ExtremeHillBiome;
-import ca.qc.icerealm.bukkit.plugins.dreamworld.scanner.ForestBiome;
-import ca.qc.icerealm.bukkit.plugins.dreamworld.scanner.JungleBiome;
-import ca.qc.icerealm.bukkit.plugins.dreamworld.scanner.MarshBiome;
-import ca.qc.icerealm.bukkit.plugins.dreamworld.scanner.PlainBiome;
 
 
 public class IcerealmBlockPopulator extends BlockPopulator {
@@ -45,7 +36,7 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 	private JavaPlugin _plugin;
 	private HashSet<GenerationEvent> _generatedStructure;
 	private HashMap<String, BiomeScanner> _scanners;
-	private CustomScanner _customScanner;
+	private BiomeScanner _customScanner;
 	private boolean _useCustomScanner = false;
 	private BiomeScanner _defaultScanner;
 	private Location _lastGenerationLocation;
@@ -59,9 +50,9 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 		_plugin = j;
 		_generatedStructure = readGeneratedStructure();
 		_seaLevel = s.getWorld("world").getSeaLevel();
-		_scanners = fillBiomeScanner();
-		_customScanner = new CustomScanner();
-		_defaultScanner = new DefaultBiome();
+		_scanners = readBiomeScanner();
+		_customScanner = new BiomeScanner("default:50:50:5");
+		_defaultScanner = new BiomeScanner("default:50:50:5"); // scan 50 x 50, diff de +/- 5
 		_globalCoolDown = 60000; // 1 minute
 		
 		_minDistanceFromLastGeneration = 0; // 500m
@@ -84,7 +75,6 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 	        }
 
 	        BiomeScanner scanner = getBiomeScanner(world.getBiome(centerX, centerZ).name());
-	        //_logger.info(scanner.getClass().toString());
 	        
 	        if (valid && centerY < world.getSeaLevel()) {
 	        	return;
@@ -98,14 +88,14 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 	        	return;
 	        }
 	                
-	        int desiredWidthX = scanner.getDesiredWidthX();
-	        int desiredWidthZ = scanner.getDesiredWidthZ();
-	        int desiredDiffY = scanner.getDesiredDiff();
+	        int desiredWidthX = scanner.DesiredWidthX;
+	        int desiredWidthZ = scanner.DesiredWidthZ;
+	        int desiredDiffY = scanner.DesiredDiff;
 	        int minHeightFound = centerY;
 	        
-	        for (int i = 0; i < desiredWidthX && valid; i++) {
+	        for (int i = 0; i <= desiredWidthX && valid; i++) {
 	        	
-	        	for (int j = 0; j < desiredWidthZ && valid; j++) {
+	        	for (int j = 0; j <= desiredWidthZ && valid; j++) {
 	        	
 	        		int checkX = centerX + i;
 	        		int checkZ = centerZ + j;
@@ -243,21 +233,25 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 		return _generatedStructure;
 	}
 	
-	private HashMap<String, BiomeScanner> fillBiomeScanner() {
+	private HashMap<String, BiomeScanner> readBiomeScanner() {
+		
 		HashMap<String, BiomeScanner> biomes = new HashMap<String, BiomeScanner>();
-		biomes.put("default", new DefaultBiome());
-		biomes.put(Biome.FOREST.name(), new ForestBiome());
-		biomes.put(Biome.JUNGLE.name(), new JungleBiome());
-		biomes.put(Biome.DESERT.name(), new DesertBiome());
-		biomes.put(Biome.MUSHROOM_ISLAND.name(), new MarshBiome());
-		biomes.put(Biome.SWAMPLAND.name(), new MarshBiome());
-		biomes.put(Biome.TAIGA.name(), new ForestBiome());
-		biomes.put(Biome.PLAINS.name(), new PlainBiome());
-		biomes.put(Biome.TAIGA_HILLS.name(), new ExtremeHillBiome());
-		biomes.put(Biome.EXTREME_HILLS.name(), new ExtremeHillBiome());
-		biomes.put(Biome.DESERT_HILLS.name(), new ExtremeHillBiome());
-		biomes.put(Biome.JUNGLE_HILLS.name(), new ExtremeHillBiome());
-		biomes.put(Biome.SMALL_MOUNTAINS.name(), new ExtremeHillBiome());
+		
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(WORKING_DIR + "biomes.config"));
+			String line;
+			
+			while ((line = reader.readLine()) != null) {
+				BiomeScanner scan = new BiomeScanner(line);
+				biomes.put(scan.Name, scan);
+			}
+			
+		}
+		catch (Exception ex) {
+			_logger.info("exception occured while reading biome config");
+			ex.printStackTrace();
+		}
+
 		return biomes;
 	}
 	
@@ -361,27 +355,27 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 	}
 	
 	public void setHeightDifferential(int diff) {
-		_customScanner.setDesiredDiff(diff);
+		_customScanner.DesiredDiff = diff;
 	}
 	
 	public int getHeightDifferential() {
-		return _customScanner.getDesiredDiff();
+		return _customScanner.DesiredDiff;
 	}
 	
 	public int getWidthX() {
-		return _customScanner.getDesiredWidthX();
+		return _customScanner.DesiredWidthX;
 	}
 
 	public void setWidthX(int _widthX) {
-		_customScanner.setDesiredWidthX(_widthX);
+		_customScanner.DesiredWidthX = _widthX;
 	}
 
 	public int getWidthZ() {
-		return _customScanner.getDesiredWidthZ();
+		return _customScanner.DesiredWidthZ;
 	}
 
 	public void setWidthZ(int _widthZ) {
-		_customScanner.setDesiredWidthZ(_widthZ);
+		_customScanner.DesiredWidthZ = _widthZ;
 	}
 
 	public boolean getUseCustomScanner() {
