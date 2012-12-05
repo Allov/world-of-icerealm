@@ -5,7 +5,7 @@ import java.util.Hashtable;
 public class RareDropsMultiplierData 
 {
     private static final RareDropsMultiplierData instance = new RareDropsMultiplierData();
-    private Hashtable<Integer, Double> entityMutipliers = new Hashtable<Integer, Double>();
+    private Hashtable<Integer, RareDropsMultipliers> entityMutipliers = new Hashtable<Integer, RareDropsMultipliers>();
 
     private RareDropsMultiplierData() 
     {
@@ -17,19 +17,24 @@ public class RareDropsMultiplierData
         return instance;
     }
 
-	public Hashtable<Integer, Double> getEntityMutipliers() 
+	public Hashtable<Integer, RareDropsMultipliers> getEntityMutipliers() 
 	{
 		return entityMutipliers;
 	}
 	
-	public void setEntityMutipliers(Hashtable<Integer, Double> entityMutipliers) 
+	public boolean entityIsHandled(int entityId)
+	{
+		return entityMutipliers.get(entityId) != null;
+	}
+	
+	public void setEntityMutipliers(Hashtable<Integer, RareDropsMultipliers> entityMutipliers) 
 	{
 		this.entityMutipliers = entityMutipliers;
 	}
 	
-	public void addEntityRareDropsMultiplier(int entityId, double multiplier)
+	public void addEntityRareDropsMultiplier(int entityId, RareDropsMultipliers multipliers)
 	{
-		this.entityMutipliers.put(entityId, multiplier);
+		this.entityMutipliers.put(entityId, multipliers);
 	}
 	
 	public void removeEntityRareDropsMultiplier(int entityId)

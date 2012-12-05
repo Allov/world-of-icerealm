@@ -1,17 +1,17 @@
 package ca.qc.icerealm.bukkit.plugins.raremobs.data;
 
-import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.EntityType;
 
 public class Subordinate 
 {
-	private CreatureType creatureType;
+	private EntityType creatureType;
 
-	public CreatureType getCreatureType() 
+	public EntityType getCreatureType() 
 	{
 		return creatureType;
 	}
 
-	public void setCreatureType(CreatureType creatureType) 
+	public void setCreatureType(EntityType creatureType) 
 	{
 		this.creatureType = creatureType;
 	}

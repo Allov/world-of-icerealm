@@ -39,9 +39,9 @@ mobs:
                 odds: 2.00
             -   name: APPLE
                 odds: 5.00  
-            -   name: CARROT
+            -   name: CARROT_ITEM
                 odds: 1.00   
-            -   name: POTATO
+            -   name: POTATO_ITEM
                 odds: 2.00                
             -   name: RAW_BEEF
                 odds: 4.00
@@ -51,6 +51,8 @@ mobs:
                 odds: 4.00                
             -   name: IRON_BOOTS
                 odds: 0.10
+            -   name: EMERALD
+                odds: 0.50
                 enchantments: low odds 
             -   name: IRON_CHESTPLATE
                 odds: 0.10
@@ -60,7 +62,7 @@ mobs:
                 enchantments: low odds 
             -   name: IRON_LEGGINGS
                 odds: 0.10
-                enchantments: low odds                                          
+                enchantments: low odds                                           
     SKELETON:
         materials:
             -   name: IRON_PICKAXE
@@ -115,14 +117,16 @@ mobs:
                 enchantments: average odds 
             -   name: IRON_LEGGINGS
                 odds: 0.15
-                enchantments: average odds   
+                enchantments: average odds  
+            -   name: EMERALD
+                odds: 1.00 
     SPIDER:
         materials:
             -   name: BREAD
                 odds: 10.00
             -   name: COOKIE
                 odds: 5.00
-            -   name: CARROT
+            -   name: CARROT_ITEM
                 odds: 2.00     
             -   name: POTION
                 odds: 1.00                              
@@ -130,6 +134,8 @@ mobs:
                 odds: 1.00
             -   name: IRON_INGOT
                 odds: 2.00
+            -   name: EMERALD
+                odds: 0.25
     CREEPER:
         materials:
             -   name: DIAMOND_CHESTPLATE
@@ -191,6 +197,8 @@ mobs:
                 odds: 3.00
             -   name: GOLDEN_CARROT
                 odds: 1.50 
+            -   name: EMERALD
+                odds: 1.00
     ENDERMAN:
         materials:
             -   name: DIRT
@@ -204,7 +212,9 @@ mobs:
             -   name: GOLDEN_CARROT
                 odds: 4.00    
             -   name: MELON
-                odds: 10.00   
+                odds: 10.00
+            -   name: EMERALD
+                odds: 2.00   
             -   name: DIAMOND_CHESTPLATE
                 odds: 0.15
                 enchantments: high odds 
@@ -265,6 +275,8 @@ mobs:
             -   name: IRON_SPADE
                 odds: 15.00
                 enchantments: high odds 
+            -   name: EMERALD
+                odds: 10.00
     WOLF:
         materials:
             -   name: GOLDEN_APPLE
@@ -299,15 +311,17 @@ mobs:
                 odds: 0.50
             -   name: GOLDEN_APPLE
                 odds: 3.00   
+            -   name: EMERALD
+                odds: 0.50
     CAVE_SPIDER:
         materials:
             -   name: BREAD
                 odds: 7.00
             -   name: COOKIE
                 odds: 4.00
-            -   name: CARROT
+            -   name: CARROT_ITEM
                 odds: 3.00
-            -   name: POTATO
+            -   name: POTATO_ITEM
                 odds: 8.00     
             -   name: LAPIS_ORE
                 odds: 1.00                
@@ -323,7 +337,7 @@ mobs:
                 odds: 25.00 
             -   name: GOLDEN_CARROT
                 odds: 25.00  
-            -   name: POTATO
+            -   name: POTATO_ITEM
                 odds: 5.00  
             -   name: DIAMOND_CHESTPLATE
                 odds: 3.50
@@ -341,6 +355,8 @@ mobs:
                 odds: 5.00
             -   name: BLAZE_ROD
                 odds: 30.00
+            -   name: EMERALD
+                odds: 25.00
     PIG_ZOMBIE:
         materials:         
             -   name: DIAMOND_CHESTPLATE
@@ -372,13 +388,17 @@ mobs:
                 enchantments: average odds  
             -   name: GOLD_SWORD
                 odds: 2.00
-                enchantments: high odds  
+                enchantments: high odds 
+            -   name: EMERALD
+                odds: 0.10 
     GHAST:
         materials:
             -   name: GLOWSTONE_DUST
                 odds: 5.00
             -   name: FEATHER
-                odds: 5.00             
+                odds: 5.00     
+            -   name: EMERALD
+                odds: 5.00        
     MAGMA_CUBE:
         materials:
             -   name: MAGMA_CREAM
@@ -386,7 +406,9 @@ mobs:
             -   name: LAVA_BUCKET
                 odds: 1.00
             -   name: LAPIS_ORE
-                odds: 2.00      
+                odds: 2.00    
+            -   name: EMERALD
+                odds: 2.00  
     BLAZE:
         materials:
             -   name: GOLD_INGOT
@@ -407,12 +429,71 @@ mobs:
             -   name: DIAMOND_BOOTS
                 odds: 0.06
                 enchantments: average odds 
+            -   name: EMERALD
+                odds: 2.00
+
+    WITHER_SKULL:
+        materials:
+            -   name: IRON_PICKAXE
+                odds: 1.00
+                enchantments: average odds
+            -   name: IRON_AXE
+                odds: 1.00
+                enchantments: average odds
+            -   name: IRON_SWORD
+                odds: 1.00
+                enchantments: average odds
+            -   name: IRON_HOE
+                odds: 1.00
+            -   name: IRON_SPADE
+                odds: 1.00
+                enchantments: average odds
+            -   name: DIAMOND_PICKAXE
+                odds: 0.30
+                enchantments: average odds
+            -   name: DIAMOND_SPADE
+                odds: 0.30
+                enchantments: average odds
+            -   name: DIAMOND_HOE
+                odds: 0.30
+            -   name: DIAMOND_SWORD
+                odds: 0.30
+                enchantments: average odds     
+            -   name: DIAMOND_AXE
+                odds: 0.30
+                enchantments: average odds        
+            -   name: DIAMOND_AXE            # custom rare weapon
+                custom name: diamond battle axe
+                odds: 0.30
+                enchantments: sure average odds
+                enchantments as: DIAMOND_SWORD
+            -   name: SHEARS                 # custom rare weapon
+                custom name: scissors
+                odds: 0.30
+                enchantments: sure high odds
+                enchantments as: IRON_SWORD
+            -   name: IRON_BOOTS
+                odds: 0.30
+                enchantments: average odds 
+            -   name: IRON_CHESTPLATE
+                odds: 0.30
+                enchantments: average odds 
+            -   name: IRON_HELMET
+                odds: 0.30
+                enchantments: average odds 
+            -   name: IRON_LEGGINGS
+                odds: 0.30
+                enchantments: average odds  
+            -   name: EMERALD
+                odds: 3.00 
     ENDER_DRAGON:
         materials:
             -   name: GOLDEN_APPLE
                 odds: 50.00 
             -   name: GOLDEN_CARROT
                 odds: 40.00  
+            -   name: EMERALD
+                odds: 100.00
             -   name: DIAMOND_CHESTPLATE
                 odds: 3.00
                 enchantments: boss high odds

@@ -19,21 +19,21 @@ import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropResult;
 import ca.qc.icerealm.bukkit.plugins.raredrops.randomizer.MultipleRareDropsRandomizer;
 import ca.qc.icerealm.bukkit.plugins.raredrops.randomizer.RareDropsRandomizer;
 import ca.qc.icerealm.bukkit.plugins.raremobs.data.CurrentRareMob;
-import net.milkbowl.vault.economy.Economy;
+//import net.milkbowl.vault.economy.Economy;
 
 public class RareMobsEntityListener implements Listener
 {
 	public final Logger logger = Logger.getLogger(("Minecraft"));
-	private final Economy economy;
+	//private final Economy economy;
 	
-	public RareMobsEntityListener(Economy economy)
+	/*public RareMobsEntityListener(Economy economy)
 	{
 		this.economy = economy;
-	}
+	}*/
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityDeath(EntityDeathEvent event)
-	{     
+	{  
         if(event.getEntity() instanceof Monster)
         { 
         	CurrentRareMob raremob = CurrentRareMob.getInstance();
@@ -56,23 +56,23 @@ public class RareMobsEntityListener implements Listener
 	        	event.setDroppedExp(0);
 	        	
 	        	int levels = raremob.getRareMob().getExperienceLevels() / raremob.getFighters().size();
-	        	int money = raremob.getRareMob().getMoney() / raremob.getFighters().size();
+	        	//int money = raremob.getRareMob().getMoney() / raremob.getFighters().size();
 	        	
     			for (Player p : raremob.getFighters())
     			{
     				p.setLevel(p.getLevel() + levels);
     				
-    				if (economy != null)
+    			/*	if (economy != null)
     				{
 	    				economy.depositPlayer(p.getName(), levels);
 	
 	    				p.sendMessage(ChatColor.GRAY + "Reward: " + ChatColor.GOLD
 	    				+ money + ChatColor.GRAY + " gold and " + ChatColor.GOLD + levels + ChatColor.GRAY + " levels.");
-    				}
-    				else
-    				{
+    				}*/
+    				//else
+    				//{
 	    				p.sendMessage(ChatColor.GRAY + "Rewards: " + ChatColor.GOLD + levels + ChatColor.GRAY + " levels.");
-    				}
+    				//}
     			}
 	        	
 	        	List<Entity> nearbyEntities = entity.getNearbyEntities(100, 100, 100);

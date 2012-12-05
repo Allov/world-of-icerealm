@@ -3,7 +3,6 @@ package ca.qc.icerealm.bukkit.plugins.raremobs;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
@@ -16,6 +15,7 @@ import org.bukkit.entity.Player;
 import ca.qc.icerealm.bukkit.plugins.advancedcompass.CustomCompassManager;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultiplierData;
+import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultipliers;
 import ca.qc.icerealm.bukkit.plugins.raremobs.data.CurrentRareMob;
 import ca.qc.icerealm.bukkit.plugins.raremobs.data.RareMob;
 
@@ -45,16 +45,20 @@ public class RareMobSpawner
 			// Cancel if no spawning loc was found
 			if (loc != null)
 			{
-				LivingEntity mob = bukkitServer.getWorld("World").spawnCreature(loc, rareMob.getCreatureType());
+				LivingEntity mob = (LivingEntity)bukkitServer.getWorld("World").spawnEntity(loc, rareMob.getCreatureType());
 				
 				CurrentRareMob currentRareMob = CurrentRareMob.getInstance();
 				currentRareMob.setRareMobEntityId(mob.getEntityId());
 				currentRareMob.setCurrentHealth(currentRareMob.getRareMob().getHealth());
 						
 				// Cancel base raredrops for this type of monster, we handle the drops ourselves
-				RareDropsMultiplierData.getInstance().addEntityRareDropsMultiplier(mob.getEntityId(), 0);
+				RareDropsMultiplierData.getInstance().addEntityRareDropsMultiplier(mob.getEntityId(), new RareDropsMultipliers(0.00, 0.00, 0.00));
+				
+				//RareDropsMultipliers customMultiplier = RareDropsMultiplierData.getInstance().getEntityMutipliers().get(mob.getEntityId());
+    			//logger.info("eee: "+customMultiplier.getLowValueMultiplier() + "," + customMultiplier.getMediumValueMultiplier() + ","+ customMultiplier.getHighValueMultiplier());
+    			
 				List<Integer> subordinatesIds = new CopyOnWriteArrayList<Integer>();
-				Hashtable<Integer, Double> subHealth = new Hashtable<Integer, Double>();	
+				Hashtable<Integer, Double> subHealth = new Hashtable<Integer, Double>();				
 				
 				if (rareMob.getSubordinates().size() != 0)
 				{
@@ -82,7 +86,7 @@ public class RareMobSpawner
 							locSub = loc;
 						}
 		
-						LivingEntity subordinate = bukkitServer.getWorld("World").spawnCreature(locSub, rareMob.getSubordinates().get(i).getCreatureType());	
+						LivingEntity subordinate = (LivingEntity) bukkitServer.getWorld("World").spawnEntity(locSub, rareMob.getSubordinates().get(i).getCreatureType());	
 						spawnedLocations.add(locSub.toString());
 						subordinatesIds.add(subordinate.getEntityId());
 						

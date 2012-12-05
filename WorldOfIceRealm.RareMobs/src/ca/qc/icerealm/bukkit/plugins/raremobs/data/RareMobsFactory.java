@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.bukkit.entity.CreatureType;
-
 import ca.qc.icerealm.bukkit.plugins.common.MapWrapper;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsFactory;
+import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultiplierData;
+import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultipliers;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsOdds;
+
+import org.bukkit.entity.EntityType;;
 
 public class RareMobsFactory 
 {
@@ -47,13 +49,13 @@ public class RareMobsFactory
 			RareMob raremob = new RareMob();
 			
 			// Make sure the mob exists
-			if (CreatureType.valueOf(mob.getString("type", null)) == null)
+			if (EntityType.valueOf(mob.getString("type", null)) == null)
 			{
 				logger.warning("Invalid mob type, ignoring odds for mob: " + mob.getString("name", null));
 			}
 			else
 			{			
-				raremob.setCreatureType(CreatureType.valueOf(mob.getString("type", null)));		
+				raremob.setCreatureType(EntityType.valueOf(mob.getString("type", null)));		
 				raremob.setMobName(mob.getString("name", null));
 				raremob.setSpawnOdds(mob.getDouble("odds", 0.00) * oddsMultiplier);
 				
@@ -77,13 +79,13 @@ public class RareMobsFactory
 					Subordinate sub = new Subordinate();
 					
 					// Make sure the mob exists
-					if (CreatureType.valueOf(subordinate.getString("type", null)) == null)
+					if (EntityType.valueOf(subordinate.getString("type", null)) == null)
 					{
 						logger.warning("Invalid mob name, ignoring odds for mob: " + subordinate.getString("name", null));
 					}
 					else
 					{
-						sub.setCreatureType(CreatureType.valueOf(subordinate.getString("type", null)));	
+						sub.setCreatureType(EntityType.valueOf(subordinate.getString("type", null)));	
 						subList.add(sub);
 						raremob.setSubordinates(subList);
 					}
@@ -94,7 +96,7 @@ public class RareMobsFactory
 				
 				if (raredrops.size() != 0)
 				{	
-					RareDropsFactory rardropsFactory = new RareDropsFactory(raredrops, 1);
+					RareDropsFactory rardropsFactory = new RareDropsFactory(raredrops);
 					
 					RareDropsOdds dropsOdd = rardropsFactory.createOdds();
 					raremob.setRaredropsOdds(dropsOdd);

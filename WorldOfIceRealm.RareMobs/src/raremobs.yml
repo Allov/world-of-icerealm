@@ -12,7 +12,7 @@
 raremobs:
     -   type: ZOMBIE
         name: Mall Roaming Kevin Eubanks
-        health: 400
+        health: 300
         strength multiplier: 3
         odds: 0.60
         rewards:   
@@ -57,9 +57,9 @@ raremobs:
             -   type: SKELETON
     -   type: ZOMBIE
         name: Markus the Flesheater
-        health: 600
+        health: 400
         strength multiplier: 3
-        odds: 0.01
+        odds: 0.35
         rewards:   
             experienceLevels: 15 
             money: 2500           
@@ -105,7 +105,7 @@ raremobs:
             -   type: SKELETON
     -   type: SKELETON
         name: Bad to the bones
-        health: 500
+        health: 350
         strength multiplier: 3
         odds: 0.40
         rewards:
@@ -179,6 +179,8 @@ raremobs:
                     enchantments: high odds    
                 -   name: GOLDEN_APPLE
                     odds: 75.00
+                -   name: GOLDEN_CARROT
+                    odds: 50.00
                 -   name: DIAMOND_SWORD
                     odds: 10.00
                     enchantments: average odds      
@@ -189,3 +191,48 @@ raremobs:
             - type: CAVE_SPIDER
             - type: CAVE_SPIDER
             - type: CAVE_SPIDER
+    -   type: CREEPER
+        name: Exploding Joe
+        health: 100
+        strength multiplier: 2
+        odds: 0.25
+        rewards:   
+            experienceLevels: 10 
+            money: 2000           
+            drops:
+                -   name: IRON_BOOTS
+                    odds: 40.00
+                    enchantments: high odds 
+                -   name: IRON_CHESTPLATE
+                    odds: 40.00
+                    enchantments: high odds 
+                -   name: IRON_HELMET
+                    odds: 40.00
+                    enchantments: high odds 
+                -   name: IRON_LEGGINGS
+                    odds: 40.00
+                    enchantments: high odds    
+                -   name: IRON_AXE               # custom rare weapon
+                    custom name: iron battle axe
+                    odds: 40.00
+                    enchantments: sure high odds
+                    enchantments as: IRON_SWORD
+                -   name: DIAMOND_AXE               # custom rare weapon
+                    custom name: diamond battle axe
+                    odds: 20.00
+                    enchantments: sure average odds
+                    enchantments as: IRON_SWORD
+                -   name: DIAMOND_SWORD
+                    odds: 5.00
+                    enchantments: average odds   
+                -   name: GOLDEN_APPLE
+                    odds: 75.00
+                -   name: GOLDEN_CARROT
+                    odds: 75.00
+        subordinates health multiplier: 2
+        subordinates strength multiplier: 1
+        subordinates:
+            -   type: CREEPER
+            -   type: CREEPER
+            -   type: CREEPER
+            -   type: CREEPER

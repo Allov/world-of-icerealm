@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import net.milkbowl.vault.economy.Economy;
+//import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.RegisteredServiceProvider;
+//import org.bukkit.plugin.PluginManager;
+//import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import ca.qc.icerealm.bukkit.plugins.common.ConfigWrapper;
@@ -22,8 +22,13 @@ import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 public class RareMobs extends JavaPlugin
 {
 	public static final int SPAWN_CHECK_INTERVAL = 50000;
-	private PluginManager pluginManager;
-	private RegisteredServiceProvider<Economy> economyProvider;
+	public static final int SPAWN_AROUND_X = 100;
+	public static final int SPAWN_AROUND_Y = 20;
+	public static final int SPAWN_AROUND_Z = 100;
+	public static final int DEFAULT_ODDS_MULTIPLIER = 1;
+	
+	//private PluginManager pluginManager;
+	//private RegisteredServiceProvider<Economy> economyProvider;
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 	
 	@Override
@@ -48,7 +53,7 @@ public class RareMobs extends JavaPlugin
 	    // Load all the data (rare mobs, subordinates and rare drops)
 		ConfigWrapper configWrapper = new ConfigWrapper(config);
 		List<MapWrapper> mobs = configWrapper.getMapList("raremobs", new ArrayList<MapWrapper>());
-		RareMobsFactory factory = new RareMobsFactory(mobs, 1);
+		RareMobsFactory factory = new RareMobsFactory(mobs, DEFAULT_ODDS_MULTIPLIER);
 		
 		// Add mobs to singleton
 		RareMobsData data = factory.build();
@@ -58,15 +63,16 @@ public class RareMobs extends JavaPlugin
 		RareMobsTimeObserver observer = new RareMobsTimeObserver(getServer(), randomizer);
 		TimeServer.getInstance().addListener(observer, SPAWN_CHECK_INTERVAL);
 		
-		pluginManager = getServer().getPluginManager();
+		//pluginManager = getServer().getPluginManager();
 		
-		if(pluginManager.isPluginEnabled("Vault")) {
+	/*	if(pluginManager.isPluginEnabled("Vault")) {
 			economyProvider = getServer()
 					.getServicesManager()
 					.getRegistration(net.milkbowl.vault.economy.Economy.class);
-		}
+		}*/
 		
-		getServer().getPluginManager().registerEvents(new RareMobsEntityListener(economyProvider.getProvider()), this);
+		//getServer().getPluginManager().registerEvents(new RareMobsEntityListener(economyProvider.getProvider()), this);
+		getServer().getPluginManager().registerEvents(new RareMobsEntityListener(), this);
 		getServer().getPluginManager().registerEvents(new RareMobDamageListener(), this);
 	}
 }

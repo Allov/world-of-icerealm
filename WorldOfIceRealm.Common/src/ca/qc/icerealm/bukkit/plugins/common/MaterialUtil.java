@@ -23,7 +23,8 @@ public class MaterialUtil
 		if (item.equals(Material.RAW_BEEF)) return Material.COOKED_BEEF;
 		if (item.equals(Material.RAW_CHICKEN)) return Material.COOKED_CHICKEN;
 		if (item.equals(Material.RAW_FISH)) return Material.COOKED_FISH;
-		
+		if (item.equals(Material.POTATO_ITEM)) return Material.BAKED_POTATO;
+			
 		return null;
 	}
 	

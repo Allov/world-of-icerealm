@@ -29,6 +29,7 @@ public class EntityUtilities
 	public static final int Silverfish = 60;
 	public static final int EnderDragon = 63;
 	public static final int Wither = 64;
+	public static final int WitherSkeleton = 51;
 	public static final int Snowman = 97;
 	public static final int IronGolem = 99;
 	
@@ -60,6 +61,7 @@ public class EntityUtilities
         if(entity instanceof Slime) return Slime;
         if(entity instanceof Witch) return Witch;
         if(entity instanceof Wither) return Wither;
+        if(entity instanceof WitherSkull) return WitherSkeleton;
         
         if(entity instanceof Ghast) return Ghast;
         if(entity instanceof Blaze) return Blaze;
@@ -98,6 +100,7 @@ public class EntityUtilities
 		if (s.equalsIgnoreCase("Bat")) { return EntityType.BAT; }
 		if (s.equalsIgnoreCase("Witch")) { return EntityType.WITCH; }
 		if (s.equalsIgnoreCase("Wither")) { return EntityType.WITHER; }
+		if (s.equalsIgnoreCase("WitherSkeleton")) { return EntityType.WITHER_SKULL; }
 		return EntityType.VILLAGER;
 	}
 	
@@ -201,6 +204,7 @@ public class EntityUtilities
         if(entity instanceof MagmaCube) return "Magma Cube";  
         if(entity instanceof Witch) return "Witch"; 
         if(entity instanceof Wither) return "Wither";
+        if(entity instanceof WitherSkull) return "Wither Skeleton";
         
         if(entity instanceof Silverfish) return "Silverfish";
         if(entity instanceof EnderDragon) return "Ender Dragon";
@@ -243,6 +247,7 @@ public class EntityUtilities
         if(id == Silverfish) return "Silverfish";
         if(id == EnderDragon) return "Ender Dragon";
         if(id == Wither) return "Wither";
+        if(id == WitherSkeleton) return "Wither Skeleton";
 
         return null;
     }

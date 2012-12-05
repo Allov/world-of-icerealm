@@ -2,7 +2,7 @@ package ca.qc.icerealm.bukkit.plugins.raremobs.data;
 
 import java.util.List;
 
-import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.EntityType;
 
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsOdds;
 
@@ -10,7 +10,7 @@ public class RareMob
 {
 	private String mobName = null;
 	private double spawnOdds; // Each hour between spawn time range
-	private CreatureType creatureType = null;
+	private EntityType creatureType = null;
 	private int health = 0;
 	private double strengthMultiplier = 0.00;
 	private int experienceLevels = 0;
@@ -30,12 +30,12 @@ public class RareMob
 		this.mobName = mobName;
 	}
 
-	public CreatureType getCreatureType() 
+	public EntityType getCreatureType() 
 	{
 		return creatureType;
 	}
 
-	public void setCreatureType(CreatureType creatureType) 
+	public void setCreatureType(EntityType creatureType) 
 	{
 		this.creatureType = creatureType;
 	}

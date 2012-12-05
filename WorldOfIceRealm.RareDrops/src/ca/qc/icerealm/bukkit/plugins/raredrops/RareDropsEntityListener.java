@@ -16,6 +16,7 @@ import ca.qc.icerealm.bukkit.plugins.common.MapWrapper;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropResult;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsFactory;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultiplierData;
+import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultipliers;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsOdds;
 import ca.qc.icerealm.bukkit.plugins.raredrops.enchantment.LootingEnchantmentHandler;
 import ca.qc.icerealm.bukkit.plugins.raredrops.randomizer.MultipleRareDropsRandomizer;
@@ -51,30 +52,38 @@ public class RareDropsEntityListener implements Listener
         	
         	if (entity.getKiller() != null)
         	{  
-        		double multiplier = 1.00;
+        		Double generalMultiplier = 1.00;
         		
         		// Apply base multiplier based on looting enchantment
         		LootingEnchantmentHandler lootingEnchantmentHandler = new LootingEnchantmentHandler();
-        		multiplier = lootingEnchantmentHandler.getMultipler(entity.getKiller());
+        		generalMultiplier = lootingEnchantmentHandler.getMultipler(entity.getKiller());
+        		//generalMultiplier = generalMultiplier * 20.00;
         		
         		// Apply custom multiplier set on one specific entity by another plugin
-        		Double customMultiplier = RareDropsMultiplierData.getInstance().getEntityMutipliers().get(entity.getEntityId());
+        		RareDropsMultipliers customMultiplier = RareDropsMultiplierData.getInstance().getEntityMutipliers().get(entity.getEntityId());
         		
+        		//logger.info("before");
         		if (customMultiplier != null)
         		{
-        			multiplier = multiplier * customMultiplier;
+        			customMultiplier.setLowValueMultiplier(generalMultiplier * customMultiplier.getLowValueMultiplier());
+        			customMultiplier.setMediumValueMultiplier(generalMultiplier * customMultiplier.getMediumValueMultiplier());
+        			customMultiplier.setHighValueMultiplier(generalMultiplier * customMultiplier.getHighValueMultiplier());
+        			
+        			//logger.info(customMultiplier.getLowValueMultiplier() + "," + customMultiplier.getMediumValueMultiplier() + ","+ customMultiplier.getHighValueMultiplier());
         			// Remove it from the list
         			RareDropsMultiplierData.getInstance().removeEntityRareDropsMultiplier(entity.getEntityId());
         		}
-        		
-        		//multiplier = multiplier * 20;
+        		else
+        		{
+        			customMultiplier = new RareDropsMultipliers(generalMultiplier);
+        		}
         		
         		// if multiplier equals 0, the drops are handled elsewhere (by another plugin)
-        		if (multiplier > 0)
+        		if (customMultiplier.getLowValueMultiplier() > 0 || customMultiplier.getMediumValueMultiplier() > 0 || customMultiplier.getHighValueMultiplier() > 0)
         		{
 	        		String entityName = entity.getType().name();
 	        		List<MapWrapper> materials = configWrapper.getMapList("mobs." + entityName + ".materials", new ArrayList<MapWrapper>());
-		        	RareDropsFactory factory = new RareDropsFactory(materials, multiplier);
+	        		RareDropsFactory factory = new RareDropsFactory(materials, customMultiplier);
 		        	RareDropsOdds odds = factory.createOdds();
 		        	
 		        	RareDropsRandomizer randomizer = new MultipleRareDropsRandomizer(odds);
