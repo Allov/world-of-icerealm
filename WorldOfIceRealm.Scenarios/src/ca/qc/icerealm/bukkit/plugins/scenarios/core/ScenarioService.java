@@ -181,4 +181,9 @@ public class ScenarioService {
 		this.logger.info(m);
 	}
 	
+	public void removeEntityFromCustomMonster(int id) {
+		if (_customMonster != null) {
+			_customMonster.removeMonster(id);	
+		}
+	}
 }
