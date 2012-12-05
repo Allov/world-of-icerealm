@@ -16,6 +16,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import ca.qc.icerealm.bukkit.plugins.common.LocationUtil;
+import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultiplierData;
+import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultipliers;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
 
 public class Frontier implements Listener, CommandExecutor {
@@ -68,6 +70,13 @@ public class Frontier implements Listener, CommandExecutor {
 				LivingEntity creature = event.getEntity();
 				int maxHealth = creature.getMaxHealth() + (int)(modifier * creature.getMaxHealth());
 				_scenarioService.addExistingEntity(creature.getEntityId(), maxHealth, true, modifier / _damage);
+				
+				if (LocationUtil.getDistanceBetween(event.getLocation(), _world.getSpawnLocation()) <= _divider) {
+					RareDropsMultiplierData.getInstance().addEntityRareDropsMultiplier(creature.getEntityId(), new RareDropsMultipliers(1.0, 1.0, 0.00));
+				}
+				else {
+					RareDropsMultiplierData.getInstance().addEntityRareDropsMultiplier(creature.getEntityId(), new RareDropsMultipliers(modifier, modifier, modifier));
+				}
 			}
 		}
 	}

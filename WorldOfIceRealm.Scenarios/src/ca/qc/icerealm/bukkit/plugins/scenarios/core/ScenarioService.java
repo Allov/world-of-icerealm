@@ -166,11 +166,11 @@ public class ScenarioService {
 	}
 
 	public void attachRareDropMultiplierToEntity(int id, double d) {
-		
+		/*
 		if (_plugin.getServer().getPluginManager().isPluginEnabled("WoI.RareDrops")) {
 			RareDropsMultiplierData.getInstance().addEntityRareDropsMultiplier(id, d);	
 		}
-		
+		*/
 	}
 	
 	public boolean monsterAlreadyPresent(Integer id) {
