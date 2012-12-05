@@ -1,0 +1,5 @@
+name: WoI.SocketRcon
+main: ca.qc.icerealm.bukkit.plugins.socketrcon.SocketRconPlugin
+version: 0.1.0
+description: World Of IceRealm Socket Rcon
+author: Allov
