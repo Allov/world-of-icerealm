@@ -38,14 +38,14 @@ import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 
 	private Logger _logger = Logger.getLogger("Minecraft");
-	private final int MAX_WAVE = 1;
+	private final int MAX_WAVE = 5;
 	private final int MONSTER_PER_LOCATION = 1;
-	private final long INTERVAL_BETWEEN_ATTACK = 10; // 2 heures
+	private final long INTERVAL_BETWEEN_ATTACK = 7200; // 7200 sec = 2 heures
 	private final long INTERVAL_BETWEEN_WAVE = 10; // 10 secondes;
 	
 	private List<BlockRestore> _restoreBlocks;
 	private List<Location> _locations;
-	private String[] _monsters = new String[] { "zombie" };
+	private String[] _monsters = new String[] { "creeper", "zombie", "spider", "cavespider", "pigzombie" };
 	private int _waveDone = 0;
 	private World _world;
 	private HashSet<Integer> _monstersContainer;
@@ -69,7 +69,7 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 		if (_activated) {
 			for (Location loc : _locations) {
 				String monster = _monsters[RandomUtil.getRandomInt(_monsters.length)];
-				double modifier = ScenarioService.getInstance().calculateHealthModifierWithFrontier(loc, _world.getSpawnLocation()) * (_waveDone + 1);
+				double modifier = ScenarioService.getInstance().calculateHealthModifierWithFrontier(loc, _world.getSpawnLocation()) + ((double)_waveDone / (double)MAX_WAVE);
 				
 				for (int i = 0; i < MONSTER_PER_LOCATION; i++) {
 					Entity e = ScenarioService.getInstance().spawnCreature(_world, loc, EntityUtilities.getEntityType(monster), modifier, false);
@@ -128,11 +128,13 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 				}
 				else {
 					for (Player p : _players) {
-						p.sendMessage(ChatColor.GREEN + "You survived this attack, take the loot and " + ChatColor.YELLOW + "get the fuck out!");
+						p.sendMessage(ChatColor.YELLOW + "You survived this attack, take the loot and " + ChatColor.GREEN + "get the fuck out!");
 					}
 					
-					_loot = LootGenerator.getRandomLoot(1.0); 
-					_loot.generateLoot(getRandomLocation(_lootPoints));	
+					Location lootLocation = getRandomLocation(_lootPoints);
+					double lootModifier = ScenarioService.getInstance().calculateHealthModifierWithFrontier(lootLocation, _world.getSpawnLocation());
+					_loot = LootGenerator.getRandomLoot(lootModifier); 
+					_loot.generateLoot(lootLocation);
 					
 					_activated = false;
 					_started = false;

@@ -8,6 +8,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -222,8 +223,9 @@ public class TreasureHunt implements Event, ZoneObserver, Listener, Runnable {
 				_chestBlock = b;
 				Chest chest = (Chest)b.getState();
 				Inventory inv = chest.getInventory();
-				inv.addItem(new ItemStack(Material.DIAMOND, 4));
-				_logger.info("loot apparead at " + l.toString());
+				int nb = RandomUtils.nextInt(10);				
+				inv.addItem(new ItemStack(Material.DIAMOND, nb > 0 ? nb : 1));
+				_logger.info("loot apparead");
 			}
 			
 			_lootAppeared = true;

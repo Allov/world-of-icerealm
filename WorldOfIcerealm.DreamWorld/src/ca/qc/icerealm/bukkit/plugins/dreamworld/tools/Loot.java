@@ -24,6 +24,10 @@ public class Loot {
 		_content.add(new ItemStack(m, qty));
 	}
 	
+	public void addItemStack(ItemStack stack) {
+		_content.add(stack);
+	}
+	
 	public void generateLoot(Location location) {
 		Location l = new Location(location.getWorld(), location.getX(), location.getY(), location.getZ());
 		Block b = location.getWorld().getBlockAt(l);
