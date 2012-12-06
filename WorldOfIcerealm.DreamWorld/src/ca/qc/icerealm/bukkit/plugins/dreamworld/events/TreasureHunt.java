@@ -26,6 +26,9 @@ import org.bukkit.inventory.ItemStack;
 
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.PinPoint;
+import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.Loot;
+import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.LootGenerator;
+import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 
@@ -46,6 +49,7 @@ public class TreasureHunt implements Event, ZoneObserver, Listener, Runnable {
 	private List<Player> _players;
 	private boolean _canGenerate = true;
 	private String _name;
+	private Loot _loot;
 	
 	public TreasureHunt() {
 		_players = new ArrayList<Player>();
@@ -85,7 +89,7 @@ public class TreasureHunt implements Event, ZoneObserver, Listener, Runnable {
 			Location openedChest = event.getClickedBlock().getLocation();
 
 			try {
-				if (openedChest.getX() == _chestBlock.getLocation().getX() && openedChest.getY() == _chestBlock.getLocation().getY() && openedChest.getZ() == _chestBlock.getLocation().getZ()) {
+				if (openedChest.getX() == _loot.getLocation().getX() && openedChest.getY() == _loot.getLocation().getY() && openedChest.getZ() == _loot.getLocation().getZ()) {
 					
 					if (!_clearLoot) {
 						for (Player p : _players) {
@@ -216,6 +220,10 @@ public class TreasureHunt implements Event, ZoneObserver, Listener, Runnable {
 			_lootLocation = _loots.get(0);
 			
 			Location l = new Location(_source.getWorld(), _source.getX() + _lootLocation.X, _source.getY() + _lootLocation.Y, _source.getZ() + _lootLocation.Z);
+			_loot = LootGenerator.generateTreasureLoot(ScenarioService.getInstance().calculateHealthModifierWithFrontier(l, _source.getWorld().getSpawnLocation()));
+			_loot.generateLoot(l);
+			_logger.info("loot at: " + l.toString());
+			/*
 			Block b = _source.getWorld().getBlockAt(l);
 			b.setType(Material.CHEST);
 			
@@ -227,7 +235,7 @@ public class TreasureHunt implements Event, ZoneObserver, Listener, Runnable {
 				inv.addItem(new ItemStack(Material.DIAMOND, nb > 0 ? nb : 1));
 				_logger.info("loot apparead");
 			}
-			
+			*/
 			_lootAppeared = true;
 		}
 		
@@ -235,7 +243,9 @@ public class TreasureHunt implements Event, ZoneObserver, Listener, Runnable {
 	
 	private void removeLoot() {
 		
-		if (_lootLocation != null) {
+		if (_loot != null) {
+			_loot.removeLoot();
+			/*
 			Location l = new Location(_source.getWorld(), _source.getX() + _lootLocation.X, _source.getY() + _lootLocation.Y, _source.getZ() + _lootLocation.Z);
 			Block b = _source.getWorld().getBlockAt(l);
 			
@@ -246,6 +256,7 @@ public class TreasureHunt implements Event, ZoneObserver, Listener, Runnable {
 			}
 			
 			b.setType(Material.AIR);
+			*/
 			_lootAppeared = false;
 			_clearLoot = false;
 			_logger.info("loot removed!");

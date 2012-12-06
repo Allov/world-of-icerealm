@@ -15,6 +15,7 @@ public class Loot {
 	private Block _chestBlock;
 	private Chest _chestItem;
 	private List<ItemStack> _content;
+	private Location _location;
 	
 	public Loot() {
 		_content = new ArrayList<ItemStack>();
@@ -28,9 +29,14 @@ public class Loot {
 		_content.add(stack);
 	}
 	
+	public Location getLocation() {
+		return _location;
+	}
+	
 	public void generateLoot(Location location) {
-		Location l = new Location(location.getWorld(), location.getX(), location.getY(), location.getZ());
-		Block b = location.getWorld().getBlockAt(l);
+		_location = location;
+		
+		Block b = location.getWorld().getBlockAt(_location);
 		b.setType(Material.CHEST);
 		
 		ItemStack[] stacks = _content.toArray(new ItemStack[_content.size()]);

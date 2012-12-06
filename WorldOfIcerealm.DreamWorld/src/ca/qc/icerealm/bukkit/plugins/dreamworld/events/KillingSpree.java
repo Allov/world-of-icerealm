@@ -10,19 +10,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.PinPoint;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.Loot;
@@ -48,6 +41,8 @@ public class KillingSpree implements Event {
 	private double _maxMonster = 0;
 	private boolean _lootCreated = false;
 	private long _lootDisapearInHours = 2;
+	private Loot _loot;
+	
 
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void monsterDies(EntityDeathEvent event) {
@@ -74,10 +69,12 @@ public class KillingSpree implements Event {
 			PinPoint lootPt = _loots.get(0);
 			
 			Location location = new Location(_world, _location.getX() + lootPt.X, _location.getY() + lootPt.Y, _location.getZ() + lootPt.Z);
-			Loot loot = LootGenerator.getFightingRandomLoot(ScenarioService.getInstance().calculateHealthModifierWithFrontier(location, _world.getSpawnLocation()));
-			loot.generateLoot(location);
+			_loot = LootGenerator.getFightingRandomLoot(ScenarioService.getInstance().calculateHealthModifierWithFrontier(location, _world.getSpawnLocation()));
+			_loot.generateLoot(location);
 			_lootCreated = true;
-			Executors.newSingleThreadScheduledExecutor().schedule(new LootDisapearer(location), _lootDisapearInHours, TimeUnit.HOURS);
+			Executors.newSingleThreadScheduledExecutor().schedule(new LootDisapearer(_loot), _lootDisapearInHours, TimeUnit.HOURS);
+			
+			//_logger.info("loot created at: " + _location.toString());
 			/*
 			Block b = _world.getBlockAt(location);
 			b.setType(Material.CHEST);
@@ -196,21 +193,27 @@ public class KillingSpree implements Event {
 	public String getName() {
 		return _name;
 	}
+	
+	public void setActivate(boolean b) {
+		
+	}
 }
 
 class LootDisapearer implements Runnable {
 	
-	private Location _location;
+	private Loot _loot;
 	
-	public LootDisapearer(Location location) {
-		_location = location;
+	public LootDisapearer(Loot loot) {
+		_loot = loot;
 	}
 
 	@Override
 	public void run() {
 		
 		try {
-			if (_location != null) {
+			if (_loot != null) {
+				_loot.removeLoot();
+				/*
 				Block b = _location.getWorld().getBlockAt(_location);
 				
 				if (b.getType() == Material.CHEST) {
@@ -218,7 +221,7 @@ class LootDisapearer implements Runnable {
 					Inventory inv = chest.getInventory();
 					inv.clear();
 					b.setType(Material.AIR);
-				}
+				}*/
 			}	
 		}
 		catch (NullPointerException ex) {
