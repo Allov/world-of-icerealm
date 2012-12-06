@@ -9,11 +9,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Server;
+import org.bukkit.Sound;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -21,17 +22,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-
 import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.PinPoint;
-import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.BlockContainer;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.BlockRestore;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.Loot;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.LootGenerator;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
-import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 
@@ -42,8 +40,9 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 	private final int MONSTER_PER_LOCATION = 1;
 	private final long INTERVAL_BETWEEN_ATTACK = 7200; // 7200 sec = 2 heures
 	private final long INTERVAL_BETWEEN_WAVE = 10; // 10 secondes;
+	private final boolean USE_ARTILLERY = true;
+	private final int NB_ARTILLERY_SHOT = 5;
 	
-	private List<BlockRestore> _restoreBlocks;
 	private List<Location> _locations;
 	private String[] _monsters = new String[] { "creeper", "zombie", "spider", "cavespider", "pigzombie" };
 	private int _waveDone = 0;
@@ -54,6 +53,7 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 	private boolean _activated;
 	private boolean _started;
 	private Loot _loot;
+	private BlockRestore _blockRestore;
 		
 	public BarbarianRaid() {
 		_monstersContainer = new HashSet<Integer>();
@@ -61,7 +61,6 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 		_players = new ArrayList<Player>();
 		_activated = true;
 		_started = false;
-		_restoreBlocks = new ArrayList<BlockRestore>();
 	}
 		
 	@Override
@@ -75,13 +74,13 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 					Entity e = ScenarioService.getInstance().spawnCreature(_world, loc, EntityUtilities.getEntityType(monster), modifier, false);
 					_monstersContainer.add(e.getEntityId());
 					
+					
 					if (_players.size() > 0) {
 						Collections.shuffle(_players);
 						Monster m = (Monster)e;
 						m.setTarget(_players.get(0));
 					}
 				}
-				
 			}	
 		}
 	}
@@ -90,21 +89,11 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 	public void monsterDies(EntityDeathEvent event) {
 		processKill(event.getEntity().getEntityId());
 	}
-	
+
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void monsterDies(EntityExplodeEvent event) {
-		processKill(event.getEntity().getEntityId());
-		
-		if (_activationZone.isInside(event.getEntity().getLocation())) {
-			HashMap<Location, BlockContainer> _blocks = new HashMap<Location, BlockContainer>();
-			for (Block b : event.blockList()) {
-				BlockContainer bc = new BlockContainer();
-				bc.TypeId = b.getTypeId();
-				bc.TypeData = b.getData();
-				_blocks.put(b.getLocation(), bc);
-			}
-			
-			_restoreBlocks.add(new BlockRestore(_world, _blocks));
+		if (event.getEntity() != null) {
+			processKill(event.getEntity().getEntityId());
 		}
 	}
 	
@@ -121,6 +110,10 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 				}
 				
 				if (_waveDone < MAX_WAVE) {
+					if (USE_ARTILLERY) {
+						Executors.newSingleThreadScheduledExecutor().schedule(new ArtilleryShelling(_activationZone, NB_ARTILLERY_SHOT), INTERVAL_BETWEEN_WAVE - 3, TimeUnit.SECONDS);	
+					}
+					
 					Executors.newSingleThreadScheduledExecutor().schedule(this, INTERVAL_BETWEEN_WAVE, TimeUnit.SECONDS);
 					for (Player p : _players) {
 						p.sendMessage(ChatColor.RED + "Another wave is coming. " + ChatColor.YELLOW + " They look stronger!");
@@ -133,16 +126,14 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 					
 					Location lootLocation = getRandomLocation(_lootPoints);
 					double lootModifier = ScenarioService.getInstance().calculateHealthModifierWithFrontier(lootLocation, _world.getSpawnLocation());
-					_loot = LootGenerator.getRandomLoot(lootModifier); 
+					_loot = LootGenerator.getFightingRandomLoot(lootModifier); 
 					_loot.generateLoot(lootLocation);
 					
 					_activated = false;
 					_started = false;
 					Executors.newSingleThreadScheduledExecutor().schedule(new EventActivator(this), INTERVAL_BETWEEN_ATTACK, TimeUnit.SECONDS);
+					Executors.newSingleThreadScheduledExecutor().schedule(_blockRestore, INTERVAL_BETWEEN_ATTACK, TimeUnit.SECONDS);
 					
-					for (BlockRestore restore : _restoreBlocks) {
-						Executors.newSingleThreadScheduledExecutor().schedule(restore, INTERVAL_BETWEEN_ATTACK, TimeUnit.SECONDS);
-					}
 				}
 			}
 		}
@@ -157,7 +148,6 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 		}
 		return _source;
 	}
-	
 
 	@Override
 	public void playerEntered(Player arg0) {
@@ -165,6 +155,10 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 		arg0.sendMessage("You are in a barbarian camp!!!");
 		if ( _activated && !_started)  {
 			_started = true;
+			
+			if (USE_ARTILLERY) {
+				Executors.newSingleThreadScheduledExecutor().schedule(new ArtilleryShelling(_activationZone, NB_ARTILLERY_SHOT), INTERVAL_BETWEEN_WAVE - 5, TimeUnit.SECONDS);	
+			}
 			Executors.newSingleThreadScheduledExecutor().schedule(this, INTERVAL_BETWEEN_WAVE, TimeUnit.SECONDS);
 		}
 		
@@ -180,14 +174,12 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 	
 	@Override
 	public void setWelcomeMessage(String s) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 
 	@Override
 	public void setEndMessage(String s) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -207,14 +199,22 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 				Location higher = new Location(_world, _source.getX() + zone.get(1).X, _source.getY() + zone.get(1).Y, _source.getZ() +zone.get(1).Z);
 				_activationZone = new WorldZone(lower, higher);
 				ZoneServer.getInstance().addListener(this);
+				_blockRestore = BlockRestore.getBlockRestoreFromWorldZone(_activationZone);
 			}
 		}
 		
 	}
 
 	@Override
+	public void setConfiguration(String config) {
+		
+	}
+
+	@Override
 	public void releaseEvent() {
 		ZoneServer.getInstance().removeListener(this);
+		_loot.removeLoot();
+		_blockRestore.run();
 	}
 
 	@Override
@@ -239,12 +239,10 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 	}
 	
 	public void setActivate(boolean b) {
-		// on fait disparaitre le coffre de loot ici, c'est un reset ici
 		_loot.removeLoot();
 		_waveDone = 0;
 		_activated = b;
 	}
-
 }
 
 class EventActivator implements Runnable {
@@ -260,4 +258,45 @@ class EventActivator implements Runnable {
 		_raid.setActivate(true);
 	}
 	
+}
+
+class ArtilleryShelling implements Runnable {
+
+	private WorldZone _shellingZone;
+	private int _limit;
+	private int _shots;
+	
+	public ArtilleryShelling(WorldZone zone, int shot) {
+		_shellingZone = zone;
+		_shots = shot;
+	}
+	
+	@Override
+	public void run() {
+		_limit++;
+		if (RandomUtils.nextBoolean()) {
+			Location location = _shellingZone.getRandomHighestLocation(_shellingZone.getWorld());
+			Location field = new Location(location.getWorld(), location.getX() + 30, location.getY(), location.getZ() + 30);
+			_shellingZone.getWorld().playSound(field, Sound.GHAST_FIREBALL, 1000, 5);
+			Executors.newSingleThreadScheduledExecutor().schedule(new ArtilleryShot(location), 1000, TimeUnit.MILLISECONDS);
+		}
+		
+		if (_limit < _shots) {
+			Executors.newSingleThreadScheduledExecutor().schedule(this, 500, TimeUnit.MILLISECONDS);
+		}
+	}
+}
+
+class ArtilleryShot implements Runnable {
+
+	private Location _location;
+	
+	public ArtilleryShot(Location location) {
+		_location = location;
+	}
+	
+	@Override
+	public void run() {
+		_location.getWorld().createExplosion(_location, 0.85f, RandomUtils.nextBoolean());
+	}
 }

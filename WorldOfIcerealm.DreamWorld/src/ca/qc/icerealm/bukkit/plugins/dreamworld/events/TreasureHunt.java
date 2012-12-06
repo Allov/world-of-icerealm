@@ -252,6 +252,12 @@ public class TreasureHunt implements Event, ZoneObserver, Listener, Runnable {
 		}
 	}
 
+	@Override
+	public void setConfiguration(String config) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 
 

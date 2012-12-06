@@ -25,6 +25,9 @@ import org.bukkit.inventory.ItemStack;
 
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.PinPoint;
+import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.Loot;
+import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.LootGenerator;
+import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 
@@ -68,9 +71,14 @@ public class KillingSpree implements Event {
 	private void generateLoot() {
 		if (_loots.size() > 0 && !_lootCreated) {
 			Collections.shuffle(_loots);
-			PinPoint loot = _loots.get(0);
+			PinPoint lootPt = _loots.get(0);
 			
-			Location location = new Location(_world, _location.getX() + loot.X, _location.getY() + loot.Y, _location.getZ() + loot.Z);
+			Location location = new Location(_world, _location.getX() + lootPt.X, _location.getY() + lootPt.Y, _location.getZ() + lootPt.Z);
+			Loot loot = LootGenerator.getFightingRandomLoot(ScenarioService.getInstance().calculateHealthModifierWithFrontier(location, _world.getSpawnLocation()));
+			loot.generateLoot(location);
+			_lootCreated = true;
+			Executors.newSingleThreadScheduledExecutor().schedule(new LootDisapearer(location), _lootDisapearInHours, TimeUnit.HOURS);
+			/*
 			Block b = _world.getBlockAt(location);
 			b.setType(Material.CHEST);
 			
@@ -79,9 +87,10 @@ public class KillingSpree implements Event {
 				Inventory inv = chest.getInventory();
 				inv.addItem(new ItemStack(Material.DIAMOND, 4));
 				_lootCreated = true;
-				
 				Executors.newSingleThreadScheduledExecutor().schedule(new LootDisapearer(location), _lootDisapearInHours, TimeUnit.HOURS);
+				
 			}
+			*/
 		}
 	}
 	
@@ -127,6 +136,14 @@ public class KillingSpree implements Event {
 	public void setServer(Server s) {
 		_server = s;
 	}
+	
+
+	@Override
+	public void setConfiguration(String config) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 	@Override
 	public void activateEvent() {
@@ -179,7 +196,6 @@ public class KillingSpree implements Event {
 	public String getName() {
 		return _name;
 	}
-
 }
 
 class LootDisapearer implements Runnable {

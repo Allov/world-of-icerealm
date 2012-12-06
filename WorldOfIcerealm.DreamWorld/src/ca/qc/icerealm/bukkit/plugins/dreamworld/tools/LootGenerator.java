@@ -13,7 +13,7 @@ import ca.qc.icerealm.bukkit.plugins.raredrops.randomizer.RareDropsRandomizer;
 
 public class LootGenerator {
 
-	public static Loot getRandomLoot(double modifier) {
+	public static Loot getFightingRandomLoot(double modifier) {
 		Random numberRandom = new Random();
 		Loot loot = new Loot();
 		
@@ -53,8 +53,11 @@ public class LootGenerator {
 		result.addAll(random.randomize());
 		
 		RareDropsOdds oddsOther = new RareDropsOdds();
+		oddsOther.addOddsItem(new RareDropsOddsItem(50 * modifier, Material.ARROW));
+		oddsOther.addOddsItem(new RareDropsOddsItem(50 * modifier, Material.APPLE));
 		oddsOther.addOddsItem(new RareDropsOddsItem(50 * modifier, Material.APPLE));
 		oddsOther.addOddsItem(new RareDropsOddsItem(50 * modifier, Material.BREAD));
+		oddsOther.addOddsItem(new RareDropsOddsItem(20 * modifier, Material.BOW, enchantOdds));
 		oddsOther.addOddsItem(new RareDropsOddsItem(5 * modifier, Material.BLAZE_POWDER));
 		oddsOther.addOddsItem(new RareDropsOddsItem(5 * modifier, Material.ENDER_PEARL));
 		oddsOther.addOddsItem(new RareDropsOddsItem(5 * modifier, Material.NETHER_WARTS));
@@ -73,6 +76,11 @@ public class LootGenerator {
 				
 				int nb = numberRandom.nextInt(5 * (int)modifier);
 				drop.getItemStack().setAmount(nb > 0 ? nb : 1);
+			}
+			
+			if (drop.getItemStack().getType() == Material.ARROW) {
+				int nb = numberRandom.nextInt(20 * (int)modifier);
+				drop.getItemStack().setAmount(nb > 5 ? nb : 5);
 			}
 			
 			loot.addItemStack(drop.getItemStack());
