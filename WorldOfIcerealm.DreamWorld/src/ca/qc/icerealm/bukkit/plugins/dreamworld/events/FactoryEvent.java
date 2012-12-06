@@ -2,7 +2,7 @@ package ca.qc.icerealm.bukkit.plugins.dreamworld.events;
 
 public class FactoryEvent {
 
-	public static enum EventType { KILLING_SPREE, TREASURE_HUNT }
+	public static enum EventType { KILLING_SPREE, TREASURE_HUNT, BARBARIAN_CAMP }
 	
 	public FactoryEvent() {
 		
@@ -17,6 +17,9 @@ public class FactoryEvent {
 		}
 		else if (name.equalsIgnoreCase("killingspree")) {
 			e = new KillingSpree();
+		}
+		else if (name.equalsIgnoreCase("barbarian")) {
+			e = new BarbarianRaid();
 		}
 		
 		return e;
