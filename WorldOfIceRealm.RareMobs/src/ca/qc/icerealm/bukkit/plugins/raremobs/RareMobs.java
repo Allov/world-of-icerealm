@@ -40,6 +40,8 @@ public class RareMobs extends JavaPlugin
 	@Override
 	public void onEnable() 
 	{	
+		//ScenarioService.getInstance().calculateHealthModifierWithFrontier(Location l, Location s)
+		//ScenarioService.getInstance().removeEntityFromCustomMonster(int id)
 		File file = new File(getDataFolder(), "raremobs.yml"); 
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 
