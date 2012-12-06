@@ -42,11 +42,12 @@ public class KillingSpree implements Event {
 	private boolean _lootCreated = false;
 	private long _lootDisapearInHours = 2;
 	private Loot _loot;
+	private String _config;
 	
 
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void monsterDies(EntityDeathEvent event) {
-		
+
 		if (_monsters.contains(event.getEntity())) {
 			_monsters.remove(event.getEntity());
 			_monsterKilled++;
@@ -136,13 +137,6 @@ public class KillingSpree implements Event {
 	
 
 	@Override
-	public void setConfiguration(String config) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
 	public void activateEvent() {
 
 		for (PinPoint p : _pin) {
@@ -194,8 +188,14 @@ public class KillingSpree implements Event {
 		return _name;
 	}
 	
-	public void setActivate(boolean b) {
-		
+	@Override
+	public String getConfiguration() {
+		return _config;
+	}
+	
+	@Override
+	public void setConfiguration(String config) {
+		_config = config;
 	}
 }
 

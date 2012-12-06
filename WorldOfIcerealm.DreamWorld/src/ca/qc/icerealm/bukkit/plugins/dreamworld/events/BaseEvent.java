@@ -14,6 +14,7 @@ public abstract class BaseEvent implements Event {
 	protected List<PinPoint> _lootPoints;
 	protected List<List<PinPoint>> _zones;
 	protected Server _server;
+	protected String _config;
 
 	@Override
 	public abstract void setWelcomeMessage(String s);
@@ -54,6 +55,16 @@ public abstract class BaseEvent implements Event {
 	@Override
 	public void setActivateZone(List<List<PinPoint>> zones) {
 		_zones = zones;
+	}
+	
+	@Override
+	public String getConfiguration() {
+		return _config;
+	}
+	
+	@Override
+	public void setConfiguration(String config) {
+		_config = config;
 	}
 
 

@@ -3,6 +3,7 @@ package ca.qc.icerealm.bukkit.plugins.dreamworld;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 import org.bukkit.Location;
@@ -23,17 +24,20 @@ public class StructurePattern {
 	public List<List<PinPoint>> ActivationZone;
 	public Location Source;
 	public String Name;
-	public List<String> Events;
+	//public List<String> Events;
+	public HashMap<String, String> ConfigEvents;
 	public Integer GroundLevel = 0;
 	
 	private Event _event;
+	private String _eventConfig;
 	
 	public StructurePattern() {
 		Blocks = new ArrayList<List<BlockUnit[]>>();
 		PinPoints = new ArrayList<PinPoint>();
 		LootPoints = new ArrayList<PinPoint>();
 		ActivationZone = new ArrayList<List<PinPoint>>();
-		Events = new ArrayList<String>();
+		//Events = new ArrayList<String>();
+		ConfigEvents = new HashMap<String,String>();
 		Layer = 0;
 		Name = "";
 		GroundLevel = 0;
@@ -45,6 +49,7 @@ public class StructurePattern {
 		PinPoints = new ArrayList<PinPoint>();
 		LootPoints = new ArrayList<PinPoint>();
 		ActivationZone = new ArrayList<List<PinPoint>>();
+		ConfigEvents = new HashMap<String,String>();
 		Layer = 0;
 		Name = "";
 		GroundLevel = 0;
@@ -120,18 +125,17 @@ public class StructurePattern {
 				pt.Z = Integer.parseInt(line[3]);
 			}
 			LootPoints.add(pt);
-			
-			
 		}
 		
 		while (!(metadata = reader.readLine()).equalsIgnoreCase("[zones]")) {
-			
 			String[] line = metadata.split(":");
-			for (String s : line) {
-				_logger.info(s);
-				Events.add(s);
+			
+			if (line.length == 1) {
+				ConfigEvents.put(line[0], "");
 			}
-						
+			else if (line.length > 1) {
+				ConfigEvents.put(line[0], line[1]);
+			}					
 		}
 		
 		while (!(metadata = reader.readLine()).equalsIgnoreCase("[blocks]")) {
@@ -217,11 +221,11 @@ public class StructurePattern {
 		}
 		
 		buf.append("[events]" + NEW_LINE);
-		
-		for (int i = 0; i < Events.size(); i++) {
-			buf.append(Events.get(i));
+	
+		for (String key : ConfigEvents.keySet()) {
+			buf.append(key + ":" + ConfigEvents.get(key));
 			buf.append(NEW_LINE);
-		}
+		}	
 		
 		buf.append("[zones]" + NEW_LINE);
 		

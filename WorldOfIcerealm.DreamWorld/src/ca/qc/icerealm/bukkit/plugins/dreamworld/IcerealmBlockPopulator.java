@@ -11,6 +11,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
+
+import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -286,13 +288,12 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 	public void generateStructure(StructurePattern pattern, Location location) {
 		
 		if (pattern != null) {
-		
 			// pogne un event au hasard
-			Event event = chooseRandomEvent(pattern.Events);
+			Event event = chooseRandomEvent(pattern.ConfigEvents);
 
 			if (event != null) {
 				pattern.attachEvent(event);
-				writePersistentEvent(event.getName(), pattern.Name, location);
+				writePersistentEvent(event.getName(), pattern.Name, location, event.getConfiguration());
 			}
 			
 			// on genere la structure
@@ -315,6 +316,28 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 		return pattern;
 	}
 	
+	public Event chooseRandomEvent(HashMap<String, String> event) {
+		
+		int index = RandomUtils.nextInt(event.size());
+		String[] keys = event.keySet().toArray(new String[event.keySet().size()]);
+		String randKey = keys[index];
+	
+		Event e = null;
+
+		if (event.size() > 0) {
+			FactoryEvent factory = new FactoryEvent();
+			e = factory.getEvent(randKey);
+
+			if (e != null) {
+				e.setServer(_server);
+				e.setConfiguration(event.get(randKey));
+				_server.getPluginManager().registerEvents(e, _plugin);
+			}
+		}
+		
+		return e;
+	}
+	/*
 	public Event chooseRandomEvent(List<String> event) {
 		Collections.shuffle(event);
 		Event e = null;
@@ -331,13 +354,13 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 		
 		return e;
 	}
-	
-	public void writePersistentEvent(String event, String name, Location location) {
+	*/
+	public void writePersistentEvent(String event, String name, Location location, String config) {
 		if (!event.equalsIgnoreCase("")) {
 			try {
 				BufferedWriter writer = new BufferedWriter(new FileWriter(WORKING_DIR + "events.config", true));
 				StringBuffer buf = new StringBuffer();
-				buf.append(event + ":" + name + ":" + location.getX() + "," + location.getY() + "," + location.getZ());
+				buf.append(event + ":" + name + ":" + location.getX() + "," + location.getY() + "," + location.getZ() + ":" + config);
 				buf.append(System.getProperty("line.separator"));
 				writer.write(buf.toString());
 				writer.flush();

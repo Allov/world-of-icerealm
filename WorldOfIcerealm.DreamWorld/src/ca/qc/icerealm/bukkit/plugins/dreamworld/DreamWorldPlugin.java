@@ -324,7 +324,7 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 					FactoryEvent factory = new FactoryEvent();
 					Event e = factory.getEvent(name);
 					if (e != null) {
-						_pattern.Events.add(name);
+						_pattern.ConfigEvents.put(name, "");
 					}
 					else {
 						throw new Exception("event not found: " + name);

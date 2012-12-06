@@ -20,4 +20,5 @@ public interface Event extends Listener {
 	public void releaseEvent();
 	public String getName();
 	public void setConfiguration(String config);
+	public String getConfiguration();
 }

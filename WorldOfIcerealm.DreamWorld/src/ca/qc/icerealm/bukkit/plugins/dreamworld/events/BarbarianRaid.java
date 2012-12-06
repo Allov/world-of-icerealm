@@ -40,8 +40,8 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 	private final int MONSTER_PER_LOCATION = 1;
 	private final long INTERVAL_BETWEEN_ATTACK = 7200; // 7200 sec = 2 heures
 	private final long INTERVAL_BETWEEN_WAVE = 10; // 10 secondes;
-	private final boolean USE_ARTILLERY = true;
-	private final int NB_ARTILLERY_SHOT = 5;
+	private boolean USE_ARTILLERY = true;
+	private int NB_ARTILLERY_SHOT = 5;
 	
 	private List<Location> _locations;
 	private String[] _monsters = new String[] { "creeper", "zombie", "spider", "cavespider", "pigzombie" };
@@ -65,6 +65,7 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 		
 	@Override
 	public void run() {
+			
 		if (_activated) {
 			for (Location loc : _locations) {
 				String monster = _monsters[RandomUtil.getRandomInt(_monsters.length)];
@@ -203,10 +204,12 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 			}
 		}
 		
-	}
-
-	@Override
-	public void setConfiguration(String config) {
+		// appliquer la config
+		String[] config = getConfiguration().split(",");
+		if (config.length > 1) {
+			NB_ARTILLERY_SHOT = Integer.parseInt(config[0]);
+			USE_ARTILLERY = Boolean.parseBoolean(config[1]);
+		}
 		
 	}
 

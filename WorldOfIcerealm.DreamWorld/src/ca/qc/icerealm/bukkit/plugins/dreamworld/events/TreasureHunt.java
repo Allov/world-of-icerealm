@@ -50,6 +50,7 @@ public class TreasureHunt implements Event, ZoneObserver, Listener, Runnable {
 	private boolean _canGenerate = true;
 	private String _name;
 	private Loot _loot;
+	private String _config;
 	
 	public TreasureHunt() {
 		_players = new ArrayList<Player>();
@@ -265,8 +266,13 @@ public class TreasureHunt implements Event, ZoneObserver, Listener, Runnable {
 
 	@Override
 	public void setConfiguration(String config) {
+		_config = config;
+	}
+
+	@Override
+	public String getConfiguration() {
 		// TODO Auto-generated method stub
-		
+		return _config;
 	}
 
 	
