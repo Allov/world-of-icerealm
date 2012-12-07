@@ -66,11 +66,7 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 			
 		if (_activated) {
 			for (Location loc : _locations) {
-				double locY = _world.getHighestBlockAt((int)loc.getX(), (int)loc.getZ()).getY();
-				if (locY != loc.getY()) {
-					loc = new Location(_world, loc.getX(), locY, loc.getZ());
-				}
-						
+					
 				double modifier = ScenarioService.getInstance().calculateHealthModifierWithFrontier(loc, _world.getSpawnLocation()) + ((double)_waveDone / (double)MAX_WAVE);
 				
 				for (int i = 0; i < MONSTER_PER_LOCATION; i++) {
