@@ -88,7 +88,7 @@ public class ScenarioPlugin extends JavaPlugin {
 		//createMoonTemple();
 		createFrontier();
 		createAmbush();
-		createArena();
+		//createArena();
 	}
 	
 	public void initZoneServer(Server s) {
