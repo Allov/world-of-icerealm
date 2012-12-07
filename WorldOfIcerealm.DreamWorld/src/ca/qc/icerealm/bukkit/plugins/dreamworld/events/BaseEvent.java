@@ -59,7 +59,7 @@ public abstract class BaseEvent implements Event {
 	
 	@Override
 	public String getConfiguration() {
-		return _config;
+		return _config != null ? _config : "";
 	}
 	
 	@Override

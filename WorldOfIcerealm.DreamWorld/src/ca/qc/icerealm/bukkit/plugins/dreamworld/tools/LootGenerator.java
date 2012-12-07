@@ -12,7 +12,7 @@ import ca.qc.icerealm.bukkit.plugins.raredrops.randomizer.MultipleRareDropsRando
 import ca.qc.icerealm.bukkit.plugins.raredrops.randomizer.RareDropsRandomizer;
 
 public class LootGenerator {
-
+	
 	public static Loot getFightingRandomLoot(double modifier) {
 		Random numberRandom = new Random();
 		Loot loot = new Loot();

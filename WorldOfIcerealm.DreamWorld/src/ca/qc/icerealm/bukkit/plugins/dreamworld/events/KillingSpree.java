@@ -55,6 +55,7 @@ public class KillingSpree implements Event {
 			if (_maxMonster > 0) {
 				double percentKilled = _monsterKilled / _maxMonster;
 				_logger.info("percent killed: " + percentKilled + " killed: " + _monsterKilled + " max:" + _maxMonster);
+				
 				if (percentKilled > 0.8 && !_lootCreated) { // 80% de monstres tuées
 					
 					_logger.info("loot created!");

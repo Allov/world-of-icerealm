@@ -8,35 +8,21 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-
-import javax.swing.JTable.PrintMode;
-import javax.swing.text.Highlighter;
-
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
-import org.bukkit.ChunkSnapshot;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.WorldCreator;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.world.ChunkEvent;
-import org.bukkit.event.world.ChunkLoadEvent;
-import org.bukkit.generator.BlockPopulator;
-import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
+
 import ca.qc.icerealm.bukkit.plugins.dreamworld.events.Event;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.events.FactoryEvent;
-import ca.qc.icerealm.bukkit.plugins.dreamworld.events.TreasureHunt;
+
 
 public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExecutor {
 
@@ -84,6 +70,11 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 					Event e = factory.getEvent(eventName);
 					
 					if (e != null) {
+
+						if (event.length > 3) {
+							e.setConfiguration(event[3]);
+						}
+						
 						e.setServer(getServer());
 						e.setSourceLocation(pattern.Source);
 						e.setLootPoints(pattern.LootPoints);
@@ -91,6 +82,8 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 						e.setActivateZone(pattern.ActivationZone);
 						getServer().getPluginManager().registerEvents(e, this);
 						e.activateEvent();
+						_logger.info("[DreamWorld] Loading event: + " + e.getName() + " with config: " + e.getConfiguration() + 
+								     " at: " + pattern.Source.getX() + "," + pattern.Source.getY() + "," + pattern.Source.getZ());
 						_events.add(e);
 					}
 				}
@@ -107,6 +100,7 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 		for (Event e : _events) {
 			e.releaseEvent();
 		}
+		_events.clear();
 	}
 	
 	@Override
@@ -129,7 +123,7 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 					arg0.sendMessage(ChatColor.GREEN + "/dw loot: " + ChatColor.YELLOW + "pin point the loot location");
 					arg0.sendMessage(ChatColor.GREEN + "/dw ground: " + ChatColor.YELLOW + "set ground level of structure");
 					arg0.sendMessage(ChatColor.GREEN + "/dw zone [int] [int] [int]: " + ChatColor.YELLOW + "create an activation zone");
-					arg0.sendMessage(ChatColor.GREEN + "/dw event [string]: " + ChatColor.YELLOW + "add an event to the structure");
+					arg0.sendMessage(ChatColor.GREEN + "/dw event [string] +[string]: " + ChatColor.YELLOW + "add an event to the structure, config optional");
 					arg0.sendMessage(ChatColor.GREEN + "/dw active [boolean]: " + ChatColor.YELLOW + "activate/deactivate random generation");
 					arg0.sendMessage(ChatColor.GREEN + "/dw customscan [boolean]: " + ChatColor.YELLOW + "activate/deactivate custom scanner");
 					arg0.sendMessage(ChatColor.GREEN + "/dw diff [int]: " + ChatColor.YELLOW + "set the height differential (default = 4)");
@@ -217,7 +211,7 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 					BufferedWriter writer = new BufferedWriter(new FileWriter(WORKING_DIR + file));
 					Integer nbLayer = _pattern.Blocks.size();
 					if (nbLayer == 0) {
-						throw new Exception("the structure pattern is not valid. Found 0 layer! Must be > 0");
+						//throw new Exception("the structure pattern is not valid. Found 0 layer! Must be > 0");
 					}
 
 					writer.append(_pattern.toString());
@@ -323,8 +317,11 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 					String name = arg3[1];
 					FactoryEvent factory = new FactoryEvent();
 					Event e = factory.getEvent(name);
-					if (e != null) {
+					if (e != null && arg3.length == 2) {
 						_pattern.ConfigEvents.put(name, "");
+					}
+					else if (e != null && arg3.length > 2){
+						_pattern.ConfigEvents.put(name, arg3[2]);
 					}
 					else {
 						throw new Exception("event not found: " + name);

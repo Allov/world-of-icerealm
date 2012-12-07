@@ -29,7 +29,6 @@ public class StructurePattern {
 	public Integer GroundLevel = 0;
 	
 	private Event _event;
-	private String _eventConfig;
 	
 	public StructurePattern() {
 		Blocks = new ArrayList<List<BlockUnit[]>>();

@@ -2,18 +2,14 @@ package ca.qc.icerealm.bukkit.plugins.dreamworld.events;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
-
-import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Server;
-import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Monster;
@@ -26,6 +22,7 @@ import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.PinPoint;
+import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.ArtilleryShelling;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.BlockRestore;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.Loot;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.LootGenerator;
@@ -36,21 +33,22 @@ import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 
 	private Logger _logger = Logger.getLogger("Minecraft");
-	private final int MAX_WAVE = 5;
-	private final int MONSTER_PER_LOCATION = 1;
-	private final long INTERVAL_BETWEEN_ATTACK = 7200; // 7200 sec = 2 heures
-	private final long INTERVAL_BETWEEN_WAVE = 10; // 10 secondes;
+	private int MAX_WAVE = 5;
+	private int MONSTER_PER_LOCATION = 1;
+	protected long INTERVAL_BETWEEN_ATTACK = 7200; // 7200 sec = 2 heures
+	private long INTERVAL_BETWEEN_WAVE = 10; // 10 secondes;
 	private boolean USE_ARTILLERY = true;
 	private int NB_ARTILLERY_SHOT = 5;
+	private String LIST_MONSTER = "";
 	
 	private List<Location> _locations;
 	private String[] _monsters = new String[] { "creeper", "zombie", "spider", "cavespider", "pigzombie" };
-	private int _waveDone = 0;
+	protected int _waveDone = 0;
 	private World _world;
 	private HashSet<Integer> _monstersContainer;
 	private WorldZone _activationZone;
-	private List<Player> _players;
-	private boolean _activated;
+	protected List<Player> _players;
+	protected boolean _activated;
 	private boolean _started;
 	private Loot _loot;
 	private BlockRestore _blockRestore;
@@ -68,10 +66,15 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 			
 		if (_activated) {
 			for (Location loc : _locations) {
-				String monster = _monsters[RandomUtil.getRandomInt(_monsters.length)];
+				double locY = _world.getHighestBlockAt((int)loc.getX(), (int)loc.getZ()).getY();
+				if (locY != loc.getY()) {
+					loc = new Location(_world, loc.getX(), locY, loc.getZ());
+				}
+						
 				double modifier = ScenarioService.getInstance().calculateHealthModifierWithFrontier(loc, _world.getSpawnLocation()) + ((double)_waveDone / (double)MAX_WAVE);
 				
 				for (int i = 0; i < MONSTER_PER_LOCATION; i++) {
+					String monster = _monsters[RandomUtil.getRandomInt(_monsters.length)];
 					Entity e = ScenarioService.getInstance().spawnCreature(_world, loc, EntityUtilities.getEntityType(monster), modifier, false);
 					_monstersContainer.add(e.getEntityId());
 					
@@ -107,7 +110,7 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 				_waveDone++;
 				
 				for (Player p : _players) {
-					p.sendMessage(ChatColor.GREEN + "This wave has been wiped out!");
+					p.sendMessage(ChatColor.YELLOW + "This wave has been wiped out!");
 				}
 				
 				if (_waveDone < MAX_WAVE) {
@@ -117,24 +120,12 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 					
 					Executors.newSingleThreadScheduledExecutor().schedule(this, INTERVAL_BETWEEN_WAVE, TimeUnit.SECONDS);
 					for (Player p : _players) {
-						p.sendMessage(ChatColor.RED + "Another wave is coming. " + ChatColor.YELLOW + " They look stronger!");
+						p.sendMessage(ChatColor.RED + "Another wave is coming... " + ChatColor.GOLD + " They look stronger!");
 					}
 				}
 				else {
-					for (Player p : _players) {
-						p.sendMessage(ChatColor.YELLOW + "You survived this attack, take the loot and " + ChatColor.GREEN + "get the fuck out!");
-					}
-					
-					Location lootLocation = getRandomLocation(_lootPoints);
-					double lootModifier = ScenarioService.getInstance().calculateHealthModifierWithFrontier(lootLocation, _world.getSpawnLocation());
-					_loot = LootGenerator.getFightingRandomLoot(lootModifier); 
-					_loot.generateLoot(lootLocation);
-					
-					_activated = false;
-					_started = false;
-					Executors.newSingleThreadScheduledExecutor().schedule(new EventActivator(this), INTERVAL_BETWEEN_ATTACK, TimeUnit.SECONDS);
-					Executors.newSingleThreadScheduledExecutor().schedule(_blockRestore, INTERVAL_BETWEEN_ATTACK, TimeUnit.SECONDS);
-					
+					generateLoot();
+					processEndEvent();
 				}
 			}
 		}
@@ -142,7 +133,35 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 		
 	}
 	
-	private Location getRandomLocation(List<PinPoint> pts) {
+	protected void processEndEvent() {
+		_activated = false;
+		_started = false;
+		Executors.newSingleThreadScheduledExecutor().schedule(new EventActivator(this), INTERVAL_BETWEEN_ATTACK, TimeUnit.SECONDS);
+		Executors.newSingleThreadScheduledExecutor().schedule(_blockRestore, INTERVAL_BETWEEN_ATTACK, TimeUnit.SECONDS);
+		_players.clear();
+	}
+	
+	protected void welcomeMessage(Player arg0) {
+		if (!_activated) {
+			arg0.sendMessage(ChatColor.YELLOW + "This camp is deserted, " + ChatColor.GOLD + "come back later.");
+		}
+		else {
+			arg0.sendMessage(ChatColor.YELLOW + "This place looks like a" + ChatColor.GOLD + " barbarian camp...");	
+		}
+	}
+	
+	protected void generateLoot() {
+		Location lootLocation = getRandomLocation(_lootPoints);
+		double lootModifier = ScenarioService.getInstance().calculateHealthModifierWithFrontier(lootLocation, _world.getSpawnLocation());
+		_loot = LootGenerator.getFightingRandomLoot(lootModifier); 
+		_loot.generateLoot(lootLocation);
+		
+		for (Player p : _players) {
+			p.sendMessage(ChatColor.YELLOW + "You survived this attack, " + ChatColor.GREEN + "take the loot" + ChatColor.YELLOW + " and get the fuck out!");
+		}
+	}
+	
+	protected Location getRandomLocation(List<PinPoint> pts) {
 		if (pts.size() > 0) {
 			Collections.shuffle(pts);
 			return new Location(_world, _source.getX() + pts.get(0).X, _source.getY() + pts.get(0).Y, _source.getZ() + pts.get(0).Z);
@@ -152,9 +171,12 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 
 	@Override
 	public void playerEntered(Player arg0) {
-		_players.add(arg0);
-		arg0.sendMessage("You are in a barbarian camp!!!");
-		if ( _activated && !_started)  {
+		if (!_players.contains(arg0)) {
+			_players.add(arg0);
+			welcomeMessage(arg0);
+		}
+		
+		if (_activated && !_started)  {
 			_started = true;
 			
 			if (USE_ARTILLERY) {
@@ -163,14 +185,12 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 			Executors.newSingleThreadScheduledExecutor().schedule(this, INTERVAL_BETWEEN_WAVE, TimeUnit.SECONDS);
 		}
 		
-		if (!_activated) {
-			arg0.sendMessage(ChatColor.YELLOW + "This camp is deserted, " + ChatColor.GOLD + "come back later.");
-		}
+		
 	}
 
 	@Override
 	public void playerLeft(Player arg0) {
-		_players.remove(arg0);
+		//_players.remove(arg0);
 	}
 	
 	@Override
@@ -205,19 +225,36 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 		}
 		
 		// appliquer la config
+		applyConfiguration();
+		
+	}
+	
+	protected void applyConfiguration() {
 		String[] config = getConfiguration().split(",");
-		if (config.length > 1) {
+		if (config.length > 6) {
 			NB_ARTILLERY_SHOT = Integer.parseInt(config[0]);
 			USE_ARTILLERY = Boolean.parseBoolean(config[1]);
+			MAX_WAVE = Integer.parseInt(config[2]);
+			MONSTER_PER_LOCATION = Integer.parseInt(config[3]);
+			INTERVAL_BETWEEN_ATTACK = Long.parseLong(config[4]);
+			INTERVAL_BETWEEN_WAVE = Long.parseLong(config[5]);
+			_monsters = config[6].split(" ");
 		}
-		
+		else {
+			_logger.info("Barbarian raid will use default settings");
+		}
 	}
 
 	@Override
 	public void releaseEvent() {
 		ZoneServer.getInstance().removeListener(this);
-		_loot.removeLoot();
-		_blockRestore.run();
+		if (_loot != null) {
+			_loot.removeLoot();	
+		}
+		if (_blockRestore != null) {
+			_blockRestore.run();	
+		}
+		
 	}
 
 	@Override
@@ -245,11 +282,14 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 		_loot.removeLoot();
 		_waveDone = 0;
 		_activated = b;
+		_logger.info("setActivate: " + b);
 	}
 }
 
+
 class EventActivator implements Runnable {
 
+	private Logger _logger = Logger.getLogger("Minecraft");
 	private BarbarianRaid _raid;
 	
 	public EventActivator(BarbarianRaid r) {
@@ -258,48 +298,8 @@ class EventActivator implements Runnable {
 	
 	@Override
 	public void run() {
+		_logger.info("setActivate event activator");
 		_raid.setActivate(true);
 	}
 	
-}
-
-class ArtilleryShelling implements Runnable {
-
-	private WorldZone _shellingZone;
-	private int _limit;
-	private int _shots;
-	
-	public ArtilleryShelling(WorldZone zone, int shot) {
-		_shellingZone = zone;
-		_shots = shot;
-	}
-	
-	@Override
-	public void run() {
-		_limit++;
-		if (RandomUtils.nextBoolean()) {
-			Location location = _shellingZone.getRandomHighestLocation(_shellingZone.getWorld());
-			Location field = new Location(location.getWorld(), location.getX() + 30, location.getY(), location.getZ() + 30);
-			_shellingZone.getWorld().playSound(field, Sound.GHAST_FIREBALL, 1000, 5);
-			Executors.newSingleThreadScheduledExecutor().schedule(new ArtilleryShot(location), 1000, TimeUnit.MILLISECONDS);
-		}
-		
-		if (_limit < _shots) {
-			Executors.newSingleThreadScheduledExecutor().schedule(this, 500, TimeUnit.MILLISECONDS);
-		}
-	}
-}
-
-class ArtilleryShot implements Runnable {
-
-	private Location _location;
-	
-	public ArtilleryShot(Location location) {
-		_location = location;
-	}
-	
-	@Override
-	public void run() {
-		_location.getWorld().createExplosion(_location, 0.85f, RandomUtils.nextBoolean());
-	}
 }
