@@ -105,6 +105,7 @@ public class AmbushExecutor implements Runnable {
 				EntityType creature = EntityUtilities.getEntityType(_monstersArray[RandomUtil.getRandomInt(_monstersArray.length)]);
 				double health = ScenarioService.getInstance().calculateHealthModifierWithFrontier(newLoc, _world.getSpawnLocation());
 				List<PotionEffect> effects = this.getRandomPotions(health);
+				//_logger.info("ambush health modifier: " + health);
 				Monster m = (Monster)ScenarioService.getInstance().spawnCreature(_world, newLoc, creature, health, false);
 				m.addPotionEffects(effects);
 				m.setTarget(_player);

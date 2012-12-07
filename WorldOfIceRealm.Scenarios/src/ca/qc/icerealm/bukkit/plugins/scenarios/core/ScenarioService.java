@@ -113,6 +113,7 @@ public class ScenarioService {
 		LivingEntity creature = (LivingEntity)this.spawnCreature(w, l, t);
 		_frontier.setActivated(true);
 		int maxHealth = creature.getMaxHealth() + (int)(modifier * creature.getMaxHealth());
+		//logger.info("creature max heatlh: " + creature.getMaxHealth() + " will be at: " + maxHealth);
 		if (_customMonster != null && ((!burn) || (maxHealth != creature.getMaxHealth()))) {
 			_customMonster.addMonster(creature.getEntityId(), maxHealth, burn);
 		}

@@ -53,10 +53,14 @@ public class Frontier implements Listener, CommandExecutor {
 		double distance = LocationUtil.getDistanceBetween(loc, spawn);
 		double modifier = 0.0;
 		
+		/*
 		if (distance > _divider) {
 			modifier = (double)distance / _divider;
 		}
-		
+		*/
+		if (_divider > 0) {
+			modifier = (double)distance / _divider;
+		}
 		return modifier;
 	}
 	
@@ -69,14 +73,16 @@ public class Frontier implements Listener, CommandExecutor {
 			if (modifier > 0 && !_scenarioService.monsterAlreadyPresent(event.getEntity().getEntityId())) {
 				LivingEntity creature = event.getEntity();
 				int maxHealth = creature.getMaxHealth() + (int)(modifier * creature.getMaxHealth());
+				//logger.info("frontier spawn modfiier: " + modifier + "health is: " + creature.getMaxHealth() + " maxhealth is: " + maxHealth);
 				_scenarioService.addExistingEntity(creature.getEntityId(), maxHealth, true, modifier / _damage);
 				
+				/*
 				if (LocationUtil.getDistanceBetween(event.getLocation(), _world.getSpawnLocation()) <= _divider) {
 					RareDropsMultiplierData.getInstance().addEntityRareDropsMultiplier(creature.getEntityId(), new RareDropsMultipliers(1.0, 1.0, 0.00));
 				}
 				else {
 					RareDropsMultiplierData.getInstance().addEntityRareDropsMultiplier(creature.getEntityId(), new RareDropsMultipliers(modifier, modifier, modifier));
-				}
+				}*/
 			}
 		}
 	}
