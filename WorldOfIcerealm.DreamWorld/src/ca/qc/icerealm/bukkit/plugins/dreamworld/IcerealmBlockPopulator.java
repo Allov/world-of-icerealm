@@ -318,23 +318,24 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 	
 	public Event chooseRandomEvent(HashMap<String, String> event) {
 		
-		int index = RandomUtils.nextInt(event.size());
-		String[] keys = event.keySet().toArray(new String[event.keySet().size()]);
-		String randKey = keys[index];
-	
 		Event e = null;
-
+		
 		if (event.size() > 0) {
-			FactoryEvent factory = new FactoryEvent();
-			e = factory.getEvent(randKey);
+			int index = RandomUtils.nextInt(event.size());
+			String[] keys = event.keySet().toArray(new String[event.keySet().size()]);
+			String randKey = keys[index];
+			if (event.size() > 0) {
+				FactoryEvent factory = new FactoryEvent();
+				e = factory.getEvent(randKey);
 
-			if (e != null) {
-				e.setServer(_server);
-				e.setConfiguration(event.get(randKey));
-				_server.getPluginManager().registerEvents(e, _plugin);
+				if (e != null) {
+					e.setServer(_server);
+					e.setConfiguration(event.get(randKey));
+					_server.getPluginManager().registerEvents(e, _plugin);
+				}
 			}
 		}
-		
+
 		return e;
 	}
 	/*

@@ -172,6 +172,8 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 			welcomeMessage(arg0);
 		}
 		
+		
+		
 		if (_activated && !_started)  {
 			_started = true;
 			
@@ -186,7 +188,10 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 
 	@Override
 	public void playerLeft(Player arg0) {
-		//_players.remove(arg0);
+		if (!_activated && !_started) {
+			_players.remove(arg0);	
+		}
+		
 	}
 	
 	@Override
