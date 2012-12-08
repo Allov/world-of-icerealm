@@ -375,7 +375,7 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 					arg0.sendMessage(showMessage(ChatColor.GRAY + "Global cooldown: " + ChatColor.YELLOW + _populator.getGlobalCoolDown()));
 				}
 				if (arg3.length == 3 && arg3[0].contains("globalcooldown")) {
-					_populator.setGlobalCoolDown(Double.parseDouble(arg3[1]));
+					_populator.setGlobalCoolDown(Long.parseLong(arg3[1]));
 					arg0.sendMessage(showMessage(ChatColor.GRAY + "Global cooldown: " + ChatColor.YELLOW + _populator.getGlobalCoolDown()));
 				}
 				

@@ -10,21 +10,28 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.math.RandomUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
+import org.bukkit.entity.Player;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import ca.qc.icerealm.bukkit.plugins.advancedcompass.AdvancedCompass;
+import ca.qc.icerealm.bukkit.plugins.advancedcompass.CustomCompassManager;
 import ca.qc.icerealm.bukkit.plugins.common.LocationUtil;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.events.Event;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.events.FactoryEvent;
+import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.GeneratorActivator;
 
 
 public class IcerealmBlockPopulator extends BlockPopulator {
@@ -43,7 +50,7 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 	private BiomeScanner _defaultScanner;
 	private Location _lastGenerationLocation;
 	private double _minDistanceFromLastGeneration = 0;
-	private double _globalCoolDown = 0;
+	private long _globalCoolDown = 0;
 	private double _lastGenerationTime = 0;
 	
 		
@@ -55,9 +62,8 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 		_scanners = readBiomeScanner();
 		_customScanner = new BiomeScanner("default:50:50:5");
 		_defaultScanner = new BiomeScanner("default:50:50:5"); // scan 50 x 50, diff de +/- 5
-		_globalCoolDown = 60000; // 1 minute
-		
-		_minDistanceFromLastGeneration = 0; // 500m
+		_globalCoolDown = 420000; // 6 minute
+		_minDistanceFromLastGeneration = 500; // 500m
 		_lastGenerationLocation = s.getWorld("world").getSpawnLocation();
 	}
 	
@@ -124,10 +130,9 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 	        if (valid) {
 	        	
 	        	GenerationEvent generation = chooseValidStructure(new Location(world, centerX, minHeightFound, centerZ), desiredWidthX, desiredWidthZ);
-	        	if (generation != null) {
-	        		
-	        		
-	        		
+	        	if (generation != null && _canGenerate) {
+	        		_canGenerate = false;
+	        		_lastGenerationTime = System.currentTimeMillis() + _globalCoolDown;
 	        		generation.NbGeneration++;
 	        		generation.LastLocation.X = centerX;
 	        		generation.LastLocation.Y = minHeightFound;
@@ -135,17 +140,24 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 	        		generation.CoolDown = generation.IntervalCoolDown + System.currentTimeMillis();
 	        		_lastGenerationLocation = new Location(world, centerX, world.getSeaLevel() - 1, centerZ);
 	        		generateStructure(_lastGenerationLocation, generation.Name);
-	        		_lastGenerationTime = System.currentTimeMillis() + _globalCoolDown;
-	        		
-	        		if (_minDistanceFromLastGeneration == 0) {
-	        			_minDistanceFromLastGeneration = 500;
-	        		}
 	        		
 	        		_logger.info("generating structure: " + generation.toString() + " found lowest height at: " + minHeightFound + " and sealevel = " +  world.getSeaLevel());
 	        		writePersistenceGeneration();
+	        		
+	        		Executors.newSingleThreadScheduledExecutor().schedule(new GeneratorActivator(this), _globalCoolDown, TimeUnit.MILLISECONDS);
+	        		
+	        		Player[] players = _server.getOnlinePlayers();
+	        		for (Player p : players)  {
+	        			CustomCompassManager manager = new CustomCompassManager(generation.Name, p);
+	        			manager.setCustomLocation(_lastGenerationLocation, "A Point Of Interest has been discovered!");
+	        		}
 	        	}
 	        }
 		}
+	}
+	
+	public void setActivate(boolean b) {
+		_canGenerate = b;
 	}
 	
 	private int skipVegetation(int x, int z, int height, World w) {
@@ -179,26 +191,30 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 		
 		List<GenerationEvent> possible = new ArrayList<GenerationEvent>();
 		
-		for (GenerationEvent gen : _generatedStructure) {
-			
-			double currentFromSpawn = LocationUtil.getDistanceBetween(location, location.getWorld().getSpawnLocation());
-			
-			Location lastLocation = new Location(location.getWorld(), gen.LastLocation.X, gen.LastLocation.Y, gen.LastLocation.Z);
-			double lastFromSpawn = LocationUtil.getDistanceBetween(lastLocation, location.getWorld().getSpawnLocation());
-			
-			// la derniere generation est plus proche que la place qu'on vient de trouver
-			// et le cooldown est expiré et les dimensions sont corrects
-			if (currentFromSpawn > lastFromSpawn && (currentFromSpawn - lastFromSpawn) > gen.MinDistance && gen.CoolDown < System.currentTimeMillis() &&
-				gen.WidthX < widthX && gen.WidthZ < widthZ) {
+		if (_canGenerate && _lastGenerationTime < System.currentTimeMillis()) {
+			for (GenerationEvent gen : _generatedStructure) {
 				
-				possible.add(gen);
+				double currentFromSpawn = LocationUtil.getDistanceBetween(location, location.getWorld().getSpawnLocation());
+				
+				Location lastLocation = new Location(location.getWorld(), gen.LastLocation.X, gen.LastLocation.Y, gen.LastLocation.Z);
+				double lastFromSpawn = LocationUtil.getDistanceBetween(lastLocation, location.getWorld().getSpawnLocation());
+				
+				// la derniere generation est plus proche que la place qu'on vient de trouver
+				// et le cooldown est expiré et les dimensions sont corrects
+				if (currentFromSpawn > lastFromSpawn && (currentFromSpawn - lastFromSpawn) > gen.MinDistance && gen.CoolDown < System.currentTimeMillis() &&
+					gen.WidthX < widthX && gen.WidthZ < widthZ) {
+					
+					possible.add(gen);
+				}
 			}
+			
+			Collections.shuffle(possible);
+			if (possible.size() > 0) {
+				return possible.get(0);	
+			}	
 		}
 		
-		Collections.shuffle(possible);
-		if (possible.size() > 0) {
-			return possible.get(0);	
-		}
+		
 		
 		return null;
 	}
@@ -422,11 +438,11 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 		_minDistanceFromLastGeneration = use;
 	}
 	
-	public double getGlobalCoolDown() {
+	public long getGlobalCoolDown() {
 		return _globalCoolDown;
 	}
 
-	public void setGlobalCoolDown(double use) {
+	public void setGlobalCoolDown(long use) {
 		_globalCoolDown = use;
 	}
 }
