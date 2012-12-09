@@ -18,6 +18,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.omg.stub.java.rmi._Remote_Stub;
+
 import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
@@ -26,6 +30,7 @@ import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.ArtilleryShelling;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.BlockRestore;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.Loot;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.LootGenerator;
+import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.TimeFormatter;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
@@ -52,9 +57,12 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 	private boolean _started;
 	private Loot _loot;
 	private BlockRestore _blockRestore;
+	protected long _timeForReactivation;
+	private HashSet<Monster> _monstersEntity;
 		
 	public BarbarianRaid() {
 		_monstersContainer = new HashSet<Integer>();
+		_monstersEntity = new HashSet<Monster>();
 		_locations = new ArrayList<Location>();
 		_players = new ArrayList<Player>();
 		_activated = true;
@@ -73,6 +81,7 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 					String monster = _monsters[RandomUtil.getRandomInt(_monsters.length)];
 					Entity e = ScenarioService.getInstance().spawnCreature(_world, loc, EntityUtilities.getEntityType(monster), modifier, false);
 					_monstersContainer.add(e.getEntityId());
+					_monstersEntity.add((Monster)e);
 					
 					
 					if (_players.size() > 0) {
@@ -82,6 +91,42 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 					}
 				}
 			}	
+		}
+	}
+	
+	@EventHandler (priority = EventPriority.NORMAL)
+	public void playerDies(PlayerDeathEvent event) {
+		Player p = event.getEntity();
+		_players.remove(p);
+		
+		if (_players.size() == 0 && _started) {
+			EventActivator activator = new EventActivator(this);
+			activator.run();
+			
+			if (_blockRestore != null) {
+				_blockRestore.run();
+			}
+			for (Monster m : _monstersEntity) { 
+				m.remove();
+			}
+			_monstersContainer.clear();
+			_started = false;
+		}
+	}
+	
+	@EventHandler (priority = EventPriority.NORMAL)
+	public void playerQuit(PlayerQuitEvent event) {
+		Player p = event.getPlayer();
+		_players.remove(p);
+		
+		if (_players.size() == 0 && _started) {
+			processEndEvent();
+			/*
+			for (Monster m : _monstersEntity) { 
+				m.remove();
+			}
+			_monstersContainer.clear();
+			*/
 		}
 	}
 	
@@ -132,6 +177,7 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 	protected void processEndEvent() {
 		_activated = false;
 		_started = false;
+		_timeForReactivation = System.currentTimeMillis() + INTERVAL_BETWEEN_ATTACK * 1000;
 		Executors.newSingleThreadScheduledExecutor().schedule(new EventActivator(this), INTERVAL_BETWEEN_ATTACK, TimeUnit.SECONDS);
 		Executors.newSingleThreadScheduledExecutor().schedule(_blockRestore, INTERVAL_BETWEEN_ATTACK, TimeUnit.SECONDS);
 		_players.clear();
@@ -139,7 +185,7 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 	
 	protected void welcomeMessage(Player arg0) {
 		if (!_activated) {
-			arg0.sendMessage(ChatColor.YELLOW + "This camp is deserted, " + ChatColor.GOLD + "come back later.");
+			arg0.sendMessage(ChatColor.YELLOW + "This camp is deserted, " + ChatColor.GOLD + "come back in " + TimeFormatter.readableTime(_timeForReactivation - System.currentTimeMillis()));
 		}
 		else {
 			arg0.sendMessage(ChatColor.YELLOW + "This place looks like a" + ChatColor.GOLD + " barbarian camp...");	
@@ -280,7 +326,10 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 	}
 	
 	public void setActivate(boolean b) {
-		_loot.removeLoot();
+		if (_loot != null) {
+			_loot.removeLoot();	
+		}
+		
 		_waveDone = 0;
 		_activated = b;
 		_logger.info("setActivate: " + b);

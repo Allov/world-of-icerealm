@@ -7,6 +7,8 @@ import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.TimeFormatter;
+
 public class Arena extends BarbarianRaid {
 	
 	private Logger _logger = Logger.getLogger("Minecraft");
@@ -44,7 +46,7 @@ public class Arena extends BarbarianRaid {
 	
 	protected void welcomeMessage(Player arg0) {
 		if (!_activated) {
-			arg0.sendMessage(ChatColor.YELLOW + "This arena is empty, " + ChatColor.GOLD + "come back later.");
+			arg0.sendMessage(ChatColor.YELLOW + "This arena is empty, " + ChatColor.GOLD + "come back in " + TimeFormatter.readableTime(_timeForReactivation - System.currentTimeMillis()));
 		}
 		else {
 			arg0.sendMessage(ChatColor.YELLOW + "This place looks like a" + ChatColor.GOLD + " gladiator arena...");	
@@ -53,10 +55,8 @@ public class Arena extends BarbarianRaid {
 	
 	public String getName() {
 		return "arena";
-	}
-	
+	}	
 }
-
 
 class ArenaActivator implements Runnable {
 
