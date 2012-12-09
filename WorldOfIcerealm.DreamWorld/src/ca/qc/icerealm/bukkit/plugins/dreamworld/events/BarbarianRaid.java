@@ -9,8 +9,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -74,7 +76,13 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 			
 		if (_activated) {
 			for (Location loc : _locations) {
-					
+
+				Block b = _world.getBlockAt(loc);
+				while (b.getType() != Material.AIR) {
+					loc = new Location(_world, loc.getX(), loc.getY() + 1, loc.getZ());
+					b = _world.getBlockAt(loc);
+				}
+
 				double modifier = ScenarioService.getInstance().calculateHealthModifierWithFrontier(loc, _world.getSpawnLocation()) + ((double)_waveDone / (double)MAX_WAVE);
 				
 				for (int i = 0; i < MONSTER_PER_LOCATION; i++) {
