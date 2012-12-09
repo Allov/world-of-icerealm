@@ -9,17 +9,25 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+import net.minecraft.server.PlayerDistanceComparator;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.PinPoint;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.Loot;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.LootGenerator;
+import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.TimeFormatter;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
@@ -37,14 +45,22 @@ public class KillingSpree implements Event {
 	private List<PinPoint> _loots;
 	private List<PinPoint> _pin;
 	private List<LivingEntity> _monsters;
-	private int _monsterKilled = 0;
+	private Integer _monsterKilled = 0;
 	private double _maxMonster = 0;
 	private boolean _lootCreated = false;
-	private long _lootDisapearInHours = 2;
+	private long _lootDisapearInHours = 7200000;
 	private Loot _loot;
 	private String _config;
-	
+	private List<Player> _players;
+	private List<ZoneTrigger> _triggers;
+	private long _reactivationIn = 0;
+	private int _monsterKilledThreshold = 0;
 
+	public KillingSpree() {
+		_players = new ArrayList<Player>();
+		_triggers = new ArrayList<ZoneTrigger>();		
+	}
+	
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void monsterDies(EntityDeathEvent event) {
 
@@ -53,14 +69,58 @@ public class KillingSpree implements Event {
 			_monsterKilled++;
 			
 			if (_maxMonster > 0) {
-				double percentKilled = _monsterKilled / _maxMonster;
-				_logger.info("percent killed: " + percentKilled + " killed: " + _monsterKilled + " max:" + _maxMonster);
+				double percentKilled = _monsterKilled / _maxMonster;	
+				
+				if (_monsterKilled % _monsterKilledThreshold == 0) {
+					Integer percentMsg = (int)(percentKilled * 100);
+					
+					for (Player p : _players) {
+						p.sendMessage(ChatColor.GOLD + percentMsg.toString() + "%" + ChatColor.RED + " monsters killed!");
+					}
+				}
 				
 				if (percentKilled > 0.8 && !_lootCreated) { // 80% de monstres tuées
 					
-					_logger.info("loot created!");
 					generateLoot();
+					_logger.info("loot created! " + _lootCreated);
+					for (Player p : _players) {
+						p.sendMessage(ChatColor.GREEN + "The" + ChatColor.GOLD + " chest loot " + ChatColor.GREEN + "just appeared!");
+					}
 				}
+			}
+		}
+	}
+	
+	@EventHandler (priority = EventPriority.NORMAL)
+	public void playerDisconnect(PlayerQuitEvent event) {
+		Player player = event.getPlayer();
+		_players.remove(player);
+		//_logger.info("loot created! " + _lootCreated);
+		if (_players.size() == 0 && !_lootCreated) {
+			//_logger.info("player was last to leave!! and the loot not created");
+			Executors.newSingleThreadScheduledExecutor().schedule(new ResetKillingSpree(_loot, _triggers, this), _lootDisapearInHours, TimeUnit.MILLISECONDS);
+			_reactivationIn = System.currentTimeMillis() + _lootDisapearInHours;
+			for (ZoneTrigger z : _triggers) {
+				z.setCoolDown(_reactivationIn);
+				z.setLootCreated(true);
+			}
+		}
+		
+	}
+	
+	@EventHandler (priority = EventPriority.NORMAL)
+	public void playerDies(PlayerDeathEvent event) {
+		Player player = event.getEntity();
+		_players.remove(player);
+		//_logger.info("player removed! size: " + _players.size());
+		if (_players.size() == 0 && !_lootCreated) {
+			for (ZoneTrigger ob : _triggers) {
+				//_logger.info("player size=0; zonetrigger activate to FALSE");
+				ob.setActivate(false);
+			}
+			
+			for (LivingEntity m : _monsters) {
+				m.remove();
 			}
 		}
 	}
@@ -74,7 +134,15 @@ public class KillingSpree implements Event {
 			_loot = LootGenerator.getFightingRandomLoot(ScenarioService.getInstance().calculateHealthModifierWithFrontier(location, _world.getSpawnLocation()));
 			_loot.generateLoot(location);
 			_lootCreated = true;
-			Executors.newSingleThreadScheduledExecutor().schedule(new LootDisapearer(_loot), _lootDisapearInHours, TimeUnit.HOURS);
+			//_logger.info("will reset in 50 sec");
+			//Executors.newSingleThreadScheduledExecutor().schedule(new ResetKillingSpree(_loot, _triggers, this), 50, TimeUnit.SECONDS);
+			
+			Executors.newSingleThreadScheduledExecutor().schedule(new ResetKillingSpree(_loot, _triggers, this), _lootDisapearInHours, TimeUnit.MILLISECONDS);
+			_reactivationIn = System.currentTimeMillis() + _lootDisapearInHours;
+			for (ZoneTrigger z : _triggers) {
+				z.setCoolDown(_reactivationIn);
+				z.setLootCreated(true);
+			}
 			
 			//_logger.info("loot created at: " + _location.toString());
 			/*
@@ -107,6 +175,7 @@ public class KillingSpree implements Event {
 	public void setPinPoints(List<PinPoint> points) {
 		_pin = points;
 		_maxMonster = _pin.size();
+		_monsterKilledThreshold = (int)_maxMonster / 4;
 	}
 
 	@Override
@@ -155,7 +224,7 @@ public class KillingSpree implements Event {
 				String name = points.get(0).Name;
 				WorldZone zone = new WorldZone(lower, higher);
 				
-				List<Runnable> list = new ArrayList<Runnable>();
+				List<MonsterSpawner> list = new ArrayList<MonsterSpawner>();
 				for (MonsterSpawner sp : _spawners) {
 					if (sp.getName().equalsIgnoreCase(name)) {
 						list.add(sp);
@@ -165,7 +234,9 @@ public class KillingSpree implements Event {
 				if (list.size() > 0 && _server != null) {
 					ZoneTrigger trigger = new ZoneTrigger(list, _server);
 					trigger.setWorldZone(zone);
+					trigger.setPlayerList(_players);
 					_zoneObservers.add(trigger);
+					_triggers.add(trigger);
 					ZoneServer.getInstance().addListener(trigger);
 				}
 			}			
@@ -198,14 +269,27 @@ public class KillingSpree implements Event {
 	public void setConfiguration(String config) {
 		_config = config;
 	}
+	
+	public void clearMonsterKilled() {
+		_monsterKilled = 0;
+		_players.clear();
+		_lootCreated = false;
+	}
+
 }
 
-class LootDisapearer implements Runnable {
+class ResetKillingSpree implements Runnable {
 	
+	private Logger _logger = Logger.getLogger("Minecraft");
 	private Loot _loot;
+	private List<ZoneTrigger> _triggers;
+	private KillingSpree _spree;
 	
-	public LootDisapearer(Loot loot) {
+	
+	public ResetKillingSpree(Loot loot, List<ZoneTrigger> t, KillingSpree ks) {
 		_loot = loot;
+		_triggers = t;
+		_spree = ks;
 	}
 
 	@Override
@@ -214,16 +298,15 @@ class LootDisapearer implements Runnable {
 		try {
 			if (_loot != null) {
 				_loot.removeLoot();
-				/*
-				Block b = _location.getWorld().getBlockAt(_location);
-				
-				if (b.getType() == Material.CHEST) {
-					Chest chest = (Chest)b.getState();
-					Inventory inv = chest.getInventory();
-					inv.clear();
-					b.setType(Material.AIR);
-				}*/
 			}	
+			
+			_logger.info("removing loot!");
+			for (ZoneTrigger ob : _triggers) {
+				ob.setActivate(false);
+				ob.setLootCreated(false);
+			}
+						
+			_spree.clearMonsterKilled();
 		}
 		catch (NullPointerException ex) {
 			// on etouffe l'exception
