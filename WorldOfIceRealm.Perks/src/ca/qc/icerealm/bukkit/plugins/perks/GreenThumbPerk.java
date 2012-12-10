@@ -17,11 +17,17 @@ public class GreenThumbPerk implements Listener {
 	public void onPlayerPlanting(BlockPlaceEvent evt) {
 		if ((evt.getBlock().getType().equals(Material.CROPS) ||
 			 evt.getBlock().getType().equals(Material.POTATO) ||
-			 evt.getBlock().getType().equals(Material.CARROT)) && 
+			 evt.getBlock().getType().equals(Material.CARROT) ||
+			 evt.getBlock().getType().equals(Material.NETHER_WARTS)) && 
 			perkService.playerHasPerk(evt.getPlayer(), SettlerPerks.GreenThumbId)) {
 			
 			if (new Random(Calendar.getInstance().getTimeInMillis()).nextInt(5) == 1) {
-				evt.getBlock().setData((byte)7);			
+				
+				if (evt.getBlock().getType().equals(Material.NETHER_WARTS)) {
+					evt.getBlock().setData((byte)3);
+				} else {
+					evt.getBlock().setData((byte)7);
+				}
 			}
 		}
 	}

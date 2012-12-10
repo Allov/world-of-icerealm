@@ -1,0 +1,5 @@
+name: WoI.Trading
+main: ca.qc.icerealm.bukkit.plugins.trading.TradingPlugin
+version: 0.1.0
+description: World Of IceRealm Trading
+author: Allov

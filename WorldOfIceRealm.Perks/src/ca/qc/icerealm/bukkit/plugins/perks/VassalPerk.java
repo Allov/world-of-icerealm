@@ -20,6 +20,7 @@ public class VassalPerk implements Listener {
 			 evt.getBlock().getType().equals(Material.PUMPKIN) ||
 			 evt.getBlock().getType().equals(Material.MELON_BLOCK) ||
 			 evt.getBlock().getType().equals(Material.COCOA) ||
+			 evt.getBlock().getType().equals(Material.NETHER_WARTS) ||
 			 evt.getBlock().getType().equals(Material.SUGAR_CANE_BLOCK)) && 
 			perkService.playerHasPerk(evt.getPlayer(), SettlerPerks.VassalId)) {
 			
@@ -39,6 +40,8 @@ public class VassalPerk implements Listener {
 				stack = new ItemStack(Material.COCOA, 1);
 			} else if (evt.getBlock().getType().equals(Material.SUGAR_CANE_BLOCK)) {
 				stack = new ItemStack(Material.SUGAR_CANE, 1);
+			} else if (evt.getBlock().getType().equals(Material.NETHER_WARTS)) {
+				stack = new ItemStack(Material.NETHER_STALK, 1);
 			}
 			
 			if (stack != null) {

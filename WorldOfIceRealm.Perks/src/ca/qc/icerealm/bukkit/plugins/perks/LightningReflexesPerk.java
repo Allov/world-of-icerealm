@@ -1,5 +1,8 @@
 package ca.qc.icerealm.bukkit.plugins.perks;
 
+import java.util.Calendar;
+import java.util.Random;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,7 +20,9 @@ public class LightningReflexesPerk implements Listener {
 				Player player = (Player)evt.getEntity();
 				
 				if (perkService.playerHasPerk(player, AdventurerPerks.LightningReflexesId)) {
+					if (new Random(Calendar.getInstance().getTimeInMillis()).nextInt(5) == 1) {
 						evt.setCancelled(true);
+					}
 				}
 			}
 		}

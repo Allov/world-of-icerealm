@@ -26,6 +26,11 @@ public class PerksPlugin extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new GreenThumbPerk(), this);
 		getServer().getPluginManager().registerEvents(new MeatShieldPerk(), this);
 		getServer().getPluginManager().registerEvents(new LightningReflexesPerk(), this);
+		getServer().getPluginManager().registerEvents(new BerserkerPerk(), this);
+		getServer().getPluginManager().registerEvents(new PoisonedArrowPerk(), this);
+		getServer().getPluginManager().registerEvents(new LifeLeechPerk(), this);
+		getServer().getPluginManager().registerEvents(new FindWeaknessPerk(), this);
+		getServer().getPluginManager().registerEvents(new LastManStandingPerk(), this);
 		
 		// Other
 		getServer().getPluginManager().registerEvents(PerkService.getInstance(), this);
