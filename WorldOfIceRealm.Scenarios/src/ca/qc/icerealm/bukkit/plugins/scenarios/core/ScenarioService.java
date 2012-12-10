@@ -146,6 +146,13 @@ public class ScenarioService {
 		}
 	}
 	
+	public void updateExistingEntity(Integer id, double modifier, double damage) {
+		if (_customMonster != null) {
+			_customMonster.updateExistingMonster(id, modifier, damage);
+		}
+		
+	}
+	
 	@Deprecated 
 	public Entity spawnCreatureWithPotion(World w, Location l, EntityType t, PotionEffect p, boolean burn) {
 		List<PotionEffect> potions = new ArrayList<PotionEffect>();

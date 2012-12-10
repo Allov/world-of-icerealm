@@ -78,6 +78,19 @@ public class CustomMonsterListener implements Listener {
 		logInfo(c);
 	}
 	
+	
+	public void updateExistingMonster(Integer id, double modifier, double damage) {
+		if (_customMonsters.containsKey(id)) {
+			CustomMonster m = _customMonsters.get(id);
+			// on modifier le health selon le modifier
+			logger.info("modifying health: was " + m.Health + " and now is: " + (int)(m.Health + (m.Health * modifier)));
+			m.Health  = (int)(m.Health + (m.Health * modifier));
+			m.DamageModifier  = (int)(m.DamageModifier + (m.DamageModifier * damage));
+			_customMonsters.put(id, m);
+		}
+	}
+
+	
 	public void removeMonster(Integer entityId) {
 		_customMonsters.remove(entityId);
 	}
