@@ -53,7 +53,6 @@ mobs:
                 odds: 0.10
             -   name: EMERALD
                 odds: 0.50
-                enchantments: low odds 
             -   name: IRON_CHESTPLATE
                 odds: 0.10
                 enchantments: low odds 
@@ -101,6 +100,11 @@ mobs:
             -   name: SHEARS                 # custom rare weapon
                 custom name: scissors
                 odds: 0.15
+                enchantments: sure high odds
+                enchantments as: IRON_SWORD
+            -   name: DIAMOND_HOE                 # custom rare weapon
+                custom name: scythe
+                odds: 0.10
                 enchantments: sure high odds
                 enchantments as: IRON_SWORD
             -   name: BOW
@@ -231,7 +235,12 @@ mobs:
                 custom name: diamond battle axe
                 odds: 0.15
                 enchantments: sure high odds
-                enchantments as: IRON_SWORD    
+                enchantments as: IRON_SWORD  
+            -   name: DIAMOND_HOE                 # custom rare weapon
+                custom name: scythe
+                odds: 0.20
+                enchantments: sure high odds
+                enchantments as: IRON_SWORD  
             -   name: IRON_BOOTS
                 odds: 1.50
                 enchantments: high odds 
@@ -357,6 +366,11 @@ mobs:
                 odds: 30.00
             -   name: EMERALD
                 odds: 25.00
+            -   name: DIAMOND_HOE                 # custom rare weapon
+                custom name: scythe
+                odds: 0.50
+                enchantments: sure high odds
+                enchantments as: IRON_SWORD
     PIG_ZOMBIE:
         materials:         
             -   name: DIAMOND_CHESTPLATE
@@ -472,6 +486,11 @@ mobs:
                 odds: 0.30
                 enchantments: sure high odds
                 enchantments as: IRON_SWORD
+            -   name: DIAMOND_HOE                 # custom rare weapon
+                custom name: scythe
+                odds: 0.20
+                enchantments: sure high odds
+                enchantments as: IRON_SWORD
             -   name: IRON_BOOTS
                 odds: 0.30
                 enchantments: average odds 
@@ -546,7 +565,12 @@ mobs:
                 custom name: diamond battle axe
                 odds: 3.00
                 enchantments: sure high odds
-                enchantments as: IRON_SWORD   
+                enchantments as: IRON_SWORD 
+            -   name: DIAMOND_HOE                 # custom rare weapon
+                custom name: scythe
+                odds: 4.00
+                enchantments: sure high odds
+                enchantments as: IRON_SWORD  
     WITHER:
         materials:
             -   name: GOLDEN_APPLE
