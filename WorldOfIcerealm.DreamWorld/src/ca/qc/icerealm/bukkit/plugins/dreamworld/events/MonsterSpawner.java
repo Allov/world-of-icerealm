@@ -1,9 +1,6 @@
 package ca.qc.icerealm.bukkit.plugins.dreamworld.events;
 
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import org.bukkit.Location;
@@ -25,9 +22,6 @@ public class MonsterSpawner implements Runnable {
 	private String[] _monsters = new String[] { "skeleton", "zombie", "spider", "cavespider", "pigzombie" };
 	private boolean _done = false;
 	private List<LivingEntity> _entity;
-	private long _coolDownInHours = 2;
-	private SpawnerActivator _activator;
-	private ScheduledExecutorService _schedule;
 	
 	public MonsterSpawner(Location loc, String name, List<LivingEntity> entity) {
 		_world = loc.getWorld();
@@ -51,28 +45,16 @@ public class MonsterSpawner implements Runnable {
 			EntityType creature = EntityUtilities.getEntityType(_monsters[RandomUtil.getRandomInt(_monsters.length)]);
 			LivingEntity entity = (LivingEntity)ScenarioService.getInstance().spawnCreature(_world, _location, creature, modifier, false);
 			_entity.add(entity);
-			
-			/*
-			_activator = new SpawnerActivator(this);
-			_schedule = Executors.newSingleThreadScheduledExecutor();
-			//_schedule.schedule(_activator, _coolDownInHours, TimeUnit.HOURS);
-			_schedule.schedule(_activator, 2, TimeUnit.MINUTES);
-			*/
 		}
 	}
 	
 	public void setActivate(boolean b) {
 		_done = b;
-		if (!_done) { // c'est un reset
-			//_logger.info("monsterspawner setActvivate : " + b);
-			//_schedule.shutdown();
-		}
 	}
 	
 	public String getName() {
 		return _name;
 	}
-	
 }
 
 class SpawnerActivator implements Runnable {

@@ -27,7 +27,6 @@ import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.PinPoint;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.Loot;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.LootGenerator;
-import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.TimeFormatter;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
@@ -48,7 +47,7 @@ public class KillingSpree implements Event {
 	private Integer _monsterKilled = 0;
 	private double _maxMonster = 0;
 	private boolean _lootCreated = false;
-	private long _lootDisapearInHours = 7200000;
+	private long _lootDisapearInHours = 7200000; //2 heures de cooldown
 	private Loot _loot;
 	private String _config;
 	private List<Player> _players;
@@ -79,10 +78,8 @@ public class KillingSpree implements Event {
 					}
 				}
 				
-				if (percentKilled > 0.8 && !_lootCreated) { // 80% de monstres tuées
-					
+				if (percentKilled > 0.8 && !_lootCreated) { // 80% de monstres tuées					
 					generateLoot();
-					_logger.info("loot created! " + _lootCreated);
 					for (Player p : _players) {
 						p.sendMessage(ChatColor.GREEN + "The" + ChatColor.GOLD + " chest loot " + ChatColor.GREEN + "just appeared!");
 					}
@@ -95,9 +92,10 @@ public class KillingSpree implements Event {
 	public void playerDisconnect(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		_players.remove(player);
-		//_logger.info("loot created! " + _lootCreated);
+
+		// c'est le dernier joueur a se deconnecté, cool down devient effectif.
 		if (_players.size() == 0 && !_lootCreated) {
-			//_logger.info("player was last to leave!! and the loot not created");
+		
 			Executors.newSingleThreadScheduledExecutor().schedule(new ResetKillingSpree(_loot, _triggers, this), _lootDisapearInHours, TimeUnit.MILLISECONDS);
 			_reactivationIn = System.currentTimeMillis() + _lootDisapearInHours;
 			for (ZoneTrigger z : _triggers) {
@@ -105,17 +103,17 @@ public class KillingSpree implements Event {
 				z.setLootCreated(true);
 			}
 		}
-		
 	}
 	
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void playerDies(PlayerDeathEvent event) {
 		Player player = event.getEntity();
 		_players.remove(player);
-		//_logger.info("player removed! size: " + _players.size());
+		
+		// c'est le dernier joueur a mourir sans avoir réussi le scenario
 		if (_players.size() == 0 && !_lootCreated) {
+			
 			for (ZoneTrigger ob : _triggers) {
-				//_logger.info("player size=0; zonetrigger activate to FALSE");
 				ob.setActivate(false);
 			}
 			
@@ -130,34 +128,19 @@ public class KillingSpree implements Event {
 			Collections.shuffle(_loots);
 			PinPoint lootPt = _loots.get(0);
 			
+			// création du loot
 			Location location = new Location(_world, _location.getX() + lootPt.X, _location.getY() + lootPt.Y, _location.getZ() + lootPt.Z);
 			_loot = LootGenerator.getFightingRandomLoot(ScenarioService.getInstance().calculateHealthModifierWithFrontier(location, _world.getSpawnLocation()));
 			_loot.generateLoot(location);
 			_lootCreated = true;
-			//_logger.info("will reset in 50 sec");
-			//Executors.newSingleThreadScheduledExecutor().schedule(new ResetKillingSpree(_loot, _triggers, this), 50, TimeUnit.SECONDS);
-			
+
+			// on part un thread lorsque le cool down est terminé. Cela reset le scenario
 			Executors.newSingleThreadScheduledExecutor().schedule(new ResetKillingSpree(_loot, _triggers, this), _lootDisapearInHours, TimeUnit.MILLISECONDS);
 			_reactivationIn = System.currentTimeMillis() + _lootDisapearInHours;
 			for (ZoneTrigger z : _triggers) {
 				z.setCoolDown(_reactivationIn);
 				z.setLootCreated(true);
 			}
-			
-			//_logger.info("loot created at: " + _location.toString());
-			/*
-			Block b = _world.getBlockAt(location);
-			b.setType(Material.CHEST);
-			
-			if (b.getType() == Material.CHEST) {
-				Chest chest = (Chest)b.getState();
-				Inventory inv = chest.getInventory();
-				inv.addItem(new ItemStack(Material.DIAMOND, 4));
-				_lootCreated = true;
-				Executors.newSingleThreadScheduledExecutor().schedule(new LootDisapearer(location), _lootDisapearInHours, TimeUnit.HOURS);
-				
-			}
-			*/
 		}
 	}
 	
@@ -235,6 +218,7 @@ public class KillingSpree implements Event {
 					ZoneTrigger trigger = new ZoneTrigger(list, _server);
 					trigger.setWorldZone(zone);
 					trigger.setPlayerList(_players);
+					trigger.setEntities(_monsters);
 					_zoneObservers.add(trigger);
 					_triggers.add(trigger);
 					ZoneServer.getInstance().addListener(trigger);
@@ -296,16 +280,19 @@ class ResetKillingSpree implements Runnable {
 	public void run() {
 		
 		try {
+			
+			// enleve le loot si présent
 			if (_loot != null) {
 				_loot.removeLoot();
 			}	
 			
-			_logger.info("removing loot!");
+			// on active les zones de triggers
 			for (ZoneTrigger ob : _triggers) {
 				ob.setActivate(false);
 				ob.setLootCreated(false);
 			}
 						
+			// on fait le ménage dans les stats
 			_spree.clearMonsterKilled();
 		}
 		catch (NullPointerException ex) {
