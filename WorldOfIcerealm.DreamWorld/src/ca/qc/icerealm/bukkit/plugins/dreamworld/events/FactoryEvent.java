@@ -24,6 +24,9 @@ public class FactoryEvent {
 		else if (name.equalsIgnoreCase("arena")) {
 			e = new Arena();
 		}
+		else if (name.equalsIgnoreCase("infestation")) {
+			e = new InfestationAdapter();
+		}
 		
 		return e;
 	}
