@@ -124,7 +124,7 @@ public class CurrentRareMob
 	{
 		this.currentSubordinateHealth = currentSubordinateHealth;
 	}
-
+	
 	public void clear()
 	{
     	setRareMob(null);

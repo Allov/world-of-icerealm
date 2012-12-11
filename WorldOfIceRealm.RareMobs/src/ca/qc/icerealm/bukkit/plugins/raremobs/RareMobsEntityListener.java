@@ -12,8 +12,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.inventory.ItemStack;
 
 import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
+import ca.qc.icerealm.bukkit.plugins.common.NamedItemStack;
 import ca.qc.icerealm.bukkit.plugins.raredrops.RareDropsChat;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropResult;
 import ca.qc.icerealm.bukkit.plugins.raredrops.randomizer.MultipleRareDropsRandomizer;
@@ -41,7 +43,7 @@ public class RareMobsEntityListener implements Listener
         	
         	// If there's a living rare mob and if he just died
         	if (raremob.getRareMobEntityId() == entity.getEntityId())
-        	{      		
+        	{ 
 	        	RareDropsRandomizer randomizer = new MultipleRareDropsRandomizer(raremob.getRareMob().getRaredropsOdds());
 	        	ArrayList<RareDropResult> items =  randomizer.randomize(); 
 	        	
@@ -49,13 +51,25 @@ public class RareMobsEntityListener implements Listener
 	        	for (int i = 0; i < items.size(); i++)
 	        	{
 	        		RareDropResult raredrop = items.get(i);
-	        		event.getDrops().add(raredrop.getItemStack());
+
+	        		// Also change the name of the item if needed
+	        		if (raredrop.getCustomName() != null && !raredrop.getCustomName().equals(""))
+	        		{
+	        			ItemStack bukkitItem = NamedItemStack.toCraftBukkit(raredrop.getItemStack());
+	        		    NamedItemStack namedItemStack = new NamedItemStack(bukkitItem);
+	        		    namedItemStack.setName(raredrop.getCustomName());
+	        		    event.getDrops().add(bukkitItem);
+	        		}
+	        		else
+	        		{
+	        			event.getDrops().add(raredrop.getItemStack());
+	        		}
 	        	}
 	        	
 	        	// Experience levels will be devided
 	        	event.setDroppedExp(0);
 	        	
-	        	int levels = raremob.getRareMob().getExperienceLevels() / raremob.getFighters().size();
+	        	int levels = (raremob.getRareMob().getExperienceLevels() / raremob.getFighters().size());
 	        	//int money = raremob.getRareMob().getMoney() / raremob.getFighters().size();
 	        	
     			for (Player p : raremob.getFighters())
@@ -77,7 +91,6 @@ public class RareMobsEntityListener implements Listener
 	        	
 	        	List<Entity> nearbyEntities = entity.getNearbyEntities(100, 100, 100);
 	        	
-	        	// Notify the players in range for all obtained rare drops
 	        	for (Entity nearbyEntity : nearbyEntities)
 	        	{
 	        		if (nearbyEntity instanceof Player)

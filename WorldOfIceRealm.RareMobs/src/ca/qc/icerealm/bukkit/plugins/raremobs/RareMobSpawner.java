@@ -18,6 +18,7 @@ import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultiplierData;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultipliers;
 import ca.qc.icerealm.bukkit.plugins.raremobs.data.CurrentRareMob;
 import ca.qc.icerealm.bukkit.plugins.raremobs.data.RareMob;
+import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
 
 public class RareMobSpawner 
 {
@@ -47,9 +48,13 @@ public class RareMobSpawner
 			{
 				LivingEntity mob = (LivingEntity)bukkitServer.getWorld("World").spawnEntity(loc, rareMob.getCreatureType());
 				
+				ScenarioService.getInstance().removeEntityFromCustomMonster(mob.getEntityId());
+				
 				CurrentRareMob currentRareMob = CurrentRareMob.getInstance();
+				currentRareMob.getRareMob().setDistanceMultiplier(ScenarioService.getInstance().calculateHealthModifierWithFrontier(bukkitServer.getWorld("World").getSpawnLocation(), loc));
+						
 				currentRareMob.setRareMobEntityId(mob.getEntityId());
-				currentRareMob.setCurrentHealth(currentRareMob.getRareMob().getHealth());
+				currentRareMob.setCurrentHealth((int) (currentRareMob.getRareMob().getHealth()));			
 						
 				// Cancel base raredrops for this type of monster, we handle the drops ourselves
 				RareDropsMultiplierData.getInstance().addEntityRareDropsMultiplier(mob.getEntityId(), new RareDropsMultipliers(0.00, 0.00, 0.00));
@@ -69,14 +74,14 @@ public class RareMobSpawner
 					for (int i = 0; i < rareMob.getSubordinates().size(); i++)
 					{
 						// Found a location where a mob didn't spawn yet, try 5 times.. if there's still a mob at that position, make it spawn at same location
-						Location locSub = subordinatesZone.getRandomHighestLocation(bukkitServer.getWorld("World"));
+						Location locSub = subordinatesZone.getRandomLocation(bukkitServer.getWorld("World"));
 						int tries = 0;
 						
 						if (locSub != null)						
 						{
 							while (spawnedLocations.contains(locSub) && tries < 5)
 							{
-								locSub = subordinatesZone.getRandomHighestLocation(bukkitServer.getWorld("World"));
+								locSub = subordinatesZone.getRandomLocation(bukkitServer.getWorld("World"));
 								tries++;
 							}
 						}
@@ -87,6 +92,9 @@ public class RareMobSpawner
 						}
 		
 						LivingEntity subordinate = (LivingEntity) bukkitServer.getWorld("World").spawnEntity(locSub, rareMob.getSubordinates().get(i).getCreatureType());	
+						
+						ScenarioService.getInstance().removeEntityFromCustomMonster(subordinate.getEntityId());
+						
 						spawnedLocations.add(locSub.toString());
 						subordinatesIds.add(subordinate.getEntityId());
 						
@@ -103,10 +111,13 @@ public class RareMobSpawner
 	
 	public static void clearCompass(World world)
 	{
-    	for (Player player : world.getPlayers())
-		{
-        	CustomCompassManager manager = new CustomCompassManager("RareMobs", player);
-        	manager.removeCustomLocation();
+		if (RareMobs.server.getPluginManager().isPluginEnabled("WoI.AdvancedCompass")) 
+		{	
+	    	for (Player player : world.getPlayers())
+			{
+	        	CustomCompassManager manager = new CustomCompassManager("RareMobs", player);
+	        	manager.removeCustomLocation();
+			}
 		}
 	}
 

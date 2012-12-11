@@ -19,6 +19,7 @@ public class RareMob
 	private double subordinatesHealthMultiplier = 0;
 	private List<Subordinate> subordinates;
 	private RareDropsOdds raredropsOdds;
+	private double distanceMultiplier = 1.00;
 
 	public String getMobName() 
 	{
@@ -128,5 +129,15 @@ public class RareMob
 	public void setSubordinatesHealthMultiplier(double subordinatesHealthMultiplier) 
 	{
 		this.subordinatesHealthMultiplier = subordinatesHealthMultiplier;
+	}
+
+	public double getDistanceMultiplier() 
+	{
+		return distanceMultiplier;
+	}
+
+	public void setDistanceMultiplier(double distanceMultiplier) 
+	{
+		this.distanceMultiplier = distanceMultiplier;
 	}
 }

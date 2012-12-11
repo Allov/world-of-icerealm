@@ -76,18 +76,21 @@ public class RareMobsTimeObserver implements TimeObserver
 						Location locPlayer = p.getLocation();
 					
 						WorldZone spawnZone = new WorldZone(locPlayer, RareMobs.SPAWN_AROUND_X, RareMobs.SPAWN_AROUND_Y, RareMobs.SPAWN_AROUND_Z);
-						Location loc = spawnZone.getRandomHighestLocation(bukkitServer.getWorld("World"));
+						Location loc = spawnZone.getRandomLocation(bukkitServer.getWorld("World"));
 						
 						// Add a buffer of 1 block in height to make sure it doesn't spawn in a block
 						loc.setY(loc.getY() + 1);
 						
 						// Set the compass so it points on our raremob	
-						for (Player player : bukkitServer.getWorld("World").getPlayers())
-						{
-				        	CustomCompassManager manager = new CustomCompassManager("RareMobs", player);
-				        	manager.setCustomLocation(loc, "Your compass is now pointing at " + ChatColor.RED + spawnedRareMob.getMobName());	
-						}
 						
+						if (bukkitServer.getPluginManager().isPluginEnabled("WoI.AdvancedCompass")) 
+						{							
+							for (Player player : bukkitServer.getWorld("World").getPlayers())
+							{
+					        	CustomCompassManager manager = new CustomCompassManager("RareMobs", player);
+					        	manager.setCustomLocation(loc, "Your compass is now pointing at " + ChatColor.RED + spawnedRareMob.getMobName());	
+							}
+						}
 						current.setRareMobLocation(loc);
 						current.setRareMob(spawnedRareMob);
 						current.setTimeSpawned(System.currentTimeMillis());

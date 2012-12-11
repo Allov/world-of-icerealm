@@ -6,5 +6,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/WorldOfIceRealm.RareDrops"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/WorldOfIceRealm.AdvancedCompass"/>
 	<classpathentry kind="lib" path="D:/workspace/WoIR/Libs/craftbukkit-1.4.5-R0.3-20121201.201145-15.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/WorldOfIceRealm.Scenarios"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

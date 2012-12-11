@@ -62,13 +62,29 @@ public class RareMobsFactory
 				Map<?, ?> temp = mob.getMap();
 				MapWrapper rawards = new MapWrapper((Map<?, ?>)temp.get("rewards"));
 								
-				raremob.setExperienceLevels(rawards.getInt("experienceLevels", 0));
-				raremob.setMoney(rawards.getInt("money", 0));
-				raremob.setHealth(mob.getInt("health", 20));
-				raremob.setStrengthMultiplier(mob.getInt("strength multiplier", 1));
-				raremob.setSubordinatesHealthMultiplier(mob.getDouble("subordinates health multiplier", 1));
-				raremob.setSubordinatesDamageMultiplier(mob.getDouble("subordinates strength multiplier", 1));
+				raremob.setExperienceLevels((int) (rawards.getInt("experienceLevels", 0) * raremob.getDistanceMultiplier()));
+				//raremob.setMoney(rawards.getInt("money", 0));
+				raremob.setHealth((int) (mob.getInt("health", 20) * raremob.getDistanceMultiplier()));		
 				
+				if (raremob.getDistanceMultiplier() == 1)
+				{
+					raremob.setStrengthMultiplier(mob.getInt("strength multiplier", 1));
+				}
+				else
+				{
+					raremob.setStrengthMultiplier(mob.getDouble("strength multiplier", 1) + (raremob.getDistanceMultiplier() * 0.25));
+				}
+				
+				raremob.setSubordinatesHealthMultiplier(mob.getDouble("subordinates health multiplier", 1 * raremob.getDistanceMultiplier()));
+				
+				if (raremob.getDistanceMultiplier() == 1)
+				{
+					raremob.setSubordinatesDamageMultiplier(mob.getDouble("subordinates strength multiplier", 1));
+				}
+				else
+				{
+					raremob.setSubordinatesDamageMultiplier(mob.getDouble("subordinates strength multiplier", 1) + (raremob.getDistanceMultiplier() * 0.25));
+				}
 				// Load subordinates (mobs' friends)
 				ArrayList<Subordinate> subList = new ArrayList<Subordinate>();
 				

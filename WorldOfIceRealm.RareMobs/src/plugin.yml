@@ -1,5 +1,5 @@
 name: WoI.RareMobs
 main: ca.qc.icerealm.bukkit.plugins.raremobs.RareMobs
-version: 0.2.0
+version: 1.0.0
 description: World Of IceRealm rare mobs spawning randomly
 softdepend: [Vault]

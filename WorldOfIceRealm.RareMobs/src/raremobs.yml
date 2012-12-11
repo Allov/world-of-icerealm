@@ -48,6 +48,14 @@ raremobs:
                     odds: 75.00
                 -   name: DIAMOND
                     odds: 3.00
+                -   name: EMERALD
+                    odds: 50.00
+                -   name: EMERALD
+                    odds: 50.00
+                -   name: EMERALD
+                    odds: 50.00
+                -   name: EMERALD
+                    odds: 50.00
         subordinates health multiplier: 3
         subordinates strength multiplier: 2
         subordinates:
@@ -86,6 +94,11 @@ raremobs:
                     odds: 10.00
                     enchantments: sure average odds
                     enchantments as: IRON_SWORD
+                -   name: DIAMOND_HOE                 # custom rare weapon
+                    custom name: scythe
+                    odds: 5.00
+                    enchantments: sure high odds
+                    enchantments as: IRON_SWORD
                 -   name: DIAMOND_SWORD
                     odds: 10.00
                     enchantments: average odds   
@@ -95,6 +108,16 @@ raremobs:
                     odds: 3.00
                 -   name: BLAZE_POWDER
                     odds: 3.00
+                -   name: EMERALD
+                    odds: 50.00
+                -   name: EMERALD
+                    odds: 50.00
+                -   name: EMERALD
+                    odds: 50.00
+                -   name: EMERALD
+                    odds: 50.00
+                -   name: EMERALD
+                    odds: 50.00
         subordinates health multiplier: 3
         subordinates strength multiplier: 3
         subordinates:
@@ -143,7 +166,17 @@ raremobs:
                     odds: 75.00
                 -   name: DIAMOND_SWORD
                     odds: 15.00
-                    enchantments: average odds     
+                    enchantments: average odds
+                -   name: EMERALD
+                    odds: 50.00
+                -   name: EMERALD
+                    odds: 50.00
+                -   name: EMERALD
+                    odds: 50.00
+                -   name: EMERALD
+                    odds: 50.00
+                -   name: EMERALD
+                    odds: 50.00  
         subordinates health multiplier: 2
         subordinates strength multiplier: 2
         subordinates:
@@ -162,6 +195,11 @@ raremobs:
             experienceLevels: 15
             money: 3000    
             drops: 
+                -   name: DIAMOND_HOE                 # custom rare weapon
+                    custom name: scythe
+                    odds: 30.00
+                    enchantments: sure high odds
+                    enchantments as: IRON_SWORD
                 -   name: DIAMOND_BOOTS
                     odds: 5.00
                     enchantments: high odds 
@@ -183,7 +221,19 @@ raremobs:
                     odds: 50.00
                 -   name: DIAMOND_SWORD
                     odds: 10.00
-                    enchantments: average odds      
+                    enchantments: average odds 
+                -   name: EMERALD
+                    odds: 50.00
+                -   name: EMERALD
+                    odds: 50.00
+                -   name: EMERALD
+                    odds: 50.00
+                -   name: EMERALD
+                    odds: 50.00
+                -   name: EMERALD
+                    odds: 50.00
+                -   name: EMERALD
+                    odds: 50.00  
         subordinates health multiplier: 3
         subordinates strength multiplier: 2.5
         subordinates:
@@ -229,6 +279,14 @@ raremobs:
                     odds: 75.00
                 -   name: GOLDEN_CARROT
                     odds: 75.00
+                -   name: EMERALD
+                    odds: 50.00
+                -   name: EMERALD
+                    odds: 50.00
+                -   name: EMERALD
+                    odds: 50.00
+                -   name: EMERALD
+                    odds: 50.00
         subordinates health multiplier: 2
         subordinates strength multiplier: 1
         subordinates:

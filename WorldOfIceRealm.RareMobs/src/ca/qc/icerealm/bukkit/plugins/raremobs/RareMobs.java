@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 //import net.milkbowl.vault.economy.Economy;
 
+import org.bukkit.Server;
 import org.bukkit.configuration.file.YamlConfiguration;
 //import org.bukkit.plugin.PluginManager;
 //import org.bukkit.plugin.RegisteredServiceProvider;
@@ -17,15 +18,17 @@ import ca.qc.icerealm.bukkit.plugins.common.ConfigWrapper;
 import ca.qc.icerealm.bukkit.plugins.common.MapWrapper;
 import ca.qc.icerealm.bukkit.plugins.raremobs.data.RareMobsData;
 import ca.qc.icerealm.bukkit.plugins.raremobs.data.RareMobsFactory;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.CustomMonsterListener;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 
 public class RareMobs extends JavaPlugin
 {
 	public static final int SPAWN_CHECK_INTERVAL = 50000;
-	public static final int SPAWN_AROUND_X = 100;
-	public static final int SPAWN_AROUND_Y = 20;
-	public static final int SPAWN_AROUND_Z = 100;
+	public static final int SPAWN_AROUND_X = 150;
+	public static final int SPAWN_AROUND_Y = 50;
+	public static final int SPAWN_AROUND_Z = 150;
 	public static final int DEFAULT_ODDS_MULTIPLIER = 1;
+	public static Server server;
 	
 	//private PluginManager pluginManager;
 	//private RegisteredServiceProvider<Economy> economyProvider;
@@ -40,8 +43,8 @@ public class RareMobs extends JavaPlugin
 	@Override
 	public void onEnable() 
 	{	
-		//ScenarioService.getInstance().calculateHealthModifierWithFrontier(Location l, Location s)
-		//ScenarioService.getInstance().removeEntityFromCustomMonster(int id)
+		server = this.getServer();
+		
 		File file = new File(getDataFolder(), "raremobs.yml"); 
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 
