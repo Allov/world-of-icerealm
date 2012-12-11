@@ -54,6 +54,9 @@ public class KillingSpree implements Event {
 	private List<ZoneTrigger> _triggers;
 	private long _reactivationIn = 0;
 	private int _monsterKilledThreshold = 0;
+	private GlobalZoneTrigger _globalTrigger;
+	private double _percentNecessary = 0.8;
+	private double _additionalPlayerModifier = 0.25;
 
 	public KillingSpree() {
 		_players = new ArrayList<Player>();
@@ -78,7 +81,7 @@ public class KillingSpree implements Event {
 					}
 				}
 				
-				if (percentKilled > 0.8 && !_lootCreated) { // 80% de monstres tuées					
+				if (percentKilled > _percentNecessary && !_lootCreated) { // 80% de monstres tuées					
 					generateLoot();
 					for (Player p : _players) {
 						p.sendMessage(ChatColor.GREEN + "The" + ChatColor.GOLD + " chest loot " + ChatColor.GREEN + "just appeared!");
@@ -96,12 +99,16 @@ public class KillingSpree implements Event {
 		// c'est le dernier joueur a se deconnecté, cool down devient effectif.
 		if (_players.size() == 0 && !_lootCreated) {
 		
-			Executors.newSingleThreadScheduledExecutor().schedule(new ResetKillingSpree(_loot, _triggers, this), _lootDisapearInHours, TimeUnit.MILLISECONDS);
+			Executors.newSingleThreadScheduledExecutor().schedule(new ResetKillingSpree(_loot, _globalTrigger, this), _lootDisapearInHours, TimeUnit.MILLISECONDS);
 			_reactivationIn = System.currentTimeMillis() + _lootDisapearInHours;
+			_globalTrigger.setCoolDown(_reactivationIn);
+			_globalTrigger.setLootCreated(true);
+			/*
 			for (ZoneTrigger z : _triggers) {
 				z.setCoolDown(_reactivationIn);
 				z.setLootCreated(true);
 			}
+			*/
 		}
 	}
 	
@@ -135,12 +142,17 @@ public class KillingSpree implements Event {
 			_lootCreated = true;
 
 			// on part un thread lorsque le cool down est terminé. Cela reset le scenario
-			Executors.newSingleThreadScheduledExecutor().schedule(new ResetKillingSpree(_loot, _triggers, this), _lootDisapearInHours, TimeUnit.MILLISECONDS);
+			Executors.newSingleThreadScheduledExecutor().schedule(new ResetKillingSpree(_loot, _globalTrigger, this), _lootDisapearInHours, TimeUnit.MILLISECONDS);
 			_reactivationIn = System.currentTimeMillis() + _lootDisapearInHours;
+			_globalTrigger.setCoolDown(_reactivationIn);
+			_globalTrigger.setLootCreated(true);
+			/*
 			for (ZoneTrigger z : _triggers) {
 				z.setCoolDown(_reactivationIn);
 				z.setLootCreated(true);
 			}
+			*/
+			
 		}
 	}
 	
@@ -200,7 +212,7 @@ public class KillingSpree implements Event {
 		
 		
 		for (List<PinPoint> points : _zones) {
-			if (points.size() == 2) {
+			if (points.size() == 2 && !points.get(0).Name.equalsIgnoreCase("general")) {
 				Location lower = new Location(_world, _location.getX() + points.get(0).X, _location.getY() + points.get(0).Y, _location.getZ() + points.get(0).Z);
 				Location higher = new Location(_world, _location.getX() + points.get(1).X, _location.getY() + points.get(1).Y, _location.getZ() + points.get(1).Z);
 				
@@ -217,14 +229,45 @@ public class KillingSpree implements Event {
 				if (list.size() > 0 && _server != null) {
 					ZoneTrigger trigger = new ZoneTrigger(list, _server);
 					trigger.setWorldZone(zone);
-					trigger.setPlayerList(_players);
-					trigger.setEntities(_monsters);
 					_zoneObservers.add(trigger);
 					_triggers.add(trigger);
 					ZoneServer.getInstance().addListener(trigger);
 				}
-			}			
+			}
+			
 		}
+		
+		// on pogne la config!
+		if (getConfiguration() != null && !getConfiguration().equalsIgnoreCase("")) {
+			String configData[] = getConfiguration().split(",");
+			if (configData.length > 1) {
+				try {
+					_percentNecessary = Double.parseDouble(configData[0]);
+					_additionalPlayerModifier = Double.parseDouble(configData[1]);
+				}
+				catch (Exception ex) {
+					_percentNecessary = 0.8;
+					_additionalPlayerModifier = 0.25;
+				}
+			}
+		}
+		
+		for (List<PinPoint> points : _zones) {
+			if (points.size() == 2 && points.get(0).Name.equalsIgnoreCase("general")) {
+				Location lower = new Location(_world, _location.getX() + points.get(0).X, _location.getY() + points.get(0).Y, _location.getZ() + points.get(0).Z);
+				Location higher = new Location(_world, _location.getX() + points.get(1).X, _location.getY() + points.get(1).Y, _location.getZ() + points.get(1).Z);
+				
+				WorldZone zone = new WorldZone(lower, higher);
+				_globalTrigger = new GlobalZoneTrigger(_triggers, _server, _percentNecessary, _additionalPlayerModifier);
+				_globalTrigger.setWorldZone(zone);
+				_globalTrigger.setEntities(_monsters);
+				_globalTrigger.setPlayerList(_players);
+				_zoneObservers.add(_globalTrigger);
+				ZoneServer.getInstance().addListener(_globalTrigger);
+			}
+		}
+		
+		
 	}
 
 	@Override
@@ -266,13 +309,13 @@ class ResetKillingSpree implements Runnable {
 	
 	private Logger _logger = Logger.getLogger("Minecraft");
 	private Loot _loot;
-	private List<ZoneTrigger> _triggers;
+	private GlobalZoneTrigger _trigger;
 	private KillingSpree _spree;
 	
 	
-	public ResetKillingSpree(Loot loot, List<ZoneTrigger> t, KillingSpree ks) {
+	public ResetKillingSpree(Loot loot, GlobalZoneTrigger trigger, KillingSpree ks) {
 		_loot = loot;
-		_triggers = t;
+		_trigger = trigger;
 		_spree = ks;
 	}
 
@@ -286,11 +329,8 @@ class ResetKillingSpree implements Runnable {
 				_loot.removeLoot();
 			}	
 			
-			// on active les zones de triggers
-			for (ZoneTrigger ob : _triggers) {
-				ob.setActivate(false);
-				ob.setLootCreated(false);
-			}
+			_trigger.setActivate(false);
+			_trigger.setLootCreated(false);
 						
 			// on fait le ménage dans les stats
 			_spree.clearMonsterKilled();
