@@ -1,11 +1,16 @@
 package ca.qc.icerealm.bukkit.plugins.dreamworld.events;
 
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Location;
 import org.bukkit.Server;
 
 import ca.qc.icerealm.bukkit.plugins.dreamworld.PinPoint;
+import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneProber;
+import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneServer;
+import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
 
 public abstract class BaseEvent implements Event {
 
@@ -15,6 +20,7 @@ public abstract class BaseEvent implements Event {
 	protected List<List<PinPoint>> _zones;
 	protected Server _server;
 	protected String _config;
+	private ZoneSubject _zoneServer;
 
 	@Override
 	public abstract void setWelcomeMessage(String s);
@@ -65,6 +71,16 @@ public abstract class BaseEvent implements Event {
 	@Override
 	public void setConfiguration(String config) {
 		_config = config;
+	}
+	
+	protected ZoneSubject getZoneSubjectInstance() {
+		if (_zoneServer == null) {
+			_zoneServer = new ScenarioZoneServer(_server);
+			ScenarioZoneProber prober = new ScenarioZoneProber(_zoneServer);
+			Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(prober, 0, 20, TimeUnit.MILLISECONDS);
+		}
+		
+		return _zoneServer;
 	}
 
 

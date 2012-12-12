@@ -34,8 +34,11 @@ import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.Loot;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.LootGenerator;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.TimeFormatter;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
+import ca.qc.icerealm.bukkit.plugins.scenarios.frontier.Frontier;
+import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneServer;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
+import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
 
 public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 
@@ -61,6 +64,7 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 	private BlockRestore _blockRestore;
 	protected long _timeForReactivation;
 	private HashSet<Monster> _monstersEntity;
+	private ZoneSubject _zoneServer;
 		
 	public BarbarianRaid() {
 		_monstersContainer = new HashSet<Integer>();
@@ -88,7 +92,7 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 					playerBasedModifier += ((_players.size() - 1) * 0.25); 
 				}
 
-				double modifier = ScenarioService.getInstance().calculateHealthModifierWithFrontier(loc, _world.getSpawnLocation()) + playerBasedModifier;
+				double modifier = Frontier.getInstance().calculateHealthModifier(loc, _world.getSpawnLocation()) + playerBasedModifier;
 				
 				for (int i = 0; i < MONSTER_PER_LOCATION; i++) {
 					String monster = _monsters[RandomUtil.getRandomInt(_monsters.length)];
@@ -266,6 +270,7 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 	@Override
 	public void activateEvent() {
 		_world = this._source.getWorld();
+		_zoneServer = this.getZoneSubjectInstance();
 		
 		for (int i = 0; i < _pinPoints.size(); i++) {
 			Location l = new Location(_world, _source.getX() + _pinPoints.get(i).X, _source.getY() + _pinPoints.get(i).Y, _source.getZ() + _pinPoints.get(i).Z);
@@ -279,7 +284,7 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 				Location lower = new Location(_world, _source.getX() + zone.get(0).X, _source.getY() + zone.get(0).Y, _source.getZ() +zone.get(0).Z);
 				Location higher = new Location(_world, _source.getX() + zone.get(1).X, _source.getY() + zone.get(1).Y, _source.getZ() +zone.get(1).Z);
 				_activationZone = new WorldZone(lower, higher);
-				ZoneServer.getInstance().addListener(this);
+				_zoneServer.addListener(this);
 				_blockRestore = BlockRestore.getBlockRestoreFromWorldZone(_activationZone);
 			}
 		}
@@ -307,7 +312,7 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 
 	@Override
 	public void releaseEvent() {
-		ZoneServer.getInstance().removeListener(this);
+		_zoneServer.removeListener(this);
 		if (_loot != null) {
 			_loot.removeLoot();	
 		}

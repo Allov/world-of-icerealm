@@ -1,17 +1,10 @@
 package ca.qc.icerealm.bukkit.plugins.dreamworld.events;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-
-import org.bukkit.ChatColor;
 import org.bukkit.Server;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
-import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.TimeFormatter;
-import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 
 public class ZoneTrigger implements ZoneObserver {

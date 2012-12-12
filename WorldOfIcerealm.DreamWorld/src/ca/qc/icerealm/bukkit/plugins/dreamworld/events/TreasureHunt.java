@@ -29,8 +29,11 @@ import ca.qc.icerealm.bukkit.plugins.dreamworld.PinPoint;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.Loot;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.LootGenerator;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
+import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneProber;
+import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneServer;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
+import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
 
 public class TreasureHunt implements Event, ZoneObserver, Listener, Runnable {
 
@@ -51,6 +54,7 @@ public class TreasureHunt implements Event, ZoneObserver, Listener, Runnable {
 	private String _name;
 	private Loot _loot;
 	private String _config;
+	private ZoneSubject _zoneServer;
 	
 	public TreasureHunt() {
 		_players = new ArrayList<Player>();
@@ -60,13 +64,17 @@ public class TreasureHunt implements Event, ZoneObserver, Listener, Runnable {
 	@Override
 	public void activateEvent() {
 		if (_zones != null && _zones.size() == 1 && _source != null && _server != null) {
+			_zoneServer = new ScenarioZoneServer(_server);
+			ScenarioZoneProber prober = new ScenarioZoneProber(_zoneServer);
+			Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(prober, 0, 20, TimeUnit.MILLISECONDS);
+			
 			List<PinPoint> pts = _zones.get(0);
 			World world = _server.getWorld("world");
 			Location lower = new Location(world, _source.getX() + pts.get(0).X, _source.getY() + pts.get(0).Y, _source.getZ() + pts.get(0).Z);
 			Location higher = new Location(world, _source.getX() + pts.get(1).X, _source.getY() + pts.get(1).Y, _source.getZ() + pts.get(1).Z);
 
 			_zone = new WorldZone(lower, higher);
-			ZoneServer.getInstance().addListener(this);
+			_zoneServer.addListener(this);
 		}
 		
 	}
@@ -206,7 +214,7 @@ public class TreasureHunt implements Event, ZoneObserver, Listener, Runnable {
 	@Override
 	public void releaseEvent() {
 		removeLoot();
-		ZoneServer.getInstance().removeListener(this);
+		_zoneServer.removeListener(this);
 	}
 	
 	@Override

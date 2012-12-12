@@ -60,9 +60,9 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 		_scanners = readBiomeScanner();
 		_customScanner = new BiomeScanner("default:50:50:5");
 		_defaultScanner = new BiomeScanner("default:50:50:10"); // scan 50 x 50, diff de +/- 5
-		//_globalCoolDown = 420000; // 6 minute
-		_globalCoolDown = 10000; // 6 minute
-		_minDistanceFromLastGeneration = 20; // 500m
+		_globalCoolDown = 420000; // 6 minute
+		//_globalCoolDown = 10000; // 6 minute
+		_minDistanceFromLastGeneration = 500; // 500m
 		_lastGenerationLocation = s.getWorld("world").getSpawnLocation();
 	}
 	

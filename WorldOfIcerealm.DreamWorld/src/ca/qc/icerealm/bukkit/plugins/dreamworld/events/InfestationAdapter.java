@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.PinPoint;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
+import ca.qc.icerealm.bukkit.plugins.scenarios.frontier.Frontier;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.Infestation;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.InfestationConfiguration;
 import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneServer;
@@ -29,14 +30,13 @@ public class InfestationAdapter extends BaseEvent {
 	@Override
 	public void setEndMessage(String s) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void activateEvent() {
 		
 		JavaPlugin plugin = (JavaPlugin) _server.getPluginManager().getPlugin("WoI.DreamWorld");
-		_zoneServer = ZoneServer.getInstance();
+		_zoneServer = this.getZoneSubjectInstance();
 		
 		// on batit la config de base
 		_configInfestation = new InfestationConfiguration();
@@ -51,7 +51,7 @@ public class InfestationAdapter extends BaseEvent {
 		_configInfestation.Server = _server;
 		_configInfestation.EnterZoneMessage = ChatColor.YELLOW + "You are entering into " + ChatColor.DARK_RED + "an infested zone!";
 		_configInfestation.LeaveZoneMessage =  ChatColor.YELLOW + "You are leaving " + ChatColor.RED + "an infested zone!";
-		_configInfestation.HealthModifier = ScenarioService.getInstance().calculateHealthModifierWithFrontier(_source, _source.getWorld().getSpawnLocation());
+		_configInfestation.HealthModifier = Frontier.getInstance().calculateHealthModifier(_source, _source.getWorld().getSpawnLocation());
 		
 		// on formatte la zone!
 		String[] configData = _config.split(",");
@@ -96,7 +96,7 @@ public class InfestationAdapter extends BaseEvent {
 	@Override
 	public void releaseEvent() {
 		// TODO Auto-generated method stub
-		ZoneServer.getInstance().removeListener(_infestation);
+		_zoneServer.removeListener(_infestation);
 	}
 
 	@Override

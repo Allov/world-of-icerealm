@@ -28,8 +28,10 @@ import ca.qc.icerealm.bukkit.plugins.dreamworld.PinPoint;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.Loot;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.LootGenerator;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
+import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneProber;
+import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneServer;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
-import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
+import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
 
 public class KillingSpree implements Event {
 
@@ -57,10 +59,11 @@ public class KillingSpree implements Event {
 	private GlobalZoneTrigger _globalTrigger;
 	private double _percentNecessary = 0.8;
 	private double _additionalPlayerModifier = 0.25;
+	private ZoneSubject _zoneServer;
 
 	public KillingSpree() {
 		_players = new ArrayList<Player>();
-		_triggers = new ArrayList<ZoneTrigger>();		
+		_triggers = new ArrayList<ZoneTrigger>();
 	}
 	
 	@EventHandler (priority = EventPriority.NORMAL)
@@ -203,7 +206,10 @@ public class KillingSpree implements Event {
 
 	@Override
 	public void activateEvent() {
-
+		_zoneServer = new ScenarioZoneServer(_server);
+		ScenarioZoneProber prober = new ScenarioZoneProber(_zoneServer);
+		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(prober, 0, 20, TimeUnit.MILLISECONDS);
+		
 		for (PinPoint p : _pin) {
 			Location l = new Location(_location.getWorld(), _location.getX() + p.X, _location.getY() + p.Y, _location.getZ() + p.Z);
 			MonsterSpawner spawner = new MonsterSpawner(l, p.Name, _monsters);
@@ -231,7 +237,7 @@ public class KillingSpree implements Event {
 					trigger.setWorldZone(zone);
 					_zoneObservers.add(trigger);
 					_triggers.add(trigger);
-					ZoneServer.getInstance().addListener(trigger);
+					_zoneServer.addListener(trigger);
 				}
 			}
 			
@@ -263,7 +269,7 @@ public class KillingSpree implements Event {
 				_globalTrigger.setEntities(_monsters);
 				_globalTrigger.setPlayerList(_players);
 				_zoneObservers.add(_globalTrigger);
-				ZoneServer.getInstance().addListener(_globalTrigger);
+				_zoneServer.addListener(_globalTrigger);
 			}
 		}
 		
@@ -273,7 +279,7 @@ public class KillingSpree implements Event {
 	@Override
 	public void releaseEvent() {
 		for (ZoneObserver ob : _zoneObservers) {
-			ZoneServer.getInstance().removeListener(ob);
+			_zoneServer.removeListener(ob);
 		}
 		
 		for (LivingEntity l : _monsters) {
