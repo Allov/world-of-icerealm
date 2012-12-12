@@ -2,18 +2,12 @@ package ca.qc.icerealm.bukkit.plugins.scenarios.events;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
-
-import net.minecraft.server.PlayerDistanceComparator;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -22,37 +16,28 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.Loot;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.LootGenerator;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PinPoint;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.ScenarioServerProxy;
-import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneProber;
-import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneServer;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
 
-public class KillingSpree implements Event {
+public class KillingSpree extends BaseEvent {
 
 	private Logger _logger = Logger.getLogger("Minecraft");
 	private World _world;
-	private Location _location;
 	private List<MonsterSpawner> _spawners;
 	private List<ZoneObserver> _zoneObservers;
-	private Server _server;
 	private String _name = "killingspree";
-	private List<List<PinPoint>> _zones;
-	private List<PinPoint> _loots;
-	private List<PinPoint> _pin;
 	private List<LivingEntity> _monsters;
 	private Integer _monsterKilled = 0;
 	private double _maxMonster = 0;
 	private boolean _lootCreated = false;
 	private long _lootDisapearInHours = 7200000; //2 heures de cooldown
 	private Loot _loot;
-	private String _config;
 	private List<Player> _players;
 	private List<ZoneTrigger> _triggers;
 	private long _reactivationIn = 0;
@@ -135,12 +120,12 @@ public class KillingSpree implements Event {
 	}
 	
 	private void generateLoot() {
-		if (_loots.size() > 0 && !_lootCreated) {
-			Collections.shuffle(_loots);
-			PinPoint lootPt = _loots.get(0);
+		if (_lootPoints.size() > 0 && !_lootCreated) {
+			Collections.shuffle(_lootPoints);
+			PinPoint lootPt = _lootPoints.get(0);
 			
 			// création du loot
-			Location location = new Location(_world, _location.getX() + lootPt.X, _location.getY() + lootPt.Y, _location.getZ() + lootPt.Z);
+			Location location = new Location(_world, _source.getX() + lootPt.X, _source.getY() + lootPt.Y, _source.getZ() + lootPt.Z);
 			_loot = LootGenerator.getFightingRandomLoot(ScenarioService.getInstance().calculateHealthModifierWithFrontier(location, _world.getSpawnLocation()));
 			_loot.generateLoot(location);
 			_lootCreated = true;
@@ -156,61 +141,32 @@ public class KillingSpree implements Event {
 				z.setLootCreated(true);
 			}
 			*/
-			
 		}
-	}
-	
-	@Override
-	public void setSourceLocation(Location source) {
-		// TODO Auto-generated method stub
-		_location = source;
-		_world = source.getWorld();
-		_spawners = new ArrayList<MonsterSpawner>();
-		_zoneObservers = new ArrayList<ZoneObserver>();
-		_monsters = new ArrayList<LivingEntity>();
-	}
-	
-	@Override
-	public void setPinPoints(List<PinPoint> points) {
-		_pin = points;
-		_maxMonster = _pin.size();
-		_monsterKilledThreshold = (int)_maxMonster / 4;
-	}
-
-	@Override
-	public void setLootPoints(List<PinPoint> loots) {
-		_loots = loots;
-	}
-
-	@Override
-	public void setActivateZone(List<List<PinPoint>> zones) {
-		_zones = zones;
 	}
 
 	@Override
 	public void setWelcomeMessage(String s) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void setEndMessage(String s) {
 		// TODO Auto-generated method stub
-		
 	}
-
-	@Override
-	public void setServer(Server s) {
-		_server = s;
-	}
-	
 
 	@Override
 	public void activateEvent() {
 		_zoneServer = ScenarioServerProxy.getInstance().getZoneServer();
+		_world = _source.getWorld();
+		_spawners = new ArrayList<MonsterSpawner>();
+		_zoneObservers = new ArrayList<ZoneObserver>();
+		_monsters = new ArrayList<LivingEntity>();
 		
-		for (PinPoint p : _pin) {
-			Location l = new Location(_location.getWorld(), _location.getX() + p.X, _location.getY() + p.Y, _location.getZ() + p.Z);
+		_maxMonster = _pinPoints.size();
+		_monsterKilledThreshold = (int)_maxMonster / 4;
+		
+		for (PinPoint p : _pinPoints) {
+			Location l = new Location(_source.getWorld(), _source.getX() + p.X, _source.getY() + p.Y, _source.getZ() + p.Z);
 			MonsterSpawner spawner = new MonsterSpawner(l, p.Name, _monsters);
 			_spawners.add(spawner);
 		}
@@ -218,8 +174,8 @@ public class KillingSpree implements Event {
 		
 		for (List<PinPoint> points : _zones) {
 			if (points.size() == 2 && !points.get(0).Name.equalsIgnoreCase("general")) {
-				Location lower = new Location(_world, _location.getX() + points.get(0).X, _location.getY() + points.get(0).Y, _location.getZ() + points.get(0).Z);
-				Location higher = new Location(_world, _location.getX() + points.get(1).X, _location.getY() + points.get(1).Y, _location.getZ() + points.get(1).Z);
+				Location lower = new Location(_world, _source.getX() + points.get(0).X, _source.getY() + points.get(0).Y, _source.getZ() + points.get(0).Z);
+				Location higher = new Location(_world, _source.getX() + points.get(1).X, _source.getY() + points.get(1).Y, _source.getZ() + points.get(1).Z);
 				
 				String name = points.get(0).Name;
 				WorldZone zone = new WorldZone(lower, higher);
@@ -259,8 +215,8 @@ public class KillingSpree implements Event {
 		
 		for (List<PinPoint> points : _zones) {
 			if (points.size() == 2 && points.get(0).Name.equalsIgnoreCase("general")) {
-				Location lower = new Location(_world, _location.getX() + points.get(0).X, _location.getY() + points.get(0).Y, _location.getZ() + points.get(0).Z);
-				Location higher = new Location(_world, _location.getX() + points.get(1).X, _location.getY() + points.get(1).Y, _location.getZ() + points.get(1).Z);
+				Location lower = new Location(_world, _source.getX() + points.get(0).X, _source.getY() + points.get(0).Y, _source.getZ() + points.get(0).Z);
+				Location higher = new Location(_world, _source.getX() + points.get(1).X, _source.getY() + points.get(1).Y, _source.getZ() + points.get(1).Z);
 				
 				WorldZone zone = new WorldZone(lower, higher);
 				_globalTrigger = new GlobalZoneTrigger(_triggers, _server, _percentNecessary, _additionalPlayerModifier);
@@ -292,22 +248,11 @@ public class KillingSpree implements Event {
 		return _name;
 	}
 	
-	@Override
-	public String getConfiguration() {
-		return _config;
-	}
-	
-	@Override
-	public void setConfiguration(String config) {
-		_config = config;
-	}
-	
 	public void clearMonsterKilled() {
 		_monsterKilled = 0;
 		_players.clear();
 		_lootCreated = false;
 	}
-
 }
 
 class ResetKillingSpree implements Runnable {

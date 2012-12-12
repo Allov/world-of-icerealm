@@ -195,6 +195,7 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 		_activated = false;
 		_started = false;
 		_timeForReactivation = System.currentTimeMillis() + INTERVAL_BETWEEN_ATTACK * 1000;
+		this.sendEventCompleted(_players, Frontier.getInstance().calculateHealthModifier(_source, _world.getSpawnLocation()));			
 		Executors.newSingleThreadScheduledExecutor().schedule(new EventActivator(this), INTERVAL_BETWEEN_ATTACK, TimeUnit.SECONDS);
 		Executors.newSingleThreadScheduledExecutor().schedule(_blockRestore, INTERVAL_BETWEEN_ATTACK, TimeUnit.SECONDS);
 		_players.clear();

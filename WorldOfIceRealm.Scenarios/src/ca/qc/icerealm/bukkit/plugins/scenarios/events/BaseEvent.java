@@ -1,8 +1,10 @@
 package ca.qc.icerealm.bukkit.plugins.scenarios.events;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.Server;
+import org.bukkit.entity.Player;
 
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PinPoint;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.ScenarioServerProxy;
@@ -17,6 +19,7 @@ public abstract class BaseEvent implements Event {
 	protected Server _server;
 	protected String _config;
 	private ZoneSubject _zoneServer;
+	private List<EventListener> _eventListener;
 
 	@Override
 	public abstract void setWelcomeMessage(String s);
@@ -34,6 +37,25 @@ public abstract class BaseEvent implements Event {
 	public abstract String getName();
 	
 	@Override
+	public void addEventListener(EventListener l) {
+		if (_eventListener == null) {
+			_eventListener = new ArrayList<EventListener>();
+		}
+		
+		_eventListener.add(l);
+	}
+	
+	protected List<EventListener> getListeners() {
+		return _eventListener != null ? _eventListener : new ArrayList<EventListener>(); 
+	}
+	
+	protected void sendEventCompleted(List<Player> player, double modifier) {
+		for (EventListener event : getListeners()) {
+			event.eventCompleted(player, modifier);
+		}
+	}
+	
+	@Override
 	public void setSourceLocation(Location source) {
 		_source = source;
 	}
@@ -48,7 +70,6 @@ public abstract class BaseEvent implements Event {
 		_lootPoints = loots;
 	}
 	
-
 	@Override
 	public void setServer(Server s) {
 		_server = s;

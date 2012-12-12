@@ -1,53 +1,37 @@
 package ca.qc.icerealm.bukkit.plugins.scenarios.events;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
-
-import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.Loot;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.LootGenerator;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PinPoint;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.ScenarioServerProxy;
-import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneProber;
-import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneServer;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
-import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
 
-public class TreasureHunt implements Event, ZoneObserver, Listener, Runnable {
+public class TreasureHunt extends BaseEvent implements ZoneObserver, Listener, Runnable {
 
 	private Logger _logger = Logger.getLogger("Minecraft");
 	private final long MS_MINECRAFT_HOUR = 50;
-	private Location _source;
 	private PinPoint _lootLocation; 
-	private List<PinPoint> _loots;
-	private List<List<PinPoint>> _zones;
-	private Server _server;
 	private WorldZone _zone;
 	private boolean _lootAppeared = false;
-	private Block _chestBlock;
 	private int _nbPlayers = 0;
 	private boolean _clearLoot = false;
 	private List<Player> _players;
@@ -116,27 +100,6 @@ public class TreasureHunt implements Event, ZoneObserver, Listener, Runnable {
 		}
 		
 	}
-	
-	@Override
-	public void setSourceLocation(Location source) {
-		_source = source;
-	}
-
-	@Override
-	public void setPinPoints(List<PinPoint> points) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setLootPoints(List<PinPoint> loots) {
-		_loots = loots;	
-	}
-
-	@Override
-	public void setActivateZone(List<List<PinPoint>> zones) {
-		_zones = zones;		
-	}
 
 	@Override
 	public void setWelcomeMessage(String s) {
@@ -148,11 +111,6 @@ public class TreasureHunt implements Event, ZoneObserver, Listener, Runnable {
 	public void setEndMessage(String s) {
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public void setServer(Server s) {
-		_server = s;		
 	}
 
 	@Override
@@ -223,9 +181,9 @@ public class TreasureHunt implements Event, ZoneObserver, Listener, Runnable {
 	
 	private void generateLoot() {
 		
-		if (_loots.size() > 0) {
-			Collections.shuffle(_loots);
-			_lootLocation = _loots.get(0);
+		if (_lootPoints.size() > 0) {
+			Collections.shuffle(_lootPoints);
+			_lootLocation = _lootPoints.get(0);
 			
 			Location l = new Location(_source.getWorld(), _source.getX() + _lootLocation.X, _source.getY() + _lootLocation.Y, _source.getZ() + _lootLocation.Z);
 			_loot = LootGenerator.generateTreasureLoot(ScenarioService.getInstance().calculateHealthModifierWithFrontier(l, _source.getWorld().getSpawnLocation()));
@@ -270,20 +228,10 @@ public class TreasureHunt implements Event, ZoneObserver, Listener, Runnable {
 			_logger.info("loot removed!");
 		}
 	}
-
-	@Override
-	public void setConfiguration(String config) {
-		_config = config;
-	}
-
+	
 	@Override
 	public String getConfiguration() {
 		// TODO Auto-generated method stub
 		return _config;
 	}
-
-	
-
-
-
 }
