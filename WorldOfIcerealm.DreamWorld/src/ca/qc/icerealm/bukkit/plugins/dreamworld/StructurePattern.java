@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.logging.Logger;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import ca.qc.icerealm.bukkit.plugins.dreamworld.events.Event;
+
+import ca.qc.icerealm.bukkit.plugins.scenarios.events.Event;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PinPoint;
 
 public class StructurePattern {
 	

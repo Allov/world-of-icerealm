@@ -18,10 +18,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-
-
-import ca.qc.icerealm.bukkit.plugins.dreamworld.events.Event;
-import ca.qc.icerealm.bukkit.plugins.dreamworld.events.FactoryEvent;
+import ca.qc.icerealm.bukkit.plugins.scenarios.events.Event;
+import ca.qc.icerealm.bukkit.plugins.scenarios.events.FactoryEvent;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PinPoint;
 
 
 public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExecutor {
@@ -35,7 +34,7 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 	private List<Event> _events;
 	
 	@Override
-	public void onEnable() {
+	public void onEnable() {	
 		getServer().getPluginManager().registerEvents(this, this);
 		getCommand("dw").setExecutor(this);
 		World myWorld = getServer().getWorld("world");

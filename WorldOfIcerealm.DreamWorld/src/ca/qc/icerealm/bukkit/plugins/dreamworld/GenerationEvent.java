@@ -2,6 +2,8 @@ package ca.qc.icerealm.bukkit.plugins.dreamworld;
 
 import java.util.logging.Logger;
 
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PinPoint;
+
 public class GenerationEvent {
 
 	private Logger _logger = Logger.getLogger("Minecraft");

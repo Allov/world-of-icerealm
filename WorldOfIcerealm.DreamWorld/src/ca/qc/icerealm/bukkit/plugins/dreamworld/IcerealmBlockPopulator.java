@@ -27,10 +27,9 @@ import org.bukkit.generator.BlockPopulator;
 import org.bukkit.plugin.java.JavaPlugin;
 import ca.qc.icerealm.bukkit.plugins.advancedcompass.CustomCompassManager;
 import ca.qc.icerealm.bukkit.plugins.common.LocationUtil;
-import ca.qc.icerealm.bukkit.plugins.dreamworld.events.Event;
-import ca.qc.icerealm.bukkit.plugins.dreamworld.events.FactoryEvent;
-import ca.qc.icerealm.bukkit.plugins.dreamworld.tools.GeneratorActivator;
-
+import ca.qc.icerealm.bukkit.plugins.scenarios.events.Event;
+import ca.qc.icerealm.bukkit.plugins.scenarios.events.FactoryEvent;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PinPoint;
 
 public class IcerealmBlockPopulator extends BlockPopulator {
 

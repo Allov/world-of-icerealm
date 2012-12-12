@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.dreamworld.tools;
+package ca.qc.icerealm.bukkit.plugins.dreamworld;
 
 import ca.qc.icerealm.bukkit.plugins.dreamworld.IcerealmBlockPopulator;
 
