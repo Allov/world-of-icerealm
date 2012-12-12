@@ -87,6 +87,7 @@ public class StructurePattern {
 	}
 	
 	public void readFromFile(String file) throws Exception {
+		_logger.info("reading structure file: " + file);
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 		
 		String metadata = reader.readLine();

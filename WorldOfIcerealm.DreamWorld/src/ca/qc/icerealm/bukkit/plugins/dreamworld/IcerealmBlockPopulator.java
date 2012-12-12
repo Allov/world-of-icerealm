@@ -25,8 +25,6 @@ import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import ca.qc.icerealm.bukkit.plugins.advancedcompass.AdvancedCompass;
 import ca.qc.icerealm.bukkit.plugins.advancedcompass.CustomCompassManager;
 import ca.qc.icerealm.bukkit.plugins.common.LocationUtil;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.events.Event;
@@ -61,9 +59,10 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 		_seaLevel = s.getWorld("world").getSeaLevel();
 		_scanners = readBiomeScanner();
 		_customScanner = new BiomeScanner("default:50:50:5");
-		_defaultScanner = new BiomeScanner("default:50:50:5"); // scan 50 x 50, diff de +/- 5
-		_globalCoolDown = 420000; // 6 minute
-		_minDistanceFromLastGeneration = 500; // 500m
+		_defaultScanner = new BiomeScanner("default:50:50:10"); // scan 50 x 50, diff de +/- 5
+		//_globalCoolDown = 420000; // 6 minute
+		_globalCoolDown = 10000; // 6 minute
+		_minDistanceFromLastGeneration = 20; // 500m
 		_lastGenerationLocation = s.getWorld("world").getSpawnLocation();
 	}
 	
@@ -75,31 +74,29 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 			int centerX = (source.getX() << 4) + random.nextInt(16);
 	        int centerZ = (source.getZ() << 4) + random.nextInt(16);
 	        int centerY = world.getHighestBlockYAt(centerX, centerZ) - 1;
-	        //_logger.info("source block is: " + world.getBlockAt(centerX, centerY, centerZ).getType());
 
 	        Location currentLocation = new Location(world, centerX, centerY, centerZ);
 	        if (LocationUtil.getDistanceBetween(currentLocation, _lastGenerationLocation) <= _minDistanceFromLastGeneration) {
-	        	valid = false;
+	        	return;
 	        }
 
 	        BiomeScanner scanner = getBiomeScanner(world.getBiome(centerX, centerZ).name());
 	        
-	        if (valid && centerY < world.getSeaLevel()) {
+	        if (centerY < world.getSeaLevel()) {
 	        	return;
 	        }
 	        
-	        if (valid && world.getHighestBlockAt(centerX, centerZ).getType() == Material.WATER) {
+	        if (world.getHighestBlockAt(centerX, centerZ).getType() == Material.WATER) {
 	        	return;
 	        }
 	        
-	        if (valid && world.getBiome(centerX, centerZ).name() == Biome.OCEAN.name()) {
+	        if (world.getBiome(centerX, centerZ).name() == Biome.OCEAN.name()) {
 	        	return;
 	        }
 	                
 	        int desiredWidthX = scanner.DesiredWidthX;
 	        int desiredWidthZ = scanner.DesiredWidthZ;
 	        int desiredDiffY = scanner.DesiredDiff;
-	        int minHeightFound = centerY;
 	        
 	        for (int i = 0; i <= desiredWidthX && valid; i++) {
 	        	
@@ -115,41 +112,61 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 	        		
 	        		int minHeight = centerY - desiredDiffY;
 	        		int maxHeight = centerY + desiredDiffY;
-	        		//_logger.info("height found was: " + height + " max: " + maxHeight + " min: " + minHeight);
 	        		if (height > maxHeight || height < minHeight) {
 	        			return;
-	        			//_logger.info("not valid: " + height);
 	        		}
 	        		
-	        		if (centerY < minHeightFound) {
-	        			minHeightFound = centerY;
+	        		Material mat = world.getBlockAt(checkX, height, checkZ).getType();
+	        		if (mat == Material.WATER || mat == Material.STATIONARY_WATER || mat == Material.LAVA || mat == Material.STATIONARY_LAVA) {
+	        			return;
 	        		}
 	        	}
 	        }
-	        
+
+	        // selon le biome, c'est un emplacement qui a du potentiel
 	        if (valid) {
-	        	
-	        	GenerationEvent generation = chooseValidStructure(new Location(world, centerX, minHeightFound, centerZ), desiredWidthX, desiredWidthZ);
+	        	GenerationEvent generation = chooseValidStructure(new Location(world, centerX, centerY, centerZ), desiredWidthX, desiredWidthZ);
 	        	if (generation != null && _canGenerate) {
 	        		_canGenerate = false;
 	        		_lastGenerationTime = System.currentTimeMillis() + _globalCoolDown;
+	        			
+	        		// on cherche le point le plus bas	        		
+	        		int lowerHeight = world.getMaxHeight();
+	        		for (int i = 0; i < generation.WidthX; i++) {
+	        			for (int j = 0; j < generation.WidthZ; j++) {
+	        				int height = world.getHighestBlockYAt(centerX + i, centerZ + j);
+	        				if (height < lowerHeight) {
+	        					lowerHeight = height;
+	        				}
+	        			}
+	        		}
+	        		
+	        		// on ajuste le niveau plancher
+	        		if (lowerHeight < _seaLevel) {
+	        			lowerHeight = _seaLevel;
+	        		}
+	        		
+	        		// on update l'info de génération
 	        		generation.NbGeneration++;
 	        		generation.LastLocation.X = centerX;
-	        		generation.LastLocation.Y = minHeightFound;
+	        		generation.LastLocation.Y = lowerHeight;
 	        		generation.LastLocation.Z = centerZ;
 	        		generation.CoolDown = generation.IntervalCoolDown + System.currentTimeMillis();
-	        		_lastGenerationLocation = new Location(world, centerX, world.getSeaLevel() - 1, centerZ);
-	        		generateStructure(_lastGenerationLocation, generation.Name);
 	        		
-	        		_logger.info("generating structure: " + generation.toString() + " found lowest height at: " + minHeightFound + " and sealevel = " +  world.getSeaLevel());
+	        		// on genere la structure
+	        		_lastGenerationLocation = new Location(world, centerX, lowerHeight, centerZ);
+	        		generateStructure(_lastGenerationLocation, generation.Name);
+	        		_logger.info("generating structure: " + generation.toString() + " found lowest height at: " + lowerHeight);
 	        		writePersistenceGeneration();
 	        		
+	        		// cooldown pour generer autre chose, evite de surcharger le CPU et de générer un paquet de structure
 	        		Executors.newSingleThreadScheduledExecutor().schedule(new GeneratorActivator(this), _globalCoolDown, TimeUnit.MILLISECONDS);
 	        		
+	        		// on averti les joueurs online
 	        		Player[] players = _server.getOnlinePlayers();
 	        		for (Player p : players)  {
 	        			CustomCompassManager manager = new CustomCompassManager(generation.Name, p);
-	        			manager.setCustomLocation(_lastGenerationLocation, "A Point Of Interest has been discovered!");
+	        			manager.setCustomLocation(_lastGenerationLocation, ChatColor.AQUA + "A Point Of Interest has been discovered!");
 	        		}
 	        	}
 	        }
@@ -164,7 +181,6 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 		boolean foundGround = false;
 		int downHeight = height;
 		
-		//_logger.info("found a " + w.getBlockAt(x, height, z).getType());
 		Material mat;
 		while (downHeight > _seaLevel && !foundGround) {
 			
@@ -179,12 +195,10 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 			}
 			else {
 				foundGround = true;
-				//_logger.info("found ground at " + x + ", " + z + ", " + downHeight + " Mat = " + mat.name() + " Biome: " + w.getBiome(x, z));
 			}
 		}
 		
 		return downHeight;
-		
 	}
 	
 	private GenerationEvent chooseValidStructure(Location location, int widthX, int widthZ) {
@@ -192,10 +206,10 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 		List<GenerationEvent> possible = new ArrayList<GenerationEvent>();
 		
 		if (_canGenerate && _lastGenerationTime < System.currentTimeMillis()) {
+
 			for (GenerationEvent gen : _generatedStructure) {
 				
 				double currentFromSpawn = LocationUtil.getDistanceBetween(location, location.getWorld().getSpawnLocation());
-				
 				Location lastLocation = new Location(location.getWorld(), gen.LastLocation.X, gen.LastLocation.Y, gen.LastLocation.Z);
 				double lastFromSpawn = LocationUtil.getDistanceBetween(lastLocation, location.getWorld().getSpawnLocation());
 				
@@ -203,7 +217,6 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 				// et le cooldown est expiré et les dimensions sont corrects
 				if (currentFromSpawn > lastFromSpawn && (currentFromSpawn - lastFromSpawn) > gen.MinDistance && gen.CoolDown < System.currentTimeMillis() &&
 					gen.WidthX < widthX && gen.WidthZ < widthZ) {
-					
 					possible.add(gen);
 				}
 			}
@@ -211,11 +224,10 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 			Collections.shuffle(possible);
 			if (possible.size() > 0) {
 				return possible.get(0);	
-			}	
+			}
 		}
-		
-		
-		
+
+		// on retourne comme safe guard, on ne peut pas generer pour l'instant, cooldown!
 		return null;
 	}
 	
@@ -255,8 +267,10 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 			}
 		}
 		catch (Exception ex) {
-			
+			_logger.info("exception while reading generated structure!");
 		}
+		
+		_logger.info("found " + _generatedStructure.size() + " structure to generate!");
 		return _generatedStructure;
 	}
 	

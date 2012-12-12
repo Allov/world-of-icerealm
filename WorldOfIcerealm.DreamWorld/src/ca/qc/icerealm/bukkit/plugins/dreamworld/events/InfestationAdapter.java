@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import ca.qc.icerealm.bukkit.plugins.dreamworld.PinPoint;
+import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.Infestation;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.InfestationConfiguration;
 import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneServer;
@@ -50,6 +51,7 @@ public class InfestationAdapter extends BaseEvent {
 		_configInfestation.Server = _server;
 		_configInfestation.EnterZoneMessage = ChatColor.YELLOW + "You are entering into " + ChatColor.DARK_RED + "an infested zone!";
 		_configInfestation.LeaveZoneMessage =  ChatColor.YELLOW + "You are leaving " + ChatColor.RED + "an infested zone!";
+		_configInfestation.HealthModifier = ScenarioService.getInstance().calculateHealthModifierWithFrontier(_source, _source.getWorld().getSpawnLocation());
 		
 		// on formatte la zone!
 		String[] configData = _config.split(",");
