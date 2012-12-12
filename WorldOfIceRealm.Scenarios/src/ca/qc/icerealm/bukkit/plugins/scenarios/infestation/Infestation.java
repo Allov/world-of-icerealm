@@ -200,18 +200,24 @@ public class Infestation implements ZoneObserver, Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockDestroy(EntityExplodeEvent  event) {
-		if (_config.RegenerateExplodedBlocks && _zone.isInside(event.getEntity().getLocation())) {
-			HashMap<Location, BlockContainer> _blocks = new HashMap<Location, BlockContainer>();
-			for (Block b : event.blockList()) {
-				BlockContainer bc = new BlockContainer();
-				bc.TypeId = b.getTypeId();
-				bc.TypeData = b.getData();
-				_blocks.put(b.getLocation(), bc);
+		try {
+			if (_config.RegenerateExplodedBlocks && _zone.isInside(event.getEntity().getLocation())) {
+				HashMap<Location, BlockContainer> _blocks = new HashMap<Location, BlockContainer>();
+				for (Block b : event.blockList()) {
+					BlockContainer bc = new BlockContainer();
+					bc.TypeId = b.getTypeId();
+					bc.TypeData = b.getData();
+					_blocks.put(b.getLocation(), bc);
+				}
+				
+				BlockRestore restore = new BlockRestore(_world, _blocks);
+				TimeServer.getInstance().addListener(restore, _config.DelayBeforeRegeneration);
 			}
-			
-			BlockRestore restore = new BlockRestore(_world, _blocks);
-			TimeServer.getInstance().addListener(restore, _config.DelayBeforeRegeneration);
-		}		
+		}
+		catch (Exception ex) {
+			logger.info("onblock destroy in Infestation raised an exception, it's ok!");
+		}
+				
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)

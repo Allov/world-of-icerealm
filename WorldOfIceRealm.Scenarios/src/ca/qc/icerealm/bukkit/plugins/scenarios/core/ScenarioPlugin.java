@@ -150,12 +150,12 @@ public class ScenarioPlugin extends JavaPlugin {
 	private void createFrontier() {
 		
 		// a chaque 50m du spawn point, 100% plus fort, 33% plus de dommage
-		_frontier = new Frontier(getServer().getWorld("world"), 400, 3);
+		//_frontier = new Frontier(getServer().getWorld("world"), 400, 3);
+		_frontier = Frontier.getInstance();
 		getServer().getPluginManager().registerEvents(_frontier, this);
 		getCommand("fr").setExecutor(_frontier);
 		
 		if (_frontier != null) {
-			ScenarioService.getInstance().setFrontier(_frontier);
 			logger.info("[Scenarios] Frontier feature is enabled");
 		}
 	}

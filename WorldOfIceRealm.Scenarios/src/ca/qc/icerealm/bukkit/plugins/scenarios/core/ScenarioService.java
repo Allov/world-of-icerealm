@@ -2,6 +2,8 @@ package ca.qc.icerealm.bukkit.plugins.scenarios.core;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import org.bukkit.Location;
@@ -20,6 +22,9 @@ import org.bukkit.potion.PotionType;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultiplierData;
 import ca.qc.icerealm.bukkit.plugins.scenarios.frontier.Frontier;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.CustomMonsterListener;
+import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneProber;
+import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneServer;
+import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
 
 public class ScenarioService {
 
@@ -27,7 +32,9 @@ public class ScenarioService {
 	private List<Scenario> _registeredScenario;
 	private JavaPlugin _plugin;
 	private CustomMonsterListener _customMonster;
-	private Frontier _frontier;
+	//private Frontier _frontier;
+	private ZoneSubject _zoneServer;
+	private ScenarioZoneProber _prober;
 	
 	private static ScenarioService _instance;
 	
@@ -63,13 +70,9 @@ public class ScenarioService {
 		_customMonster = new CustomMonsterListener();
 		j.getServer().getPluginManager().registerEvents(_customMonster, _plugin);
 	}
-	
-	public void setFrontier(Frontier f) {
-		_frontier = f;
-	}
-	
+		
 	public double calculateHealthModifierWithFrontier(Location l, Location spawn) {
-		return _frontier.calculateHealthModifier(l, spawn);
+		return Frontier.getInstance().calculateHealthModifier(l, spawn);
 	}
 	
 	public List<Scenario> getScenarios() {
@@ -109,9 +112,9 @@ public class ScenarioService {
 	}
 	
 	public Entity spawnCreature(World w, Location l, EntityType t, double modifier, boolean burn) {
-		_frontier.setActivated(false);
+		Frontier.getInstance().setActivated(false);
 		LivingEntity creature = (LivingEntity)this.spawnCreature(w, l, t);
-		_frontier.setActivated(true);
+		Frontier.getInstance().setActivated(true);
 		int maxHealth = creature.getMaxHealth() + (int)(modifier * creature.getMaxHealth());
 		//logger.info("creature max heatlh: " + creature.getMaxHealth() + " will be at: " + maxHealth);
 		if (_customMonster != null && ((!burn) || (maxHealth != creature.getMaxHealth()))) {
@@ -122,9 +125,9 @@ public class ScenarioService {
 	}
 	
 	public Entity spawnCreature(World w, Location l, EntityType t, int maxHealth, boolean burn) {
-		_frontier.setActivated(false);
+		Frontier.getInstance().setActivated(false);
 		LivingEntity creature = (LivingEntity)this.spawnCreature(w, l, t);
-		_frontier.setActivated(true);
+		Frontier.getInstance().setActivated(true);
 		
 		if (_customMonster != null && ((!burn) || (maxHealth != creature.getMaxHealth()))) {
 			_customMonster.addMonster(creature.getEntityId(), maxHealth, burn);
@@ -161,9 +164,9 @@ public class ScenarioService {
 	
 	@Deprecated 
 	public Entity spawnCreatureWithPotion(World w, Location l, EntityType t, List<PotionEffect> p, boolean burn) {
-		_frontier.setActivated(false);
+		Frontier.getInstance().setActivated(false);
 		LivingEntity entity = (LivingEntity)this.spawnCreature(w, l, t);
-		_frontier.setActivated(true);
+		Frontier.getInstance().setActivated(true);
 		
 		entity.addPotionEffects(p);
 		if (!burn && _customMonster != null) {

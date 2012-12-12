@@ -24,17 +24,24 @@ public class Frontier implements Listener, CommandExecutor {
 
 	public final Logger logger = Logger.getLogger(("Minecraft"));
 	private ScenarioService _scenarioService = null;
-	private World _world = null;
 	private double _divider;
 	private boolean _activated = false;
 	private double _damage;
 	
-	public Frontier(World w, double divider, double damage) {
+	private static Frontier _instance = null;
+	
+	protected Frontier(double divider, double damage) {
 		_scenarioService = ScenarioService.getInstance();
-		_world = w;
 		_activated = true;
 		_divider = divider;
 		_damage = damage;
+	}
+	
+	public static Frontier getInstance() {
+		if (_instance == null) {
+			_instance = new Frontier(400, 400 / 3);
+		}
+		return _instance;
 	}
 	
 	public void setActivated(boolean activate) {
@@ -46,7 +53,7 @@ public class Frontier implements Listener, CommandExecutor {
 	}
 	
 	public void setWorld(World w) {
-		_world = w;
+		//_world = w;
 	}
 	
 	public double calculateHealthModifier(Location loc, Location spawn) {
@@ -68,7 +75,7 @@ public class Frontier implements Listener, CommandExecutor {
 	public void onMonsterSpawn(CreatureSpawnEvent event) {
 		
 		if (_activated && event.getEntity() instanceof Monster) {
-			double modifier = calculateHealthModifier(event.getLocation(), _world.getSpawnLocation());
+			double modifier = calculateHealthModifier(event.getLocation(), event.getLocation().getWorld().getSpawnLocation());
 
 			if (modifier > 0 && !_scenarioService.monsterAlreadyPresent(event.getEntity().getEntityId())) {
 				LivingEntity creature = event.getEntity();
@@ -76,13 +83,13 @@ public class Frontier implements Listener, CommandExecutor {
 				//logger.info("frontier spawn modfiier: " + modifier + "health is: " + creature.getMaxHealth() + " maxhealth is: " + maxHealth);
 				_scenarioService.addExistingEntity(creature.getEntityId(), maxHealth, true, modifier / _damage);
 				
-				/*
-				if (LocationUtil.getDistanceBetween(event.getLocation(), _world.getSpawnLocation()) <= _divider) {
-					RareDropsMultiplierData.getInstance().addEntityRareDropsMultiplier(creature.getEntityId(), new RareDropsMultipliers(1.0, 1.0, 0.00));
+				
+				if (LocationUtil.getDistanceBetween(event.getLocation(), event.getLocation().getWorld().getSpawnLocation()) <= _divider) {
+					RareDropsMultiplierData.getInstance().addEntityRareDropsMultiplier(creature.getEntityId(), new RareDropsMultipliers(0.25, 0.25, 0.00));
 				}
 				else {
 					RareDropsMultiplierData.getInstance().addEntityRareDropsMultiplier(creature.getEntityId(), new RareDropsMultipliers(modifier, modifier, modifier));
-				}*/
+				}
 			}
 		}
 	}
