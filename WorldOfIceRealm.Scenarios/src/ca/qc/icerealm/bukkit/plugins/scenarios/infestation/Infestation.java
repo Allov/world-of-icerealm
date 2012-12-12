@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
@@ -211,7 +213,7 @@ public class Infestation implements ZoneObserver, Listener {
 				}
 				
 				BlockRestore restore = new BlockRestore(_world, _blocks);
-				TimeServer.getInstance().addListener(restore, _config.DelayBeforeRegeneration);
+				Executors.newSingleThreadScheduledExecutor().schedule(restore, _config.DelayBeforeRegeneration, TimeUnit.MILLISECONDS);
 			}
 		}
 		catch (Exception ex) {
