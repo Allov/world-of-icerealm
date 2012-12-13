@@ -5,13 +5,10 @@ import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
-import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
 import ca.qc.icerealm.bukkit.plugins.scenarios.frontier.Frontier;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.Infestation;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.InfestationConfiguration;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PinPoint;
-import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneServer;
-import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
 
 public class InfestationAdapter extends BaseEvent {
@@ -24,7 +21,6 @@ public class InfestationAdapter extends BaseEvent {
 	@Override
 	public void setWelcomeMessage(String s) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -82,15 +78,12 @@ public class InfestationAdapter extends BaseEvent {
 					_infestation = new Infestation(plugin, _configInfestation, _zoneServer);
 					_zoneServer.addListener(_infestation);
 					_server.getPluginManager().registerEvents(_infestation, plugin);
-					_logger.info("zone listener done!");
 				}
 			}
 			catch (Exception ex) {
 				_logger.info("could not create an infestation zone!");
 			}
 		}
-		
-		
 	}
 
 	@Override

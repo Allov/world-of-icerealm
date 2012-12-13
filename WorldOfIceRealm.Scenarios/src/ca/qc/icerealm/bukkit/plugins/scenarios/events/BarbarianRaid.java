@@ -22,7 +22,6 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.omg.stub.java.rmi._Remote_Stub;
 
 import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
@@ -49,8 +48,6 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 	private long INTERVAL_BETWEEN_WAVE = 10; // 10 secondes;
 	private boolean USE_ARTILLERY = true;
 	private int NB_ARTILLERY_SHOT = 5;
-	private String LIST_MONSTER = "";
-	
 	private List<Location> _locations;
 	private String[] _monsters = new String[] { "creeper", "zombie", "spider", "cavespider", "pigzombie" };
 	protected int _waveDone = 0;

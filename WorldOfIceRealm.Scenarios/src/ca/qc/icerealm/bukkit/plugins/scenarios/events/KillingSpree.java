@@ -18,6 +18,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
+import ca.qc.icerealm.bukkit.plugins.scenarios.frontier.Frontier;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.Loot;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.LootGenerator;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PinPoint;
@@ -72,6 +73,7 @@ public class KillingSpree extends BaseEvent {
 				
 				if (percentKilled > _percentNecessary && !_lootCreated) { // 80% de monstres tuées					
 					generateLoot();
+					this.sendEventCompleted(_players, Frontier.getInstance().calculateHealthModifier(_source, _source.getWorld().getSpawnLocation()));
 					for (Player p : _players) {
 						p.sendMessage(ChatColor.GREEN + "The" + ChatColor.GOLD + " chest loot " + ChatColor.GREEN + "just appeared!");
 					}
