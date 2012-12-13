@@ -3,9 +3,9 @@ package ca.qc.icerealm.bukkit.plugins.scenarios.events;
 public class FactoryEvent {
 
 	public static enum EventType { KILLING_SPREE, TREASURE_HUNT, BARBARIAN_CAMP, ARENA }
+	private String[] _eventList = new String[] { "treasurehunt", "killingspree", "barbarian", "arena", "infestation" };
 	
 	public FactoryEvent() {
-		
 	}
 	
 	public Event getEvent(String name) {
@@ -31,4 +31,7 @@ public class FactoryEvent {
 		return e;
 	}
 	
+	public String[] getEventsName() {
+		return _eventList;
+	}
 }
