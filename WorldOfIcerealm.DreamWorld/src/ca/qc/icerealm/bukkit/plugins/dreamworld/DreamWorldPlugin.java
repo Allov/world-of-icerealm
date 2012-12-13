@@ -19,6 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import ca.qc.icerealm.bukkit.plugins.scenarios.events.Event;
+import ca.qc.icerealm.bukkit.plugins.scenarios.events.EventService;
 import ca.qc.icerealm.bukkit.plugins.scenarios.events.FactoryEvent;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PinPoint;
 
@@ -31,15 +32,15 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 	private boolean _generating = false;
 	private StructurePattern _pattern = null;
 	private IcerealmBlockPopulator _populator;
-	private List<Event> _events;
+	private EventService _eventService = null;
 	
 	@Override
 	public void onEnable() {	
+		_eventService = EventService.getInstance();
 		getServer().getPluginManager().registerEvents(this, this);
 		getCommand("dw").setExecutor(this);
 		World myWorld = getServer().getWorld("world");
 		_populator = new IcerealmBlockPopulator(getServer(), this);
-		_events = new ArrayList<Event>();
 		myWorld.getPopulators().add(_populator);	
 		
 		// loading
@@ -83,7 +84,7 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 						e.activateEvent();
 						_logger.info("[DreamWorld] Loading event: + " + e.getName() + " with config: " + e.getConfiguration() + 
 								     " at: " + pattern.Source.getX() + "," + pattern.Source.getY() + "," + pattern.Source.getZ());
-						_events.add(e);
+						_eventService.addEvent(e);
 					}
 				}
 			}
@@ -96,10 +97,10 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 	
 	@Override
 	public void onDisable() {
-		for (Event e : _events) {
+		for (Event e : _eventService.getActiveEvents()) {
 			e.releaseEvent();
 		}
-		_events.clear();
+		_eventService.clearEvents();
 	}
 	
 	@Override

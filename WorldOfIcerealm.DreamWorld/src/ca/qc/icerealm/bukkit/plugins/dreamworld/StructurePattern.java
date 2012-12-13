@@ -10,6 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 
 import ca.qc.icerealm.bukkit.plugins.scenarios.events.Event;
+import ca.qc.icerealm.bukkit.plugins.scenarios.events.EventService;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PinPoint;
 
 public class StructurePattern {
@@ -26,11 +27,11 @@ public class StructurePattern {
 	public List<List<PinPoint>> ActivationZone;
 	public Location Source;
 	public String Name;
-	//public List<String> Events;
 	public HashMap<String, String> ConfigEvents;
 	public Integer GroundLevel = 0;
 	
 	private Event _event;
+	private EventService _eventService;
 	
 	public StructurePattern() {
 		Blocks = new ArrayList<List<BlockUnit[]>>();
@@ -43,6 +44,7 @@ public class StructurePattern {
 		Name = "";
 		GroundLevel = 0;
 		_event = null;
+		_eventService = EventService.getInstance();
 	}
 	
 	public StructurePattern(Event e) {
@@ -55,6 +57,7 @@ public class StructurePattern {
 		Name = "";
 		GroundLevel = 0;
 		_event = e;
+		_eventService = EventService.getInstance();
 	}
 	
 	public void generate(Location location) {
@@ -81,6 +84,7 @@ public class StructurePattern {
 			_event.setActivateZone(ActivationZone);
 			_event.setLootPoints(LootPoints);
 			_event.activateEvent();
+			_eventService.addEvent(_event);
 		}
 	}
 		
