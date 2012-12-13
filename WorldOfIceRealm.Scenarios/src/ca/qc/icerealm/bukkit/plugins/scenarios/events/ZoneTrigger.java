@@ -50,7 +50,7 @@ public class ZoneTrigger implements ZoneObserver {
 	
 	public void setActivate(boolean a) {
 		for (MonsterSpawner s : _runnable) {
-			s.setActivate(!a);
+			s.setActivate(a);
 		}
 	}
 

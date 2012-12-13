@@ -20,7 +20,7 @@ public class MonsterSpawner implements Runnable {
 	private World _world;
 	private String _name;
 	private String[] _monsters = new String[] { "skeleton", "zombie", "spider", "cavespider", "pigzombie" };
-	private boolean _done = false;
+	private boolean _canSpawn = true;
 	private List<LivingEntity> _entity;
 	
 	public MonsterSpawner(Location loc, String name, List<LivingEntity> entity) {
@@ -39,8 +39,8 @@ public class MonsterSpawner implements Runnable {
 	
 	@Override
 	public void run() {
-		if (!_done) {
-			_done = true;
+		if (_canSpawn) {
+			_canSpawn = false;
 			double modifier = ScenarioService.getInstance().calculateHealthModifierWithFrontier(_location, _world.getSpawnLocation());
 			EntityType creature = EntityUtilities.getEntityType(_monsters[RandomUtil.getRandomInt(_monsters.length)]);
 			LivingEntity entity = (LivingEntity)ScenarioService.getInstance().spawnCreature(_world, _location, creature, modifier, false);
@@ -49,25 +49,11 @@ public class MonsterSpawner implements Runnable {
 	}
 	
 	public void setActivate(boolean b) {
-		_done = b;
+		_logger.info("monster spawner == " + b);
+		_canSpawn = b;
 	}
 	
 	public String getName() {
 		return _name;
 	}
-}
-
-class SpawnerActivator implements Runnable {
-
-	private MonsterSpawner _spawner;
-	
-	public SpawnerActivator(MonsterSpawner spawner) {
-		_spawner = spawner;
-	}
-	
-	@Override
-	public void run() {
-		_spawner.setActivate(false);
-	}
-	
 }

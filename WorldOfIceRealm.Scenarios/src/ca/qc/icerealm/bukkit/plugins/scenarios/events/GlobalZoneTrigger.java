@@ -61,6 +61,10 @@ public class GlobalZoneTrigger implements ZoneObserver {
 	public WorldZone getWorldZone() {
 		return _zone;
 	}
+	
+	public void setStarted(boolean b) {
+		_started = b;
+	}
 
 	@Override
 	public void playerEntered(Player arg0) {
@@ -74,7 +78,7 @@ public class GlobalZoneTrigger implements ZoneObserver {
 		// ce n'est pas commencé et le premier joueur vient d'entrer dans la zone!
 		if (!_started && !_lootCreated) {
 			arg0.sendMessage(ChatColor.GREEN + "You just entered in a" + ChatColor.GOLD + " dangerous area." + ChatColor.RED + " Kill " + (_percent * 100) + "%"  + ChatColor.GREEN + " of the monsters!");
-			
+			_started = true;
 			// ici, on met les flag a on pour les zonetrigger!
 			setActivate(true);
 		}	
@@ -117,7 +121,6 @@ public class GlobalZoneTrigger implements ZoneObserver {
 	}
 	
 	public void setActivate(boolean a) {
-		_started = a;
 		for (ZoneTrigger trigger : _runnable) {
 			trigger.setActivate(a);
 		}

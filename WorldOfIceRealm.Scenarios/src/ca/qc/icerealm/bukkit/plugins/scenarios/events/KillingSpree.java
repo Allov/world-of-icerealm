@@ -38,6 +38,7 @@ public class KillingSpree extends BaseEvent {
 	private double _maxMonster = 0;
 	private boolean _lootCreated = false;
 	private long _lootDisapearInHours = 7200000; //2 heures de cooldown
+	//private long _lootDisapearInHours = 60000; //2 heures de cooldown
 	private Loot _loot;
 	private List<Player> _players;
 	private List<ZoneTrigger> _triggers;
@@ -94,6 +95,7 @@ public class KillingSpree extends BaseEvent {
 			_reactivationIn = System.currentTimeMillis() + _lootDisapearInHours;
 			_globalTrigger.setCoolDown(_reactivationIn);
 			_globalTrigger.setLootCreated(true);
+			_globalTrigger.setStarted(false);
 			/*
 			for (ZoneTrigger z : _triggers) {
 				z.setCoolDown(_reactivationIn);
@@ -112,7 +114,8 @@ public class KillingSpree extends BaseEvent {
 		if (playerRemoved && _players.size() == 0 && !_lootCreated) {
 			
 			for (ZoneTrigger ob : _triggers) {
-				ob.setActivate(false);
+				_globalTrigger.setStarted(false);
+				ob.setActivate(true);
 			}
 			
 			for (LivingEntity m : _monsters) {
@@ -137,6 +140,7 @@ public class KillingSpree extends BaseEvent {
 			_reactivationIn = System.currentTimeMillis() + _lootDisapearInHours;
 			_globalTrigger.setCoolDown(_reactivationIn);
 			_globalTrigger.setLootCreated(true);
+			_globalTrigger.setStarted(false);
 			/*
 			for (ZoneTrigger z : _triggers) {
 				z.setCoolDown(_reactivationIn);
@@ -281,7 +285,8 @@ class ResetKillingSpree implements Runnable {
 				_loot.removeLoot();
 			}	
 			
-			_trigger.setActivate(false);
+			_trigger.setStarted(false);
+			_trigger.setActivate(true);
 			_trigger.setLootCreated(false);
 						
 			// on fait le ménage dans les stats
