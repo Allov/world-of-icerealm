@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
+import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PinPoint;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.ScenarioServerProxy;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
@@ -92,6 +93,18 @@ public abstract class BaseEvent implements Event {
 	
 	protected ZoneSubject getZoneSubjectInstance() {
 		return ScenarioServerProxy.getInstance().getZoneServer();
+	}
+	
+	protected WorldZone getGeneralZone() {
+	
+		for (List<PinPoint> zone : _zones) {
+			if (zone.size() == 2 && zone.get(0).Name.equalsIgnoreCase("general")) {
+				Location lower = new Location(_source.getWorld(), _source.getX() + zone.get(0).X, _source.getY() + zone.get(0).Y, _source.getZ() + zone.get(0).Z);
+				Location higher = new Location(_source.getWorld(), _source.getX() + zone.get(1).X, _source.getY() + zone.get(1).Y, _source.getZ() + zone.get(1).Z);
+				return new WorldZone(lower, higher);
+			}
+		}
+		return null;
 	}
 
 

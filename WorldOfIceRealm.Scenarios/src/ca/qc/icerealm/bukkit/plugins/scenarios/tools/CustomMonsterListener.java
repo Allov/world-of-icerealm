@@ -27,6 +27,10 @@ public class CustomMonsterListener implements Listener {
 		return _customMonsters.containsKey(entityId);
 	}
 	
+	public CustomMonster getCustomMonsterEntity(int id) {
+		return _customMonsters.get(id);
+	}
+	
 	public void addMonster(Integer entityId, Integer health) {
 		CustomMonster c = new CustomMonster();
 		c.Health = health;
@@ -143,13 +147,4 @@ public class CustomMonsterListener implements Listener {
 	private void logInfo(CustomMonster c) {
 		//logger.info("Custom Monster: " + c.Health + " health - " + c.EntityId + " id" + " damage: " + c.DamageModifier);
 	}
-}
-
-class CustomMonster {
-	public int EntityId;
-	public int Health;
-	public boolean Burn;
-	public boolean Invincible;
-	public double DamageModifier;
-	
 }

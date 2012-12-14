@@ -14,6 +14,7 @@ import org.bukkit.potion.PotionEffect;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultiplierData;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultipliers;
 import ca.qc.icerealm.bukkit.plugins.scenarios.frontier.Frontier;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.CustomMonster;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.CustomMonsterListener;
 import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneProber;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
@@ -109,7 +110,7 @@ public class ScenarioService {
 		LivingEntity creature = (LivingEntity)this.spawnCreature(w, l, t);
 		Frontier.getInstance().setActivated(true);
 		int maxHealth = creature.getMaxHealth() + (int)(modifier * creature.getMaxHealth());
-		//logger.info("creature max heatlh: " + creature.getMaxHealth() + " will be at: " + maxHealth);
+		logger.info(creature.toString() + " creature max heatlh: " + creature.getMaxHealth() + " will be at: " + maxHealth);
 		if (_customMonster != null && ((!burn) || (maxHealth != creature.getMaxHealth()))) {
 			_customMonster.addMonster(creature.getEntityId(), maxHealth, burn);
 		}
@@ -178,6 +179,13 @@ public class ScenarioService {
 			RareDropsMultiplierData.getInstance().addEntityRareDropsMultiplier(id, new RareDropsMultipliers(d));	
 		}
 		
+	}
+	
+	public CustomMonster getCustomMonsterEntity(int id) {
+		if (_customMonster != null && _customMonster.monsterAlreadyAdded(id)) {
+			return _customMonster.getCustomMonsterEntity(id);
+		}
+		return null;
 	}
 	
 	public boolean monsterAlreadyPresent(Integer id) {

@@ -17,7 +17,6 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
-import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
 import ca.qc.icerealm.bukkit.plugins.scenarios.frontier.Frontier;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.Loot;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.LootGenerator;

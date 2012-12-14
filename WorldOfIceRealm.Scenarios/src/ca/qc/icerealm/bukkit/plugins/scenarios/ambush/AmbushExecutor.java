@@ -34,6 +34,7 @@ import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
+import ca.qc.icerealm.bukkit.plugins.scenarios.frontier.Frontier;
 
 
 public class AmbushExecutor implements Runnable {
@@ -103,9 +104,8 @@ public class AmbushExecutor implements Runnable {
 			
 			if (maxTry < 3) {
 				EntityType creature = EntityUtilities.getEntityType(_monstersArray[RandomUtil.getRandomInt(_monstersArray.length)]);
-				double health = ScenarioService.getInstance().calculateHealthModifierWithFrontier(newLoc, _world.getSpawnLocation());
+				double health = Frontier.getInstance().calculateGlobalModifier(newLoc);
 				List<PotionEffect> effects = this.getRandomPotions(health);
-				//_logger.info("ambush health modifier: " + health);
 				Monster m = (Monster)ScenarioService.getInstance().spawnCreature(_world, newLoc, creature, health, false);
 				m.addPotionEffects(effects);
 				m.setTarget(_player);
