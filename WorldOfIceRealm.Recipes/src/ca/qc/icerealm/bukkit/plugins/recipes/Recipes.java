@@ -1,5 +1,7 @@
 package ca.qc.icerealm.bukkit.plugins.recipes;
 
+import net.minecraft.server.ShapelessRecipes;
+
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
@@ -58,7 +60,22 @@ public class Recipes extends JavaPlugin {
         iceBlockBucketBack.setIngredient('W', Material.WATER_BUCKET);
         server.addRecipe(iceBlockBucketBack);
 
-        //TODO: Add recipes to list of custom additions
+        ShapelessRecipe smiteHoe = new ShapelessRecipe(new ItemStack(Material.IRON_INGOT, 1));
+        smiteHoe.addIngredient(1, Material.IRON_HOE);
+        server.addRecipe(smiteHoe);
+        
+        ShapelessRecipe smiteAxe = new ShapelessRecipe(new ItemStack(Material.IRON_INGOT, 1));
+        smiteAxe.addIngredient(1, Material.IRON_AXE);
+        server.addRecipe(smiteAxe);
+        
+        ShapelessRecipe smitePick = new ShapelessRecipe(new ItemStack(Material.IRON_INGOT, 1));
+        smitePick.addIngredient(1, Material.IRON_PICKAXE);
+        server.addRecipe(smitePick);
+        
+        ShapelessRecipe smiteSpade = new ShapelessRecipe(new ItemStack(Material.IRON_INGOT, 1));
+        smiteSpade.addIngredient(1, Material.IRON_SPADE);
+        server.addRecipe(smiteSpade);
+        
         
     }
 
