@@ -27,6 +27,8 @@ public class GlobalZoneTrigger implements ZoneObserver {
 	private List<LivingEntity> _entities;
 	private double _percent = 0.8;
 	private double _additionalPlayerModifier = 0.25;
+	private String _startMessage;
+	private String _endMessage;
 	
 	public GlobalZoneTrigger(List<ZoneTrigger> trigger, Server s, double percent, double playerMod) {
 		_runnable = trigger;
@@ -34,6 +36,16 @@ public class GlobalZoneTrigger implements ZoneObserver {
 		_players = new ArrayList<Player>();
 		_percent = percent;
 		_additionalPlayerModifier = playerMod;
+		_startMessage = "You are entering a dangerous area!";
+		_endMessage = "This place has already been visited!";
+	}
+	
+	public void setStartMessage(String m) {
+		_startMessage = m;
+	}
+	
+	public void setEndMessage(String m) {
+		_endMessage = m;
 	}
 	
 	public void setLootCreated(boolean b) {
@@ -77,7 +89,7 @@ public class GlobalZoneTrigger implements ZoneObserver {
 		
 		// ce n'est pas commencé et le premier joueur vient d'entrer dans la zone!
 		if (!_started && !_lootCreated) {
-			arg0.sendMessage(ChatColor.GREEN + "You just entered in a" + ChatColor.GOLD + " dangerous area." + ChatColor.RED + " Kill " + (_percent * 100) + "%"  + ChatColor.GREEN + " of the monsters!");
+			arg0.sendMessage(ChatColor.YELLOW + _startMessage + ChatColor.RED + " Kill " + (_percent * 100) + "% of the monsters!");
 			_started = true;
 			// ici, on met les flag a on pour les zonetrigger!
 			setActivate(true);
@@ -85,7 +97,7 @@ public class GlobalZoneTrigger implements ZoneObserver {
 		else if (_started && playeradded && !_lootCreated) { // c'est commencé, un nouveau joueur est entré et ce n'est pas terminé.
 			
 			for (Player p : _players) {
-				p.sendMessage(ChatColor.YELLOW + arg0.getDisplayName() + ChatColor.GREEN + " joined the battle." + ChatColor.RED +" Monsters are stronger!");
+				p.sendMessage(ChatColor.GREEN + arg0.getDisplayName() + ChatColor.DARK_GREEN + " joined the battle." + ChatColor.RED +" Monsters are stronger!");
 			}
 			
 			for (LivingEntity entity : _entities) {
@@ -99,7 +111,7 @@ public class GlobalZoneTrigger implements ZoneObserver {
 			if (timeLeft < 0) {
 				timeLeft = 0;
 			}
-			arg0.sendMessage(ChatColor.YELLOW + "This area has been already" + ChatColor.GOLD + " cleared!" + ChatColor.YELLOW + " Come back in " + 
+			arg0.sendMessage(ChatColor.YELLOW + _endMessage + ChatColor.AQUA + " Come back in " + 
 							 ChatColor.GREEN + TimeFormatter.readableTime(timeLeft));
 		}
 	}

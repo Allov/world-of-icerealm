@@ -34,9 +34,7 @@ import ca.qc.icerealm.bukkit.plugins.scenarios.tools.Loot;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.LootGenerator;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PinPoint;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.TimeFormatter;
-import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneServer;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
-import ca.qc.icerealm.bukkit.plugins.zone.ZoneServer;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
 
 public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
@@ -62,6 +60,8 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 	protected long _timeForReactivation;
 	private HashSet<Monster> _monstersEntity;
 	private ZoneSubject _zoneServer;
+	private String _welcomeMessage;
+	private String _endMessage;
 		
 	public BarbarianRaid() {
 		_monstersContainer = new HashSet<Integer>();
@@ -70,6 +70,8 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 		_players = new ArrayList<Player>();
 		_activated = true;
 		_started = false;
+		_welcomeMessage = "This looks like a occupied place by bandits!";
+		_endMessage = "This place looks like it is abandonned!";
 	}
 		
 	@Override
@@ -89,7 +91,7 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 					playerBasedModifier += ((_players.size() - 1) * 0.25); 
 				}
 
-				double modifier = Frontier.getInstance().calculateHealthModifier(loc, _world.getSpawnLocation()) + playerBasedModifier;
+				double modifier = Frontier.getInstance().calculateGlobalModifier(loc) + playerBasedModifier;
 				
 				for (int i = 0; i < MONSTER_PER_LOCATION; i++) {
 					String monster = _monsters[RandomUtil.getRandomInt(_monsters.length)];
@@ -135,12 +137,6 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 		
 		if (playerRemoved && _players.size() == 0 && _started) {
 			processEndEvent();
-			/*
-			for (Monster m : _monstersEntity) { 
-				m.remove();
-			}
-			_monstersContainer.clear();
-			*/
 		}
 	}
 	
@@ -192,7 +188,7 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 		_activated = false;
 		_started = false;
 		_timeForReactivation = System.currentTimeMillis() + INTERVAL_BETWEEN_ATTACK * 1000;
-		this.sendEventCompleted(_players, Frontier.getInstance().calculateHealthModifier(_source, _world.getSpawnLocation()));			
+		this.sendEventCompleted(_players, Frontier.getInstance().calculateGlobalModifier(_source));			
 		Executors.newSingleThreadScheduledExecutor().schedule(new EventActivator(this), INTERVAL_BETWEEN_ATTACK, TimeUnit.SECONDS);
 		Executors.newSingleThreadScheduledExecutor().schedule(_blockRestore, INTERVAL_BETWEEN_ATTACK, TimeUnit.SECONDS);
 		_players.clear();
@@ -200,21 +196,21 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 	
 	protected void welcomeMessage(Player arg0) {
 		if (!_activated) {
-			arg0.sendMessage(ChatColor.YELLOW + "This camp is deserted, " + ChatColor.GOLD + "come back in " + TimeFormatter.readableTime(_timeForReactivation - System.currentTimeMillis()));
+			arg0.sendMessage(ChatColor.GREEN + _endMessage + ChatColor.AQUA + " Come back in " + ChatColor.GREEN + TimeFormatter.readableTime(_timeForReactivation - System.currentTimeMillis()));
 		}
 		else {
-			arg0.sendMessage(ChatColor.YELLOW + "This place looks like a" + ChatColor.GOLD + " barbarian camp...");	
+			arg0.sendMessage(ChatColor.GOLD + _welcomeMessage);	
 		}
 	}
 	
 	protected void generateLoot() {
 		Location lootLocation = getRandomLocation(_lootPoints);
-		double lootModifier = ScenarioService.getInstance().calculateHealthModifierWithFrontier(lootLocation, _world.getSpawnLocation());
+		double lootModifier = Frontier.getInstance().calculateGlobalModifier(lootLocation);
 		_loot = LootGenerator.getFightingRandomLoot(lootModifier); 
 		_loot.generateLoot(lootLocation);
 		
 		for (Player p : _players) {
-			p.sendMessage(ChatColor.YELLOW + "You survived this attack, " + ChatColor.GREEN + "take the loot" + ChatColor.YELLOW + " and get the fuck out!");
+			p.sendMessage(ChatColor.DARK_GREEN + "You survived this attack, " + ChatColor.GOLD + "take the loot" + ChatColor.YELLOW + " and get the fuck out!");
 		}
 	}
 	
@@ -232,9 +228,6 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 			_players.add(arg0);
 			welcomeMessage(arg0);
 		}
-		
-		
-		
 		if (_activated && !_started)  {
 			_started = true;
 			
@@ -302,6 +295,14 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 			INTERVAL_BETWEEN_ATTACK = Long.parseLong(config[4]);
 			INTERVAL_BETWEEN_WAVE = Long.parseLong(config[5]);
 			_monsters = config[6].split(" ");
+			
+			if (config.length > 7) {
+				_welcomeMessage = config[7];
+			}
+			
+			if (config.length > 8) {
+				_endMessage = config[8];
+			}
 		}
 		else {
 			_logger.info("Barbarian raid will use default settings");

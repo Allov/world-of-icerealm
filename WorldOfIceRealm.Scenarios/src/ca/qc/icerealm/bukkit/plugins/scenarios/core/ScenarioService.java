@@ -2,28 +2,20 @@ package ca.qc.icerealm.bukkit.plugins.scenarios.core;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
-
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Monster;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionType;
 
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultiplierData;
+import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultipliers;
 import ca.qc.icerealm.bukkit.plugins.scenarios.frontier.Frontier;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.CustomMonsterListener;
 import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneProber;
-import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneServer;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
 
 public class ScenarioService {
@@ -71,6 +63,7 @@ public class ScenarioService {
 		j.getServer().getPluginManager().registerEvents(_customMonster, _plugin);
 	}
 		
+	@Deprecated
 	public double calculateHealthModifierWithFrontier(Location l, Location spawn) {
 		return Frontier.getInstance().calculateHealthModifier(l, spawn);
 	}
@@ -156,7 +149,10 @@ public class ScenarioService {
 		
 	}
 	
-	@Deprecated 
+	@Deprecated
+	/**
+	 * Utilisez Frontier.getInstance().calculateGlobalModifier(Location loc) à la place
+	 */
 	public Entity spawnCreatureWithPotion(World w, Location l, EntityType t, PotionEffect p, boolean burn) {
 		List<PotionEffect> potions = new ArrayList<PotionEffect>();
 		return this.spawnCreatureWithPotion(w, l, t, potions, burn);
@@ -177,11 +173,11 @@ public class ScenarioService {
 	}
 
 	public void attachRareDropMultiplierToEntity(int id, double d) {
-		/*
+		
 		if (_plugin.getServer().getPluginManager().isPluginEnabled("WoI.RareDrops")) {
-			RareDropsMultiplierData.getInstance().addEntityRareDropsMultiplier(id, d);	
+			RareDropsMultiplierData.getInstance().addEntityRareDropsMultiplier(id, new RareDropsMultipliers(d));	
 		}
-		*/
+		
 	}
 	
 	public boolean monsterAlreadyPresent(Integer id) {

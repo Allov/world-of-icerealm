@@ -48,6 +48,8 @@ public class KillingSpree extends BaseEvent {
 	private double _percentNecessary = 0.8;
 	private double _additionalPlayerModifier = 0.25;
 	private ZoneSubject _zoneServer;
+	private String _welcomeMsg;
+	private String _endMessage;
 
 	public KillingSpree() {
 		_players = new ArrayList<Player>();
@@ -74,7 +76,7 @@ public class KillingSpree extends BaseEvent {
 				
 				if (percentKilled > _percentNecessary && !_lootCreated) { // 80% de monstres tuées					
 					generateLoot();
-					this.sendEventCompleted(_players, Frontier.getInstance().calculateHealthModifier(_source, _source.getWorld().getSpawnLocation()));
+					this.sendEventCompleted(_players, Frontier.getInstance().calculateGlobalModifier(_source));
 					for (Player p : _players) {
 						p.sendMessage(ChatColor.GREEN + "The" + ChatColor.GOLD + " chest loot " + ChatColor.GREEN + "just appeared!");
 					}
@@ -96,12 +98,6 @@ public class KillingSpree extends BaseEvent {
 			_globalTrigger.setCoolDown(_reactivationIn);
 			_globalTrigger.setLootCreated(true);
 			_globalTrigger.setStarted(false);
-			/*
-			for (ZoneTrigger z : _triggers) {
-				z.setCoolDown(_reactivationIn);
-				z.setLootCreated(true);
-			}
-			*/
 		}
 	}
 	
@@ -131,7 +127,7 @@ public class KillingSpree extends BaseEvent {
 			
 			// création du loot
 			Location location = new Location(_world, _source.getX() + lootPt.X, _source.getY() + lootPt.Y, _source.getZ() + lootPt.Z);
-			_loot = LootGenerator.getFightingRandomLoot(ScenarioService.getInstance().calculateHealthModifierWithFrontier(location, _world.getSpawnLocation()));
+			_loot = LootGenerator.getFightingRandomLoot(Frontier.getInstance().calculateGlobalModifier(location));
 			_loot.generateLoot(location);
 			_lootCreated = true;
 
@@ -141,12 +137,6 @@ public class KillingSpree extends BaseEvent {
 			_globalTrigger.setCoolDown(_reactivationIn);
 			_globalTrigger.setLootCreated(true);
 			_globalTrigger.setStarted(false);
-			/*
-			for (ZoneTrigger z : _triggers) {
-				z.setCoolDown(_reactivationIn);
-				z.setLootCreated(true);
-			}
-			*/
 		}
 	}
 
@@ -211,6 +201,14 @@ public class KillingSpree extends BaseEvent {
 				try {
 					_percentNecessary = Double.parseDouble(configData[0]);
 					_additionalPlayerModifier = Double.parseDouble(configData[1]);
+					
+					if (configData.length > 2) {
+						_welcomeMsg = configData[2];
+					}
+					
+					if (configData.length > 3) {
+						_endMessage = configData[3];
+					}
 				}
 				catch (Exception ex) {
 					_percentNecessary = 0.8;
@@ -229,6 +227,15 @@ public class KillingSpree extends BaseEvent {
 				_globalTrigger.setWorldZone(zone);
 				_globalTrigger.setEntities(_monsters);
 				_globalTrigger.setPlayerList(_players);
+				
+				if (_welcomeMsg != null && _welcomeMsg != "") {
+					_globalTrigger.setStartMessage(_welcomeMsg);
+				}
+				
+				if (_endMessage != null && _endMessage != "") {
+					_globalTrigger.setEndMessage(_endMessage);
+				}
+				
 				_zoneObservers.add(_globalTrigger);
 				_zoneServer.addListener(_globalTrigger);
 			}
@@ -242,11 +249,9 @@ public class KillingSpree extends BaseEvent {
 		for (ZoneObserver ob : _zoneObservers) {
 			_zoneServer.removeListener(ob);
 		}
-		
 		for (LivingEntity l : _monsters) {
 			l.remove();
 		}
-		
 	}
 
 	@Override

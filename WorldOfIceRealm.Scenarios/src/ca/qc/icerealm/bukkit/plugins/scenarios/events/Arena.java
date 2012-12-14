@@ -24,7 +24,7 @@ public class Arena extends BarbarianRaid {
 		
 		for (Player p : _players) {
 			p.setLevel(p.getLevel() + xp);
-			p.sendMessage(ChatColor.GREEN + "You received " + ChatColor.YELLOW + xp + " level " + ChatColor.GREEN + "of experience");
+			p.sendMessage(ChatColor.GREEN + "You received " + ChatColor.LIGHT_PURPLE + xp + " level " + ChatColor.GREEN + "of experience");
 		}
 	}
 	
@@ -47,7 +47,7 @@ public class Arena extends BarbarianRaid {
 	
 	protected void welcomeMessage(Player arg0) {
 		if (!_activated) {
-			arg0.sendMessage(ChatColor.YELLOW + "This arena is empty, " + ChatColor.GOLD + "come back in " + TimeFormatter.readableTime(_timeForReactivation - System.currentTimeMillis()));
+			arg0.sendMessage(ChatColor.YELLOW + "This arena is empty. " + ChatColor.GOLD + "Come back in " + ChatColor.GREEN + TimeFormatter.readableTime(_timeForReactivation - System.currentTimeMillis()));
 		}
 		else {
 			arg0.sendMessage(ChatColor.YELLOW + "This place looks like a" + ChatColor.GOLD + " gladiator arena...");	

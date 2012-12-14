@@ -56,6 +56,11 @@ public class Frontier implements Listener, CommandExecutor {
 		//_world = w;
 	}
 	
+	public double calculateGlobalModifier(Location loc) {
+		return calculateHealthModifier(loc, loc.getWorld().getSpawnLocation());
+	}
+	
+	@Deprecated
 	public double calculateHealthModifier(Location loc, Location spawn) {
 		double distance = LocationUtil.getDistanceBetween(loc, spawn);
 		double modifier = 0.0;

@@ -12,6 +12,7 @@ import org.bukkit.entity.LivingEntity;
 import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
+import ca.qc.icerealm.bukkit.plugins.scenarios.frontier.Frontier;
 
 public class MonsterSpawner implements Runnable {
 
@@ -34,14 +35,14 @@ public class MonsterSpawner implements Runnable {
 		}
 		
 		_name = name;
-		_entity = entity;		
+		_entity = entity;
 	}
 	
 	@Override
 	public void run() {
 		if (_canSpawn) {
 			_canSpawn = false;
-			double modifier = ScenarioService.getInstance().calculateHealthModifierWithFrontier(_location, _world.getSpawnLocation());
+			double modifier = Frontier.getInstance().calculateGlobalModifier(_location);
 			EntityType creature = EntityUtilities.getEntityType(_monsters[RandomUtil.getRandomInt(_monsters.length)]);
 			LivingEntity entity = (LivingEntity)ScenarioService.getInstance().spawnCreature(_world, _location, creature, modifier, false);
 			_entity.add(entity);
