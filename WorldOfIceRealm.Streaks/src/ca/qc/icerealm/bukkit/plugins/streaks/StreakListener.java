@@ -3,7 +3,6 @@ package ca.qc.icerealm.bukkit.plugins.streaks;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.milkbowl.vault.economy.Economy;
 import net.minecraft.server.MobEffect;
 
 import org.bukkit.ChatColor;
@@ -28,17 +27,14 @@ public class StreakListener implements Listener {
 	private static final int KillingStreak = 2;
 	private static final int RampageStreak = 3;
 	private static final int GodlikeStreak = 4;
-	private static final int BaseMoneyReward = 50;
 	private static final int BaseLevelReward = 1;
 	private static final long MaximumStreakInactivityTime = 15000;
 	private static final int[] ComboMileStones = new int[] { 5, 12, 20, 32, 48, 68, 92, 120 };
 
 	private Map<Player, Combo> combos;
-	private final Economy economy;
 	private final Plugin plugin;
 	
-	public StreakListener(Economy economy, Plugin plugin) {
-		this.economy = economy;
+	public StreakListener(Plugin plugin) {
 		this.plugin = plugin;		
 	}
 	
@@ -63,16 +59,13 @@ public class StreakListener implements Listener {
 			combo.getKillCount() == ComboMileStones[combo.getComboMileStone()]) {
 			
 			combo.incrementComboMileStone();
-			int moneyReward = giveMoneyReward(killer, combo.getComboMileStone());
-			
-			comboString += "(" + ChatColor.YELLOW + "+" + moneyReward + " golds";
 			
 			if (combo.isFlawless()) {
 				int levelReward = giveLevelReward(killer, (int)Math.ceil(((double)combo.getComboMileStone() * 0.5)));
-				comboString += ChatColor.DARK_GREEN + " and " + ChatColor.YELLOW + levelReward + " level"; 
+				comboString += ChatColor.DARK_GREEN + " (" + ChatColor.YELLOW + levelReward + " level"; 
 			} else if (combo.getComboMileStone() >= KillStreakLevelRewardComboCount) {
 				int levelReward = giveLevelReward(killer, 1);				
-				comboString += ChatColor.DARK_GREEN + " and " + ChatColor.YELLOW + levelReward + " level"; 
+				comboString += ChatColor.DARK_GREEN + " (" + ChatColor.YELLOW + levelReward + " level"; 
 			}			
 			
 			if (combo.getComboMileStone() == SpeedRewardComboCount) {
@@ -134,16 +127,6 @@ public class StreakListener implements Listener {
 			Combo combo = getCombo((Player) entity);
 			combo.setFlawless(false);
 		}
-	}
-
-	private int giveMoneyReward(Player killer, int modifier) {
-		int moneyReward = 0;
-		if (economy != null) {
-			 moneyReward = (int)((double)BaseMoneyReward * (((double)modifier / 2) + 0.5));
-			economy.depositPlayer(killer.getName(), moneyReward);
-		}
-		
-		return moneyReward;
 	}
 	
 	private int giveLevelReward(Player player, int modifier) {
