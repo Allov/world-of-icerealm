@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.perks;
+package ca.qc.icerealm.bukkit.plugins.perks.archer;
 
 import org.bukkit.craftbukkit.entity.CraftArrow;
 import org.bukkit.entity.LivingEntity;
@@ -9,6 +9,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import ca.qc.icerealm.bukkit.plugins.perks.PerkService;
+import ca.qc.icerealm.bukkit.plugins.perks.warrior.AdventurerPerks;
 
 public class PoisonedArrowPerk implements Listener {
 

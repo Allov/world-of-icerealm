@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.perks;
+package ca.qc.icerealm.bukkit.plugins.perks.blacksmith;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -7,6 +7,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
+
+import ca.qc.icerealm.bukkit.plugins.perks.PerkService;
+import ca.qc.icerealm.bukkit.plugins.perks.SettlerPerks;
 
 public class StoneWorkerPerk implements Listener {
 	

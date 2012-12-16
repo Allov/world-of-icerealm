@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.perks;
+package ca.qc.icerealm.bukkit.plugins.perks.farmer;
 
 import java.util.Calendar;
 import java.util.Random;
@@ -8,6 +8,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+
+import ca.qc.icerealm.bukkit.plugins.perks.PerkService;
+import ca.qc.icerealm.bukkit.plugins.perks.SettlerPerks;
 
 public class GreenThumbPerk implements Listener {
 

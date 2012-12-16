@@ -8,6 +8,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
+
 public class ClearPerk implements Listener {
 
 	private final PerkService perkService = PerkService.getInstance(); 

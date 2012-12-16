@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.perks;
+package ca.qc.icerealm.bukkit.plugins.perks.farmer;
 
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -6,6 +6,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
+
+import ca.qc.icerealm.bukkit.plugins.perks.PerkService;
+import ca.qc.icerealm.bukkit.plugins.perks.SettlerPerks;
 
 public class VassalPerk implements Listener {
 

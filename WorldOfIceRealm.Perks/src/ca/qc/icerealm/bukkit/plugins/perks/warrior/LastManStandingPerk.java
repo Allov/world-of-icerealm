@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.perks;
+package ca.qc.icerealm.bukkit.plugins.perks.warrior;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -11,6 +11,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import ca.qc.icerealm.bukkit.plugins.perks.PerkService;
 
 public class LastManStandingPerk implements Listener {
 	private PerkService perkService = PerkService.getInstance();

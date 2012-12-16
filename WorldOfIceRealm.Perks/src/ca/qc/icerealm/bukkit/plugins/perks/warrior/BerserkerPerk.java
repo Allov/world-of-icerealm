@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.perks;
+package ca.qc.icerealm.bukkit.plugins.perks.warrior;
 
 import java.util.HashMap;
 import org.bukkit.entity.Player;
@@ -9,6 +9,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import ca.qc.icerealm.bukkit.plugins.perks.PerkService;
 
 public class BerserkerPerk implements Listener {
 	

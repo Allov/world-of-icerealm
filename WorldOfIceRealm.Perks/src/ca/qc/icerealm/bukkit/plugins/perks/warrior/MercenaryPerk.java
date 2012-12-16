@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.perks;
+package ca.qc.icerealm.bukkit.plugins.perks.warrior;
 
 import java.util.logging.Logger;
 
@@ -8,6 +8,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
+
+import ca.qc.icerealm.bukkit.plugins.perks.PerkService;
 
 public class MercenaryPerk implements Listener {
 

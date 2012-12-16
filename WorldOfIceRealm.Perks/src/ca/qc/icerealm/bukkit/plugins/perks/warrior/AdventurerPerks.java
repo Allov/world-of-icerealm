@@ -1,4 +1,6 @@
-package ca.qc.icerealm.bukkit.plugins.perks;
+package ca.qc.icerealm.bukkit.plugins.perks.warrior;
+
+import ca.qc.icerealm.bukkit.plugins.perks.Perk;
 
 public class AdventurerPerks {
 	public static final String MercenaryId = "mer";

@@ -3,6 +3,20 @@ package ca.qc.icerealm.bukkit.plugins.perks;
 import org.bukkit.Server;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import ca.qc.icerealm.bukkit.plugins.perks.archer.LightningReflexesPerk;
+import ca.qc.icerealm.bukkit.plugins.perks.archer.PoisonedArrowPerk;
+import ca.qc.icerealm.bukkit.plugins.perks.blacksmith.StoneWorkerPerk;
+import ca.qc.icerealm.bukkit.plugins.perks.farmer.GreenThumbPerk;
+import ca.qc.icerealm.bukkit.plugins.perks.farmer.VassalPerk;
+import ca.qc.icerealm.bukkit.plugins.perks.lumberjack.WoodmanPerk;
+import ca.qc.icerealm.bukkit.plugins.perks.warrior.BerserkerPerk;
+import ca.qc.icerealm.bukkit.plugins.perks.warrior.ExplorerPerk;
+import ca.qc.icerealm.bukkit.plugins.perks.warrior.FindWeaknessPerk;
+import ca.qc.icerealm.bukkit.plugins.perks.warrior.LastManStandingPerk;
+import ca.qc.icerealm.bukkit.plugins.perks.warrior.LifeLeechPerk;
+import ca.qc.icerealm.bukkit.plugins.perks.warrior.MeatShieldPerk;
+import ca.qc.icerealm.bukkit.plugins.perks.warrior.MercenaryPerk;
+
 public class PerksPlugin extends JavaPlugin {
 
 	@Override

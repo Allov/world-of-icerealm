@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import ca.qc.icerealm.bukkit.plugins.data.DataPersistenceService;
 import ca.qc.icerealm.bukkit.plugins.data.DataSerializationService;
+import ca.qc.icerealm.bukkit.plugins.perks.warrior.AdventurerPerks;
 
 public class PerkService implements Listener {
 	private HashMap<String, ArrayList<Perk>> playerPerks = new HashMap<String, ArrayList<Perk>>();

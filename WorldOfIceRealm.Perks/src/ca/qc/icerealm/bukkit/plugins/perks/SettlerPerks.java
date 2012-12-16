@@ -1,5 +1,6 @@
 package ca.qc.icerealm.bukkit.plugins.perks;
 
+
 public class SettlerPerks {
 	public static final String StoneWorkerId = "sw";
 	public static final String WoodmanId = "wm";
