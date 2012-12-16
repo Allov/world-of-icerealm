@@ -22,7 +22,7 @@ public class MercenaryPerk implements Listener {
 			Monster monster = (Monster)evt.getEntity();
 			Player killer = monster.getKiller();
 			
-			if (killer != null && perkService.playerHasPerk(killer, AdventurerPerks.MercenaryId)) {
+			if (killer != null && perkService.playerHasPerk(killer, WarriorTree.MercenaryId)) {
 				evt.setDroppedExp((int)((double)evt.getDroppedExp() * 1.20));
 			}
 		}

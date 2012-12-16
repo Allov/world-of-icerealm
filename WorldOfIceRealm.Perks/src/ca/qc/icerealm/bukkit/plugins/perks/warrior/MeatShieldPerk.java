@@ -19,7 +19,7 @@ public class MeatShieldPerk implements Listener {
 		if (evt.getEntity() instanceof Player) {
 			Player player = (Player)evt.getEntity();
 			
-			if (perkService.playerHasPerk(player, AdventurerPerks.MeatShieldId)) {
+			if (perkService.playerHasPerk(player, WarriorTree.MeatShieldId)) {
 				evt.setDamage(evt.getDamage() - 1);
 			}
 		}

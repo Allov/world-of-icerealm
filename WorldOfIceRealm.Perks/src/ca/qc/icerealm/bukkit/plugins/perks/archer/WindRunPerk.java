@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.perks.warrior;
+package ca.qc.icerealm.bukkit.plugins.perks.archer;
 
 import java.util.HashMap;
 
@@ -13,43 +13,53 @@ import org.bukkit.potion.PotionEffectType;
 import ca.qc.icerealm.bukkit.plugins.perks.Cooldown;
 import ca.qc.icerealm.bukkit.plugins.perks.PerkService;
 
-public class LastManStandingPerk implements Listener {
+public class WindRunPerk implements Listener {
+	
+	private static final long CooldownTime = 60000;
+	private static final long ActivationCooldownTime = 10000; 
+
 	private PerkService perkService = PerkService.getInstance();
 	private HashMap<String, Cooldown> cooldowns = new HashMap<String, Cooldown>();
-	private static final long CooldownTime = 60000;
-	
+	private HashMap<String, Cooldown> activated = new HashMap<String, Cooldown>();
+
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerShoot(EntityDamageEvent evt) {
+	public void onPlayerHit(EntityDamageEvent evt) {
+		boolean canWindRun = false;
 		
-		boolean canLastMan = false;
-		
-		if (evt.getEntity() instanceof Player && perkService.playerHasPerk((Player)evt.getEntity(), WarriorTree.LastManStandingId)) {
+		if (evt.getEntity() instanceof Player && perkService.playerHasPerk((Player)evt.getEntity(), ArcherTree.WindRunId)) {
 			Player player = (Player)evt.getEntity();
 			
-			if (player.getHealth() > 10) {
-				return;
-			}
 			if (cooldowns.containsKey(player.getName())) {
 				if (!cooldowns.get(player.getName()).isOnCooldown()) {
 					Cooldown cd = new Cooldown(CooldownTime);
 					cooldowns.put(player.getName(), cd);
 					cd.start();
 					
-					canLastMan = true;
+					canWindRun = true;
 				}
 			} else {
 				Cooldown cd = new Cooldown(CooldownTime);
 				cooldowns.put(player.getName(), cd);
 				cd.start();
-				
-				canLastMan = true;
+
+				canWindRun = true;
 			}
 			
-			if (canLastMan) {
-				player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20*10, 2));
-			}
+			if (canWindRun) {
+				player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20*10, 1));
+				
+				Cooldown cd = new Cooldown(ActivationCooldownTime);
+				activated.put(player.getName(), cd);
+				cd.start();				
+			}			
 		}
-		
 	}
-
+	
+	public boolean isActive(Player player) {
+		if (activated.containsKey(player.getName())) {
+			return activated.get(player.getName()).isOnCooldown();
+		} else {
+			return false;
+		}
+	}
 }

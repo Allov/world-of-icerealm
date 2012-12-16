@@ -19,7 +19,7 @@ public class BerserkerPerk implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDamage(EntityDamageByEntityEvent evt) {
-		if (evt.getDamager() instanceof Player && perkService.playerHasPerk((Player)evt.getDamager(), AdventurerPerks.BerserkerId)) {
+		if (evt.getDamager() instanceof Player && perkService.playerHasPerk((Player)evt.getDamager(), WarriorTree.BerserkerId)) {
 			Player damager = (Player)evt.getDamager(); 
 			if (players.containsKey(damager)) {
 				if (damager.getLocation().getY() < players.get(damager)) {

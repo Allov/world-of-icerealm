@@ -13,24 +13,30 @@ import org.bukkit.potion.PotionEffectType;
 import ca.qc.icerealm.bukkit.plugins.perks.PerkService;
 import ca.qc.icerealm.bukkit.plugins.perks.warrior.WarriorTree;
 
-public class PoisonedArrowPerk implements Listener {
-
-	private PerkService perkService = PerkService.getInstance();
+public class FindWeaknessPerk implements Listener {
 	
+	private PerkService perkService = PerkService.getInstance();
+
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerShoot(EntityDamageByEntityEvent evt) {
 
+		Player damager = null;
+		
 		if (evt.getDamager() instanceof CraftArrow) {
 			CraftArrow arrow = (CraftArrow)evt.getDamager();
-			
-			if (arrow.getShooter() instanceof Player && perkService.playerHasPerk((Player)arrow.getShooter(), ArcherTree.PoisonedArrowId)) {
-				if (evt.getEntity() instanceof LivingEntity) {
-					LivingEntity le = (LivingEntity)evt.getEntity();					
-					le.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 5*20, 1));
-				}
+						
+			if (arrow.getShooter() instanceof Player) {
+				damager = (Player)arrow.getShooter();
 			}
+		} else if (evt.getDamager() instanceof Player) {
+			damager = (Player)evt.getDamager();
 		}
 		
+		if (damager != null && perkService.playerHasPerk(damager, ArcherTree.FindWeaknessId)) {
+			if (evt.getEntity() instanceof LivingEntity) {
+				LivingEntity le = (LivingEntity)evt.getEntity();					
+				le.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 5*20, 1));
+			}
+		}
 	}
-	
 }

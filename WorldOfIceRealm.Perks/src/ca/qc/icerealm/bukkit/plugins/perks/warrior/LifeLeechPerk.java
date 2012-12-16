@@ -17,7 +17,7 @@ public class LifeLeechPerk implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerShoot(EntityDamageByEntityEvent evt) {
 		
-		if (evt.getDamager() instanceof Player && perkService.playerHasPerk((Player)evt.getDamager(), AdventurerPerks.LifeLeechId)) {
+		if (evt.getDamager() instanceof Player && perkService.playerHasPerk((Player)evt.getDamager(), WarriorTree.LifeLeechId)) {
 			Player player = (Player)evt.getDamager();
 			player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 30, 0));
 		}

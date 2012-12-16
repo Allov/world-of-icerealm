@@ -12,7 +12,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import ca.qc.icerealm.bukkit.plugins.data.DataPersistenceService;
 import ca.qc.icerealm.bukkit.plugins.data.DataSerializationService;
-import ca.qc.icerealm.bukkit.plugins.perks.warrior.AdventurerPerks;
+import ca.qc.icerealm.bukkit.plugins.perks.archer.ArcherTree;
+import ca.qc.icerealm.bukkit.plugins.perks.warrior.WarriorTree;
 
 public class PerkService implements Listener {
 	private HashMap<String, ArrayList<Perk>> playerPerks = new HashMap<String, ArrayList<Perk>>();
@@ -26,17 +27,7 @@ public class PerkService implements Listener {
 		
 		return instance;
 	}
-	
-	private PerkService() {
-		for(Perk perk : SettlerPerks.Perks) {
-			perks.add(perk);
-		}
 
-		for(Perk perk : AdventurerPerks.Perks) {
-			perks.add(perk);
-		}
-	}
-	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent evt) {
 		DataPersistenceService data = new DataSerializationService();
@@ -153,5 +144,9 @@ public class PerkService implements Listener {
 
 	public ArrayList<Perk> getPlayerPerks(Player player) {
 		return playerPerks.get(player.getName());		
+	}
+
+	public void addTree(PerkTree tree) {
+		getPerks().addAll(tree.getPerks());
 	}
 }
