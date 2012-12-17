@@ -19,14 +19,15 @@ public class EntityReflection {
 	public final static String TARGET_GOAL_SELECTOR = "targetSelector";
 	public final static String NAVIGATION 			= "navigation";
 
-	public static <T> T getEntityPropertyValue(Object instance, Class clazz, String prop) {
+	public static <T> T getEntityPropertyValue(LivingEntity e, String prop) {
 		
 		T field = null;
 		
 		try {
-			Field f = getField(clazz, prop);
+			EntityCreature creature = getEntityCreature(e);
+			Field f = getField(creature.getClass(), prop);
 			f.setAccessible(true);
-			field = (T)f.get(instance);
+			field = (T)f.get(creature);
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
@@ -34,12 +35,13 @@ public class EntityReflection {
 		return field;
 	}
 	
-	public static void setEntityPropertyValue(Object instance, Class clazz, String prop, Object value) {
+	public static void setEntityPropertyValue(LivingEntity e, String prop, Object value) {
 		
 		try {
-			Field f = getField(clazz, prop);
+			EntityCreature creature = getEntityCreature(e);
+			Field f = getField(creature.getClass(), prop);
 			f.setAccessible(true);
-			f.set(instance, value);	
+			f.set(creature, value);	
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();

@@ -101,7 +101,7 @@ public class GlobalZoneTrigger implements ZoneObserver {
 			}
 			
 			for (LivingEntity entity : _entities) {
-				ScenarioService.getInstance().updateExistingEntity(entity, _additionalPlayerModifier, 0);
+				ScenarioService.getInstance().updateHealthModifier(entity, _additionalPlayerModifier);
 			}
 		}
 		

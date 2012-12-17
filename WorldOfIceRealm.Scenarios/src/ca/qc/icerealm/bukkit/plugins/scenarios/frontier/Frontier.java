@@ -2,6 +2,8 @@ package ca.qc.icerealm.bukkit.plugins.scenarios.frontier;
 
 import java.util.logging.Logger;
 
+import net.minecraft.server.EntityCreature;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -72,14 +74,20 @@ public class Frontier implements Listener, CommandExecutor {
 	public void onMonsterSpawn(CreatureSpawnEvent event) {
 		
 		if (event.getSpawnReason() != SpawnReason.CUSTOM && _activated && event.getEntity() instanceof Monster) {
-
+			
 			double modifier = calculateGlobalModifier(event.getLocation());
 
-			if (modifier > 0 && !_scenarioService.monsterAlreadyPresent(event.getEntity().getEntityId())) {
+			if (modifier > 0.0) {
 				
 				// boost le health
 				int maxHealth = event.getEntity().getMaxHealth() + (int)(modifier * event.getEntity().getMaxHealth());
-				EntityReflection.setEntityPropertyValue(event.getEntity(), event.getEntity().getClass(), EntityReflection.HEALTH, maxHealth);
+				try {
+					EntityReflection.setEntityPropertyValue(event.getEntity(), EntityReflection.HEALTH, maxHealth);
+					ScenarioService.getInstance().updateDamageModifier(event.getEntity(), modifier);
+				}
+				catch (Exception ex) {
+					_logger.info("exception on Frontier!");
+				}
 				
 				// ajuste les rare drops, rien en diamant dans le premier palier
 				if (LocationUtil.getDistanceBetween(event.getLocation(), event.getLocation().getWorld().getSpawnLocation()) <= _divider) {

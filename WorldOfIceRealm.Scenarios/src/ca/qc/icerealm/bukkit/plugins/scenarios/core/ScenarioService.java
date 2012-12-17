@@ -29,10 +29,6 @@ public class ScenarioService {
 	private List<Scenario> _registeredScenario;
 	private JavaPlugin _plugin;
 	private CustomMonsterListener _customMonster;
-	//private Frontier _frontier;
-	private ZoneSubject _zoneServer;
-	private ScenarioZoneProber _prober;
-	
 	private static ScenarioService _instance;
 	
 	protected ScenarioService() {
@@ -110,122 +106,45 @@ public class ScenarioService {
 	}
 	
 	public Entity spawnCreature(World w, Location l, EntityType t, double modifier, boolean burn) {
-		/*
 		LivingEntity creature = (LivingEntity)this.spawnCreature(w, l, t);
 		int maxHealth = creature.getMaxHealth() + (int)(modifier * creature.getMaxHealth());
-		logger.info(creature.toString() + " creature max heatlh: " + creature.getMaxHealth() + " will be at: " + maxHealth);
-		if (_customMonster != null && ((!burn) || (maxHealth != creature.getMaxHealth()))) {
-			_customMonster.addMonster(creature.getEntityId(), maxHealth, burn);
-		}
-		*/
-		LivingEntity creature = (LivingEntity)this.spawnCreature(w, l, t);
-		int maxHealth = creature.getMaxHealth() + (int)(modifier * creature.getMaxHealth());
-		EntityCreature entityCreature = EntityReflection.getEntityCreature(creature);
-		EntityReflection.setEntityPropertyValue(entityCreature, entityCreature.getClass(), EntityReflection.HEALTH, maxHealth);
-		EntityReflection.setEntityPropertyValue(entityCreature, entityCreature.getClass(), EntityReflection.FIRE_PROOF, !burn);
+		EntityReflection.setEntityPropertyValue(creature, EntityReflection.HEALTH, maxHealth);
+		_customMonster.updateFireproofMonster(creature, burn);
 		return creature;
 	}
 	
 	public Entity spawnCreature(World w, Location l, EntityType t, int maxHealth, boolean burn) {
-		//Frontier.getInstance().setActivated(false);
-		
-		//Frontier.getInstance().setActivated(true);
-		/*
-		if (_customMonster != null && ((!burn) || (maxHealth != creature.getMaxHealth()))) {
-			_customMonster.addMonster(creature.getEntityId(), maxHealth, burn);
-		}
-		*/
 		LivingEntity creature = (LivingEntity)this.spawnCreature(w, l, t);
-		EntityCreature entityCreature = EntityReflection.getEntityCreature(creature);
-		EntityReflection.setEntityPropertyValue(entityCreature, entityCreature.getClass(), EntityReflection.HEALTH, maxHealth);
-		EntityReflection.setEntityPropertyValue(entityCreature, entityCreature.getClass(), EntityReflection.FIRE_PROOF, !burn);
+		EntityReflection.setEntityPropertyValue(creature, EntityReflection.HEALTH, maxHealth);
+		_customMonster.updateFireproofMonster(creature, burn);
 		return creature;
 	}
-	
-	@Deprecated
-	public void addExistingEntity(Integer id, int health) {
-		this.addExistingEntity(id, health, true);
-	}
-	
-	@Deprecated
-	public void addExistingEntity(Integer id, int health, boolean burn) {
-		_customMonster.addMonster(id, health, burn, false, 0.0);
-	}
-	
-	@Deprecated
-	public void addExistingEntity(Integer id, int health, boolean burn, double damage) {
-		if (_customMonster != null) {
-			_customMonster.addMonster(id, health, burn, false, damage);
-		}
-	}
-	
-	@Deprecated
-	public void updateExistingEntity(Integer id, double modifier, double damage) {
-		if (_customMonster != null) {
-			_customMonster.updateExistingMonster(id, modifier, damage);
-		}
-		
-	}
-	
-	public void updateExistingEntity(LivingEntity e, double modifier, double damage) {
-		EntityCreature creature = EntityReflection.getEntityCreature(e);
-		int currentHealth = EntityReflection.getEntityPropertyValue(creature, creature.getClass(), EntityReflection.HEALTH);
+
+	public void updateHealthModifier(LivingEntity e, double modifier) {
+		int currentHealth = EntityReflection.getEntityPropertyValue(e, EntityReflection.HEALTH);
 		int newHealth = currentHealth + (int)(currentHealth * modifier);
-		EntityReflection.setEntityPropertyValue(creature, creature.getClass(), EntityReflection.HEALTH, newHealth);
+		EntityReflection.setEntityPropertyValue(e, EntityReflection.HEALTH, newHealth);
 	}
 	
-	@Deprecated
-	/**
-	 * Utilisez Frontier.getInstance().calculateGlobalModifier(Location loc) à la place
-	 */
-	public Entity spawnCreatureWithPotion(World w, Location l, EntityType t, PotionEffect p, boolean burn) {
-		List<PotionEffect> potions = new ArrayList<PotionEffect>();
-		return this.spawnCreatureWithPotion(w, l, t, potions, burn);
+	public void updateDamageModifier(LivingEntity e, double damage) {
+		_customMonster.updateDamageModifierMonster(e, damage);
 	}
 	
-	@Deprecated 
-	public Entity spawnCreatureWithPotion(World w, Location l, EntityType t, List<PotionEffect> p, boolean burn) {
-		//Frontier.getInstance().setActivated(false);
-		LivingEntity entity = (LivingEntity)this.spawnCreature(w, l, t);
-		//Frontier.getInstance().setActivated(true);
-		
-		entity.addPotionEffects(p);
-		if (!burn && _customMonster != null) {
-			_customMonster.addMonster(entity.getEntityId(), burn);
-		}
-		
-		return entity;
+	public void updateFireproof(LivingEntity e, boolean burn) {
+		_customMonster.updateFireproofMonster(e, burn);
 	}
 
 	public void attachRareDropMultiplierToEntity(int id, double d) {
-		
 		if (_plugin.getServer().getPluginManager().isPluginEnabled("WoI.RareDrops")) {
 			RareDropsMultiplierData.getInstance().addEntityRareDropsMultiplier(id, new RareDropsMultipliers(d));	
 		}
-		
 	}
-	
-	@Deprecated
-	public CustomMonster getCustomMonsterEntity(int id) {
-		if (_customMonster != null && _customMonster.monsterAlreadyAdded(id)) {
-			return _customMonster.getCustomMonsterEntity(id);
-		}
-		return null;
-	}
-	
-	@Deprecated
-	public boolean monsterAlreadyPresent(Integer id) {
-		return _customMonster.monsterAlreadyAdded(id);
-	}
-	
+
 	public void logInfo(String m) {
 		this.logger.info(m);
 	}
-	
+
 	@Deprecated
 	public void removeEntityFromCustomMonster(int id) {
-		if (_customMonster != null) {
-			_customMonster.removeMonster(id);	
-		}
 	}
 }
