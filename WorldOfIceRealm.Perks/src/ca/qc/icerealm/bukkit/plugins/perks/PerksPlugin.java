@@ -12,6 +12,8 @@ import ca.qc.icerealm.bukkit.plugins.perks.blacksmith.StoneWorkerPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.farmer.GreenThumbPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.farmer.VassalPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.lumberjack.WoodmanPerk;
+import ca.qc.icerealm.bukkit.plugins.perks.magic.ExecuteMagicEvent;
+import ca.qc.icerealm.bukkit.plugins.perks.magic.fire.FireStoper;
 import ca.qc.icerealm.bukkit.plugins.perks.warrior.BerserkerPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.warrior.LastManStandingPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.warrior.LifeLeechPerk;
@@ -57,10 +59,14 @@ public class PerksPlugin extends JavaPlugin {
 		PerkService.getInstance().addTree(new ArcherTree());
 		PerkService.getInstance().addTree(new WarriorTree());
 		
+		// Magic 
+		getServer().getPluginManager().registerEvents(new ExecuteMagicEvent(), this);
+		
 		// Other
 		getServer().getPluginManager().registerEvents(PerkService.getInstance(), this);
 		getServer().getPluginManager().registerEvents(new ClearPerk(), this);
 		getServer().getPluginManager().registerEvents(new PerkNotifier(), this);
+		getServer().getPluginManager().registerEvents(new FireStoper(), this);
 	}
 	
 }
