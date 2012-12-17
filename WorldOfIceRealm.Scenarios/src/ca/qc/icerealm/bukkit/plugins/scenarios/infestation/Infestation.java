@@ -201,7 +201,7 @@ public class Infestation implements ZoneObserver, Listener {
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onBlockDestroy(EntityExplodeEvent  event) {
+	public void onBlockDestroy(EntityExplodeEvent  event) { 
 		try {
 			if (_config.RegenerateExplodedBlocks && _zone.isInside(event.getEntity().getLocation())) {
 				HashMap<Location, BlockContainer> _blocks = new HashMap<Location, BlockContainer>();

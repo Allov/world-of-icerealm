@@ -39,7 +39,7 @@ public class Boss extends BaseEvent implements ZoneObserver, CombatImplementor {
 		Location l = _zoneActivation.getRandomLocation(_zoneActivation.getWorld());	
 		LivingEntity e = (LivingEntity) ScenarioService.getInstance().spawnCreature(_zoneActivation.getWorld(), l, EntityType.GIANT, 2.0, false);
 		_spawned = true;
-		_observer.startObservation(ScenarioService.getInstance().getCustomMonsterEntity(e.getEntityId()), e);
+		//_observer.startObservation(ScenarioService.getInstance().getCustomMonsterEntity(e.getEntityId()), e);
 		_lastLocation = e.getLocation();
 	}
 	

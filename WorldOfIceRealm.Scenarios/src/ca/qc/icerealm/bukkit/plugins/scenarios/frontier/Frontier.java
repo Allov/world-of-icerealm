@@ -14,15 +14,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 
 import ca.qc.icerealm.bukkit.plugins.common.LocationUtil;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultiplierData;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultipliers;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.EntityReflection;
 
 public class Frontier implements Listener, CommandExecutor {
 
-	public final Logger logger = Logger.getLogger(("Minecraft"));
+	public final Logger _logger = Logger.getLogger(("Minecraft"));
 	private ScenarioService _scenarioService = null;
 	private double _divider;
 	private boolean _activated = false;
@@ -52,48 +54,39 @@ public class Frontier implements Listener, CommandExecutor {
 		_divider = d;
 	}
 	
-	public void setWorld(World w) {
-		//_world = w;
-	}
-	
 	public double calculateGlobalModifier(Location loc) {
-		return calculateHealthModifier(loc, loc.getWorld().getSpawnLocation());
-	}
-	
-	@Deprecated
-	public double calculateHealthModifier(Location loc, Location spawn) {
-		double distance = LocationUtil.getDistanceBetween(loc, spawn);
+		double distance = LocationUtil.getDistanceBetween(loc, loc.getWorld().getSpawnLocation());
 		double modifier = 0.0;
-		
-		/*
-		if (distance > _divider) {
-			modifier = (double)distance / _divider;
-		}
-		*/
 		if (_divider > 0) {
 			modifier = (double)distance / _divider;
 		}
 		return modifier;
 	}
 	
+	@Deprecated
+	public double calculateHealthModifier(Location loc, Location spawn) {
+		return calculateGlobalModifier(loc);
+	}
+	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onMonsterSpawn(CreatureSpawnEvent event) {
 		
-		if (_activated && event.getEntity() instanceof Monster) {
-			double modifier = calculateHealthModifier(event.getLocation(), event.getLocation().getWorld().getSpawnLocation());
+		if (event.getSpawnReason() != SpawnReason.CUSTOM && _activated && event.getEntity() instanceof Monster) {
+
+			double modifier = calculateGlobalModifier(event.getLocation());
 
 			if (modifier > 0 && !_scenarioService.monsterAlreadyPresent(event.getEntity().getEntityId())) {
-				LivingEntity creature = event.getEntity();
-				int maxHealth = creature.getMaxHealth() + (int)(modifier * creature.getMaxHealth());
-				//logger.info("frontier spawn modfiier: " + modifier + "health is: " + creature.getMaxHealth() + " maxhealth is: " + maxHealth);
-				_scenarioService.addExistingEntity(creature.getEntityId(), maxHealth, true, modifier / _damage);
 				
+				// boost le health
+				int maxHealth = event.getEntity().getMaxHealth() + (int)(modifier * event.getEntity().getMaxHealth());
+				EntityReflection.setEntityPropertyValue(event.getEntity(), event.getEntity().getClass(), EntityReflection.HEALTH, maxHealth);
 				
+				// ajuste les rare drops, rien en diamant dans le premier palier
 				if (LocationUtil.getDistanceBetween(event.getLocation(), event.getLocation().getWorld().getSpawnLocation()) <= _divider) {
-					RareDropsMultiplierData.getInstance().addEntityRareDropsMultiplier(creature.getEntityId(), new RareDropsMultipliers(0.25, 0.25, 0.00));
+					RareDropsMultiplierData.getInstance().addEntityRareDropsMultiplier(event.getEntity().getEntityId(), new RareDropsMultipliers(0.25, 0.25, 0.00));
 				}
 				else {
-					RareDropsMultiplierData.getInstance().addEntityRareDropsMultiplier(creature.getEntityId(), new RareDropsMultipliers(modifier, modifier, modifier));
+					RareDropsMultiplierData.getInstance().addEntityRareDropsMultiplier(event.getEntity().getEntityId(), new RareDropsMultipliers(modifier, modifier, modifier));
 				}
 			}
 		}

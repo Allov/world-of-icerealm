@@ -105,6 +105,8 @@ public class CustomMonsterListener implements Listener {
 		
 		if (custom != null && event.getEntity() instanceof Monster) {
 			
+			logger.info("A PLUGIN IS USING THE CUSTOM MONSTER LISTENER AND IS NOT SUPPOSED!");
+			
 			if (event.getCause() == DamageCause.FIRE_TICK && !custom.Burn) {
 				event.setCancelled(true);
 				event.getEntity().setFireTicks(0);

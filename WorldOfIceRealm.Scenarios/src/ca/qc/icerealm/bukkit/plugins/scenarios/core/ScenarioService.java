@@ -3,6 +3,9 @@ package ca.qc.icerealm.bukkit.plugins.scenarios.core;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+
+import net.minecraft.server.EntityCreature;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -16,6 +19,7 @@ import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultipliers;
 import ca.qc.icerealm.bukkit.plugins.scenarios.frontier.Frontier;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.CustomMonster;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.CustomMonsterListener;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.EntityReflection;
 import ca.qc.icerealm.bukkit.plugins.scenarios.zone.ScenarioZoneProber;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
 
@@ -106,48 +110,68 @@ public class ScenarioService {
 	}
 	
 	public Entity spawnCreature(World w, Location l, EntityType t, double modifier, boolean burn) {
-		Frontier.getInstance().setActivated(false);
+		/*
 		LivingEntity creature = (LivingEntity)this.spawnCreature(w, l, t);
-		Frontier.getInstance().setActivated(true);
 		int maxHealth = creature.getMaxHealth() + (int)(modifier * creature.getMaxHealth());
 		logger.info(creature.toString() + " creature max heatlh: " + creature.getMaxHealth() + " will be at: " + maxHealth);
 		if (_customMonster != null && ((!burn) || (maxHealth != creature.getMaxHealth()))) {
 			_customMonster.addMonster(creature.getEntityId(), maxHealth, burn);
 		}
-		
+		*/
+		LivingEntity creature = (LivingEntity)this.spawnCreature(w, l, t);
+		int maxHealth = creature.getMaxHealth() + (int)(modifier * creature.getMaxHealth());
+		EntityCreature entityCreature = EntityReflection.getEntityCreature(creature);
+		EntityReflection.setEntityPropertyValue(entityCreature, entityCreature.getClass(), EntityReflection.HEALTH, maxHealth);
+		EntityReflection.setEntityPropertyValue(entityCreature, entityCreature.getClass(), EntityReflection.FIRE_PROOF, !burn);
 		return creature;
 	}
 	
 	public Entity spawnCreature(World w, Location l, EntityType t, int maxHealth, boolean burn) {
-		Frontier.getInstance().setActivated(false);
-		LivingEntity creature = (LivingEntity)this.spawnCreature(w, l, t);
-		Frontier.getInstance().setActivated(true);
+		//Frontier.getInstance().setActivated(false);
 		
+		//Frontier.getInstance().setActivated(true);
+		/*
 		if (_customMonster != null && ((!burn) || (maxHealth != creature.getMaxHealth()))) {
 			_customMonster.addMonster(creature.getEntityId(), maxHealth, burn);
 		}
+		*/
+		LivingEntity creature = (LivingEntity)this.spawnCreature(w, l, t);
+		EntityCreature entityCreature = EntityReflection.getEntityCreature(creature);
+		EntityReflection.setEntityPropertyValue(entityCreature, entityCreature.getClass(), EntityReflection.HEALTH, maxHealth);
+		EntityReflection.setEntityPropertyValue(entityCreature, entityCreature.getClass(), EntityReflection.FIRE_PROOF, !burn);
 		return creature;
 	}
 	
+	@Deprecated
 	public void addExistingEntity(Integer id, int health) {
 		this.addExistingEntity(id, health, true);
 	}
 	
+	@Deprecated
 	public void addExistingEntity(Integer id, int health, boolean burn) {
 		_customMonster.addMonster(id, health, burn, false, 0.0);
 	}
 	
+	@Deprecated
 	public void addExistingEntity(Integer id, int health, boolean burn, double damage) {
 		if (_customMonster != null) {
 			_customMonster.addMonster(id, health, burn, false, damage);
 		}
 	}
 	
+	@Deprecated
 	public void updateExistingEntity(Integer id, double modifier, double damage) {
 		if (_customMonster != null) {
 			_customMonster.updateExistingMonster(id, modifier, damage);
 		}
 		
+	}
+	
+	public void updateExistingEntity(LivingEntity e, double modifier, double damage) {
+		EntityCreature creature = EntityReflection.getEntityCreature(e);
+		int currentHealth = EntityReflection.getEntityPropertyValue(creature, creature.getClass(), EntityReflection.HEALTH);
+		int newHealth = currentHealth + (int)(currentHealth * modifier);
+		EntityReflection.setEntityPropertyValue(creature, creature.getClass(), EntityReflection.HEALTH, newHealth);
 	}
 	
 	@Deprecated
@@ -161,9 +185,9 @@ public class ScenarioService {
 	
 	@Deprecated 
 	public Entity spawnCreatureWithPotion(World w, Location l, EntityType t, List<PotionEffect> p, boolean burn) {
-		Frontier.getInstance().setActivated(false);
+		//Frontier.getInstance().setActivated(false);
 		LivingEntity entity = (LivingEntity)this.spawnCreature(w, l, t);
-		Frontier.getInstance().setActivated(true);
+		//Frontier.getInstance().setActivated(true);
 		
 		entity.addPotionEffects(p);
 		if (!burn && _customMonster != null) {
@@ -181,6 +205,7 @@ public class ScenarioService {
 		
 	}
 	
+	@Deprecated
 	public CustomMonster getCustomMonsterEntity(int id) {
 		if (_customMonster != null && _customMonster.monsterAlreadyAdded(id)) {
 			return _customMonster.getCustomMonsterEntity(id);
@@ -188,6 +213,7 @@ public class ScenarioService {
 		return null;
 	}
 	
+	@Deprecated
 	public boolean monsterAlreadyPresent(Integer id) {
 		return _customMonster.monsterAlreadyAdded(id);
 	}
@@ -196,6 +222,7 @@ public class ScenarioService {
 		this.logger.info(m);
 	}
 	
+	@Deprecated
 	public void removeEntityFromCustomMonster(int id) {
 		if (_customMonster != null) {
 			_customMonster.removeMonster(id);	
