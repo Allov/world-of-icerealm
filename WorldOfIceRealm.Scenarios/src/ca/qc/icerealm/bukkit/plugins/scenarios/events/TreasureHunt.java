@@ -125,7 +125,10 @@ public class TreasureHunt extends BaseEvent implements ZoneObserver, Listener, R
 
 	@Override
 	public void playerEntered(Player arg0) {
-		_players.add(arg0);
+		if (!_players.contains(arg0)) {
+			_players.add(arg0);
+		}
+		
 		World world = _server.getWorld("world");
 		if (!_lootAppeared) {
 			
@@ -158,7 +161,7 @@ public class TreasureHunt extends BaseEvent implements ZoneObserver, Listener, R
 		arg0.sendMessage(ChatColor.YELLOW + "You left the Ruins!");
 		_players.remove(arg0);
 		
-		if (_nbPlayers == 0 && _clearLoot) {
+		if (_players.size() == 0 && _clearLoot) {
 			removeLoot();
 		}
 	}

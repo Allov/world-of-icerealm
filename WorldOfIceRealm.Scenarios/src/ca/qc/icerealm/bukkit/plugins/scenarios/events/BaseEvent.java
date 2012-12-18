@@ -7,6 +7,7 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.BlockRestore;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PinPoint;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.ScenarioServerProxy;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
@@ -19,9 +20,26 @@ public abstract class BaseEvent implements Event {
 	protected List<List<PinPoint>> _zones;
 	protected Server _server;
 	protected String _config;
-	private ZoneSubject _zoneServer;
 	private List<EventListener> _eventListener;
 
+	protected List<WorldZone> transformIntoLocations(List<List<PinPoint>> pins) {
+		List<WorldZone> worldZones = new ArrayList<WorldZone>();
+		
+		if (_source != null) {
+			for (int i = 0; i < pins.size(); i++) {
+				List<PinPoint> zone = pins.get(i);
+				
+				if (zone.size() == 2) {
+					Location lower = new Location(_source.getWorld(), _source.getX() + zone.get(0).X, _source.getY() + zone.get(0).Y, _source.getZ() + zone.get(0).Z);
+					Location higher = new Location(_source.getWorld(), _source.getX() + zone.get(1).X, _source.getY() + zone.get(1).Y, _source.getZ() + zone.get(1).Z);
+					worldZones.add(new WorldZone(lower, higher));
+				}
+			}
+		}
+		
+		return worldZones;
+	}
+	
 	@Override
 	public abstract void setWelcomeMessage(String s);
 
@@ -79,6 +97,18 @@ public abstract class BaseEvent implements Event {
 	@Override
 	public void setActivateZone(List<List<PinPoint>> zones) {
 		_zones = zones;
+	}
+	
+	protected List<List<PinPoint>> getPinPointsByName(String name) {
+		List<List<PinPoint>> list = new ArrayList<List<PinPoint>>();
+		if (_zones != null) {
+			for (List<PinPoint> l : _zones) {
+				if (l.size() > 1 && l.get(0).Name.equalsIgnoreCase(name)) {
+					list.add(l);
+				}
+			}
+		}
+		return list;
 	}
 	
 	@Override
