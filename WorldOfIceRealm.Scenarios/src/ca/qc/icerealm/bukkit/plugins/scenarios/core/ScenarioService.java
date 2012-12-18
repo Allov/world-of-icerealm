@@ -110,6 +110,7 @@ public class ScenarioService {
 		int maxHealth = creature.getMaxHealth() + (int)(modifier * creature.getMaxHealth());
 		EntityReflection.setEntityPropertyValue(creature, EntityReflection.HEALTH, maxHealth);
 		_customMonster.updateFireproofMonster(creature, burn);
+		_customMonster.updateDamageModifierMonster(creature, modifier);
 		return creature;
 	}
 	

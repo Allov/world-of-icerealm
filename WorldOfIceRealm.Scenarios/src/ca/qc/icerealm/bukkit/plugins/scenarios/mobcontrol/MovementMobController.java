@@ -1,11 +1,13 @@
 package ca.qc.icerealm.bukkit.plugins.scenarios.mobcontrol;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import net.minecraft.server.EntityCreature;
 import net.minecraft.server.MethodProfiler;
 import net.minecraft.server.Navigation;
 import net.minecraft.server.PathEntity;
+import net.minecraft.server.PathfinderGoalFollowParent;
 import net.minecraft.server.PathfinderGoalSelector;
 
 import org.bukkit.Location;
@@ -17,6 +19,7 @@ public class MovementMobController {
 
 	private final Logger _logger = Logger.getLogger("Minecraft");
 	private MobPositionObserver _positionObserver;
+	private MobFollowingObserver _followingObserver;
 	
 	public MovementMobController() {
 		_positionObserver = new MobPositionObserver();
@@ -48,4 +51,58 @@ public class MovementMobController {
 		eCreature.getNavigation().a(path, speed);
 	}
 	
+	public void moveEntityToLocation(LivingEntity e, List<Location> locations) {
+		
+		if (locations.size() > 1) {
+			PatrolControllerObserver observer = new PatrolControllerObserver(this, locations);
+			this.moveEntityToLocation(e, locations.get(0), true, observer);
+		}
+		else if (locations.size() == 1) {
+			this.moveEntityToLocation(e, locations.get(0), true);
+		}
+	}
+	
+	public void followAnotherEntity(LivingEntity follower, LivingEntity followee) {
+		if (_followingObserver == null) {
+			_followingObserver = new MobFollowingObserver(this);
+		}
+		
+		_followingObserver.addFollowingAction(follower, followee);
+	}
+	
+	public void stopFollowAnotherEntity(LivingEntity follower) {
+		if (_followingObserver == null) {
+			_followingObserver = new MobFollowingObserver(this);
+		}
+		
+		_followingObserver.removeFollowingAction(follower);
+	}
+	
+}
+
+class PatrolControllerObserver implements DestinationReachedObserver {
+
+	private final Logger _logger = Logger.getLogger("Minecraft");
+	private MovementMobController _movementController;
+	private List<Location> _location;
+	private int _currentLocIndex = 0;
+	
+	public PatrolControllerObserver(MovementMobController mov, List<Location> list) {
+		_movementController = mov;
+		_location = list;
+	}
+	
+	@Override
+	public void destinationReached(LivingEntity e, Location l) {
+
+		if (_currentLocIndex == _location.size() - 1) {
+			_currentLocIndex = 0;
+		}
+		else {
+			_currentLocIndex++;
+		}
+		
+		Location nextLoc = _location.get(_currentLocIndex);
+		_movementController.moveEntityToLocation(e, nextLoc, true, this);
+	}
 }

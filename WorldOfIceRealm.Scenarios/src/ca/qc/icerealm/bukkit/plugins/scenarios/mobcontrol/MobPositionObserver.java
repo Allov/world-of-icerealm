@@ -1,20 +1,19 @@
 package ca.qc.icerealm.bukkit.plugins.scenarios.mobcontrol;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
-
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 
-import ca.qc.icerealm.bukkit.plugins.common.LocationUtil;
-
 public class MobPositionObserver implements Runnable {
 
+	public static int CHECK_INTERVAL = 50;
 	private final Logger _logger = Logger.getLogger("Minecraft");
 	private ScheduledExecutorService _executor;
 	private List<LivingEntity> _living;
@@ -24,39 +23,45 @@ public class MobPositionObserver implements Runnable {
 	
 	public MobPositionObserver() {
 		_executor = Executors.newSingleThreadScheduledExecutor();
-		_living = new ArrayList<LivingEntity>();
+		_living = Collections.synchronizedList(new ArrayList<LivingEntity>());
 		_destinations = new HashMap<Integer, Location>();
 		_observers = new HashMap<Integer, DestinationReachedObserver>();
 	}
-
 	
 	public void addDestinationReachedObserver(LivingEntity e, Location l, DestinationReachedObserver ob) {
-		_living.add(e);
+		if (!_living.contains(e)) {
+			synchronized (this) {
+				_living.add(e);	
+			}
+		}
+		
 		_destinations.put(e.getEntityId(), l);
 		_observers.put(e.getEntityId(), ob);
 		
 		if (!_observerLoopStarted) {
-			_executor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
+			_executor.scheduleAtFixedRate(this, 0, CHECK_INTERVAL, TimeUnit.MILLISECONDS);
 			_observerLoopStarted = true;
 		}
 	}
 	
 	@Override
 	public void run() {
-		
-		DestinationReachedObserver observer = null;
-		
-		for (LivingEntity e : _living) {
+
+		try {
 			
-			Location destination = _destinations.get(e.getEntityId());
-			
-			if (destination != null && !isDifferent(destination, e.getLocation()) &&
-				(observer = _observers.get(e.getEntityId())) != null) {
+			for (LivingEntity e : _living) {
 				
-				observer.destinationReached(e, destination);
-				_observers.remove(e.getEntityId());
-				_destinations.remove(e.getEntityId());
+				DestinationReachedObserver observer = null;
+				Location destination = _destinations.get(e.getEntityId());
+			
+				if (destination != null && !isDifferent(destination, e.getLocation()) &&
+					(observer = _observers.get(e.getEntityId())) != null) {
+					observer.destinationReached(e, destination);
+				}
 			}
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 	
