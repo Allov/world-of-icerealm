@@ -25,7 +25,7 @@ public class RareMobs extends JavaPlugin
 {
 	public static final int SPAWN_CHECK_INTERVAL = 50000;
 	public static final int SPAWN_AROUND_X = 150;
-	public static final int SPAWN_AROUND_Y = 50;
+	public static final int SPAWN_AROUND_Y = 100;
 	public static final int SPAWN_AROUND_Z = 150;
 	public static final int DEFAULT_ODDS_MULTIPLIER = 1;
 	public static Server server;

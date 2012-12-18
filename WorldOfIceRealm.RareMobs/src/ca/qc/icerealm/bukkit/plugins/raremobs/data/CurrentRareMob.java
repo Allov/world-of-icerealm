@@ -131,6 +131,7 @@ public class CurrentRareMob
     	setRareMobEntityId(-1);
     //	setSubordinatesEntityId(null);
     	setRareMobLocation(null);
+    	setFighters(new CopyOnWriteArrayList<Player>());
     	
     	if (raremobZone != null)
     	{

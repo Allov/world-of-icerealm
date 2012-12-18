@@ -7,8 +7,6 @@ import java.util.logging.Logger;
 
 import ca.qc.icerealm.bukkit.plugins.common.MapWrapper;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsFactory;
-import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultiplierData;
-import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultipliers;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsOdds;
 
 import org.bukkit.entity.EntityType;;

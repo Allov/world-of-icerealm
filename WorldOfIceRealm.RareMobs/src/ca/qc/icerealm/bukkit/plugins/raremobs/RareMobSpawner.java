@@ -18,7 +18,7 @@ import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultiplierData;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultipliers;
 import ca.qc.icerealm.bukkit.plugins.raremobs.data.CurrentRareMob;
 import ca.qc.icerealm.bukkit.plugins.raremobs.data.RareMob;
-import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
+import ca.qc.icerealm.bukkit.plugins.scenarios.frontier.Frontier;
 
 public class RareMobSpawner 
 {
@@ -48,11 +48,11 @@ public class RareMobSpawner
 			{
 				LivingEntity mob = (LivingEntity)bukkitServer.getWorld("World").spawnEntity(loc, rareMob.getCreatureType());
 				
-				ScenarioService.getInstance().removeEntityFromCustomMonster(mob.getEntityId());
+			//	ScenarioService.getInstance().removeEntityFromCustomMonster(mob.getEntityId());
 				
 				CurrentRareMob currentRareMob = CurrentRareMob.getInstance();
-				currentRareMob.getRareMob().setDistanceMultiplier(ScenarioService.getInstance().calculateHealthModifierWithFrontier(bukkitServer.getWorld("World").getSpawnLocation(), loc));
-						
+				currentRareMob.getRareMob().setDistanceMultiplier(Frontier.getInstance().calculateGlobalModifier(bukkitServer.getWorld("World").getSpawnLocation()));
+				
 				currentRareMob.setRareMobEntityId(mob.getEntityId());
 				currentRareMob.setCurrentHealth((int) (currentRareMob.getRareMob().getHealth()));			
 						
@@ -92,8 +92,6 @@ public class RareMobSpawner
 						}
 		
 						LivingEntity subordinate = (LivingEntity) bukkitServer.getWorld("World").spawnEntity(locSub, rareMob.getSubordinates().get(i).getCreatureType());	
-						
-						ScenarioService.getInstance().removeEntityFromCustomMonster(subordinate.getEntityId());
 						
 						spawnedLocations.add(locSub.toString());
 						subordinatesIds.add(subordinate.getEntityId());
