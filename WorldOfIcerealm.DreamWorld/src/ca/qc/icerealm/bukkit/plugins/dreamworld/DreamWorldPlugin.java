@@ -103,6 +103,49 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 		_eventService.clearEvents();
 	}
 	
+	private void acquireStructure(World world, Location source, int layer, int row, int col) {
+		int layerNumber = layer;
+		int rowNumber = row;
+		int colNumber = col;
+		
+		int centerX = (int)source.getX();
+		int centerY = (int)source.getY();
+		int centerZ = (int)source.getZ();
+		
+		
+		List<List<BlockUnit[]>> layers = new ArrayList<List<BlockUnit[]>>();
+		for (int j = 0; j < layerNumber; j++) {
+			
+    		List<BlockUnit[]> _rows = new ArrayList<BlockUnit[]>();
+    		for (int x = 0; x < rowNumber; x++) {
+    			
+    			BlockUnit[] blockRow = new BlockUnit[colNumber];
+    			
+    			for (int i = 0; i < colNumber; i++) {
+    				
+    				Block block = world.getBlockAt(centerX + i, centerY + j, centerZ + x);
+    				BlockUnit unit = new BlockUnit();
+    				unit.TypeId = block.getTypeId();
+    				unit.Data = block.getData();
+    				blockRow[i] = unit;
+    			}
+    			_rows.add(blockRow);
+    		}
+    		
+    		layers.add(_rows);
+    	}
+		
+		if (_pattern == null) {
+			_pattern = new StructurePattern();	
+		}
+
+		_pattern.Blocks = layers;
+		_pattern.Layer = layers.size();
+		_pattern.Column = colNumber;
+		_pattern.Row = rowNumber;
+		_pattern.Source = source;
+	}
+	
 	@Override
 	public boolean onCommand(CommandSender arg0, Command arg1, String arg2, String[] arg3) {
 		
@@ -116,8 +159,9 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 				if (arg3.length == 0 || arg3[0].equalsIgnoreCase("help") || arg3[0].equalsIgnoreCase("?")) {
 					arg0.sendMessage(ChatColor.GREEN + "[DreamWorld] " + ChatColor.LIGHT_PURPLE + "HELP GUIDE");
 					arg0.sendMessage(ChatColor.GREEN + "/dw read [string]: " + ChatColor.YELLOW + "read a structure in the specified file");
-					arg0.sendMessage(ChatColor.GREEN + "/dw acquire [int] [int] [int]: " + ChatColor.YELLOW + ChatColor.GOLD + "/dw acquire help" + ChatColor.YELLOW + " for more info");
+					arg0.sendMessage(ChatColor.GREEN + "/dw acquire [int] [int] [int] / start|end: " + ChatColor.YELLOW + ChatColor.GOLD + "/dw acquire help" + ChatColor.YELLOW + " for more info");
 					arg0.sendMessage(ChatColor.GREEN + "/dw create: " + ChatColor.YELLOW + "create the structure in the world");
+					arg0.sendMessage(ChatColor.GREEN + "/dw clear: " + ChatColor.YELLOW + "clear the structure from memory (any unsaved changes lost!)");
 					arg0.sendMessage(ChatColor.GREEN + "/dw write [filename]: " + ChatColor.YELLOW + "write the structure in file");
 					arg0.sendMessage(ChatColor.GREEN + "/dw pin: " + ChatColor.YELLOW + "pin point a location");
 					arg0.sendMessage(ChatColor.GREEN + "/dw loot: " + ChatColor.YELLOW + "pin point the loot location");
@@ -138,6 +182,10 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 
 					if (arg3.length == 2 && arg3[1].equalsIgnoreCase("help")) {
 						arg0.sendMessage(ChatColor.GREEN + "[DreamWorld] " + ChatColor.YELLOW + "How to acquire structure");
+						
+						arg0.sendMessage(ChatColor.GREEN + "1. " + ChatColor.YELLOW + "/dw acquire start" + ChatColor.GOLD + " in the lower corner facing EAST ");
+						arg0.sendMessage(ChatColor.GREEN + "2. " + ChatColor.YELLOW + "/dw acquire end" + ChatColor.GOLD + " in the upper corner go toward WEST and up ");
+						arg0.sendMessage(ChatColor.LIGHT_PURPLE + "  OR");
 						arg0.sendMessage(ChatColor.GREEN + "1. " + ChatColor.YELLOW + "Face EAST direction");
 						arg0.sendMessage(ChatColor.GREEN + "2. " + ChatColor.YELLOW + "Count the HEIGHT");
 						arg0.sendMessage(ChatColor.GREEN + "3. " + ChatColor.YELLOW + "Count the block to your RIGHT");
@@ -146,43 +194,43 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 						return true;
 					}
 					
-					if (arg3.length != 4) {
-						throw new Exception("missing argument: /dw acquire x y z");
+					if (arg3.length == 2 && arg3[1].equalsIgnoreCase("start")) {
+						_pattern = new StructurePattern();
+						_pattern.Source = new Location(world, centerX, centerY, centerZ);
+						arg0.sendMessage(showMessage("source location acquired! next operation should be /dw acquire end"));
+					}
+					else if (arg3.length == 2 && arg3[1].equalsIgnoreCase("end")) {
+						
+						if (_pattern == null) {
+							throw new Exception("the structure pattern is null. Use /dw acquire start first");
+						}
+						
+						int layer = centerY - (int)_pattern.Source.getY();
+						int row = centerZ - (int)_pattern.Source.getZ();
+						int col = centerX - (int)_pattern.Source.getX();
+						
+						this.acquireStructure(world, _pattern.Source, layer, row, col);
+						arg0.sendMessage(showMessage("structure successfully acquired!"));
+					}
+					else {
+						
+						if (arg3.length != 4) {
+							throw new Exception("missing argument: /dw acquire x y z");
+						}
+						
+						int layerNumber = Integer.parseInt(arg3[1]);
+						int rowNumber = Integer.parseInt(arg3[2]);
+						int colNumber = Integer.parseInt(arg3[3]);
+						this.acquireStructure(world, ((Player) arg0).getLocation(), layerNumber, rowNumber, colNumber);
+						arg0.sendMessage(showMessage("structure successfully acquired!"));						
 					}
 					
-					int layerNumber = Integer.parseInt(arg3[1]);
-					int rowNumber = Integer.parseInt(arg3[2]);
-					int colNumber = Integer.parseInt(arg3[3]);
-					
-					List<List<BlockUnit[]>> layers = new ArrayList<List<BlockUnit[]>>();
-					for (int j = 0; j < layerNumber; j++) {
-						
-		        		List<BlockUnit[]> _rows = new ArrayList<BlockUnit[]>();
-		        		for (int x = 0; x < rowNumber; x++) {
-		        			
-		        			BlockUnit[] blockRow = new BlockUnit[colNumber];
-		        			
-		        			for (int i = 0; i < colNumber; i++) {
-		        				
-		        				Block block = world.getBlockAt(centerX + i, centerY + j, centerZ + x);
-		        				BlockUnit unit = new BlockUnit();
-		        				unit.TypeId = block.getTypeId();
-		        				unit.Data = block.getData();
-		        				blockRow[i] = unit;
-		        			}
-		        			_rows.add(blockRow);
-		        		}
-		        		
-		        		layers.add(_rows);
-		        	}
-					
-					_pattern = new StructurePattern();
-					_pattern.Blocks = layers;
-					_pattern.Layer = layers.size();
-					_pattern.Column = colNumber;
-					_pattern.Row = rowNumber;
-					_pattern.Source = new Location(world, centerX, centerY, centerZ);
-					arg0.sendMessage(showMessage("structure successfully acquired!"));
+
+				}
+				
+				if (arg3[0].equalsIgnoreCase("clear")) {
+					_pattern = null;
+					arg0.sendMessage(showMessage("structure pattern cleared from memory"));
 				}
 				
 				if (arg3[0].equalsIgnoreCase("read")) {
