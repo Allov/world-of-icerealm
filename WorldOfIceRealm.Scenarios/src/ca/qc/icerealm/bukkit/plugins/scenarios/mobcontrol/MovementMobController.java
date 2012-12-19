@@ -13,6 +13,7 @@ import net.minecraft.server.PathfinderGoalSelector;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 
+import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.EntityReflection;
 
 public class MovementMobController {
@@ -51,6 +52,15 @@ public class MovementMobController {
 		eCreature.getNavigation().a(path, speed);
 	}
 	
+	public void moveEntityToZone(LivingEntity e, WorldZone zone, boolean eraseOldBehavior, DestinationReachedObserver ob) {
+		
+		if (ob != null) {
+			_positionObserver.addDestinationReachedObserver(e, zone, ob);
+		}
+		
+		this.moveEntityToLocation(e, zone.getCentralPointAt(zone.getMinHeight() + 1));
+	}
+	
 	public void moveEntityToLocation(LivingEntity e, List<Location> locations) {
 		
 		if (locations.size() > 1) {
@@ -76,6 +86,17 @@ public class MovementMobController {
 		}
 		
 		_followingObserver.removeFollowingAction(follower);
+	}
+	
+	public void freezeEntityToPosition(LivingEntity entity) {
+		EntityReflection.setEntityPropertyValue(entity, EntityReflection.PATH_GOAL_SELECTOR, new PathfinderGoalSelector(new MethodProfiler()));
+		EntityReflection.setEntityPropertyValue(entity, EntityReflection.TARGET_GOAL_SELECTOR, new PathfinderGoalSelector(new MethodProfiler()));
+	}
+	
+	public void modifyMovementSpeed(LivingEntity e, float modifier) {
+		float speed = EntityReflection.getEntityPropertyValue(e, EntityReflection.SPEED);
+		speed *= modifier;
+		EntityReflection.setEntityPropertyValue(e, EntityReflection.SPEED, speed);
 	}
 	
 }

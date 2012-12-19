@@ -2,18 +2,26 @@ package ca.qc.icerealm.bukkit.plugins.scenarios.events;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
+
 import org.bukkit.Location;
 import org.bukkit.Server;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.BlockRestore;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PinPoint;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.ScenarioServerProxy;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.TimeFormatter;
+import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
 
-public abstract class BaseEvent implements Event {
+public abstract class BaseEvent implements Event, Runnable {
 
+	private final Logger _logger = Logger.getLogger("Minecraft");
 	protected Location _source;
 	protected List<PinPoint> _pinPoints;
 	protected List<PinPoint> _lootPoints;
@@ -21,7 +29,50 @@ public abstract class BaseEvent implements Event {
 	protected Server _server;
 	protected String _config;
 	private List<EventListener> _eventListener;
-
+	protected int _height;
+	protected int _row;
+	protected int _col;
+	protected List<LivingEntity> _livingEntities = new ArrayList<LivingEntity>();
+	protected List<ZoneObserver> _worldZones = new ArrayList<ZoneObserver>();
+	protected boolean _coolDownActive = false;
+	protected long _timeBeforeReactivation = 0;
+	protected List<Player> _players = new ArrayList<Player>();
+	
+	@Override
+	public void run() {
+		_logger.info("disabling cooldown for event " + getName());
+		_coolDownActive = false;
+		for (LivingEntity e : _livingEntities) {
+			e.remove();
+		}	
+	}
+	
+	public void activateCoolDown(long cooldown) {
+		_logger.info("enabling cooldown for event " + getName() + " for " + cooldown + TimeFormatter.readableTime(cooldown));
+		_coolDownActive = true;
+		_timeBeforeReactivation = cooldown + System.currentTimeMillis();
+		Executors.newSingleThreadScheduledExecutor().schedule(this, cooldown, TimeUnit.MILLISECONDS);
+	}
+	
+	protected void addLivingEntity(LivingEntity e) {
+		_livingEntities.add(e);
+	}
+	
+	protected void despawnLivingEntity(List<LivingEntity> l) {
+		for (LivingEntity e : l) {
+			e.remove();
+		}
+	}
+	
+	protected void addZoneObserver(ZoneObserver e) {
+		_worldZones.add(e);
+	}
+	
+	protected List<WorldZone> getWorldZoneByName(String name) {
+		List<List<PinPoint>> pins = getPinPointsByName(name);
+		return transformIntoLocations(pins);
+	}
+	
 	protected List<WorldZone> transformIntoLocations(List<List<PinPoint>> pins) {
 		List<WorldZone> worldZones = new ArrayList<WorldZone>();
 		
@@ -38,6 +89,13 @@ public abstract class BaseEvent implements Event {
 		}
 		
 		return worldZones;
+	}
+	
+	@Override
+	public void setEventArea(int high, int row, int col) {
+		_height = high;
+		_row = row;
+		_col = col;
 	}
 	
 	@Override
@@ -136,7 +194,19 @@ public abstract class BaseEvent implements Event {
 		}
 		return null;
 	}
-
-
+	
+	protected WorldZone getAutomaticGeneralZone() {
+		return new WorldZone(_source, new Location(_source.getWorld(), _source.getX() + _col, _source.getY() + _height, _source.getZ() + _row));
+	}
+	
+	protected List<Location> transformPinIntoLocations(List<PinPoint> pins) {
+		List<Location> locations = new ArrayList<Location>();
+		
+		for (PinPoint pin : pins) {
+			locations.add(new Location(_source.getWorld(), _source.getX() + pin.X, _source.getY() + pin.Y, _source.getZ() + pin.Z));
+		}
+		
+		return locations;
+	}
 
 }

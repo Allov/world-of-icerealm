@@ -2,9 +2,9 @@ package ca.qc.icerealm.bukkit.plugins.scenarios.tools;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.Inventory;
@@ -60,6 +60,13 @@ public class Loot {
 				_chestItem = null;
 				_content.clear();
 			}			
+		}
+	}
+	
+	public void dropLootAtLocation(Location location) {
+		World w = location.getWorld();
+		for (ItemStack s : _content) {
+			w.dropItem(location, s);
 		}
 	}
 	

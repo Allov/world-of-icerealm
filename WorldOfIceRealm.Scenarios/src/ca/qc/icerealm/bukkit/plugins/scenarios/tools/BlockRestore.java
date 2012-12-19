@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 
@@ -21,7 +22,7 @@ public class BlockRestore implements Runnable {
 	 
 	@Override
 	public void run() {
-		for (Location l : _blocks.keySet()) {
+		for (Location l : _blocks.keySet()) {			
 			Block b = _world.getBlockAt(l);
 			b.setTypeId(_blocks.get(l).TypeId);
 			b.setData(_blocks.get(l).TypeData);

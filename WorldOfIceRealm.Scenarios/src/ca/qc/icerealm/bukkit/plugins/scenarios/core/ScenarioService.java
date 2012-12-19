@@ -33,6 +33,7 @@ public class ScenarioService {
 	
 	protected ScenarioService() {
 		_registeredScenario = new ArrayList<Scenario>();
+		_customMonster = new CustomMonsterListener();
 	}
 
 	public static ScenarioService getInstance() {
@@ -60,7 +61,6 @@ public class ScenarioService {
 	
 	public void setPlugin(JavaPlugin j) {
 		_plugin = j;
-		_customMonster = new CustomMonsterListener();
 		j.getServer().getPluginManager().registerEvents(_customMonster, _plugin);
 	}
 		

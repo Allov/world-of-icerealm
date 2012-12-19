@@ -20,4 +20,5 @@ public interface Event extends Listener {
 	public void setConfiguration(String config);
 	public String getConfiguration();
 	public void addEventListener(EventListener listener);
+	public void setEventArea(int high, int row, int col);
 }
