@@ -13,6 +13,7 @@ import ca.qc.icerealm.bukkit.plugins.perks.farmer.GreenThumbPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.farmer.VassalPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.lumberjack.WoodmanPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.magic.ExecuteMagicEvent;
+import ca.qc.icerealm.bukkit.plugins.perks.magic.fire.FireDamageModifier;
 import ca.qc.icerealm.bukkit.plugins.perks.magic.fire.FireStoper;
 import ca.qc.icerealm.bukkit.plugins.perks.warrior.BerserkerPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.warrior.LastManStandingPerk;
@@ -50,8 +51,8 @@ public class PerksPlugin extends JavaPlugin {
 
 		// Archer
 		getServer().getPluginManager().registerEvents(new ExplorerPerk(), this);
-		getServer().getPluginManager().registerEvents(new PoisonedArrowPerk(), this);
-		getServer().getPluginManager().registerEvents(new FindWeaknessPerk(), this);
+	//	getServer().getPluginManager().registerEvents(new PoisonedArrowPerk(), this);
+	//	getServer().getPluginManager().registerEvents(new FindWeaknessPerk(), this);
 		WindRunPerk windRunPerk = new WindRunPerk();
 		getServer().getPluginManager().registerEvents(windRunPerk, this);
 		getServer().getPluginManager().registerEvents(new LightningReflexesPerk(windRunPerk), this);
@@ -67,6 +68,7 @@ public class PerksPlugin extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new ClearPerk(), this);
 		getServer().getPluginManager().registerEvents(new PerkNotifier(), this);
 		getServer().getPluginManager().registerEvents(new FireStoper(), this);
+		getServer().getPluginManager().registerEvents(new FireDamageModifier(), this);		
 	}
 	
 }

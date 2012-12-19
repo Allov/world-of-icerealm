@@ -29,9 +29,19 @@ public class ExecuteMagicEvent implements Listener
 	    // If Right-clicked, execute magic
 	    else if(event.getItem() != null && event.getAction() != null && ((event.getAction().equals(Action.RIGHT_CLICK_AIR) || (event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) && event.getItem().getType() != null && event.getItem().getType().equals(Material.STICK)))
 	    {
-			//p.sendMessage(ChatColor.RED + ">> Execute magic");
-			MagicPerk magic = magicTogglingService.getMagicTogglingData(p.getName(), MagicData.SCHOOL_OF_FIRE);
-			magic.executeMagic(p);
+	    	if (p.getFoodLevel() > 4)
+	    	{
+				//p.sendMessage(ChatColor.RED + ">> Execute magic");
+				MagicPerk magic = magicTogglingService.getMagicTogglingData(p.getName(), MagicData.SCHOOL_OF_FIRE);
+				magic.executeMagic(p);
+				
+				//double random = (Math.random() * 100);
+				p.setFoodLevel(p.getFoodLevel() - magic.getFoodCost());
+	    	}
+	    	else
+	    	{
+	    		p.sendMessage(ChatColor.RED + ">> You are too tired to cast a spell");
+	    	}
 	    }
 	}
 }

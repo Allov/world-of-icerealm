@@ -21,11 +21,13 @@ public class BlockRestore implements Runnable {
 	 
 	@Override
 	public void run() {
-			
+		logger.info("in BlockRestore");
 		for (Location l : _blocks.keySet()) {
+			logger.info("in BlockRestore");
 			Block b = _world.getBlockAt(l);
 			b.setTypeId(_blocks.get(l).TypeId);
 			b.setData(_blocks.get(l).TypeData);
+			logger.info("restored: " + _blocks.get(l).TypeId + " loc: " + l.toString());
 		}
 	}
 	

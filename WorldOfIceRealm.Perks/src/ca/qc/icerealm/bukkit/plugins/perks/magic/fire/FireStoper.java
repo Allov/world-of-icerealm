@@ -8,7 +8,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.ExplosionPrimeEvent;
 
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.BlockContainer;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.BlockRestore;
@@ -74,5 +73,4 @@ public class FireStoper implements Listener
 			logger.info("onblock destroy in Infestation raised an exception, it's ok!");
 		}	
 	}
-   
 }

@@ -14,6 +14,7 @@ public class BigFireballMagic implements MagicPerk
 		fb.setIsIncendiary(true);
 		fb.setBounce(false);
 		fb.setShooter(player);
+	//	fb.setVelocity(new Vector(1.0,0,0));
 	}
 	
 	@Override
@@ -29,9 +30,9 @@ public class BigFireballMagic implements MagicPerk
 	}
 
 	@Override
-	public double getHungerCost() 
+	public int getFoodCost() 
 	{
-		return 0.50;
+		return 2;
 	}
 
 	@Override

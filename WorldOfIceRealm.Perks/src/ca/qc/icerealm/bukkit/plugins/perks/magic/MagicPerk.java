@@ -7,7 +7,7 @@ public interface MagicPerk
 	public String getDisplayName();
 	public int getMagicSchool();
 	public int getMagicId();
-	public double getHungerCost();
+	public int getFoodCost();
 	public int getNextTogglingMagicId();
 	public void executeMagic(Player player);
 }
