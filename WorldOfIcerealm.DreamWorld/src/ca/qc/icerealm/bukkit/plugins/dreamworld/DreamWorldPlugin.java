@@ -76,6 +76,7 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 						}
 						
 						e.setServer(getServer());
+						e.setEventArea(pattern.Layer, pattern.Row, pattern.Column);
 						e.setSourceLocation(pattern.Source);
 						e.setLootPoints(pattern.LootPoints);
 						e.setPinPoints(pattern.PinPoints);

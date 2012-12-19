@@ -83,6 +83,7 @@ public class StructurePattern {
 			_event.setPinPoints(PinPoints);
 			_event.setActivateZone(ActivationZone);
 			_event.setLootPoints(LootPoints);
+			_event.setEventArea(Layer, Row, Column);
 			_event.activateEvent();
 			_eventService.addEvent(_event);
 		}
