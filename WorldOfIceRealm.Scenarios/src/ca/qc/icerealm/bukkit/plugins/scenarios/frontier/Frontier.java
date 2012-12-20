@@ -83,7 +83,7 @@ public class Frontier implements Listener, CommandExecutor {
 				int maxHealth = event.getEntity().getMaxHealth() + (int)(modifier * event.getEntity().getMaxHealth());
 				try {
 					EntityReflection.setEntityPropertyValue(event.getEntity(), EntityReflection.HEALTH, maxHealth);
-					ScenarioService.getInstance().updateDamageModifier(event.getEntity(), _damage);
+					ScenarioService.getInstance().updateDamageModifier(event.getEntity(), modifier / 3);
 				}
 				catch (Exception ex) {
 					_logger.info("exception on Frontier!");
