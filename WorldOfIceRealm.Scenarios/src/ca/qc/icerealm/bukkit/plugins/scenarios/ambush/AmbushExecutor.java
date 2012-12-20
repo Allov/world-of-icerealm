@@ -75,8 +75,11 @@ public class AmbushExecutor implements Runnable {
 		
 		List<PotionEffect> potions = new ArrayList<PotionEffect>();
 		try {
-			PotionEffectType potion = _potions[RandomUtil.getRandomInt(_potions.length + 1)];
-			potions.add(new PotionEffect(potion, 600000, (int)modifier));
+			if ((int)modifier > 0) {
+				PotionEffectType potion = _potions[RandomUtil.getRandomInt(_potions.length + 1)];
+				potions.add(new PotionEffect(potion, 600000, ((int)modifier) - 1));	
+			}
+			
 		}
 		catch (Exception ex) {
 			// rien a faire
