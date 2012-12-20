@@ -46,6 +46,7 @@ public class CustomMonsterListener implements Listener {
 			
 			if (damager != null && damageEvent.getDamager() instanceof Monster && event.getEntity() instanceof Player) {
 				int damageDone = (int)(event.getDamage() + (event.getDamage() * damager.DamageModifier));
+				logger.info("damage done is: " + damageDone);
 				event.setDamage(damageDone);
 			}
 		}
