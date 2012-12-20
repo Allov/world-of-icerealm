@@ -127,5 +127,17 @@ public class Boss extends BaseEvent implements ZoneObserver, CombatImplementor {
 	public void setEndMessage(String s) {
 	}
 
+	@Override
+	protected long getCoolDownInterval() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	protected void resetEvent() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
  

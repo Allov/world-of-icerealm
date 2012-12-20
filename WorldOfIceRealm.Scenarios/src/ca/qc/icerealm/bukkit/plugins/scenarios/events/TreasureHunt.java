@@ -237,4 +237,16 @@ public class TreasureHunt extends BaseEvent implements ZoneObserver, Listener, R
 		// TODO Auto-generated method stub
 		return _config;
 	}
+
+	@Override
+	protected long getCoolDownInterval() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	protected void resetEvent() {
+		// TODO Auto-generated method stub
+		
+	}
 }

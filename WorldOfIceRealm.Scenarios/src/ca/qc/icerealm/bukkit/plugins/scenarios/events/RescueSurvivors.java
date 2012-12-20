@@ -16,6 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import ca.qc.icerealm.bukkit.plugins.advancedcompass.AdvancedCompass;
 import ca.qc.icerealm.bukkit.plugins.advancedcompass.CustomCompassManager;
@@ -58,6 +59,13 @@ public class RescueSurvivors extends BaseEvent implements ZoneObserver, Runnable
 	}
 	
 	@EventHandler (priority = EventPriority.NORMAL)
+	public void onPlayerJoin(PlayerJoinEvent event) { 
+		if (_general.isInside(event.getPlayer().getLocation())) {
+			_logger.info("jfddsjfk");
+		}
+	}
+	
+	@EventHandler (priority = EventPriority.NORMAL)
 	public void onSurvivorDies(EntityDeathEvent event) {
 
 		if (_livingEntities.contains(event.getEntity())) {
@@ -67,14 +75,12 @@ public class RescueSurvivors extends BaseEvent implements ZoneObserver, Runnable
 			if (_greeter.getEntityId() == event.getEntity().getEntityId()) {
 				sendMessageToPlayers("The quest giver is dead! You failed the mission!");
 				activateCoolDown();
-				clearPlayers();
 				resetEvent();
 			}
 			else {
 				if (_globalTrigger.survivorDied(event.getEntity()) == 0) {
 					sendMessageToPlayers("All the survivors died, you failed the mission!");
 					activateCoolDown();
-					clearPlayers();
 					resetEvent();
 				}
 				else {
@@ -127,14 +133,14 @@ public class RescueSurvivors extends BaseEvent implements ZoneObserver, Runnable
 
 	}
 	
-	public void resetEvent() {	
+	@Override
+	protected void resetEvent() {	
 		_rescueStarted = false;
 		_globalTrigger.setActivated(false);
 		for (ZoneObserver ob : _worldZones) {
 			getZoneSubjectInstance().removeListener(ob);
 		}
-		
-		
+		clearPlayers();
 	}
 
 	@Override
@@ -226,12 +232,6 @@ public class RescueSurvivors extends BaseEvent implements ZoneObserver, Runnable
 		}
 		
 	}
-	
-	public void sendMessageToPlayers(String msg) {
-		for (Player p : _players) {
-			p.sendMessage(msg);
-		}
-	}
 
 	@Override
 	public void playerLeft(Player p) {
@@ -249,13 +249,17 @@ public class RescueSurvivors extends BaseEvent implements ZoneObserver, Runnable
 		_players.clear();
 	}
 	
-	public void generateLoot(int modifier) {
-		_loot = LootGenerator.generateRescueSurvivorLoot((double)modifier / 10);
-		_loot.generateLoot(_globalTrigger.getWorldZone().getRandomLocation(_greeter.getWorld()));
+	public void generateLoot(double modifier) {
+		Location l = _globalTrigger.getWorldZone().getRandomLocation(_greeter.getWorld());
+		_loot = LootGenerator.generateRescueSurvivorLoot(modifier, Frontier.getInstance().calculateGlobalModifier(l));
+		_loot.generateLoot(l);
 		sendMessageToPlayers("Thank you very much, here is a reward for your courage!");
-		
 	}
 
+	@Override
+	protected long getCoolDownInterval() {
+		return COOLDOWN_INTERVAL;
+	}
 }
 
 class GreetingTrigger implements ZoneObserver, DestinationReachedObserver {
@@ -271,6 +275,7 @@ class GreetingTrigger implements ZoneObserver, DestinationReachedObserver {
 	private RescueSurvivors _rescue;
 	private LivingEntity _entity;
 	private boolean _failed = false;
+	private int _survivorToBeSaved = 0;
 		
 	public GreetingTrigger(Server s, int save, MovementMobController mob, RescueSurvivors rescue) {
 		_server = s;
@@ -283,6 +288,7 @@ class GreetingTrigger implements ZoneObserver, DestinationReachedObserver {
 		
 	public void addFollowingTrigger(FollowingTrigger t) {
 		_following.add(t);
+		_survivorToBeSaved++;
 	}
 	
 	public void setGreeter(LivingEntity entity) {
@@ -369,8 +375,7 @@ class GreetingTrigger implements ZoneObserver, DestinationReachedObserver {
 		if (_saved == _numberToSave) {
 			_rescue.activateCoolDown();
 			_rescue.sendMessageToPlayers("The survivors are now safe! Thank you!");
-			_rescue.generateLoot(_saved);
-			_rescue.clearPlayers();
+			_rescue.generateLoot(_saved / _numberToSave);
 			_rescue.resetEvent();
 		}
 		else {

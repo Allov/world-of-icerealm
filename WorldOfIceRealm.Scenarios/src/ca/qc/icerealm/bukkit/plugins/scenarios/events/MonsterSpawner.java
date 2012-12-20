@@ -50,7 +50,6 @@ public class MonsterSpawner implements Runnable {
 	}
 	
 	public void setActivate(boolean b) {
-		_logger.info("monster spawner == " + b);
 		_canSpawn = b;
 	}
 	

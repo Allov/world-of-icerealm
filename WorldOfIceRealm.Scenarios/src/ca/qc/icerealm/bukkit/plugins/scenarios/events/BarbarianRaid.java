@@ -351,6 +351,18 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 		_activated = b;
 		_logger.info("setActivate: " + b);
 	}
+
+	@Override
+	protected long getCoolDownInterval() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	protected void resetEvent() {
+		// TODO Auto-generated method stub
+		
+	}
 }
 
 

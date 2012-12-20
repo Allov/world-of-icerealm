@@ -10,6 +10,11 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.BlockRestore;
@@ -38,65 +43,9 @@ public abstract class BaseEvent implements Event, Runnable {
 	protected long _timeBeforeReactivation = 0;
 	protected List<Player> _players = new ArrayList<Player>();
 	
-	@Override
-	public void run() {
-		_logger.info("disabling cooldown for event " + getName());
-		_coolDownActive = false;
-		for (LivingEntity e : _livingEntities) {
-			e.remove();
-		}	
-	}
+	protected abstract long getCoolDownInterval();
 	
-	public void activateCoolDown(long cooldown) {
-		_logger.info("enabling cooldown for event " + getName() + " for " + cooldown + TimeFormatter.readableTime(cooldown));
-		_coolDownActive = true;
-		_timeBeforeReactivation = cooldown + System.currentTimeMillis();
-		Executors.newSingleThreadScheduledExecutor().schedule(this, cooldown, TimeUnit.MILLISECONDS);
-	}
-	
-	protected void addLivingEntity(LivingEntity e) {
-		_livingEntities.add(e);
-	}
-	
-	protected void despawnLivingEntity(List<LivingEntity> l) {
-		for (LivingEntity e : l) {
-			e.remove();
-		}
-	}
-	
-	protected void addZoneObserver(ZoneObserver e) {
-		_worldZones.add(e);
-	}
-	
-	protected List<WorldZone> getWorldZoneByName(String name) {
-		List<List<PinPoint>> pins = getPinPointsByName(name);
-		return transformIntoLocations(pins);
-	}
-	
-	protected List<WorldZone> transformIntoLocations(List<List<PinPoint>> pins) {
-		List<WorldZone> worldZones = new ArrayList<WorldZone>();
-		
-		if (_source != null) {
-			for (int i = 0; i < pins.size(); i++) {
-				List<PinPoint> zone = pins.get(i);
-				
-				if (zone.size() == 2) {
-					Location lower = new Location(_source.getWorld(), _source.getX() + zone.get(0).X, _source.getY() + zone.get(0).Y, _source.getZ() + zone.get(0).Z);
-					Location higher = new Location(_source.getWorld(), _source.getX() + zone.get(1).X, _source.getY() + zone.get(1).Y, _source.getZ() + zone.get(1).Z);
-					worldZones.add(new WorldZone(lower, higher));
-				}
-			}
-		}
-		
-		return worldZones;
-	}
-	
-	@Override
-	public void setEventArea(int high, int row, int col) {
-		_height = high;
-		_row = row;
-		_col = col;
-	}
+	protected abstract void resetEvent();
 	
 	@Override
 	public abstract void setWelcomeMessage(String s);
@@ -153,8 +102,106 @@ public abstract class BaseEvent implements Event, Runnable {
 	}
 	
 	@Override
+	public String getConfiguration() {
+		return _config != null ? _config : "";
+	}
+	
+	@Override
+	public void setConfiguration(String config) {
+		_config = config;
+	}
+	
+	@Override
 	public void setActivateZone(List<List<PinPoint>> zones) {
 		_zones = zones;
+	}
+	
+	@EventHandler (priority = EventPriority.NORMAL)
+	public void onPlayerDisconnect(PlayerQuitEvent event) {
+		boolean removed = _players.remove(event.getPlayer());
+		if (removed && _players.size() == 0) {
+			activateCoolDown(getCoolDownInterval());
+			resetEvent();
+		}
+		
+		despawnLivingEntity(_livingEntities);
+	}
+	
+	@EventHandler (priority = EventPriority.NORMAL)
+	public void onPlayerDies(PlayerDeathEvent event) {
+		boolean removed = _players.remove(event.getEntity());
+		if (removed && _players.size() == 0) {
+			resetEvent();
+		}
+		
+		despawnLivingEntity(_livingEntities);
+	}
+	
+	public void sendMessageToPlayers(String msg) {
+		for (Player p : _players) {
+			p.sendMessage(msg);
+		}
+	}
+	
+
+	@Override
+	public void setEventArea(int high, int row, int col) {
+		_height = high;
+		_row = row;
+		_col = col;
+	}
+	
+	@Override
+	public void run() {
+		_logger.info("disabling cooldown for event " + getName());
+		_coolDownActive = false;
+		for (LivingEntity e : _livingEntities) {
+			e.remove();
+		}	
+	}
+	
+	public void activateCoolDown(long cooldown) {
+		_logger.info("enabling cooldown for event " + getName() + " for " + cooldown + TimeFormatter.readableTime(cooldown));
+		_coolDownActive = true;
+		_timeBeforeReactivation = cooldown + System.currentTimeMillis();
+		Executors.newSingleThreadScheduledExecutor().schedule(this, cooldown, TimeUnit.MILLISECONDS);
+	}
+	
+	protected void addLivingEntity(LivingEntity e) {
+		_livingEntities.add(e);
+	}
+	
+	protected void despawnLivingEntity(List<LivingEntity> l) {
+		for (LivingEntity e : l) {
+			e.remove();
+		}
+	}
+	
+	protected void addZoneObserver(ZoneObserver e) {
+		_worldZones.add(e);
+	}
+	
+	protected List<WorldZone> getWorldZoneByName(String name) {
+		List<List<PinPoint>> pins = getPinPointsByName(name);
+		return transformIntoLocations(pins);
+	}
+	
+	protected List<WorldZone> transformIntoLocations(List<List<PinPoint>> pins) {
+		List<WorldZone> worldZones = new ArrayList<WorldZone>();
+		
+		if (_source != null) {
+			for (int i = 0; i < pins.size(); i++) {
+				List<PinPoint> zone = pins.get(i);
+				
+				if (zone.size() == 2) {
+					Location lower = new Location(_source.getWorld(), _source.getX() + zone.get(0).X, _source.getY() + zone.get(0).Y, _source.getZ() + zone.get(0).Z);
+					Location higher = new Location(_source.getWorld(), _source.getX() + zone.get(1).X, _source.getY() + zone.get(1).Y, _source.getZ() + zone.get(1).Z);
+					worldZones.add(new WorldZone(lower, higher));
+				}
+			}
+		}
+		
+		return worldZones;
 	}
 	
 	protected List<List<PinPoint>> getPinPointsByName(String name) {
@@ -169,15 +216,7 @@ public abstract class BaseEvent implements Event, Runnable {
 		return list;
 	}
 	
-	@Override
-	public String getConfiguration() {
-		return _config != null ? _config : "";
-	}
 	
-	@Override
-	public void setConfiguration(String config) {
-		_config = config;
-	}
 	
 	protected ZoneSubject getZoneSubjectInstance() {
 		return ScenarioServerProxy.getInstance().getZoneServer();
@@ -208,5 +247,10 @@ public abstract class BaseEvent implements Event, Runnable {
 		
 		return locations;
 	}
+	
+	
+	
+	
+	
 
 }

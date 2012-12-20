@@ -263,6 +263,18 @@ public class KillingSpree extends BaseEvent {
 		_players.clear();
 		_lootCreated = false;
 	}
+
+	@Override
+	protected long getCoolDownInterval() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	protected void resetEvent() {
+		// TODO Auto-generated method stub
+		
+	}
 }
 
 class ResetKillingSpree implements Runnable {
