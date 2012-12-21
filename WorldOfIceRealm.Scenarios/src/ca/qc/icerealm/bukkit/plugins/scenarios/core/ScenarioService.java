@@ -94,7 +94,7 @@ public class ScenarioService {
 	}
 	
 	public Entity spawnCreature(World w, Location l, EntityType t) {
-		return w.spawnEntity(l, t);
+		return w.spawn(l, t.getEntityClass());
 	}
 	
 	public Entity spawnCreature(World w, Location l, EntityType t, int maxHealth) {

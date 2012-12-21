@@ -1,6 +1,6 @@
 package ca.qc.icerealm.bukkit.plugins.perks.archer;
 
-import org.bukkit.craftbukkit.entity.CraftArrow;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,7 +11,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import ca.qc.icerealm.bukkit.plugins.perks.PerkService;
-import ca.qc.icerealm.bukkit.plugins.perks.warrior.WarriorTree;
 
 public class FindWeaknessPerk implements Listener {
 	
@@ -22,8 +21,8 @@ public class FindWeaknessPerk implements Listener {
 
 		Player damager = null;
 		
-		if (evt.getDamager() instanceof CraftArrow) {
-			CraftArrow arrow = (CraftArrow)evt.getDamager();
+		if (evt.getDamager() instanceof Arrow) {
+			Arrow arrow = (Arrow)evt.getDamager();
 						
 			if (arrow.getShooter() instanceof Player) {
 				damager = (Player)arrow.getShooter();

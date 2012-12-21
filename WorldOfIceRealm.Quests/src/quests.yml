@@ -28,7 +28,7 @@ squid:
         level: 3
         items:
             -   id: 388
-                amount: 3                    
+                amount: 2                    
 bg:
     group: normal
     name: A bone to gnaw on
@@ -50,7 +50,7 @@ bg:
         level: 2
         items:
             -   id: 388
-                amount: 3                  
+                amount: 1                  
 sd:
     group: normal
     name: A spider's delight
@@ -82,7 +82,7 @@ sd:
         level: 2
         items:
             -   id: 388
-                amount: 3                    
+                amount: 1                    
 os:
     group: normal
     name: Repairing an old shoe
@@ -98,7 +98,7 @@ os:
         -   type: kill
             name: Kill 10 Zombies
             what: 54
-            amount: 10
+            amount: 1
     rewards:
         money: 300
         level: 2
@@ -129,7 +129,7 @@ tb:
             -   id: 46
                 amount: 1
             -   id: 388
-                amount: 5                    
+                amount: 1                    
 cave:
     group: average
     name: Cave
@@ -151,7 +151,7 @@ cave:
             -   id: 322
                 amount: 2
             -   id: 388
-                amount: 5                    
+                amount: 1                    
 cmn:
     group: average
     name: Cry more, noob
@@ -175,7 +175,7 @@ cmn:
             -   id: 322
                 amount: 3
             -   id: 388
-                amount: 4                    
+                amount: 2                    
 fire:
     group: average
     name: Fire starter
@@ -194,7 +194,7 @@ fire:
             -   id: 388
                 amount: 1                    
             -   id: 388
-                amount: 4                   
+                amount: 2                   
 pigmen:
     group: average
     name: Zombified Pigs and Men!
@@ -221,7 +221,7 @@ pigmen:
             -   id: 322
                 amount: 3
             -   id: 388
-                amount: 5                    
+                amount: 1                    
 dia:
     group: normal-adventure
     name: Diamonds!
@@ -259,7 +259,7 @@ blue:
         level: 5
         items:
             -   id: 388
-                amount: 5                    
+                amount: 1                   
 ender:
     group: normal
     name: Creepy, creepy things
@@ -283,7 +283,7 @@ ender:
             -   id: 322
                 amount: 5
             -   id: 388
-                amount: 3                    
+                amount: 1                   
 #cs:
 #    group: hard
 #    name: Castle under siege

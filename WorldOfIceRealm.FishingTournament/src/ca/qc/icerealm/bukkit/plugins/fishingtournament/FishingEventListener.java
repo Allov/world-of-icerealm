@@ -1,9 +1,7 @@
 package ca.qc.icerealm.bukkit.plugins.fishingtournament;
 
-import java.util.logging.Logger;
-
-import org.bukkit.craftbukkit.entity.CraftItem;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -21,7 +19,7 @@ class FishingEventListener implements Listener {
 		if (tournament.isInProgress()) {
 			Entity theCatch = event.getCaught();
 			
-			if (theCatch instanceof CraftItem) {
+			if (theCatch instanceof Item) {
 				tournament.addCatchToPlayer(event.getPlayer());
 			}
 		}

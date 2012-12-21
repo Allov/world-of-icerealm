@@ -1,6 +1,6 @@
 package ca.qc.icerealm.bukkit.plugins.trading;
 
-import net.minecraft.server.MerchantRecipe;
+import net.minecraft.server.v1_4_6.MerchantRecipe;
 
 import org.bukkit.inventory.ItemStack;
 
@@ -82,10 +82,7 @@ public class VillagerTradeOffer {
 	 * @return - A MerchantRecipie that can be used by minecraft's internal classes
 	 * @throws NullTradeOfferException - Thrown when the offer isn't valid; ie: one of the ItemStack's are null
 	 */
-	public MerchantRecipe getMerchantRecipie() throws NullTradeOfferException{
-		
-		if (Cost1 == null || Offer == null) throw new NullTradeOfferException();
-		
+	public MerchantRecipe getMerchantRecipie() {
 		if (Cost2 == null) return new MerchantRecipe(getNMSCost1(), getNMSOffer());
 		else  return new MerchantRecipe(getNMSCost1(), getNMSCost2(), getNMSOffer());
 	}
@@ -95,7 +92,7 @@ public class VillagerTradeOffer {
 	 * @return - The first items the villager wants, in
 	 * a netMinecraftServer itemstack
 	 */
-	public net.minecraft.server.ItemStack getNMSCost1() {
+	public net.minecraft.server.v1_4_6.ItemStack getNMSCost1() {
 		return convertItemStackToNMS(this.Cost1);
 	}
 	
@@ -104,7 +101,7 @@ public class VillagerTradeOffer {
 	 * @return - The second item the villager wants, in
 	 * a netMinecraftServer itemstack
 	 */
-	public net.minecraft.server.ItemStack getNMSCost2() {
+	public net.minecraft.server.v1_4_6.ItemStack getNMSCost2() {
 		return convertItemStackToNMS(this.Cost2);
 	}
 	
@@ -113,7 +110,7 @@ public class VillagerTradeOffer {
 	 * @return - The item the villager is offering, in
 	 * a netMinecraftServer itemstack
 	 */
-	public net.minecraft.server.ItemStack getNMSOffer() {
+	public net.minecraft.server.v1_4_6.ItemStack getNMSOffer() {
 		return convertItemStackToNMS(this.Offer);
 	}
 	
@@ -124,12 +121,12 @@ public class VillagerTradeOffer {
 	 * 
 	 * Note: looses enchantments and metadata
 	 */
-	private net.minecraft.server.ItemStack convertItemStackToNMS(ItemStack i) {
+	private net.minecraft.server.v1_4_6.ItemStack convertItemStackToNMS(ItemStack i) {
 		int amount = i.getAmount();
 		int id = i.getType().getId();
 		short durability = i.getDurability();
 		
-		return new net.minecraft.server.ItemStack(id,amount,durability);
+		return new net.minecraft.server.v1_4_6.ItemStack(id,amount,durability);
 	}
 	
 }

@@ -10,6 +10,7 @@ public class ArcherTree extends PerkTree {
 	public static final String PoisonedArrowId = "pa";
 	public static final String FindWeaknessId = "fw";
 	public static final String WindRunId = "wr";
+	public static final String LeatherExpertId = "le";
 
 	public static final Perk Explorer = new Perk(	ExplorerId, 
 													"Explorer", 
@@ -17,6 +18,13 @@ public class ArcherTree extends PerkTree {
 													5, 
 													null, 
 													null);
+
+	public static final Perk LeatherExpert = new Perk(	LeatherExpertId, 
+														"Leather Expert", 
+														"Increase bow damage by 10, 20, 30 and 50% per leather armor pieces.", 
+														5, 
+														null, 
+														null);
 
 	public static final Perk PoisonedArrow = new Perk(	PoisonedArrowId, 
 														"Poisoned Arrow", 
@@ -48,6 +56,7 @@ public class ArcherTree extends PerkTree {
 
 	public static final Perk[] Perks = new Perk[] {
 		Explorer,
+		LeatherExpert,
 		PoisonedArrow,
 		LightningReflexes,
 		FindWeakness,

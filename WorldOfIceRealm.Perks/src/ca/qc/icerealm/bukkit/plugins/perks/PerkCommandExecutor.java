@@ -1,12 +1,16 @@
 package ca.qc.icerealm.bukkit.plugins.perks;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
 
 public class PerkCommandExecutor implements CommandExecutor {
@@ -18,6 +22,7 @@ public class PerkCommandExecutor implements CommandExecutor {
 	private static final String PerkListShortCutParam = "l";
 	private static final String PerkMyPerksParam = "myperks";
 	private static final String PerkMyPerksShortCutParam = "m";
+	private static final String PerkTestParam = "t";
 	private final PerksPlugin plugin;
 	private final PerkService perkService = PerkService.getInstance();
 	
@@ -72,6 +77,7 @@ public class PerkCommandExecutor implements CommandExecutor {
 					} else {
 						player.sendMessage(ChatColor.RED + "You have no perk.");
 					}
+				} else if (params.length > 0 && params[0].equalsIgnoreCase(PerkTestParam)) {
 					
 				} else {
 					player.sendMessage(new String[] {

@@ -5,6 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import ca.qc.icerealm.bukkit.plugins.perks.archer.ArcherTree;
 import ca.qc.icerealm.bukkit.plugins.perks.archer.ExplorerPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.archer.FindWeaknessPerk;
+import ca.qc.icerealm.bukkit.plugins.perks.archer.LeatherExpertPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.archer.LightningReflexesPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.archer.PoisonedArrowPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.archer.WindRunPerk;
@@ -13,9 +14,8 @@ import ca.qc.icerealm.bukkit.plugins.perks.farmer.GreenThumbPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.farmer.VassalPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.lumberjack.WoodmanPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.magic.ExecuteMagicEvent;
-import ca.qc.icerealm.bukkit.plugins.perks.magic.fire.FireDamageModifier;
+//import ca.qc.icerealm.bukkit.plugins.perks.magic.fire.FireDamageModifier;
 import ca.qc.icerealm.bukkit.plugins.perks.magic.fire.FireStoper;
-import ca.qc.icerealm.bukkit.plugins.perks.magic.fire.FireTree;
 import ca.qc.icerealm.bukkit.plugins.perks.warrior.BerserkerPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.warrior.LastManStandingPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.warrior.LifeLeechPerk;
@@ -52,26 +52,27 @@ public class PerksPlugin extends JavaPlugin {
 
 		// Archer
 		getServer().getPluginManager().registerEvents(new ExplorerPerk(), this);
-	//	getServer().getPluginManager().registerEvents(new PoisonedArrowPerk(), this);
-	//	getServer().getPluginManager().registerEvents(new FindWeaknessPerk(), this);
+		getServer().getPluginManager().registerEvents(new PoisonedArrowPerk(), this);
+		getServer().getPluginManager().registerEvents(new FindWeaknessPerk(), this);
 		WindRunPerk windRunPerk = new WindRunPerk();
 		getServer().getPluginManager().registerEvents(windRunPerk, this);
 		getServer().getPluginManager().registerEvents(new LightningReflexesPerk(windRunPerk), this);
+		getServer().getPluginManager().registerEvents(new LeatherExpertPerk(), this);
 		
 		PerkService.getInstance().addTree(new ArcherTree());
 		PerkService.getInstance().addTree(new WarriorTree());
 		
 		// Magic 
-		getServer().getPluginManager().registerEvents(new ExecuteMagicEvent(), this);
+		//getServer().getPluginManager().registerEvents(new ExecuteMagicEvent(), this);
+		//getServer().getPluginManager().registerEvents(new FireStoper(), this);
+		//getServer().getPluginManager().registerEvents(new FireDamageModifier(), this);		
 		
-		PerkService.getInstance().addTree(new FireTree());
+		//PerkService.getInstance().addTree(new FireTree());
 		
 		// Other
 		getServer().getPluginManager().registerEvents(PerkService.getInstance(), this);
 		getServer().getPluginManager().registerEvents(new ClearPerk(), this);
 		getServer().getPluginManager().registerEvents(new PerkNotifier(), this);
-		getServer().getPluginManager().registerEvents(new FireStoper(), this);
-		getServer().getPluginManager().registerEvents(new FireDamageModifier(), this);		
 	}
 	
 }

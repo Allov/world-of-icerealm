@@ -3,10 +3,8 @@ package ca.qc.icerealm.bukkit.plugins.streaks;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.server.MobEffect;
 
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -17,6 +15,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class StreakListener implements Listener {
 	
@@ -105,18 +105,15 @@ public class StreakListener implements Listener {
 	}
 	
 	private void giveRegenReward(Player killer) {
-		CraftPlayer cp = (CraftPlayer)killer;
-		cp.getHandle().addEffect(new MobEffect(10, 1000, 0));
+		killer.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20*50, 0));
 	}
 
 	private void giveStrengthReward(Player killer) {
-		CraftPlayer cp = (CraftPlayer)killer;
-		cp.getHandle().addEffect(new MobEffect(5, 1000, 0));
+		killer.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20*50, 0));
 	}
 
 	private void giveSpeedReward(Player killer) {
-		CraftPlayer cp = (CraftPlayer)killer;
-		cp.getHandle().addEffect(new MobEffect(1, 1000, 0));
+		killer.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20*50, 0));
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
