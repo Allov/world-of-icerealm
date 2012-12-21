@@ -1,7 +1,5 @@
 package ca.qc.icerealm.bukkit.plugins.recipes;
 
-import net.minecraft.server.ShapelessRecipes;
-
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
