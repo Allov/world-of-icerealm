@@ -84,6 +84,7 @@ public abstract class BaseEvent implements Event, Runnable {
 	@Override
 	public void setSourceLocation(Location source) {
 		_source = source;
+		_logger.info(_source.toString());
 	}
 
 	@Override
@@ -196,7 +197,7 @@ public abstract class BaseEvent implements Event, Runnable {
 				if (zone.size() == 2) {
 					Location lower = new Location(_source.getWorld(), _source.getX() + zone.get(0).X, _source.getY() + zone.get(0).Y, _source.getZ() + zone.get(0).Z);
 					Location higher = new Location(_source.getWorld(), _source.getX() + zone.get(1).X, _source.getY() + zone.get(1).Y, _source.getZ() + zone.get(1).Z);
-					worldZones.add(new WorldZone(lower, higher));
+					worldZones.add(new WorldZone(lower, higher, lower.getY(), higher.getY()));
 				}
 			}
 		}
@@ -228,7 +229,7 @@ public abstract class BaseEvent implements Event, Runnable {
 			if (zone.size() == 2 && zone.get(0).Name.equalsIgnoreCase("general")) {
 				Location lower = new Location(_source.getWorld(), _source.getX() + zone.get(0).X, _source.getY() + zone.get(0).Y, _source.getZ() + zone.get(0).Z);
 				Location higher = new Location(_source.getWorld(), _source.getX() + zone.get(1).X, _source.getY() + zone.get(1).Y, _source.getZ() + zone.get(1).Z);
-				return new WorldZone(lower, higher);
+				return new WorldZone(lower, higher, lower.getY(), higher.getY());
 			}
 		}
 		return null;

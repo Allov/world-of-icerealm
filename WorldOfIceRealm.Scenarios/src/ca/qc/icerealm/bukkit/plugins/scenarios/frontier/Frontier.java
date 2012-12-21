@@ -2,7 +2,7 @@ package ca.qc.icerealm.bukkit.plugins.scenarios.frontier;
 
 import java.util.logging.Logger;
 
-import net.minecraft.server.EntityCreature;
+import net.minecraft.server.v1_4_6.EntityCreature;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

@@ -2,11 +2,9 @@ package ca.qc.icerealm.bukkit.plugins.scenarios.tools;
 
 import java.lang.reflect.Field;
 import java.util.logging.Logger;
-
-import org.bukkit.craftbukkit.entity.CraftEntity;
+import net.minecraft.server.v1_4_6.EntityCreature;
+import org.bukkit.craftbukkit.v1_4_6.entity.CraftEntity;
 import org.bukkit.entity.LivingEntity;
-
-import net.minecraft.server.EntityCreature;
 
 public class EntityReflection {
 	

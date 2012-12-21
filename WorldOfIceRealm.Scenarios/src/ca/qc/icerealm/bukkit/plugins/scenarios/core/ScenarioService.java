@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import net.minecraft.server.EntityCreature;
+import net.minecraft.server.v1_4_6.EntityCreature;
 
 import org.bukkit.Location;
 import org.bukkit.World;

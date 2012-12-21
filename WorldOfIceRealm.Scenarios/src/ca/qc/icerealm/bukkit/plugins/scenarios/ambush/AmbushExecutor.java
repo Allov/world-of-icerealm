@@ -5,15 +5,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.logging.Logger;
-
-import net.minecraft.server.EntityFireball;
-
+import net.minecraft.server.v1_4_6.EntityFireball;
 import org.bukkit.ChatColor;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.entity.CraftFireball;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Fireball;

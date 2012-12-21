@@ -25,6 +25,7 @@ import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
 import ca.qc.icerealm.bukkit.plugins.scenarios.frontier.Frontier;
 import ca.qc.icerealm.bukkit.plugins.scenarios.mobcontrol.DestinationReachedObserver;
 import ca.qc.icerealm.bukkit.plugins.scenarios.mobcontrol.MovementMobController;
+import ca.qc.icerealm.bukkit.plugins.scenarios.spawners.FixedDelayProximitySpawner;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.Loot;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.LootGenerator;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PinPoint;
@@ -44,11 +45,13 @@ public class RescueSurvivors extends BaseEvent implements ZoneObserver, Runnable
 	private LivingEntity _greeter;
 	private CustomCompassManager _compass;
 	private Loot _loot;
+	private List<FixedDelayProximitySpawner> _spawner;
 	
 	public RescueSurvivors() {
 		_mobControl = new MovementMobController();
 		_service = ScenarioService.getInstance();
 		_monstersEntities = new ArrayList<LivingEntity>();
+		_spawner = new ArrayList<FixedDelayProximitySpawner>();
 	}
 	
 	@EventHandler (priority = EventPriority.NORMAL)
@@ -58,13 +61,14 @@ public class RescueSurvivors extends BaseEvent implements ZoneObserver, Runnable
 		}
 	}
 	
+	/*
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent event) { 
 		if (_general.isInside(event.getPlayer().getLocation())) {
 			_logger.info("jfddsjfk");
 		}
 	}
-	
+	*/
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void onSurvivorDies(EntityDeathEvent event) {
 
@@ -141,6 +145,11 @@ public class RescueSurvivors extends BaseEvent implements ZoneObserver, Runnable
 			getZoneSubjectInstance().removeListener(ob);
 		}
 		clearPlayers();
+		
+		for (FixedDelayProximitySpawner s : _spawner) {
+			s.disable();
+		}
+		
 	}
 
 	@Override
@@ -178,7 +187,8 @@ public class RescueSurvivors extends BaseEvent implements ZoneObserver, Runnable
 			for (WorldZone z : greeting) { // devrait en avoir seulement une
 				
 				// creation du mob et on le freeze sur place
-				Location l = z.getCentralPointAt(10);
+				Location l = z.getCentralPointAt(_source.getY() + 2);
+				_logger.info("max height is : " + z.getMaxHeight());
 				
 				_compass = new CustomCompassManager(getName(), p);
 				_compass.setCustomLocation(l, ChatColor.AQUA + "Your compass is pointing in the safe zone");
@@ -199,7 +209,7 @@ public class RescueSurvivors extends BaseEvent implements ZoneObserver, Runnable
 			// les zones ou les villager vont commencer a te suivre
 			for (WorldZone z : follow) {
 				// creation des survivors
-				Location l = z.getCentralPointAt(10);
+				Location l = z.getCentralPointAt(_source.getY() + 2);
 				LivingEntity follower = (LivingEntity)_service.spawnCreature(l.getWorld(), l, EntityType.VILLAGER);
 				this.addLivingEntity(follower);
 				_mobControl.freezeEntityToPosition(follower);
@@ -213,11 +223,18 @@ public class RescueSurvivors extends BaseEvent implements ZoneObserver, Runnable
 				addZoneObserver(zoneTrigger);
 			}
 			
-			List<Location> monstersLocation = transformPinIntoLocations(_pinPoints);
-			double modifier = Frontier.getInstance().calculateGlobalModifier(_source);
-			for (Location location : monstersLocation) {
-				LivingEntity monster = (LivingEntity)_service.spawnCreature(location.getWorld(), location, EntityType.ZOMBIE, modifier, true);
-				_monstersEntities.add(monster);
+			if (_spawner.size() == 0) {
+				List<Location> monstersLocation = transformPinIntoLocations(_pinPoints);
+				for (Location location : monstersLocation) {
+					FixedDelayProximitySpawner spawner = new FixedDelayProximitySpawner(_server);
+					spawner.setLocation(location);
+					_spawner.add(spawner);
+				}
+			}
+			else {
+				for (FixedDelayProximitySpawner s : _spawner) {
+					s.enable();
+				}
 			}
 					
 			_rescueStarted = true;
@@ -254,6 +271,7 @@ public class RescueSurvivors extends BaseEvent implements ZoneObserver, Runnable
 		_loot = LootGenerator.generateRescueSurvivorLoot(modifier, Frontier.getInstance().calculateGlobalModifier(l));
 		_loot.generateLoot(l);
 		sendMessageToPlayers("Thank you very much, here is a reward for your courage!");
+
 	}
 
 	@Override
