@@ -47,4 +47,10 @@ public class FireballMagic implements MagicPerk
 	{
 		return "Fireball";
 	}
+	
+	@Override
+	public String getPerkId() 
+	{
+		return FireTree.FireballId;
+	}
 }

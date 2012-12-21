@@ -15,6 +15,7 @@ import ca.qc.icerealm.bukkit.plugins.perks.lumberjack.WoodmanPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.magic.ExecuteMagicEvent;
 import ca.qc.icerealm.bukkit.plugins.perks.magic.fire.FireDamageModifier;
 import ca.qc.icerealm.bukkit.plugins.perks.magic.fire.FireStoper;
+import ca.qc.icerealm.bukkit.plugins.perks.magic.fire.FireTree;
 import ca.qc.icerealm.bukkit.plugins.perks.warrior.BerserkerPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.warrior.LastManStandingPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.warrior.LifeLeechPerk;
@@ -62,6 +63,8 @@ public class PerksPlugin extends JavaPlugin {
 		
 		// Magic 
 		getServer().getPluginManager().registerEvents(new ExecuteMagicEvent(), this);
+		
+		PerkService.getInstance().addTree(new FireTree());
 		
 		// Other
 		getServer().getPluginManager().registerEvents(PerkService.getInstance(), this);

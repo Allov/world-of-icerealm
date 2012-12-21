@@ -51,6 +51,7 @@ mobs:
                 odds: 4.00                
             -   name: IRON_BOOTS
                 odds: 0.10
+                enchantments: low odds
             -   name: EMERALD
                 odds: 0.50
             -   name: IRON_CHESTPLATE
@@ -61,7 +62,10 @@ mobs:
                 enchantments: low odds 
             -   name: IRON_LEGGINGS
                 odds: 0.10
-                enchantments: low odds                                           
+                enchantments: low odds  
+            -   name: DIAMOND_SWORD
+                odds: 10.00
+                enchantments: average odds                                         
     SKELETON:
         materials:
             -   name: IRON_PICKAXE

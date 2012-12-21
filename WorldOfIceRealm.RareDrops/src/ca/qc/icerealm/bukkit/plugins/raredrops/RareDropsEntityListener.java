@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.Monster;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import ca.qc.icerealm.bukkit.plugins.common.ConfigWrapper;
 import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 import ca.qc.icerealm.bukkit.plugins.common.MapWrapper;
-import ca.qc.icerealm.bukkit.plugins.common.NamedItemStack;
+import ca.qc.icerealm.bukkit.plugins.common.MaterialUtil;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropResult;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsFactory;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropsMultiplierData;
@@ -112,12 +112,14 @@ public class RareDropsEntityListener implements Listener
 		        		RareDropResult raredrop = items.get(i);
 		        		
 		        		// Also change the name of the item if needed
+		        		
 		        		if (raredrop.getCustomName() != null && !raredrop.getCustomName().equals(""))
 		        		{
-		        			ItemStack bukkitItem = NamedItemStack.toCraftBukkit(raredrop.getItemStack());
-		        		    NamedItemStack namedItemStack = new NamedItemStack(bukkitItem);
-		        		    namedItemStack.setName(raredrop.getCustomName());
-		        		    event.getDrops().add(bukkitItem);
+		        			ItemStack stack = raredrop.getItemStack();
+		        			ItemMeta im = stack.getItemMeta();
+		        			im.setDisplayName(MaterialUtil.toTitleCase(raredrop.getCustomName()));
+		        			stack.setItemMeta(im);
+		        		    event.getDrops().add(stack);
 		        		}
 		        		else
 		        		{

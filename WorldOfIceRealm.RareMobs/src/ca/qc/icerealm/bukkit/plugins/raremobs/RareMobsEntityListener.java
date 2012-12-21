@@ -13,9 +13,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
-import ca.qc.icerealm.bukkit.plugins.common.NamedItemStack;
+import ca.qc.icerealm.bukkit.plugins.common.MaterialUtil;
 import ca.qc.icerealm.bukkit.plugins.raredrops.RareDropsChat;
 import ca.qc.icerealm.bukkit.plugins.raredrops.data.RareDropResult;
 import ca.qc.icerealm.bukkit.plugins.raredrops.randomizer.MultipleRareDropsRandomizer;
@@ -55,10 +56,11 @@ public class RareMobsEntityListener implements Listener
 	        		// Also change the name of the item if needed
 	        		if (raredrop.getCustomName() != null && !raredrop.getCustomName().equals(""))
 	        		{
-	        			ItemStack bukkitItem = NamedItemStack.toCraftBukkit(raredrop.getItemStack());
-	        		    NamedItemStack namedItemStack = new NamedItemStack(bukkitItem);
-	        		    namedItemStack.setName(raredrop.getCustomName());
-	        		    event.getDrops().add(bukkitItem);
+	        			ItemStack stack = raredrop.getItemStack();
+	        			ItemMeta im = stack.getItemMeta();
+	        			im.setDisplayName(MaterialUtil.toTitleCase(raredrop.getCustomName()));
+	        			stack.setItemMeta(im);
+	        		    event.getDrops().add(stack);
 	        		}
 	        		else
 	        		{

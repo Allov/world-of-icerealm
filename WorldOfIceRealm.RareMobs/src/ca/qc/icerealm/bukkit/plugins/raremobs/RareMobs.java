@@ -18,15 +18,14 @@ import ca.qc.icerealm.bukkit.plugins.common.ConfigWrapper;
 import ca.qc.icerealm.bukkit.plugins.common.MapWrapper;
 import ca.qc.icerealm.bukkit.plugins.raremobs.data.RareMobsData;
 import ca.qc.icerealm.bukkit.plugins.raremobs.data.RareMobsFactory;
-import ca.qc.icerealm.bukkit.plugins.scenarios.tools.CustomMonsterListener;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 
 public class RareMobs extends JavaPlugin
 {
 	public static final int SPAWN_CHECK_INTERVAL = 50000;
-	public static final int SPAWN_AROUND_X = 150;
+	public static final int SPAWN_AROUND_X = 200;
 	public static final int SPAWN_AROUND_Y = 100;
-	public static final int SPAWN_AROUND_Z = 150;
+	public static final int SPAWN_AROUND_Z = 200;
 	public static final int DEFAULT_ODDS_MULTIPLIER = 1;
 	public static Server server;
 	
