@@ -84,7 +84,6 @@ public abstract class BaseEvent implements Event, Runnable {
 	@Override
 	public void setSourceLocation(Location source) {
 		_source = source;
-		_logger.info(_source.toString());
 	}
 
 	@Override
@@ -197,7 +196,11 @@ public abstract class BaseEvent implements Event, Runnable {
 				if (zone.size() == 2) {
 					Location lower = new Location(_source.getWorld(), _source.getX() + zone.get(0).X, _source.getY() + zone.get(0).Y, _source.getZ() + zone.get(0).Z);
 					Location higher = new Location(_source.getWorld(), _source.getX() + zone.get(1).X, _source.getY() + zone.get(1).Y, _source.getZ() + zone.get(1).Z);
-					worldZones.add(new WorldZone(lower, higher, lower.getY(), higher.getY()));
+					_logger.info(_source.getY() + " " + zone.get(0).Y + ", " +  _source.getY() + " " + zone.get(1).Y + " tranformed into locations");
+					
+					WorldZone z = new WorldZone(lower, higher, lower.getY(), higher.getY());
+					worldZones.add(z);
+					
 				}
 			}
 		}
@@ -236,7 +239,9 @@ public abstract class BaseEvent implements Event, Runnable {
 	}
 	
 	protected WorldZone getAutomaticGeneralZone() {
-		return new WorldZone(_source, new Location(_source.getWorld(), _source.getX() + _col, _source.getY() + _height, _source.getZ() + _row));
+		Location lower = new Location(_source.getWorld(), _source.getX(), _source.getY(), _source.getZ());
+		Location higher = new Location(_source.getWorld(), _source.getX() + _col, _source.getY() + _height, _source.getZ() + _row);
+		return new WorldZone(lower, higher, lower.getY(), higher.getY());
 	}
 	
 	protected List<Location> transformPinIntoLocations(List<PinPoint> pins) {

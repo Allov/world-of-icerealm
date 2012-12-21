@@ -110,7 +110,7 @@ public class RescueSurvivors extends BaseEvent implements ZoneObserver, Runnable
 
 	@Override
 	public void activateEvent() {
-		setWorldZone(getAutomaticGeneralZone());
+		setWorldZone(getAutomaticGeneralZone());		
 		_logger.info(_general.toString());
 		getZoneSubjectInstance().addListener(this);
 	}
