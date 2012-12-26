@@ -4,7 +4,7 @@ import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 
 import ca.qc.icerealm.bukkit.plugins.perks.magic.MagicPerk;
-import ca.qc.icerealm.bukkit.plugins.perks.magic.data.MagicData;
+import ca.qc.icerealm.bukkit.plugins.perks.magic.data.MagicUtils;
 
 public class BigFireballMagic implements MagicPerk
 {
@@ -26,7 +26,7 @@ public class BigFireballMagic implements MagicPerk
 	@Override
 	public int getMagicId() 
 	{
-		return MagicData.BIGFIREBALL;
+		return MagicUtils.BIGFIREBALL;
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class BigFireballMagic implements MagicPerk
 	@Override
 	public int getNextTogglingMagicId() 
 	{
-		return MagicData.FIREBALL;
+		return MagicUtils.FIREBALL;
 	}
 
 	@Override
@@ -51,5 +51,11 @@ public class BigFireballMagic implements MagicPerk
 	public String getPerkId() 
 	{
 		return FireTree.BigFireballId;
+	}
+
+	@Override
+	public long getCoolDown() 
+	{
+		return 1000;
 	}
 }

@@ -14,7 +14,10 @@ import ca.qc.icerealm.bukkit.plugins.perks.farmer.GreenThumbPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.farmer.VassalPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.lumberjack.WoodmanPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.magic.ExecuteMagicEvent;
-//import ca.qc.icerealm.bukkit.plugins.perks.magic.fire.FireDamageModifier;
+import ca.qc.icerealm.bukkit.plugins.perks.magic.FoodLevelRegenerationObserver;
+import ca.qc.icerealm.bukkit.plugins.perks.magic.MagicFoodLevelEvent;
+import ca.qc.icerealm.bukkit.plugins.perks.magic.fire.FireDamageModifier;
+import ca.qc.icerealm.bukkit.plugins.perks.magic.fire.FireTree;
 import ca.qc.icerealm.bukkit.plugins.perks.magic.fire.FireStoper;
 import ca.qc.icerealm.bukkit.plugins.perks.warrior.BerserkerPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.warrior.LastManStandingPerk;
@@ -22,6 +25,7 @@ import ca.qc.icerealm.bukkit.plugins.perks.warrior.LifeLeechPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.warrior.MeatShieldPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.warrior.MercenaryPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.warrior.WarriorTree;
+import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 
 public class PerksPlugin extends JavaPlugin {
 
@@ -63,11 +67,15 @@ public class PerksPlugin extends JavaPlugin {
 		PerkService.getInstance().addTree(new WarriorTree());
 		
 		// Magic 
-		//getServer().getPluginManager().registerEvents(new ExecuteMagicEvent(), this);
-		//getServer().getPluginManager().registerEvents(new FireStoper(), this);
-		//getServer().getPluginManager().registerEvents(new FireDamageModifier(), this);		
+		getServer().getPluginManager().registerEvents(new ExecuteMagicEvent(), this);
+		getServer().getPluginManager().registerEvents(new FireStoper(), this);
+		getServer().getPluginManager().registerEvents(new FireDamageModifier(), this);	
+		getServer().getPluginManager().registerEvents(new MagicFoodLevelEvent(), this);	
 		
-		//PerkService.getInstance().addTree(new FireTree());
+		// Add a time observer for mana (food) regeneration
+		TimeServer.getInstance().addListener(new FoodLevelRegenerationObserver(this.getServer()), 1000);
+		
+		PerkService.getInstance().addTree(new FireTree());
 		
 		// Other
 		getServer().getPluginManager().registerEvents(PerkService.getInstance(), this);

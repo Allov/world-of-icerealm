@@ -1,51 +1,37 @@
 package ca.qc.icerealm.bukkit.plugins.perks.magic.data;
 
+import java.util.Hashtable;
+
 import ca.qc.icerealm.bukkit.plugins.perks.magic.MagicPerk;
-import ca.qc.icerealm.bukkit.plugins.perks.magic.fire.*;
 
 public class MagicData 
 {
-	public static final int SCHOOL_OF_FIRE = 1;
-	public static final int SCHOOL_OF_DARKNESS = 2;
-	public static final int SCHOOL_OF_LIGHT = 3;
-	public static final int SCHOOL_OF_WATER = 4;
-	
-	public static final int FIREBALL = 1;
-	public static final int BIGFIREBALL = 2;
-	
-	public static MagicPerk getFirstMagicInstance(int school)
+	private Hashtable<Integer, MagicPerk> magicData = new Hashtable<Integer, MagicPerk>();
+
+	public Hashtable<Integer, MagicPerk> getCurrentMagic() 
 	{
-		if (school == SCHOOL_OF_FIRE)
-		{
-			return new FireballMagic();
-		}
-		else if (school == SCHOOL_OF_DARKNESS)
-		{
-			return new FireballMagic();
-		}
-		else if (school == SCHOOL_OF_LIGHT)
-		{
-			return new FireballMagic();
-		}
-		else if (school == SCHOOL_OF_WATER)
-		{
-			return new FireballMagic();
-		}
-		
-		return null;
+		return magicData;
 	}
 	
-	public static MagicPerk getMagicInstance(int magicPerk)
+	public MagicPerk getCurrentMagic(int school) 
 	{
-		if (magicPerk == FIREBALL)
+		MagicPerk magicPerk = magicData.get(school);
+		
+		if (magicPerk == null)
 		{
-			return new FireballMagic();
-		}
-		else if (magicPerk == BIGFIREBALL)
-		{
-			return new BigFireballMagic();
+			magicData.put(school, MagicUtils.getFirstMagicInstance(school));
 		}
 		
-		return null;
+		return magicData.get(school);
+	}
+
+	public void setCurrentMagic(Hashtable<Integer, MagicPerk> magicData) 
+	{
+		this.magicData = magicData;
+	}
+	
+	public void setCurrentMagic(int school, MagicPerk magicPerk) 
+	{
+		this.magicData.put(school, magicPerk);
 	}
 }

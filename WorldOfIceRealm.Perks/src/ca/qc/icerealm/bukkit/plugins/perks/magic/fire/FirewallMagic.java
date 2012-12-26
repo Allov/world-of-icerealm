@@ -48,4 +48,10 @@ public class FirewallMagic implements MagicPerk
 		
 	}
 
+	@Override
+	public long getCoolDown() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

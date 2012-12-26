@@ -49,7 +49,7 @@ public class FireStoper implements Listener
 	{
 		try 
 		{
-			logger.info("Block destroy, entity: " + event.getEntityType().name());
+			//logger.info("Block destroy, entity: " + event.getEntityType().name());
 			if (event.getEntityType().getTypeId() == EntityType.FIREBALL.getTypeId()
 					&& event.getEntity().getWorld().getName().equalsIgnoreCase("World"))
 			{
@@ -58,19 +58,19 @@ public class FireStoper implements Listener
 				for (Block b : event.blockList()) {
 					BlockContainer bc = new BlockContainer();
 					bc.TypeId = b.getTypeId();
-					logger.info("Adding: " + bc.TypeId);
+					//logger.info("Adding: " + bc.TypeId);
 					bc.TypeData = b.getData();
 					_blocks.put(b.getLocation(), bc);
 				}
 				
 				BlockRestore restore = new BlockRestore(event.getEntity().getWorld(), _blocks);
-				logger.info("Restoring... ");
+				//logger.info("Restoring... ");
 				Executors.newSingleThreadScheduledExecutor().schedule(restore, 1, TimeUnit.MILLISECONDS);
 			}
 		}
 		catch (Exception ex) 
 		{
-			logger.info("onblock destroy in Infestation raised an exception, it's ok!");
+			
 		}	
 	}
 }

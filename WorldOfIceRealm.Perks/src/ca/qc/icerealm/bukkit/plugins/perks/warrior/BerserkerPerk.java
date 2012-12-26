@@ -26,7 +26,6 @@ public class BerserkerPerk implements Listener {
 					damager.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 5*20, 0));
 				}
 			}
-				
 		}
 	}
 	
