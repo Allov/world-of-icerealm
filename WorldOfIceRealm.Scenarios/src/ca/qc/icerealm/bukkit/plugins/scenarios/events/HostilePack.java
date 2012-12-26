@@ -18,10 +18,9 @@ public class HostilePack extends BaseEvent {
 	public int NB_MONSTER = 10;
 	private Player _target;
 	private String[] PACK_TYPE = new String[] { "zombie", "wolf"};
-	private AgressivityMobControl _agressionMob;
 
 	public HostilePack() {
-		_agressionMob = new AgressivityMobControl();
+
 	}
 	
 	@Override
@@ -51,7 +50,7 @@ public class HostilePack extends BaseEvent {
 					try {
 						Wolf wolf = (Wolf)ScenarioService.getInstance().spawnCreature(_source.getWorld(), spawnLoc, EntityType.WOLF);	
 						wolf.setAngry(true);
-						_agressionMob.defineTarget(wolf, _target);
+						AgressivityMobControl.defineTarget(wolf, _target);
 					}
 					catch (Exception ex) {
 						ex.printStackTrace();
@@ -63,7 +62,7 @@ public class HostilePack extends BaseEvent {
 					Location spawnLoc = zone.getRandomLocation(_source.getWorld());
 					try {
 						LivingEntity m = (LivingEntity)ScenarioService.getInstance().spawnCreature(spawnLoc.getWorld(), spawnLoc, EntityType.ZOMBIE, -0.5, false);
-						_agressionMob.defineTarget(m, _target);
+						AgressivityMobControl.defineTarget(m, _target);
 					}
 					catch (Exception ex) {
 						ex.printStackTrace();

@@ -25,6 +25,7 @@ import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioPlugin;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.InfestationConfiguration;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.SpawnerZoneActivator;
+import ca.qc.icerealm.bukkit.plugins.scenarios.mobcontrol.AgressivityMobControl;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.CoolDown;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.CoolDownTimer;
 import ca.qc.icerealm.bukkit.plugins.time.TimeObserver;
@@ -102,7 +103,8 @@ public class ProximitySpawner implements TimeObserver, Listener, Spawner, CoolDo
 			
 			if (l instanceof Monster) {
 				Monster m = (Monster)l;
-				m.setTarget(_target);
+				//m.setTarget(_target);
+				AgressivityMobControl.defineTarget(m, _target);
 			}
 			_entities.add(l);
 			ScenarioPlugin.logger.fine(creature.toString() + " - " + l.getEntityId()  + " from spawner " +_startingLocation.getX() + "," + _startingLocation.getY() + "," + _startingLocation.getZ());

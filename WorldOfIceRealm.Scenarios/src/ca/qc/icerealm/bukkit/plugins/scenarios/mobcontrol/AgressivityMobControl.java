@@ -13,8 +13,7 @@ public class AgressivityMobControl {
 	public AgressivityMobControl() {
 	}
 	
-	public void defineTarget(LivingEntity entity, LivingEntity target) {
-		
+	public static void defineTarget(LivingEntity entity, LivingEntity target) {
 		if (entity != null && target != null) {
 			EntityCreature aggro = EntityReflection.getEntityCreature(entity);
 			try {
@@ -27,7 +26,6 @@ public class AgressivityMobControl {
 				EntityPlayer finalTarget = player.getHandle();
 				aggro.b(finalTarget);
 			}
-			
 		}
 	}
 }

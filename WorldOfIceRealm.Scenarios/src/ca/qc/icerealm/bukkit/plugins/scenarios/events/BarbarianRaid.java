@@ -28,6 +28,7 @@ import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
 import ca.qc.icerealm.bukkit.plugins.scenarios.frontier.Frontier;
+import ca.qc.icerealm.bukkit.plugins.scenarios.mobcontrol.AgressivityMobControl;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.ArtilleryShelling;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.BlockRestore;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.Loot;
@@ -103,7 +104,8 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 					if (_players.size() > 0) {
 						Collections.shuffle(_players);
 						Monster m = (Monster)e;
-						m.setTarget(_players.get(0));
+						AgressivityMobControl.defineTarget(m, _players.get(0));
+						//m.setTarget(_players.get(0));
 					}
 				}
 			}	
