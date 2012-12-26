@@ -10,14 +10,14 @@ public class FireTree extends PerkTree {
 	public static final Perk Fireball = new Perk(	FireballId, 
 													"Fireball", 
 													"Ability to throw small fireballs (Fire Rod is required)", 
-													1, 
+													5, 
 													null, 
 													null);
 
 	public static final Perk BigFireball = new Perk(	BigFireballId, 
 														"Big Fireball", 
 														"Ability to throw big exploding fireballs (Fire Rod is required)", 
-														2, 
+														10, 
 														new String[] { FireballId },
 														null);
 
