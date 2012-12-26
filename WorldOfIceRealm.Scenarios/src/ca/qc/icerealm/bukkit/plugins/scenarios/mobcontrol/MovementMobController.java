@@ -43,8 +43,8 @@ public class MovementMobController {
 		float speed = EntityReflection.getEntityPropertyValue(e, EntityReflection.SPEED);
 		
 		if (eraseOldBehavior) {
-			EntityReflection.setEntityPropertyValue(e, EntityReflection.PATH_GOAL_SELECTOR, new PathfinderGoalSelector(new MethodProfiler()));
-			EntityReflection.setEntityPropertyValue(e, EntityReflection.TARGET_GOAL_SELECTOR, new PathfinderGoalSelector(new MethodProfiler()));	
+			EntityReflection.setEntityPropertyValue(e, EntityReflection.PATH_GOAL_SELECTOR, new PathfinderGoalSelector(eCreature.world.methodProfiler));
+			EntityReflection.setEntityPropertyValue(e, EntityReflection.TARGET_GOAL_SELECTOR, new PathfinderGoalSelector(eCreature.world.methodProfiler));
 		}
 
 		EntityReflection.setEntityPropertyValue(e, EntityReflection.NAVIGATION, new Navigation(eCreature, eCreature.world, 64F));

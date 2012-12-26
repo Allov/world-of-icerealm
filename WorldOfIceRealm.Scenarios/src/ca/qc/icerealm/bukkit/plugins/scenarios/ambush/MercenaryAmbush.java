@@ -34,7 +34,7 @@ import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
 import ca.qc.icerealm.bukkit.plugins.scenarios.frontier.Frontier;
 
 
-public class AmbushExecutor implements Runnable {
+public class MercenaryAmbush implements Runnable {
 
 	public final Logger _logger = Logger.getLogger(("Minecraft"));
 	
@@ -59,7 +59,7 @@ public class AmbushExecutor implements Runnable {
 	private int _radius = 32;
 	private int _numberMonster = 0;
 	
-	public AmbushExecutor(int radius, Player player, int numberMonster, String monsters) {
+	public MercenaryAmbush(int radius, Player player, int numberMonster, String monsters) {
 		_player = player;
 		_monsters = monsters;
 		_monstersArray = _monsters.split(",");

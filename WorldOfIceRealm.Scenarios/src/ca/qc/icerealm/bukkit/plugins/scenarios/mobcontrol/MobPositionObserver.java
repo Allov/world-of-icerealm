@@ -53,7 +53,7 @@ public class MobPositionObserver implements Runnable {
 	public void addDestinationReachedObserver(LivingEntity e, Location l, DestinationReachedObserver ob) {
 		if (!_living.contains(e)) {
 			synchronized (this) {
-				_living.add(e);	
+				_living.add(e);
 			}
 		}
 		

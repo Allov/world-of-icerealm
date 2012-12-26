@@ -48,10 +48,12 @@ public abstract class BaseEvent implements Event, Runnable {
 	protected abstract void resetEvent();
 	
 	@Override
-	public abstract void setWelcomeMessage(String s);
+	public void setWelcomeMessage(String s) {		
+	}
 
 	@Override
-	public abstract void setEndMessage(String s);
+	public void setEndMessage(String s) {
+	}
 
 	@Override
 	public abstract void activateEvent();

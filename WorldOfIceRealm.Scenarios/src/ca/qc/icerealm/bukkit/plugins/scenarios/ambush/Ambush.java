@@ -70,7 +70,7 @@ public class Ambush implements Runnable, CommandExecutor {
 				if (createAmbush && p.getLocation().getY() > p.getWorld().getSeaLevel() - 5) {
 					logger.info("creating an ambush for " + p.getDisplayName() + " " + _monsters);
 					
-					AmbushExecutor executor = new AmbushExecutor(_radius, p, _numberOfMonster, _monsters);
+					HostilePackAmbush executor = new HostilePackAmbush(_radius, p, _numberOfMonster, _monsters);
 					Executors.newSingleThreadScheduledExecutor().schedule(executor, _intervalBeforeSpawn, TimeUnit.MILLISECONDS);
 					_server.broadcastMessage(ChatColor.YELLOW + p.getDisplayName() + ChatColor.GREEN + " has been ambushed! Help him!");
 					break;
