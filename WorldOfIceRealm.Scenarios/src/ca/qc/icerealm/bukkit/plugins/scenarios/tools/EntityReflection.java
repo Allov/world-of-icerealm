@@ -11,7 +11,7 @@ public class EntityReflection {
 	private final static Logger _logger = Logger.getLogger("Minecraft");
 	
 	public final static String HEALTH	 			= "health";
-	public final static String SPEED	 			= "bG";
+	public final static String SPEED	 			= "bH";
 	public final static String FIRE_PROOF 			= "fireProof";
 	public final static String PATH_GOAL_SELECTOR 	= "goalSelector";
 	public final static String TARGET_GOAL_SELECTOR = "targetSelector";
@@ -58,6 +58,12 @@ public class EntityReflection {
             }
         }
     }
+	
+	public static Object getFieldValue(Object instance, String fieldname) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+		Field f = getField(instance.getClass(), fieldname);
+		f.setAccessible(true);
+		return f.get(instance);
+	}
 	
 	public static EntityCreature getEntityCreature(LivingEntity creature) {
 		CraftEntity c = (CraftEntity)creature;

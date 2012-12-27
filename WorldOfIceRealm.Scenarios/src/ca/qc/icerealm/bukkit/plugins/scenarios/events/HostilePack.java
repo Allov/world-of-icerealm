@@ -17,7 +17,7 @@ public class HostilePack extends BaseEvent {
 	public static long SINGLE_WOLFPACK_COOLDOWN = 100;
 	public int NB_MONSTER = 10;
 	private Player _target;
-	private String[] PACK_TYPE = new String[] { "zombie", "wolf"};
+	private String[] PACK_TYPE = new String[] {/* "zombie", "wolf", */"bat"};
 
 	public HostilePack() {
 
@@ -62,6 +62,18 @@ public class HostilePack extends BaseEvent {
 					Location spawnLoc = zone.getRandomLocation(_source.getWorld());
 					try {
 						LivingEntity m = (LivingEntity)ScenarioService.getInstance().spawnCreature(spawnLoc.getWorld(), spawnLoc, EntityType.ZOMBIE, -0.5, false);
+						AgressivityMobControl.defineTarget(m, _target);
+					}
+					catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				}
+			}
+			else if (randomPack.equalsIgnoreCase("bat")) {
+				for (int i = 0; i < NB_MONSTER; i++) {
+					Location spawnLoc = zone.getRandomLocation(_source.getWorld());
+					try {
+						LivingEntity m = (LivingEntity)ScenarioService.getInstance().spawnCreature(spawnLoc.getWorld(), spawnLoc, EntityType.BAT, 1, false);
 						AgressivityMobControl.defineTarget(m, _target);
 					}
 					catch (Exception ex) {

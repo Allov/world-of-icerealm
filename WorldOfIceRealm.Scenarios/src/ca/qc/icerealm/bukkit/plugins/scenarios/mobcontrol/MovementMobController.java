@@ -7,8 +7,10 @@ import net.minecraft.server.v1_4_6.EntityCreature;
 import net.minecraft.server.v1_4_6.MethodProfiler;
 import net.minecraft.server.v1_4_6.Navigation;
 import net.minecraft.server.v1_4_6.PathEntity;
+import net.minecraft.server.v1_4_6.PathPoint;
 import net.minecraft.server.v1_4_6.PathfinderGoalFollowParent;
 import net.minecraft.server.v1_4_6.PathfinderGoalSelector;
+import net.minecraft.server.v1_4_6.Vec3D;
 
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
@@ -41,15 +43,19 @@ public class MovementMobController {
 		
 		EntityCreature eCreature = EntityReflection.getEntityCreature(e);
 		float speed = EntityReflection.getEntityPropertyValue(e, EntityReflection.SPEED);
-		
+
 		if (eraseOldBehavior) {
 			EntityReflection.setEntityPropertyValue(e, EntityReflection.PATH_GOAL_SELECTOR, new PathfinderGoalSelector(eCreature.world.methodProfiler));
 			EntityReflection.setEntityPropertyValue(e, EntityReflection.TARGET_GOAL_SELECTOR, new PathfinderGoalSelector(eCreature.world.methodProfiler));
 		}
 
-		EntityReflection.setEntityPropertyValue(e, EntityReflection.NAVIGATION, new Navigation(eCreature, eCreature.world, 64F));
-		PathEntity path = eCreature.getNavigation().a(loc.getX(), loc.getY(), loc.getZ());
-		eCreature.getNavigation().a(path, speed);
+		try {
+			PathEntity path = eCreature.getNavigation().a(loc.getX(), loc.getY(), loc.getZ());
+			eCreature.getNavigation().a(path, speed);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 	
 	public void moveEntityToZone(LivingEntity e, WorldZone zone, boolean eraseOldBehavior, DestinationReachedObserver ob) {
