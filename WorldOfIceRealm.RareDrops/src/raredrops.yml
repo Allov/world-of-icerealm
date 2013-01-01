@@ -62,10 +62,7 @@ mobs:
                 enchantments: low odds 
             -   name: IRON_LEGGINGS
                 odds: 0.10
-                enchantments: low odds  
-            -   name: DIAMOND_SWORD
-                odds: 10.00
-                enchantments: average odds                                         
+                enchantments: low odds                                        
     SKELETON:
         materials:
             -   name: IRON_PICKAXE
