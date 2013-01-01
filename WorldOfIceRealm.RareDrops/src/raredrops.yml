@@ -141,6 +141,8 @@ mobs:
                 odds: 2.00
             -   name: EMERALD
                 odds: 0.25
+            -   name: GOLD_INGOT
+                odds: 3.00
     CREEPER:
         materials:
             -   name: DIAMOND_CHESTPLATE
@@ -417,6 +419,8 @@ mobs:
             -   name: LEATHER
                 odds: 7.00
             -   name: LEATHER
+                odds: 7.00
+            -   name: GOLD_INGOT
                 odds: 7.00
     GHAST:
         materials:
