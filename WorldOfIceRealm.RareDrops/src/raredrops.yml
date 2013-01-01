@@ -15,7 +15,7 @@ mobs:
             -   name: FEATHER
                 odds: 5.00
             -   name: LEATHER
-                odds: 3.00
+                odds: 15.00
             -   name: IRON_PICKAXE
                 odds: 0.50
                 enchantments: low odds
@@ -293,6 +293,14 @@ mobs:
                 odds: 15.00
             -   name: GOLDEN_CARROT
                 odds: 20.50  
+            -   name: LEATHER
+                odds: 50.00
+            -   name: LEATHER
+                odds: 50.00
+            -   name: LEATHER
+                odds: 50.00
+            -   name: LEATHER
+                odds: 50.00
     SLIME:
         materials:
             -   name: RECORD_3
@@ -406,6 +414,10 @@ mobs:
                 enchantments: high odds 
             -   name: EMERALD
                 odds: 0.10 
+            -   name: LEATHER
+                odds: 7.00
+            -   name: LEATHER
+                odds: 7.00
     GHAST:
         materials:
             -   name: GLOWSTONE_DUST
