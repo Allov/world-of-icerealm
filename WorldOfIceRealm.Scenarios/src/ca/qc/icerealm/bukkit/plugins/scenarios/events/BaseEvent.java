@@ -54,6 +54,11 @@ public abstract class BaseEvent implements Event, Runnable {
 	@Override
 	public void setEndMessage(String s) {
 	}
+	
+	@Override
+	public Location getSourceLocation() {
+		return _source;
+	}
 
 	@Override
 	public abstract void activateEvent();

@@ -17,7 +17,7 @@ public class HostilePack extends BaseEvent {
 	public static long SINGLE_WOLFPACK_COOLDOWN = 100;
 	public int NB_MONSTER = 10;
 	private Player _target;
-	private String[] PACK_TYPE = new String[] {/* "zombie", "wolf", */"bat"};
+	private String[] PACK_TYPE = new String[] { "zombie", "wolf" };
 
 	public HostilePack() {
 

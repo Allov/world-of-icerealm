@@ -21,6 +21,8 @@ import ca.qc.icerealm.bukkit.plugins.common.RandomUtil;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.ambush.Ambush;
 import ca.qc.icerealm.bukkit.plugins.scenarios.barbarian.BarbarianRaid;
+import ca.qc.icerealm.bukkit.plugins.scenarios.events.EventCommander;
+import ca.qc.icerealm.bukkit.plugins.scenarios.events.EventService;
 import ca.qc.icerealm.bukkit.plugins.scenarios.frontier.Frontier;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.Infestation;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.InfestationCommander;
@@ -78,6 +80,7 @@ public class ScenarioPlugin extends JavaPlugin {
 		// scenario commander
 		getCommand("sc").setExecutor(new ScenarioCommander());
 		ScenarioService.getInstance().setPlugin(this);
+		getCommand("ev").setExecutor(new EventCommander(EventService.getInstance()));
 		
 		// creation des different scenarios
 		//createHauntedOutpost();
