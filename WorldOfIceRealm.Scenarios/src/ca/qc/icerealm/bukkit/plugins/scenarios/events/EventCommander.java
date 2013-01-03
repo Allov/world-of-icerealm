@@ -57,14 +57,12 @@ public class EventCommander implements CommandExecutor {
 						e.releaseEvent();
 						sender.sendMessage("Event release: " + getFormattedEvent(_events.get(eventId)));
 					}
-					
-					if (arg3[1].equalsIgnoreCase("activate")) {
+					else if (arg3[1].equalsIgnoreCase("activate")) {
 						Event e = _events.get(eventId);
 						e.activateEvent();
 						sender.sendMessage("Event reset: " + getFormattedEvent(_events.get(eventId)));
 					}
-					
-					if (arg3[1].equalsIgnoreCase("teleport")) {
+					else if (arg3[1].equalsIgnoreCase("teleport")) {
 						
 						if (sender instanceof Player) {
 							Player p = (Player)sender;
@@ -73,10 +71,12 @@ public class EventCommander implements CommandExecutor {
 							p.sendMessage("Teleport to event: " + getFormattedEvent(_events.get(eventId)));
 						}
 					}
-					
-					if (arg3[1].equalsIgnoreCase("config")) {
+					else if (arg3[1].equalsIgnoreCase("config")) {
 						Event e = _events.get(eventId);
 						sender.sendMessage("Event config: " + e.getName() + " = " + e.getConfiguration());
+					}
+					else {
+						sender.sendMessage(ChatColor.RED + "No command found! " + ChatColor.GREEN + " type /ev help");
 					}
 					
 				}
