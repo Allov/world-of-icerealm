@@ -87,6 +87,9 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 								     " at: " + pattern.Source.getX() + "," + pattern.Source.getY() + "," + pattern.Source.getZ());
 						_eventService.addEvent(e);
 					}
+					else {
+						throw new Exception("Event is not in FactoryEvent");
+					}
 				}
 			}
 		}

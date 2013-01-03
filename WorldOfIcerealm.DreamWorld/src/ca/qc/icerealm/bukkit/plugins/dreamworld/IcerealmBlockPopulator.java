@@ -267,6 +267,7 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 		}
 		catch (Exception ex) {
 			_logger.info("exception while reading generated structure!");
+			ex.printStackTrace();			
 		}
 		
 		_logger.info("found " + _generatedStructure.size() + " structure to generate!");
