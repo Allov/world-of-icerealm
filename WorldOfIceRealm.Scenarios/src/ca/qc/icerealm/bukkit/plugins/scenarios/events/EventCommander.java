@@ -37,7 +37,7 @@ public class EventCommander implements CommandExecutor {
 					sender.sendMessage(ChatColor.YELLOW + "/ev [int] release " + ChatColor.GOLD + "Release the event, the event will not trigger");
 					sender.sendMessage(ChatColor.YELLOW + "/ev [int] activate " + ChatColor.GOLD + "Activate the event, the event will trigger");
 					sender.sendMessage(ChatColor.YELLOW + "/ev [int] teleport " + ChatColor.GOLD + "Teleport to the event");
-					sender.sendMessage(ChatColor.YELLOW + "/ev [int] config " + ChatColor.GOLD + "Display the configuration for an event");
+					sender.sendMessage(ChatColor.YELLOW + "/ev [int] config [string]" + ChatColor.GOLD + "Get/Set the configuration for an event");
 				}
 				
 				if (arg3.length == 1 && arg3[0].equalsIgnoreCase("list")) {
@@ -47,7 +47,7 @@ public class EventCommander implements CommandExecutor {
 					}
 				}		
 				
-				if (arg3.length == 2) {
+				if (arg3.length >= 2) {
 					
 					int eventId = Integer.parseInt(arg3[0]);
 					
@@ -60,7 +60,7 @@ public class EventCommander implements CommandExecutor {
 					else if (arg3[1].equalsIgnoreCase("activate")) {
 						Event e = _events.get(eventId);
 						e.activateEvent();
-						sender.sendMessage("Event reset: " + getFormattedEvent(_events.get(eventId)));
+						sender.sendMessage("Event activate: " + getFormattedEvent(_events.get(eventId)));
 					}
 					else if (arg3[1].equalsIgnoreCase("teleport")) {
 						
@@ -71,19 +71,25 @@ public class EventCommander implements CommandExecutor {
 							p.sendMessage("Teleport to event: " + getFormattedEvent(_events.get(eventId)));
 						}
 					}
-					else if (arg3[1].equalsIgnoreCase("config")) {
+					else if (arg3.length == 2 && arg3[1].equalsIgnoreCase("config")) {
 						Event e = _events.get(eventId);
 						sender.sendMessage("Event config: " + e.getName() + " = " + e.getConfiguration());
+					}
+					else if (arg3.length > 2 && arg3[1].equalsIgnoreCase("config")) {
+						Event e = _events.get(eventId);
+						try {
+							e.setConfiguration(arg3[2]);	
+						}
+						catch (Exception ex) {
+							sender.sendMessage(ChatColor.RED + "Exception occured: " + ex.getMessage());
+							ex.printStackTrace();
+						}
+						
+						sender.sendMessage("Event new config: " + eventId + "- " + e.getName() + " = " + e.getConfiguration());
 					}
 					else {
 						sender.sendMessage(ChatColor.RED + "No command found! " + ChatColor.GREEN + " type /ev help");
 					}
-					
-				}
-				
-				if (arg3.length == 2) {
-					
-					
 					
 				}
 				

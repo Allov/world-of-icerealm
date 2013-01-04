@@ -168,7 +168,7 @@ public abstract class BaseEvent implements Event, Runnable {
 	}
 	
 	public void activateCoolDown(long cooldown) {
-		_logger.info("enabling cooldown for event " + getName() + " for " + cooldown + TimeFormatter.readableTime(cooldown));
+		_logger.info("enabling cooldown for event " + getName() + " for " + TimeFormatter.readableTime(cooldown));
 		_coolDownActive = true;
 		_timeBeforeReactivation = cooldown + System.currentTimeMillis();
 		Executors.newSingleThreadScheduledExecutor().schedule(this, cooldown, TimeUnit.MILLISECONDS);

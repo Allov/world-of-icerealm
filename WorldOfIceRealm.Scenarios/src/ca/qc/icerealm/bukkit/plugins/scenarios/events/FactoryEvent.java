@@ -2,7 +2,7 @@ package ca.qc.icerealm.bukkit.plugins.scenarios.events;
 
 public class FactoryEvent {
 
-	private String[] _eventList = new String[] { "treasurehunt", "killingspree", "barbarian", "arena", "infestation", "boss", "rescuesurvivor" };
+	private String[] _eventList = new String[] { "treasurehunt", "killingspree", "barbarian", "arena", "infestation", "boss", "rescuesurvivor", "mayhem" };
 	
 	public FactoryEvent() {
 	}
@@ -31,6 +31,9 @@ public class FactoryEvent {
 		}
 		else if (name.equalsIgnoreCase("rescuesurvivor")) {
 			e = new RescueSurvivors();
+		}
+		else if (name.equalsIgnoreCase("mayhem")) {
+			e = new Mayhem();
 		}
 
 		return e;
