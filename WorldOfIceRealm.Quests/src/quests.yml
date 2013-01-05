@@ -94,17 +94,17 @@ os:
             name: Collect 5 Leather 
             what: 334
             amount: 5
-            keep: false
+            keep: true
         -   type: kill
             name: Kill 10 Zombies
             what: 54
-            amount: 1
+            amount: 10
     rewards:
         money: 300
         level: 2
         items:
             -   id: 388
-                amount: 3                    
+                amount: 1                    
 tb:
     group: normal
     name: Things that goes BOOM!
