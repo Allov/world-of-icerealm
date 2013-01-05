@@ -17,6 +17,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import ca.qc.icerealm.bukkit.plugins.scenarios.frontier.Frontier;
 import ca.qc.icerealm.bukkit.plugins.scenarios.spawners.ApocalypseSpawner;
@@ -113,6 +114,12 @@ public class Mayhem extends BaseEvent {
 		if (_server.getOnlinePlayers().length == 1) {
 			releaseEvent();
 		}
+	}
+	
+	@EventHandler (priority = EventPriority.NORMAL)
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		event.getPlayer().sendMessage(ChatColor.DARK_RED + "There is an" + ChatColor.DARK_RED + " Apocalypse" + ChatColor.RED + " right now!");
+		_server.broadcastMessage(ChatColor.LIGHT_PURPLE + "" + _monsterDead + " monsters dead!");
 	}
 		
 	@Override
