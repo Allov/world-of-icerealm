@@ -1,5 +1,6 @@
 package ca.qc.icerealm.bukkit.plugins.scenarios.events;
 
+import java.util.Collections;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -13,30 +14,36 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+import org.bukkit.event.player.PlayerQuitEvent;
+import ca.qc.icerealm.bukkit.plugins.scenarios.frontier.Frontier;
 import ca.qc.icerealm.bukkit.plugins.scenarios.spawners.ApocalypseSpawner;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.Loot;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.LootGenerator;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PoisonPlayer;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.TimeFormatter;
 
 public class Mayhem extends BaseEvent {
 	private Logger _logger = Logger.getLogger("Minecraft");
 	private boolean _switchActivated = false;
-	private long _totalForPreparation = 60000; // 1 minute
+	private long _totalForPreparation = 5000; // 1 minute
 	private long _incrementForPreparation = 15000; // 15 sec
-	private long _delayBetweenPoison = 60000; // 1 minute
-	private long _delayBetweenWaveSpawn = 10000; // 10 sec
+	private long _delayBetweenPoison = 30000; // 1 minute
+	private long _delayBetweenWaveSpawn = 20000; // 10 sec
 	private static boolean _apocalypseOn = false;
 	private static boolean _sequenceStarted = false;
 	private int _monsterDead = 0;
-	private int _maxMonsters = 200;
-	private int _poisonDuration = 55; // 3 sec
+	private int _maxMonsters = 5;
+	private int _poisonDuration = 70; // 3 sec
 	private int _poisonAmplifier = 1;
 	private boolean _completed = false;
 	private boolean _spawnMutex = false;
 	protected ScheduledExecutorService _executor;
 	protected ApocalypseSpawner _spawner;
+	protected PoisonPlayer _poison;
+	protected Loot _loot;
 	protected Random _random = new Random();
 	
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -61,7 +68,7 @@ public class Mayhem extends BaseEvent {
 				_spawnMutex = false;
 			}
 			catch (Exception ex) {
-				// on s'en fou!
+				_logger.info("exception raised in Mayhem.monsterSpawn(CreatureSpawnEvent event)");
 			}
 			
 		}
@@ -70,46 +77,61 @@ public class Mayhem extends BaseEvent {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void monsterDies(EntityDeathEvent event) {
 		
-		_logger.info("Monster dies: " + event.getEntityType());
 		if (_apocalypseOn && event.getEntity().getLastDamageCause().getCause() != DamageCause.FIRE_TICK) {
 			if (event.getEntity() instanceof Monster) {
 				_monsterDead++;
-				_logger.info("_monsterDead " + _monsterDead);
 			}
 			
 			if (_monsterDead >= _maxMonsters) {
-				_logger.info("reseting the event?");
 				_completed = true;
+				distributeLoot();
 				resetEvent();
 			}		
 			
 			try {
-				_spawner.spawnMonsterCloseToPlayer(event.getEntity().getLocation());	
+				_spawner.spawnMonsterCloseToPlayer(event.getEntity().getLocation());
 			}
 			catch (Exception ex) {
-				// peut pas passer l'event, on s'en fou de ca!
+				_logger.info("exception raised in Mayhem.monsterDies(EntityDeathEvent event) while using the ApocalypseSpawner");
 			}
 			
 		}
 	}
 	
+	@EventHandler (priority = EventPriority.NORMAL)
+	public void onPlayerDies(PlayerDeathEvent event) {
+		int playerDead = 0;
+		for (Player p : _server.getOnlinePlayers()) {
+			if (p.isDead()) playerDead++;
+		}
+		
+		if (playerDead == _server.getOnlinePlayers().length) releaseEvent();
+	}
 	
+	@EventHandler (priority = EventPriority.NORMAL)
+	public void onPlayerDisconnect(PlayerQuitEvent event) {
+		if (_server.getOnlinePlayers().length == 1) {
+			releaseEvent();
+		}
+	}
+		
 	@Override
 	protected long getCoolDownInterval() {
-		return 500;
+		return 60000; // 1 minute
 	}
 
 	@Override
 	protected void resetEvent() {
 		// affiche le message
 		if (_apocalypseOn && _completed) {
-			_server.broadcastMessage(ChatColor.AQUA + "The World of IceRealm has been saved. You survived the apocalypse.");
-		}
+			_server.broadcastMessage(ChatColor.GREEN + "The " + ChatColor.DARK_AQUA + "World of IceRealm" + ChatColor.GREEN + " has been from the apocalypse.");
+			_server.broadcastMessage(ChatColor.GREEN + "The " + ChatColor.GOLD + "loot " + ChatColor.GREEN + " is located near the switch!");
+		} 
 		else if (_apocalypseOn) {
-			_server.broadcastMessage(ChatColor.AQUA + "The monsters are retreating. You survived the apocalypse.");
+			_server.broadcastMessage(ChatColor.GREEN + "The monsters are retreating, the" + ChatColor.DARK_RED + " Apocalypse" + ChatColor.GREEN + " is over");
 		}
 		else if (!_apocalypseOn) {
-			if (_server != null) _server.broadcastMessage(ChatColor.AQUA + "The Gods spared us from an apocalypse!");
+			if (_server != null) _server.broadcastMessage(ChatColor.WHITE + "The Gods spared us from the " + ChatColor.DARK_RED + "Apocalypse.");
 		}
 		
 		_monsterDead = 0;
@@ -118,13 +140,26 @@ public class Mayhem extends BaseEvent {
 		_sequenceStarted = false;
 		_completed = false;
 		if (_executor != null) _executor.shutdownNow();
+		if (_loot != null) _loot.removeLoot();
 	
+	}
+	
+	private void distributeLoot() {
+		
+		if (_lootPoints.size() > 0) {
+			Collections.shuffle(_lootPoints);
+			_loot = LootGenerator.getApocalypseLoot(Frontier.getInstance().calculateGlobalModifier(_source));
+			_loot.generateLoot(transformPinIntoLocations(_lootPoints.get(0)));
+		}
 	}
 
 	@Override
 	public void activateEvent() {
 						
 		if (!_apocalypseOn && _switchActivated && !_sequenceStarted) {
+			
+			if (_loot != null) _loot.removeLoot();
+			
 			 _executor = Executors.newSingleThreadScheduledExecutor();
 			_server.broadcastMessage(ChatColor.RED + "The End Of The World is near. Apocalypse is due in " + TimeFormatter.readableTime(_totalForPreparation));
 			_server.broadcastMessage(ChatColor.YELLOW + "You have to kill " + ChatColor.LIGHT_PURPLE + _maxMonsters + " monsters" + ChatColor.YELLOW + " to " + ChatColor.LIGHT_PURPLE + "end this apocalypse");
@@ -134,7 +169,6 @@ public class Mayhem extends BaseEvent {
 			_completed = false;
 			_monsterDead = 0;
 		}
-
 	}
 
 	@Override
@@ -151,11 +185,11 @@ public class Mayhem extends BaseEvent {
 		_random = new Random();
 		_server.broadcastMessage(ChatColor.DARK_RED + "APOCALYPSE NOW!");
 		
-		PoisonPlayer poisonPlayer = new PoisonPlayer(_server.getOnlinePlayers(), _poisonDuration, _poisonAmplifier);
-		_executor.scheduleAtFixedRate(poisonPlayer, _delayBetweenPoison, _delayBetweenPoison, TimeUnit.MILLISECONDS);
+		_poison = new PoisonPlayer(_server.getOnlinePlayers(), _poisonDuration, _poisonAmplifier);
+		_executor.scheduleAtFixedRate(_poison, _delayBetweenPoison, _delayBetweenPoison, TimeUnit.MILLISECONDS);
 		
 		_spawner = new ApocalypseSpawner();
-		_executor.scheduleAtFixedRate(_spawner, _delayBetweenWaveSpawn, _delayBetweenWaveSpawn, TimeUnit.MILLISECONDS);
+		_executor.scheduleAtFixedRate(_spawner, 0, _delayBetweenWaveSpawn, TimeUnit.MILLISECONDS);
 		
 		_apocalypseOn = true;
 	}
@@ -163,12 +197,12 @@ public class Mayhem extends BaseEvent {
 	@Override
 	public void setConfiguration(String config) {
 		super.setConfiguration(config);
-		applyConfiguration();		
+		applyConfiguration();
 	}
 	
 	private void applyConfiguration() {
 		try {
-			_logger.info("applying new config: " + _config);
+			_logger.info("applying new configto mayhem: " + _config);
 			String[] values = _config.split(",");
 			if (values.length > 2) {
 				
@@ -205,34 +239,9 @@ class PreparationTimer implements Runnable {
 			_mayhem.startApocalypse();
 		}
 		else {
-			Bukkit.getServer().broadcastMessage(ChatColor.RED + "Apocalypse starts in " + ChatColor.YELLOW + TimeFormatter.readableTime(_timeLeft));
+			Bukkit.getServer().broadcastMessage(ChatColor.RED + "Apocalypse starts " + ChatColor.YELLOW + "in " + TimeFormatter.readableTime(_timeLeft));
 			_mayhem._executor.schedule(this, _increment, TimeUnit.MILLISECONDS);
 		}
 	}
 	
-}
-
-class PoisonPlayer implements Runnable {
-	
-	private Player[] _players;
-	private int _duration = 50;
-	private int _amplifier = 0;
-	
-	public PoisonPlayer(Player[] players, int duration, int amplifier) {
-		_players = players;
-		_duration = duration;
-		_amplifier = amplifier;
-	}
-
-	@Override
-	public void run() {
-		
-		//Bukkit.getServer().broadcastMessage(ChatColor.AQUA + "Gigantic waves of radiation are hitting the ground!!!");
-		for (Player p : _players) {
-			if (p.getLocation().getY() > p.getLocation().getWorld().getSeaLevel()) {
-				p.addPotionEffect(new PotionEffect(PotionEffectType.POISON, _duration, _amplifier));
-			}
-			
-		}
-	}
 }

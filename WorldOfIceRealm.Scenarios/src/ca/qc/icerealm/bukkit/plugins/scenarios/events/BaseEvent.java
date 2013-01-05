@@ -125,6 +125,7 @@ public abstract class BaseEvent implements Event, Runnable {
 	
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void onPlayerDisconnect(PlayerQuitEvent event) {
+		_logger.info("BaseEvent onPlayerDisconnect...");
 		boolean removed = _players.remove(event.getPlayer());
 		if (removed && _players.size() == 0) {
 			activateCoolDown(getCoolDownInterval());
@@ -261,7 +262,9 @@ public abstract class BaseEvent implements Event, Runnable {
 		return locations;
 	}
 	
-	
+	protected Location transformPinIntoLocations(PinPoint pin) {
+		return new Location(_source.getWorld(), _source.getX() + pin.X, _source.getY() + pin.Y, _source.getZ() + pin.Z);
+	}
 	
 	
 	
