@@ -31,14 +31,14 @@ import ca.qc.icerealm.bukkit.plugins.scenarios.tools.TimeFormatter;
 public class Mayhem extends BaseEvent {
 	private Logger _logger = Logger.getLogger("Minecraft");
 	private boolean _switchActivated = false;
-	private long _totalForPreparation = 2000; 		// 60 sec
-	private long _incrementForPreparation = 2000; 	// 15 sec
+	private long _totalForPreparation = 60000; 		// 60 sec
+	private long _incrementForPreparation = 15000; 	// 15 sec
 	private long _delayBetweenPoison = 30000; 		// 30 sec
 	private long _delayBetweenWaveSpawn = 20000; 	// 20 sec
 	private static boolean _apocalypseOn = false;
 	private static boolean _sequenceStarted = false;
 	private int _monsterDead = 0;
-	private int _maxMonsters = 5;
+	private int _maxMonsters = 200;
 	private int _poisonDuration = 70; 				// 3 sec
 	private int _poisonAmplifier = 1;
 	private boolean _completed = false;
@@ -73,7 +73,6 @@ public class Mayhem extends BaseEvent {
 			catch (Exception ex) {
 				_logger.info("exception raised in Mayhem.monsterSpawn(CreatureSpawnEvent event)");
 			}
-			
 		}
 	}
 	
@@ -81,6 +80,7 @@ public class Mayhem extends BaseEvent {
 	public void monsterDies(EntityDeathEvent event) {
 		
 		if (_apocalypseOn && event.getEntity().getLastDamageCause().getCause() != DamageCause.FIRE_TICK) {
+			
 			if (event.getEntity() instanceof Monster) {
 				_monsterDead++;
 			}
@@ -121,8 +121,8 @@ public class Mayhem extends BaseEvent {
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		if (_apocalypseOn) {
-			event.getPlayer().sendMessage(ChatColor.DARK_RED + "There is an" + ChatColor.DARK_RED + " Apocalypse" + ChatColor.RED + " right now!");
-			_server.broadcastMessage(ChatColor.LIGHT_PURPLE + "" + _monsterDead + ChatColor.DARK_PURPLE + "/" + ChatColor.LIGHT_PURPLE + " monsters dead.");	
+			event.getPlayer().sendMessage(ChatColor.RED + "There is an" + ChatColor.DARK_RED + " Apocalypse" + ChatColor.RED + " right now!");
+			_server.broadcastMessage(ChatColor.LIGHT_PURPLE + "" + _monsterDead + ChatColor.DARK_PURPLE + "/" + ChatColor.LIGHT_PURPLE + " monsters dead.");
 		}
 	}
 		
@@ -170,9 +170,9 @@ public class Mayhem extends BaseEvent {
 			if (_loot != null) _loot.removeLoot();
 			
 			 _executor = Executors.newSingleThreadScheduledExecutor();
-			_server.broadcastMessage(ChatColor.RED + "The End Of The World is near. Apocalypse is due in " + TimeFormatter.readableTime(_totalForPreparation));
-			_server.broadcastMessage(ChatColor.YELLOW + "You have to kill " + ChatColor.LIGHT_PURPLE + _maxMonsters + " monsters" + ChatColor.YELLOW + " to " + ChatColor.LIGHT_PURPLE + "end this apocalypse");
-			_server.broadcastMessage(ChatColor.YELLOW + "Any player above" + ChatColor.LIGHT_PURPLE + " sea level" + ChatColor.YELLOW + " will be" + ChatColor.DARK_GREEN +  " poisonned");
+			_server.broadcastMessage(ChatColor.RED + "The End Of The World is near." + ChatColor.DARK_RED + " Apocalypse" + ChatColor.RED + " is due in " + ChatColor.YELLOW + TimeFormatter.readableTime(_totalForPreparation));
+			_server.broadcastMessage(ChatColor.LIGHT_PURPLE + "You have to kill " + ChatColor.YELLOW + _maxMonsters + " monsters" + ChatColor.LIGHT_PURPLE + " to " + ChatColor.LIGHT_PURPLE + "end this " + ChatColor.DARK_RED + "Apocalypse");
+			_server.broadcastMessage(ChatColor.LIGHT_PURPLE + "Any player above" + ChatColor.YELLOW + " sea level" + ChatColor.LIGHT_PURPLE + " will be" + ChatColor.DARK_GREEN +  " poisoned");
 			_executor.schedule(new PreparationTimer(_totalForPreparation, _incrementForPreparation, this), _incrementForPreparation, TimeUnit.MILLISECONDS);
 			_sequenceStarted = true;
 			_completed = false;
