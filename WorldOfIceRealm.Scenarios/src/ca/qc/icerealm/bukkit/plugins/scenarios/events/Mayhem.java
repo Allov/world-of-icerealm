@@ -205,7 +205,7 @@ public class Mayhem extends BaseEvent {
 		_executor.scheduleAtFixedRate(thunder, 0, 3000, TimeUnit.MILLISECONDS);
 
 		SoundRepeater dragonScream = new SoundRepeater(_executor, 5, _source, Sound.ENDERDRAGON_GROWL, 20, 1);
-		dragonScream.run();
+		_executor.schedule(dragonScream, 1000, TimeUnit.MILLISECONDS);
 		
 		_apocalypseOn = true;
 	}
