@@ -1,25 +1,28 @@
 package ca.qc.icerealm.bukkit.plugins.scenarios.tools;
 
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 
-public class ThunderAmbiance implements Runnable {
+public class SoundRepeater implements Runnable {
 
 	private ScheduledExecutorService _executor;
 	private int _intensity = 1;
 	private int _strike = 0;
 	private Location _location;
-	private ThunderSound _thunder;
+	private Sound _sound;
+	private int _volume;
+	private int _pitch;
 	
-	public ThunderAmbiance(ScheduledExecutorService exe, int intensity, Location loc) {
+	public SoundRepeater(ScheduledExecutorService exe, int intensity, Location loc, Sound s, int volume, int pitch) {
 		_executor = exe;
 		_intensity = intensity;
 		_location = loc;
+		_volume = volume;
+		_pitch = pitch;
+		_sound = s;
 	}
 	
 	@Override
@@ -27,7 +30,7 @@ public class ThunderAmbiance implements Runnable {
 		_strike++;
 		
 		if (RandomUtils.nextBoolean()) {
-			_location.getWorld().playSound(_location, Sound.AMBIENCE_THUNDER, 10, 1);
+			_location.getWorld().playSound(_location, _sound, _volume, _pitch);
 		}
 		
 		if (_strike < _intensity) {

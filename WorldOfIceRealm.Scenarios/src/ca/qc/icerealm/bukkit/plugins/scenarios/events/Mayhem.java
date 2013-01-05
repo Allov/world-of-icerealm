@@ -25,21 +25,21 @@ import ca.qc.icerealm.bukkit.plugins.scenarios.spawners.ApocalypseSpawner;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.Loot;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.LootGenerator;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PoisonPlayer;
-import ca.qc.icerealm.bukkit.plugins.scenarios.tools.ThunderAmbiance;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.SoundRepeater;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.TimeFormatter;
 
 public class Mayhem extends BaseEvent {
 	private Logger _logger = Logger.getLogger("Minecraft");
 	private boolean _switchActivated = false;
-	private long _totalForPreparation = 5000; // 1 minute
-	private long _incrementForPreparation = 5000; // 15 sec
-	private long _delayBetweenPoison = 30000; // 1 minute
-	private long _delayBetweenWaveSpawn = 20000; // 10 sec
+	private long _totalForPreparation = 2000; 		// 60 sec
+	private long _incrementForPreparation = 2000; 	// 15 sec
+	private long _delayBetweenPoison = 30000; 		// 30 sec
+	private long _delayBetweenWaveSpawn = 20000; 	// 20 sec
 	private static boolean _apocalypseOn = false;
 	private static boolean _sequenceStarted = false;
 	private int _monsterDead = 0;
 	private int _maxMonsters = 5;
-	private int _poisonDuration = 70; // 3 sec
+	private int _poisonDuration = 70; 				// 3 sec
 	private int _poisonAmplifier = 1;
 	private boolean _completed = false;
 	private boolean _spawnMutex = false;
@@ -47,7 +47,6 @@ public class Mayhem extends BaseEvent {
 	protected ApocalypseSpawner _spawner;
 	protected PoisonPlayer _poison;
 	protected Loot _loot;
-	protected ThunderAmbiance _thunder;
 	protected Random _random = new Random();
 	
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -125,7 +124,6 @@ public class Mayhem extends BaseEvent {
 			event.getPlayer().sendMessage(ChatColor.DARK_RED + "There is an" + ChatColor.DARK_RED + " Apocalypse" + ChatColor.RED + " right now!");
 			_server.broadcastMessage(ChatColor.LIGHT_PURPLE + "" + _monsterDead + ChatColor.DARK_PURPLE + "/" + ChatColor.LIGHT_PURPLE + " monsters dead.");	
 		}
-		
 	}
 		
 	@Override
@@ -137,8 +135,8 @@ public class Mayhem extends BaseEvent {
 	protected void resetEvent() {
 		// affiche le message
 		if (_apocalypseOn && _completed) {
-			_server.broadcastMessage(ChatColor.GREEN + "The " + ChatColor.DARK_AQUA + "World of IceRealm" + ChatColor.GREEN + " has been from the apocalypse.");
-			_server.broadcastMessage(ChatColor.GREEN + "The " + ChatColor.GOLD + "loot " + ChatColor.GREEN + " is located near the switch!");
+			_server.broadcastMessage(ChatColor.GREEN + "The " + ChatColor.DARK_AQUA + "World of IceRealm" + ChatColor.GREEN + " has been saved from the" + ChatColor.DARK_RED + " Apocalypse!");
+			_server.broadcastMessage(ChatColor.GREEN + "The " + ChatColor.GOLD + "loot " + ChatColor.GREEN + "is located near the switch!");
 		} 
 		else if (_apocalypseOn) {
 			_server.broadcastMessage(ChatColor.GREEN + "The monsters are retreating, the" + ChatColor.DARK_RED + " Apocalypse" + ChatColor.GREEN + " is over");
@@ -203,8 +201,11 @@ public class Mayhem extends BaseEvent {
 		_spawner = new ApocalypseSpawner();
 		_executor.scheduleAtFixedRate(_spawner, 0, _delayBetweenWaveSpawn, TimeUnit.MILLISECONDS);
 		
-		_thunder = new ThunderAmbiance(_executor, 20, _source);
-		_executor.scheduleAtFixedRate(_thunder, 0, 5000, TimeUnit.MILLISECONDS);
+		SoundRepeater thunder = new SoundRepeater(_executor, 20, _source, Sound.AMBIENCE_THUNDER, 10, 1);
+		_executor.scheduleAtFixedRate(thunder, 0, 3000, TimeUnit.MILLISECONDS);
+
+		SoundRepeater dragonScream = new SoundRepeater(_executor, 5, _source, Sound.ENDERDRAGON_GROWL, 20, 1);
+		dragonScream.run();
 		
 		_apocalypseOn = true;
 	}
@@ -254,7 +255,7 @@ class PreparationTimer implements Runnable {
 			_mayhem.startApocalypse();
 		}
 		else {
-			Bukkit.getServer().broadcastMessage(ChatColor.RED + "Apocalypse starts " + ChatColor.YELLOW + "in " + TimeFormatter.readableTime(_timeLeft));
+			Bukkit.getServer().broadcastMessage(ChatColor.DARK_RED + "Apocalypse " + ChatColor.RED + "starts " + ChatColor.YELLOW + "in " + TimeFormatter.readableTime(_timeLeft));
 			_mayhem._executor.schedule(this, _increment, TimeUnit.MILLISECONDS);
 		}
 	}
