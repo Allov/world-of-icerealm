@@ -20,8 +20,6 @@ public class LeatherExpertPerk implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerShoot(EntityDamageByEntityEvent evt) {
-		//if (evt.getEntity() instanceof Player && perkService.playerHasPerk((Player)evt.getEntity(), ArcherTree.LeatherExpertId)) {
-		
 		Player damager = null;
 		
 		if (evt.getDamager() instanceof Arrow) {
@@ -31,7 +29,7 @@ public class LeatherExpertPerk implements Listener {
 			}
 		}
 		
-		if (damager != null && perkService.playerHasPerk((Player)damager, ArcherTree.LeatherExpertId)) {
+		if (damager != null) {// && perkService.playerHasPerk((Player)damager, ArcherTree.LeatherExpertId)) {
 			PlayerInventory inventory = damager.getInventory();
 			ItemStack[] armorContents = inventory.getArmorContents();
 			
@@ -56,10 +54,6 @@ public class LeatherExpertPerk implements Listener {
 			int baseDamage = evt.getDamage();
 			int finalDamage = (int) (baseDamage * damageBoost); 
 			evt.setDamage(finalDamage);
-			
-			Logger.getLogger("Minecraft").info("damage done: " + finalDamage + ", base damage: " + baseDamage + ", boost: " + damageBoost);
-		} else {
-			Logger.getLogger("Minecraft").info("damage done: " + evt.getDamage());
 		}
 	}
 	

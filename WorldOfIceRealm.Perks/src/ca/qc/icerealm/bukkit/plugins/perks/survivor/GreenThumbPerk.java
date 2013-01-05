@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.perks.farmer;
+package ca.qc.icerealm.bukkit.plugins.perks.survivor;
 
 import java.util.Calendar;
 import java.util.Random;
@@ -10,7 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 import ca.qc.icerealm.bukkit.plugins.perks.PerkService;
-import ca.qc.icerealm.bukkit.plugins.perks.SettlerPerks;
 
 public class GreenThumbPerk implements Listener {
 
@@ -22,7 +21,7 @@ public class GreenThumbPerk implements Listener {
 			 evt.getBlock().getType().equals(Material.POTATO) ||
 			 evt.getBlock().getType().equals(Material.CARROT) ||
 			 evt.getBlock().getType().equals(Material.NETHER_WARTS)) && 
-			perkService.playerHasPerk(evt.getPlayer(), SettlerPerks.GreenThumbId)) {
+			perkService.playerHasPerk(evt.getPlayer(), SettlerTree.GreenThumbId)) {
 			
 			if (new Random(Calendar.getInstance().getTimeInMillis()).nextInt(5) == 1) {
 				

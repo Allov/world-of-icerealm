@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.perks.lumberjack;
+package ca.qc.icerealm.bukkit.plugins.perks.survivor;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
@@ -12,7 +12,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
 import ca.qc.icerealm.bukkit.plugins.perks.PerkService;
-import ca.qc.icerealm.bukkit.plugins.perks.SettlerPerks;
 
 public class WoodmanPerk implements Listener {
 
@@ -21,7 +20,7 @@ public class WoodmanPerk implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockBreak(BlockBreakEvent evt) {
 		
-		if (evt.getBlock().getType().equals(Material.LOG) && perkService.playerHasPerk(evt.getPlayer(), SettlerPerks.WoodmanId)) {
+		if (evt.getBlock().getType().equals(Material.LOG) && perkService.playerHasPerk(evt.getPlayer(), SettlerTree.WoodmanId)) {
 			
 			Block block = evt.getBlock();
 			Block below = block.getWorld().getBlockAt(new Location(block.getWorld(), block.getX(), block.getY() - 1, block.getZ()));

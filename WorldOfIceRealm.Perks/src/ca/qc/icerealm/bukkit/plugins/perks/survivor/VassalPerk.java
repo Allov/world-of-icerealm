@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.perks.farmer;
+package ca.qc.icerealm.bukkit.plugins.perks.survivor;
 
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -8,7 +8,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
 import ca.qc.icerealm.bukkit.plugins.perks.PerkService;
-import ca.qc.icerealm.bukkit.plugins.perks.SettlerPerks;
 
 public class VassalPerk implements Listener {
 
@@ -25,7 +24,7 @@ public class VassalPerk implements Listener {
 			 evt.getBlock().getType().equals(Material.COCOA) ||
 			 evt.getBlock().getType().equals(Material.NETHER_WARTS) ||
 			 evt.getBlock().getType().equals(Material.SUGAR_CANE_BLOCK)) && 
-			perkService.playerHasPerk(evt.getPlayer(), SettlerPerks.VassalId)) {
+			perkService.playerHasPerk(evt.getPlayer(), SettlerTree.VassalId)) {
 			
 			ItemStack stack = null;
 			

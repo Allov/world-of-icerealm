@@ -19,8 +19,6 @@ public class Cooldown {
 	
 	public boolean isOnCooldown() {
 		long currentTime = Calendar.getInstance().getTimeInMillis();
-		Logger.getLogger("Minecraft").info("Went: " + (currentTime - startTime));
-		Logger.getLogger("Minecraft").info("Duration: " + duration);
 		return currentTime - startTime <= duration;
 	}
 }

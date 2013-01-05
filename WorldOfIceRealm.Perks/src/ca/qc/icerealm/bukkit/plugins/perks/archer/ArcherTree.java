@@ -5,12 +5,17 @@ import ca.qc.icerealm.bukkit.plugins.perks.PerkTree;
 
 public class ArcherTree extends PerkTree {
 
+	public ArcherTree() {
+		super("Archer");
+		// TODO Auto-generated constructor stub
+	}
+
 	public static final String ExplorerId = "exp";
 	public static final String LightningReflexesId = "lr";
 	public static final String PoisonedArrowId = "pa";
 	public static final String FindWeaknessId = "fw";
 	public static final String WindRunId = "wr";
-	public static final String LeatherExpertId = "le";
+	//public static final String LeatherExpertId = "le";
 
 	public static final Perk Explorer = new Perk(	ExplorerId, 
 													"Explorer", 
@@ -19,12 +24,12 @@ public class ArcherTree extends PerkTree {
 													null, 
 													null);
 
-	public static final Perk LeatherExpert = new Perk(	LeatherExpertId, 
+	/*public static final Perk LeatherExpert = new Perk(	LeatherExpertId, 
 														"Leather Expert", 
 														"Increase bow damage by 10, 20, 30 and 50% per leather armor pieces.", 
 														5, 
 														null, 
-														null);
+														null);*/
 
 	public static final Perk PoisonedArrow = new Perk(	PoisonedArrowId, 
 														"Poisoned Arrow", 
@@ -56,7 +61,7 @@ public class ArcherTree extends PerkTree {
 
 	public static final Perk[] Perks = new Perk[] {
 		Explorer,
-		LeatherExpert,
+		//LeatherExpert,
 		PoisonedArrow,
 		LightningReflexes,
 		FindWeakness,

@@ -4,6 +4,11 @@ import ca.qc.icerealm.bukkit.plugins.perks.Perk;
 import ca.qc.icerealm.bukkit.plugins.perks.PerkTree;
 
 public class FireTree extends PerkTree {
+	public FireTree() {
+		super("Fire");
+		// TODO Auto-generated constructor stub
+	}
+
 	public static final String FireballId = "fb";
 	public static final String BigFireballId = "bfb";
 

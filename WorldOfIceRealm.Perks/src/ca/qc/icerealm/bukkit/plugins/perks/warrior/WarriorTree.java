@@ -5,6 +5,10 @@ import ca.qc.icerealm.bukkit.plugins.perks.PerkService;
 import ca.qc.icerealm.bukkit.plugins.perks.PerkTree;
 
 public class WarriorTree extends PerkTree {
+	public WarriorTree() {
+		super("Warrior");
+	}
+
 	public static final String MercenaryId = "mer";
 	public static final String MeatShieldId = "ms";
 	public static final String BerserkerId = "ber";
