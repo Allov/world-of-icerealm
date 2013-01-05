@@ -3,14 +3,15 @@ package ca.qc.icerealm.bukkit.plugins.perks.survivor;
 import ca.qc.icerealm.bukkit.plugins.perks.Perk;
 import ca.qc.icerealm.bukkit.plugins.perks.PerkTree;
 
-public class SettlerTree extends PerkTree {
+public class SurvivorTree extends PerkTree {
 
-	public SettlerTree() {
-		super("Settler");
+	public SurvivorTree() {
+		super("Survivor");
 		// TODO Auto-generated constructor stub
 	}
 
-
+	public static final String MercenaryId = "mer";
+	public static final String ExplorerId = "exp";
 	public static final String StoneWorkerId = "sw";
 	public static final String WoodmanId = "wm";
 	public static final String VassalId = "vas";
@@ -23,6 +24,21 @@ public class SettlerTree extends PerkTree {
 														null, 
 														null);
 	
+	public static final Perk Mercenary = new Perk(	MercenaryId, 
+													"Mercenary", 
+													"Killed creatures will drop 20% more experience.", 
+													5, 
+													null, 
+													null);
+
+	public static final Perk Explorer = new Perk(	ExplorerId, 
+													"Explorer", 
+													"Actions have a 50% chance to consume no energy at all.", 
+													5, 
+													null, 
+													null);
+
+
 	public static final Perk Vassal = new Perk(	VassalId, 
 												"Vassal", 
 												"Upon harvesting, give one more of harvested resource.", 
@@ -45,8 +61,10 @@ public class SettlerTree extends PerkTree {
 													null);
 
 	public static final Perk[] Perks = new Perk[] { 
-		StoneWorker, 
+		StoneWorker,
 		Vassal, 
+		Mercenary,
+		Explorer,
 		GreenThumb, 
 		Woodman
 	};

@@ -20,7 +20,7 @@ public class WoodmanPerk implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockBreak(BlockBreakEvent evt) {
 		
-		if (evt.getBlock().getType().equals(Material.LOG) && perkService.playerHasPerk(evt.getPlayer(), SettlerTree.WoodmanId)) {
+		if (evt.getBlock().getType().equals(Material.LOG) && perkService.playerHasPerk(evt.getPlayer(), SurvivorTree.WoodmanId)) {
 			
 			Block block = evt.getBlock();
 			Block below = block.getWorld().getBlockAt(new Location(block.getWorld(), block.getX(), block.getY() - 1, block.getZ()));

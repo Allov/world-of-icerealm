@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.perks.archer;
+package ca.qc.icerealm.bukkit.plugins.perks.survivor;
 
 import java.util.Calendar;
 import java.util.Random;
@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 
 import ca.qc.icerealm.bukkit.plugins.perks.PerkService;
+import ca.qc.icerealm.bukkit.plugins.perks.archer.ArcherTree;
 import ca.qc.icerealm.bukkit.plugins.perks.warrior.WarriorTree;
 
 public class ExplorerPerk implements Listener {
@@ -21,7 +22,7 @@ public class ExplorerPerk implements Listener {
 		if (evt.getEntity() instanceof Player) {
 			Player player = (Player)evt.getEntity();
 			
-			if (perkService.playerHasPerk(player, ArcherTree.ExplorerId)) {
+			if (perkService.playerHasPerk(player, SurvivorTree.ExplorerId)) {
 				
 				if (player.getFoodLevel() > evt.getFoodLevel() && new Random(Calendar.getInstance().getTimeInMillis()).nextInt(2) == 1) {
 					evt.setCancelled(true);

@@ -20,7 +20,7 @@ public class StoneWorkerPerk implements Listener {
 			ItemStack stack = new ItemStack(Material.COBBLESTONE, 1);
 			Player player = event.getPlayer();
 			
-			if (player != null && perkService.playerHasPerk(player, SettlerTree.StoneWorkerId)) {
+			if (player != null && perkService.playerHasPerk(player, SurvivorTree.StoneWorkerId)) {
 				player.getWorld().dropItemNaturally(event.getBlock().getLocation(), stack);
 			}
 		}

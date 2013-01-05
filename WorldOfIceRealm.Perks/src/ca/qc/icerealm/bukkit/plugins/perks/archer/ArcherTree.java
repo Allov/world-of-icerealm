@@ -10,19 +10,11 @@ public class ArcherTree extends PerkTree {
 		// TODO Auto-generated constructor stub
 	}
 
-	public static final String ExplorerId = "exp";
 	public static final String LightningReflexesId = "lr";
 	public static final String PoisonedArrowId = "pa";
 	public static final String FindWeaknessId = "fw";
 	public static final String WindRunId = "wr";
 	//public static final String LeatherExpertId = "le";
-
-	public static final Perk Explorer = new Perk(	ExplorerId, 
-													"Explorer", 
-													"Actions have a 50% chance to consume no energy at all.", 
-													5, 
-													null, 
-													null);
 
 	/*public static final Perk LeatherExpert = new Perk(	LeatherExpertId, 
 														"Leather Expert", 
@@ -35,7 +27,7 @@ public class ArcherTree extends PerkTree {
 														"Poisoned Arrow", 
 														"Apply a poison to your arrow that slows ennemy for 5 seconds.", 
 														10, 
-														new String[] { ExplorerId },
+														null,
 														null);
 	
 	public static final Perk LightningReflexes = new Perk(	LightningReflexesId, 
@@ -60,7 +52,6 @@ public class ArcherTree extends PerkTree {
 												null);
 
 	public static final Perk[] Perks = new Perk[] {
-		Explorer,
 		//LeatherExpert,
 		PoisonedArrow,
 		LightningReflexes,

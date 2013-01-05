@@ -21,7 +21,7 @@ public class GreenThumbPerk implements Listener {
 			 evt.getBlock().getType().equals(Material.POTATO) ||
 			 evt.getBlock().getType().equals(Material.CARROT) ||
 			 evt.getBlock().getType().equals(Material.NETHER_WARTS)) && 
-			perkService.playerHasPerk(evt.getPlayer(), SettlerTree.GreenThumbId)) {
+			perkService.playerHasPerk(evt.getPlayer(), SurvivorTree.GreenThumbId)) {
 			
 			if (new Random(Calendar.getInstance().getTimeInMillis()).nextInt(5) == 1) {
 				

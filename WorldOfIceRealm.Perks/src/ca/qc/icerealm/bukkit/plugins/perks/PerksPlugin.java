@@ -6,7 +6,6 @@ import java.util.concurrent.TimeUnit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import ca.qc.icerealm.bukkit.plugins.perks.archer.ArcherTree;
-import ca.qc.icerealm.bukkit.plugins.perks.archer.ExplorerPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.archer.FindWeaknessPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.archer.LeatherExpertPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.archer.LightningReflexesPerk;
@@ -19,8 +18,10 @@ import ca.qc.icerealm.bukkit.plugins.perks.magic.MagicFoodLevelEvent;
 import ca.qc.icerealm.bukkit.plugins.perks.magic.fire.FireDamageModifier;
 import ca.qc.icerealm.bukkit.plugins.perks.magic.fire.FireTree;
 import ca.qc.icerealm.bukkit.plugins.perks.magic.fire.FireStoper;
+import ca.qc.icerealm.bukkit.plugins.perks.survivor.ExplorerPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.survivor.GreenThumbPerk;
-import ca.qc.icerealm.bukkit.plugins.perks.survivor.SettlerTree;
+import ca.qc.icerealm.bukkit.plugins.perks.survivor.MercenaryPerk;
+import ca.qc.icerealm.bukkit.plugins.perks.survivor.SurvivorTree;
 import ca.qc.icerealm.bukkit.plugins.perks.survivor.StoneWorkerPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.survivor.VassalPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.survivor.WoodmanPerk;
@@ -28,7 +29,6 @@ import ca.qc.icerealm.bukkit.plugins.perks.warrior.BerserkerPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.warrior.LastManStandingPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.warrior.LifeLeechPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.warrior.MeatShieldPerk;
-import ca.qc.icerealm.bukkit.plugins.perks.warrior.MercenaryPerk;
 import ca.qc.icerealm.bukkit.plugins.perks.warrior.WarriorTree;
 import ca.qc.icerealm.bukkit.plugins.time.TimeServer;
 
@@ -71,7 +71,7 @@ public class PerksPlugin extends JavaPlugin {
 		//Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(mansBestFriendPerk, 1000, 1000, TimeUnit.MILLISECONDS);
 		//getServer().getPluginManager().registerEvents(mansBestFriendPerk, this);
 		
-		PerkService.getInstance().addTree(new SettlerTree());
+		PerkService.getInstance().addTree(new SurvivorTree());
 		PerkService.getInstance().addTree(new ArcherTree());
 		PerkService.getInstance().addTree(new WarriorTree());
 		

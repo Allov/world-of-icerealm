@@ -1,7 +1,6 @@
 package ca.qc.icerealm.bukkit.plugins.perks.warrior;
 
 import ca.qc.icerealm.bukkit.plugins.perks.Perk;
-import ca.qc.icerealm.bukkit.plugins.perks.PerkService;
 import ca.qc.icerealm.bukkit.plugins.perks.PerkTree;
 
 public class WarriorTree extends PerkTree {
@@ -9,24 +8,16 @@ public class WarriorTree extends PerkTree {
 		super("Warrior");
 	}
 
-	public static final String MercenaryId = "mer";
 	public static final String MeatShieldId = "ms";
 	public static final String BerserkerId = "ber";
 	public static final String LifeLeechId = "ll";
 	public static final String LastManStandingId = "last";
 	
-	public static final Perk Mercenary = new Perk(	MercenaryId, 
-													"Mercenary", 
-													"Killed creatures will drop 20% more experience.", 
-													5, 
-													null, 
-													null);
-	
 	public static final Perk MeatShield = new Perk(	MeatShieldId, 
 													"Meat Shield", 
 													"Your thick skin give you innate protection. All damage received is reduced by 1.", 
 													10, 
-													new String[] { MercenaryId }, 
+													null, 
 													null);
 	
 	public static final Perk Berserker = new Perk(	BerserkerId, 
@@ -50,7 +41,7 @@ public class WarriorTree extends PerkTree {
 														new String[] { LifeLeechId }, 
 														null);
 	
-	public static final Perk[] Perks = new Perk[] { Mercenary, MeatShield, Berserker, LifeLeech, LastManStanding };
+	public static final Perk[] Perks = new Perk[] { MeatShield, Berserker, LifeLeech, LastManStanding };
 	
 	@Override
 	public void initializePerks() {
