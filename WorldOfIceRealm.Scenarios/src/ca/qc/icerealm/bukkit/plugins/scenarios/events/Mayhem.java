@@ -124,7 +124,7 @@ public class Mayhem extends BaseEvent {
 		
 	@Override
 	protected long getCoolDownInterval() {
-		return 60000; // 1 minute
+		return 60000;
 	}
 
 	@Override
