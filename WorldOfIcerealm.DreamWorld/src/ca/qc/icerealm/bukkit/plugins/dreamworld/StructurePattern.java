@@ -10,7 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 
 import ca.qc.icerealm.bukkit.plugins.scenarios.events.Event;
-import ca.qc.icerealm.bukkit.plugins.scenarios.events.EventService;
+import ca.qc.icerealm.bukkit.plugins.scenarios.events.services.EventService;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PinPoint;
 
 public class StructurePattern {

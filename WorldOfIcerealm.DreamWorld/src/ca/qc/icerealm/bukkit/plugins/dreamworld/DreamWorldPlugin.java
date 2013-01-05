@@ -19,8 +19,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import ca.qc.icerealm.bukkit.plugins.scenarios.events.Event;
-import ca.qc.icerealm.bukkit.plugins.scenarios.events.EventService;
-import ca.qc.icerealm.bukkit.plugins.scenarios.events.FactoryEvent;
+import ca.qc.icerealm.bukkit.plugins.scenarios.events.services.EventService;
+import ca.qc.icerealm.bukkit.plugins.scenarios.events.services.FactoryEvent;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PinPoint;
 
 

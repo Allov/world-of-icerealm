@@ -28,7 +28,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import ca.qc.icerealm.bukkit.plugins.advancedcompass.CustomCompassManager;
 import ca.qc.icerealm.bukkit.plugins.common.LocationUtil;
 import ca.qc.icerealm.bukkit.plugins.scenarios.events.Event;
-import ca.qc.icerealm.bukkit.plugins.scenarios.events.FactoryEvent;
+import ca.qc.icerealm.bukkit.plugins.scenarios.events.services.FactoryEvent;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PinPoint;
 
 public class IcerealmBlockPopulator extends BlockPopulator {
