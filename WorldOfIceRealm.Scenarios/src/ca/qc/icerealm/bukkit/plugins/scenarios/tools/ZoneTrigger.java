@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.scenarios.events;
+package ca.qc.icerealm.bukkit.plugins.scenarios.tools;
 
 import java.util.List;
 import java.util.logging.Logger;

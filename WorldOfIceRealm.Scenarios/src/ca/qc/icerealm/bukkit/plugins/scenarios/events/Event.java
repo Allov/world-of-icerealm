@@ -4,6 +4,8 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.event.Listener;
+
+import ca.qc.icerealm.bukkit.plugins.scenarios.events.services.EventListener;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PinPoint;
 
 public interface Event extends Listener {

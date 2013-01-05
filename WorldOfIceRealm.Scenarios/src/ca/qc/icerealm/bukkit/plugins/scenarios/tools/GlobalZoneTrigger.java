@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.scenarios.events;
+package ca.qc.icerealm.bukkit.plugins.scenarios.tools;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
-import ca.qc.icerealm.bukkit.plugins.scenarios.tools.TimeFormatter;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 
 public class GlobalZoneTrigger implements ZoneObserver {

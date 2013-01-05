@@ -1,4 +1,4 @@
-package ca.qc.icerealm.bukkit.plugins.scenarios.events;
+package ca.qc.icerealm.bukkit.plugins.scenarios.events.services;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +9,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import ca.qc.icerealm.bukkit.plugins.scenarios.events.Event;
 
 public class EventCommander implements CommandExecutor {
 

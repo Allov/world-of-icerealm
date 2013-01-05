@@ -1,7 +1,9 @@
-package ca.qc.icerealm.bukkit.plugins.scenarios.events;
+package ca.qc.icerealm.bukkit.plugins.scenarios.events.services;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ca.qc.icerealm.bukkit.plugins.scenarios.events.Event;
 
 public class EventService {
 

@@ -1,4 +1,14 @@
-package ca.qc.icerealm.bukkit.plugins.scenarios.events;
+package ca.qc.icerealm.bukkit.plugins.scenarios.events.services;
+
+import ca.qc.icerealm.bukkit.plugins.scenarios.events.Arena;
+import ca.qc.icerealm.bukkit.plugins.scenarios.events.BarbarianRaid;
+import ca.qc.icerealm.bukkit.plugins.scenarios.events.Boss;
+import ca.qc.icerealm.bukkit.plugins.scenarios.events.Event;
+import ca.qc.icerealm.bukkit.plugins.scenarios.events.InfestationAdapter;
+import ca.qc.icerealm.bukkit.plugins.scenarios.events.KillingSpree;
+import ca.qc.icerealm.bukkit.plugins.scenarios.events.Mayhem;
+import ca.qc.icerealm.bukkit.plugins.scenarios.events.RescueSurvivors;
+import ca.qc.icerealm.bukkit.plugins.scenarios.events.TreasureHunt;
 
 public class FactoryEvent {
 

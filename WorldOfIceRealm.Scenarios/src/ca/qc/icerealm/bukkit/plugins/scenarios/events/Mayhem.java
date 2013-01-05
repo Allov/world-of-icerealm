@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,13 +25,14 @@ import ca.qc.icerealm.bukkit.plugins.scenarios.spawners.ApocalypseSpawner;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.Loot;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.LootGenerator;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PoisonPlayer;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.ThunderAmbiance;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.TimeFormatter;
 
 public class Mayhem extends BaseEvent {
 	private Logger _logger = Logger.getLogger("Minecraft");
 	private boolean _switchActivated = false;
 	private long _totalForPreparation = 5000; // 1 minute
-	private long _incrementForPreparation = 15000; // 15 sec
+	private long _incrementForPreparation = 5000; // 15 sec
 	private long _delayBetweenPoison = 30000; // 1 minute
 	private long _delayBetweenWaveSpawn = 20000; // 10 sec
 	private static boolean _apocalypseOn = false;
@@ -45,6 +47,7 @@ public class Mayhem extends BaseEvent {
 	protected ApocalypseSpawner _spawner;
 	protected PoisonPlayer _poison;
 	protected Loot _loot;
+	protected ThunderAmbiance _thunder;
 	protected Random _random = new Random();
 	
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -118,8 +121,11 @@ public class Mayhem extends BaseEvent {
 	
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		event.getPlayer().sendMessage(ChatColor.DARK_RED + "There is an" + ChatColor.DARK_RED + " Apocalypse" + ChatColor.RED + " right now!");
-		_server.broadcastMessage(ChatColor.LIGHT_PURPLE + "" + _monsterDead + " monsters dead!");
+		if (_apocalypseOn) {
+			event.getPlayer().sendMessage(ChatColor.DARK_RED + "There is an" + ChatColor.DARK_RED + " Apocalypse" + ChatColor.RED + " right now!");
+			_server.broadcastMessage(ChatColor.LIGHT_PURPLE + "" + _monsterDead + ChatColor.DARK_PURPLE + "/" + ChatColor.LIGHT_PURPLE + " monsters dead.");	
+		}
+		
 	}
 		
 	@Override
@@ -147,8 +153,6 @@ public class Mayhem extends BaseEvent {
 		_sequenceStarted = false;
 		_completed = false;
 		if (_executor != null) _executor.shutdownNow();
-		if (_loot != null) _loot.removeLoot();
-	
 	}
 	
 	private void distributeLoot() {
@@ -181,6 +185,7 @@ public class Mayhem extends BaseEvent {
 	@Override
 	public void releaseEvent() {
 		resetEvent();
+		if (_loot != null) _loot.removeLoot();
 	}
 
 	@Override
@@ -197,6 +202,9 @@ public class Mayhem extends BaseEvent {
 		
 		_spawner = new ApocalypseSpawner();
 		_executor.scheduleAtFixedRate(_spawner, 0, _delayBetweenWaveSpawn, TimeUnit.MILLISECONDS);
+		
+		_thunder = new ThunderAmbiance(_executor, 20, _source);
+		_executor.scheduleAtFixedRate(_thunder, 0, 5000, TimeUnit.MILLISECONDS);
 		
 		_apocalypseOn = true;
 	}

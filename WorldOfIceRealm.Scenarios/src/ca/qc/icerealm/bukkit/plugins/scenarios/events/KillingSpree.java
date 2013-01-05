@@ -18,10 +18,13 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.frontier.Frontier;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.GlobalZoneTrigger;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.Loot;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.LootGenerator;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.MonsterSpawner;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PinPoint;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.ScenarioServerProxy;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.ZoneTrigger;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneSubject;
 
