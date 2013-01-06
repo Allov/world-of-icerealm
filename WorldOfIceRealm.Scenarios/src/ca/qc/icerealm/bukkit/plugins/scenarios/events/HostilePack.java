@@ -7,6 +7,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
+
+import ca.qc.icerealm.bukkit.plugins.common.EntityUtilities;
 import ca.qc.icerealm.bukkit.plugins.common.WorldZone;
 import ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioService;
 import ca.qc.icerealm.bukkit.plugins.scenarios.mobcontrol.AgressivityMobControl;
@@ -17,7 +19,7 @@ public class HostilePack extends BaseEvent {
 	public static long SINGLE_WOLFPACK_COOLDOWN = 100;
 	public int NB_MONSTER = 10;
 	private Player _target;
-	private String[] PACK_TYPE = new String[] { "zombie", "wolf" };
+	private String[] PACK_TYPE = new String[] { /*"zombie", "wolf", "spider", */"slime"};
 
 	public HostilePack() {
 
@@ -53,31 +55,38 @@ public class HostilePack extends BaseEvent {
 						AgressivityMobControl.defineTarget(wolf, _target);
 					}
 					catch (Exception ex) {
-						ex.printStackTrace();
+						_logger.info("HostilePack event generated an exception: " + ex.getMessage());
 					}
 				}	
 			}
-			else if (randomPack.equalsIgnoreCase("zombie")) {
-				for (int i = 0; i < NB_MONSTER; i++) {
-					Location spawnLoc = zone.getRandomLocation(_source.getWorld());
-					try {
-						LivingEntity m = (LivingEntity)ScenarioService.getInstance().spawnCreature(spawnLoc.getWorld(), spawnLoc, EntityType.ZOMBIE, -0.5, false);
-						AgressivityMobControl.defineTarget(m, _target);
+			else if (randomPack.equalsIgnoreCase("slime")) {
+				try {
+					for (int i = 0; i < (NB_MONSTER / 2); i++) {
+						Location spawnLoc = zone.getRandomLocation(_source.getWorld());
+						try {
+							EntityType creature = EntityUtilities.getEntityType(randomPack);
+							LivingEntity m = (LivingEntity)ScenarioService.getInstance().spawnCreature(spawnLoc.getWorld(), spawnLoc, creature);
+						}
+						catch (Exception ex) {
+							_logger.info("HostilePack event generated an exception: " + ex.getMessage());
+						}
 					}
-					catch (Exception ex) {
-						ex.printStackTrace();
-					}
+					
+				}
+				catch (Exception ex) {
+					_logger.info("HostilePack event generated an exception: " + ex.getMessage());
 				}
 			}
-			else if (randomPack.equalsIgnoreCase("bat")) {
+			else {
 				for (int i = 0; i < NB_MONSTER; i++) {
 					Location spawnLoc = zone.getRandomLocation(_source.getWorld());
 					try {
-						LivingEntity m = (LivingEntity)ScenarioService.getInstance().spawnCreature(spawnLoc.getWorld(), spawnLoc, EntityType.BAT, 1, false);
+						EntityType creature = EntityUtilities.getEntityType(randomPack);
+						LivingEntity m = (LivingEntity)ScenarioService.getInstance().spawnCreature(spawnLoc.getWorld(), spawnLoc, creature, -0.5, false);
 						AgressivityMobControl.defineTarget(m, _target);
 					}
 					catch (Exception ex) {
-						ex.printStackTrace();
+						_logger.info("HostilePack event generated an exception: " + ex.getMessage());
 					}
 				}
 			}
@@ -92,12 +101,12 @@ public class HostilePack extends BaseEvent {
 	@Override
 	public void releaseEvent() {
 		// TODO Auto-generated method stub
-		
+		_source = null;
 	}
 
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return "wolfpack";
+		return "hostilepack";
 	}
 }

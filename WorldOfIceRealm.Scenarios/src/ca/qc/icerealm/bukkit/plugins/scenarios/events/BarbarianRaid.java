@@ -47,10 +47,10 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 	private int MONSTER_PER_LOCATION = 1;
 	protected long INTERVAL_BETWEEN_ATTACK = 7200; // 7200 sec = 2 heures
 	private long INTERVAL_BETWEEN_WAVE = 10; // 10 secondes;
-	private boolean USE_ARTILLERY = true;
+	private boolean USE_ARTILLERY = false;
 	private int NB_ARTILLERY_SHOT = 5;
 	private List<Location> _locations;
-	private String[] _monsters = new String[] { "creeper", "zombie", "spider", "cavespider", "pigzombie" };
+	private String[] _monsters = new String[] { "zombie", "spider", "cavespider", "pigzombie" };
 	protected int _waveDone = 0;
 	private World _world;
 	private HashSet<Integer> _monstersContainer;
@@ -66,7 +66,6 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 	private String _welcomeMessage;
 	private String _endMessage;
 	private ScheduledExecutorService _executor;
-	private ScheduledExecutorService _leachExecutor;
 		
 	public BarbarianRaid() {
 		_monstersContainer = new HashSet<Integer>();
@@ -113,9 +112,6 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 					}
 				}
 			}
-			
-			_leachExecutor = Executors.newSingleThreadScheduledExecutor();
-			_leachExecutor.scheduleAtFixedRate(new MonsterLeach(_monstersEntity, this.getAutomaticGeneralZone()), 180000, 180000, TimeUnit.MILLISECONDS);
 		}
 	}
 	
@@ -179,8 +175,6 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 					}
 					
 					_executor.schedule(this, INTERVAL_BETWEEN_WAVE, TimeUnit.SECONDS);
-					_leachExecutor.shutdownNow();
-					
 					for (Player p : _players) {
 						p.sendMessage(ChatColor.RED + "Another wave is coming... " + ChatColor.GOLD + " They look stronger!");
 					}
@@ -337,7 +331,6 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 		_activated = false;
 		
 		_executor.shutdownNow();
-		_leachExecutor.shutdownNow();
 	}
 
 	@Override
@@ -368,7 +361,6 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 		
 		_waveDone = 0;
 		_activated = b;
-		_logger.info("setActivate: " + b);
 	}
 
 	@Override
