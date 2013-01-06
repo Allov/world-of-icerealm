@@ -52,7 +52,7 @@ public class KillingSpree extends BaseEvent {
 	private ZoneSubject _zoneServer;
 	private String _welcomeMsg;
 	private String _endMessage;
-
+	
 	public KillingSpree() {
 		_players = new ArrayList<Player>();
 		_triggers = new ArrayList<ZoneTrigger>();
@@ -254,6 +254,8 @@ public class KillingSpree extends BaseEvent {
 		for (LivingEntity l : _monsters) {
 			l.remove();
 		}
+		
+		clearMonsterKilled();
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 import org.bukkit.ChatColor;
@@ -33,6 +34,7 @@ import ca.qc.icerealm.bukkit.plugins.scenarios.tools.ArtilleryShelling;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.BlockRestore;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.Loot;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.LootGenerator;
+import ca.qc.icerealm.bukkit.plugins.scenarios.tools.MonsterLeach;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.PinPoint;
 import ca.qc.icerealm.bukkit.plugins.scenarios.tools.TimeFormatter;
 import ca.qc.icerealm.bukkit.plugins.zone.ZoneObserver;
@@ -63,6 +65,8 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 	private ZoneSubject _zoneServer;
 	private String _welcomeMessage;
 	private String _endMessage;
+	private ScheduledExecutorService _executor;
+	private ScheduledExecutorService _leachExecutor;
 		
 	public BarbarianRaid() {
 		_monstersContainer = new HashSet<Integer>();
@@ -72,7 +76,7 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 		_activated = true;
 		_started = false;
 		_welcomeMessage = "This looks like a occupied place by bandits!";
-		_endMessage = "This place looks like it is abandonned!";
+		_endMessage = "This place looks like it is abandonned!";		
 	}
 		
 	@Override
@@ -108,7 +112,10 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 						//m.setTarget(_players.get(0));
 					}
 				}
-			}	
+			}
+			
+			_leachExecutor = Executors.newSingleThreadScheduledExecutor();
+			_leachExecutor.scheduleAtFixedRate(new MonsterLeach(_monstersEntity, this.getAutomaticGeneralZone()), 180000, 180000, TimeUnit.MILLISECONDS);
 		}
 	}
 	
@@ -168,10 +175,12 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 				
 				if (_waveDone < MAX_WAVE) {
 					if (USE_ARTILLERY) {
-						Executors.newSingleThreadScheduledExecutor().schedule(new ArtilleryShelling(_activationZone, NB_ARTILLERY_SHOT), INTERVAL_BETWEEN_WAVE - 3, TimeUnit.SECONDS);	
+						_executor.schedule(new ArtilleryShelling(_activationZone, NB_ARTILLERY_SHOT), INTERVAL_BETWEEN_WAVE - 3, TimeUnit.SECONDS);	
 					}
 					
-					Executors.newSingleThreadScheduledExecutor().schedule(this, INTERVAL_BETWEEN_WAVE, TimeUnit.SECONDS);
+					_executor.schedule(this, INTERVAL_BETWEEN_WAVE, TimeUnit.SECONDS);
+					_leachExecutor.shutdownNow();
+					
 					for (Player p : _players) {
 						p.sendMessage(ChatColor.RED + "Another wave is coming... " + ChatColor.GOLD + " They look stronger!");
 					}
@@ -234,9 +243,9 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 			_started = true;
 			
 			if (USE_ARTILLERY) {
-				Executors.newSingleThreadScheduledExecutor().schedule(new ArtilleryShelling(_activationZone, NB_ARTILLERY_SHOT), INTERVAL_BETWEEN_WAVE - 5, TimeUnit.SECONDS);	
+				_executor.schedule(new ArtilleryShelling(_activationZone, NB_ARTILLERY_SHOT), INTERVAL_BETWEEN_WAVE - 5, TimeUnit.SECONDS);	
 			}
-			Executors.newSingleThreadScheduledExecutor().schedule(this, INTERVAL_BETWEEN_WAVE, TimeUnit.SECONDS);
+			_executor.schedule(this, INTERVAL_BETWEEN_WAVE, TimeUnit.SECONDS);
 		}
 		
 		
@@ -262,6 +271,7 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 
 	@Override
 	public void activateEvent() {
+		_executor = Executors.newSingleThreadScheduledExecutor();
 		_world = this._source.getWorld();
 		_zoneServer = this.getZoneSubjectInstance();
 		
@@ -284,6 +294,7 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 		
 		// appliquer la config
 		applyConfiguration();
+		_activated = true;
 		
 	}
 	
@@ -321,6 +332,12 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 			_blockRestore.run();	
 		}
 		
+		_players.clear();
+		_started = false;
+		_activated = false;
+		
+		_executor.shutdownNow();
+		_leachExecutor.shutdownNow();
 	}
 
 	@Override
