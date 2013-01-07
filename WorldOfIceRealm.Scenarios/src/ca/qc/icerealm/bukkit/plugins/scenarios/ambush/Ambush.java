@@ -67,9 +67,7 @@ public class Ambush implements Runnable, CommandExecutor {
 				
 				// ajouté un calcul de probablité selon l'inventaire du joueurs
 				boolean createAmbush = RandomUtil.getDrawResult(_prob);
-				if (createAmbush && p.getLocation().getY() > p.getWorld().getSeaLevel() - 5) {
-					logger.info("creating an ambush for " + p.getDisplayName() + " " + _monsters);
-					
+				if (createAmbush && p.getLocation().getY() > p.getWorld().getSeaLevel() - 5) {					
 					HostilePackAmbush executor = new HostilePackAmbush(_radius, p, _numberOfMonster, _monsters);
 					Executors.newSingleThreadScheduledExecutor().schedule(executor, _intervalBeforeSpawn, TimeUnit.MILLISECONDS);
 					_server.broadcastMessage(ChatColor.YELLOW + p.getDisplayName() + ChatColor.GREEN + " has been ambushed! Help him!");

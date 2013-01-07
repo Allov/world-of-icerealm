@@ -330,7 +330,7 @@ public class BarbarianRaid extends BaseEvent implements Runnable, ZoneObserver {
 		_started = false;
 		_activated = false;
 		
-		_executor.shutdownNow();
+		if (_executor != null) _executor.shutdownNow();
 	}
 
 	@Override
