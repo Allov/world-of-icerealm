@@ -209,7 +209,13 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 			for (GenerationEvent gen : _generatedStructure) {
 				
 				double currentFromSpawn = LocationUtil.getDistanceBetween(location, location.getWorld().getSpawnLocation());
-				Location lastLocation = new Location(location.getWorld(), gen.LastLocation.X, gen.LastLocation.Y, gen.LastLocation.Z);
+				
+				// le last location d'une structure est manquant quelque fois, du a une erreur dans le fichier
+				Location lastLocation = location.getWorld().getSpawnLocation();
+				if (gen != null) {
+					lastLocation = new Location(location.getWorld(), gen.LastLocation.X, gen.LastLocation.Y, gen.LastLocation.Z);
+				}
+				
 				double lastFromSpawn = LocationUtil.getDistanceBetween(lastLocation, location.getWorld().getSpawnLocation());
 				
 				// la derniere generation est plus proche que la place qu'on vient de trouver
@@ -270,7 +276,7 @@ public class IcerealmBlockPopulator extends BlockPopulator {
 			ex.printStackTrace();			
 		}
 		
-		_logger.info("found " + _generatedStructure.size() + " structure to generate!");
+		_logger.info("[DreamWorld] found " + _generatedStructure.size() + " structure to generate!");
 		return _generatedStructure;
 	}
 	

@@ -72,7 +72,7 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 						
 						if (e != null) {
 							
-							_logger.info("[DreamWorld] Loading event: + " + e.getName() + " with config: " + e.getConfiguration() + 
+							_logger.info("[DreamWorld] Loading event: " + e.getName() + ", config: " + e.getConfiguration() + 
 								     " at: " + pattern.Source.getX() + "," + pattern.Source.getY() + "," + pattern.Source.getZ());
 							
 							if (event.length > 3) {
