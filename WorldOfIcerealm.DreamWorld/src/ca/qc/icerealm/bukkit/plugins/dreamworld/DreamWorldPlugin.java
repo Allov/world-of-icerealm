@@ -52,49 +52,58 @@ public class DreamWorldPlugin extends JavaPlugin implements Listener, CommandExe
 			
 			while ((line = reader.readLine()) != null) {
 				
-				String[] event = line.split(":");
-				if (event.length > 2) {
-					String eventName = event[0];
-					String structureName = event[1];
-					String[] sourceLocation = event[2].split(",");
-					
-					double locX, locY, locZ;
-					locX = Double.parseDouble(sourceLocation[0]);
-					locY = Double.parseDouble(sourceLocation[1]);
-					locZ = Double.parseDouble(sourceLocation[2]);
-										
-					StructurePattern pattern = new StructurePattern();
-					pattern.readFromFile(WORKING_DIR + structureName);
-					pattern.Source = new Location(myWorld, locX, locY, locZ);
-					
-					Event e = factory.getEvent(eventName);
-					
-					if (e != null) {
-
-						if (event.length > 3) {
-							e.setConfiguration(event[3]);
-						}
+				try {
+					String[] event = line.split(":");
+					if (event.length > 2) {
+						String eventName = event[0];
+						String structureName = event[1];
+						String[] sourceLocation = event[2].split(",");
 						
-						e.setServer(getServer());
-						e.setEventArea(pattern.Layer, pattern.Row, pattern.Column);
-						e.setSourceLocation(pattern.Source);
-						e.setLootPoints(pattern.LootPoints);
-						e.setPinPoints(pattern.PinPoints);
-						e.setActivateZone(pattern.ActivationZone);
-						getServer().getPluginManager().registerEvents(e, this);
-						e.activateEvent();
-						_logger.info("[DreamWorld] Loading event: + " + e.getName() + " with config: " + e.getConfiguration() + 
+						double locX, locY, locZ;
+						locX = Double.parseDouble(sourceLocation[0]);
+						locY = Double.parseDouble(sourceLocation[1]);
+						locZ = Double.parseDouble(sourceLocation[2]);
+											
+						StructurePattern pattern = new StructurePattern();
+						pattern.readFromFile(WORKING_DIR + structureName);
+						pattern.Source = new Location(myWorld, locX, locY, locZ);
+						
+						Event e = factory.getEvent(eventName);
+						
+						if (e != null) {
+							
+							_logger.info("[DreamWorld] Loading event: + " + e.getName() + " with config: " + e.getConfiguration() + 
 								     " at: " + pattern.Source.getX() + "," + pattern.Source.getY() + "," + pattern.Source.getZ());
-						_eventService.addEvent(e);
-					}
-					else {
-						throw new Exception("Event is not in FactoryEvent");
+							
+							if (event.length > 3) {
+								e.setConfiguration(event[3]);
+							}
+							
+							e.setServer(getServer());
+							e.setEventArea(pattern.Layer, pattern.Row, pattern.Column);
+							e.setSourceLocation(pattern.Source);
+							e.setLootPoints(pattern.LootPoints);
+							e.setPinPoints(pattern.PinPoints);
+							e.setActivateZone(pattern.ActivationZone);
+							getServer().getPluginManager().registerEvents(e, this);
+							e.activateEvent();
+							
+							_eventService.addEvent(e);
+						}
+						else {
+							throw new Exception("[DreamWorld] Error while loading event: " + line);
+						}
 					}
 				}
+				catch (Exception ex) {
+					_logger.info(ex.getMessage());
+					ex.printStackTrace(System.err);
+				}
+				
 			}
 		}
 		catch (Exception ex) {
-			_logger.info("exception occured while loading generated structure events");
+			_logger.info("[DreamWorld] exception occured while loading generated structure events, stop loading");
 			ex.printStackTrace(System.err);
 		}
 	}
