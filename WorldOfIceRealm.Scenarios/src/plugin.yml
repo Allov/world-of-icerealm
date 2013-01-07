@@ -1,19 +1,14 @@
 name: WoI.Scenarios
 main: ca.qc.icerealm.bukkit.plugins.scenarios.core.ScenarioPlugin
-version: 0.1.0
+version: 1.1.6
 description: World Of IceRealm Scenarios!
 author: punihser_malade
 
 commands:
-  cs:
-    description: Castle Siege infestation configuration
-  pl:
-    description: Ruins plateform infestation configuration
-  sc:
-    description: general scenario commands 
+
   fr:
-    description: frontier activation command
+    description: frontier command control
   am:
-    description: ambush activation command
+    description: ambush command control
   ev:
     description: event service control
