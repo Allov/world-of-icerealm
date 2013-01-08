@@ -1,0 +1,13 @@
+name: WoI.SimpleMobs
+main: ca.qc.icerealm.bukkit.plugins.simplemobs.SimpleMobsPlugin
+
+version: 1.0.0
+
+description: Spawn mobs in front of player using simple commands (for testing purpose).
+author: Drask
+
+commands:
+  
+    mobs:
+    
+        description: Spawn mobs in front of player using simple commands (for testing purpose).
