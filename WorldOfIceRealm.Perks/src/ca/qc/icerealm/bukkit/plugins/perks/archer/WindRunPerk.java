@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -24,9 +25,9 @@ public class WindRunPerk implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerHit(EntityDamageEvent evt) {
-		boolean canWindRun = false;
-		
-		if (evt.getEntity() instanceof Player && perkService.playerHasPerk((Player)evt.getEntity(), ArcherTree.WindRunId)) {
+		if (evt.getEntity() instanceof Player && perkService.playerHasPerk((Player)evt.getEntity(), ArcherTree.WindRunId) && 
+				(evt.getCause().equals(DamageCause.ENTITY_ATTACK) || evt.getCause().equals(DamageCause.PROJECTILE))) {
+			boolean canWindRun = false;
 			Player player = (Player)evt.getEntity();
 			
 			if (cooldowns.containsKey(player.getName())) {

@@ -24,7 +24,7 @@ public class FireStoper implements Listener
     @EventHandler
     public void onBlockIgnite(BlockIgniteEvent event)
     {   
-    	logger.info("Cause: " + event.getCause().name());
+    	//logger.info("Cause: " + event.getCause().name());
     	
     	// Because we don't have any info about which player sent the fireball, disable block burning in World only (won't affect nether)
         if(event.getCause() == BlockIgniteEvent.IgniteCause.FIREBALL
