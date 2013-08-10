@@ -3,14 +3,14 @@ package ca.qc.icerealm.bukkit.plugins.scenarios.mobcontrol;
 import java.util.List;
 import java.util.logging.Logger;
 
-import net.minecraft.server.v1_4_6.EntityCreature;
-import net.minecraft.server.v1_4_6.MethodProfiler;
-import net.minecraft.server.v1_4_6.Navigation;
-import net.minecraft.server.v1_4_6.PathEntity;
-import net.minecraft.server.v1_4_6.PathPoint;
-import net.minecraft.server.v1_4_6.PathfinderGoalFollowParent;
-import net.minecraft.server.v1_4_6.PathfinderGoalSelector;
-import net.minecraft.server.v1_4_6.Vec3D;
+import net.minecraft.server.v1_6_R2.EntityCreature;
+import net.minecraft.server.v1_6_R2.MethodProfiler;
+import net.minecraft.server.v1_6_R2.Navigation;
+import net.minecraft.server.v1_6_R2.PathEntity;
+import net.minecraft.server.v1_6_R2.PathPoint;
+import net.minecraft.server.v1_6_R2.PathfinderGoalFollowParent;
+import net.minecraft.server.v1_6_R2.PathfinderGoalSelector;
+import net.minecraft.server.v1_6_R2.Vec3D;
 
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;

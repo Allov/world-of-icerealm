@@ -218,7 +218,7 @@ public class Mayhem extends BaseEvent {
 	
 	private void applyConfiguration() {
 		try {
-			_logger.info("applying new configto mayhem: " + _config);
+			_logger.info("applying new config to mayhem: " + _config);
 			String[] values = _config.split(",");
 			if (values.length > 2) {
 				

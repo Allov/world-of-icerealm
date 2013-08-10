@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
@@ -24,6 +25,7 @@ import ca.qc.icerealm.bukkit.plugins.scenarios.barbarian.BarbarianRaid;
 import ca.qc.icerealm.bukkit.plugins.scenarios.events.services.EventCommander;
 import ca.qc.icerealm.bukkit.plugins.scenarios.events.services.EventService;
 import ca.qc.icerealm.bukkit.plugins.scenarios.frontier.Frontier;
+import ca.qc.icerealm.bukkit.plugins.scenarios.frontier.WorldLocator;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.Infestation;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.InfestationCommander;
 import ca.qc.icerealm.bukkit.plugins.scenarios.infestation.InfestationConfiguration;
@@ -45,60 +47,57 @@ public class ScenarioPlugin extends JavaPlugin {
 	public final static Logger logger = Logger.getLogger(("Scenario"));
 	public final static Logger mainLogger = Logger.getLogger("Minecraft");
 	private String _filename = "sc_logs/scenario.log";
-	
-	private MonsterFury _hauntedOutpost = null;
-	private Infestation _ruinsPlateform = null;
-	private Infestation _castleSiege = null;
-	private MonsterFury _moonTemple = null;
-	private BarbarianRaid _raid = null;
-	private ObsidianMission _obsidianMission = null;
-	private Frontier _frontier = null;
-	private Ambush _ambush = null;
-		
-	private ZoneSubject _zoneServer;
-	private ScenarioZoneProber _prober;
 	private FileHandler _logFile; 
 	private Formatter _logFormat;
 
+	private Frontier _frontier = null;
+	private Ambush _ambush = null;
+	private WorldLocator _worldLocator = null;
+		
+	private ScheduledExecutorService _executor;
+
+
 	@Override
 	public void onDisable() {
-		releaseHauntedOutpost();	
-		releaseRuinsPlateform();
-		releaseCastleSiege();
-		releaseObsidianMission();
+		_executor.shutdownNow();
 	}
 
 	@Override
-	public void onEnable() {
-		
+	public void onEnable() {		
 		initFileLogger(_filename);
-		initZoneServer(getServer());
-		/*
-		_invicibleMonsters = new InvicibleMonsterServer();
-		getServer().getPluginManager().registerEvents(_invicibleMonsters, this);
-		*/
-		// scenario commander
-		getCommand("sc").setExecutor(new ScenarioCommander());
+		_executor = Executors.newSingleThreadScheduledExecutor();
+		
 		ScenarioService.getInstance().setPlugin(this);
 		getCommand("ev").setExecutor(new EventCommander(EventService.getInstance()));
-		
-		// creation des different scenarios
-		//createHauntedOutpost();
-		//createRuinsPlateform();
-		//createCastleSiege();
-		//createObsidianMission();
-		//createBarbarianRaid();
-		//createMoonTemple();
+
 		createFrontier();
 		createAmbush();
-		//createArena();
+		createWorldLocator();	
 	}
 	
-	public void initZoneServer(Server s) {
-		_zoneServer = new ScenarioZoneServer(s);
-		_prober = new ScenarioZoneProber(_zoneServer);
-		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(_prober, 0, 20, TimeUnit.MILLISECONDS);
+	private void createWorldLocator() {
+		_worldLocator = new WorldLocator();
+		_executor.scheduleAtFixedRate(_worldLocator, 0, 1000, TimeUnit.MILLISECONDS);
+		logger.info("[Scenarios] World Locator feature is enabled");
 	}
+	
+	private void createFrontier() {
+		
+		_frontier = Frontier.getInstance();
+		getServer().getPluginManager().registerEvents(_frontier, this);
+		getCommand("fr").setExecutor(_frontier);
+		
+		if (_frontier != null) {
+			logger.info("[Scenarios] Frontier feature is enabled");
+		}
+	}
+	
+	private void createAmbush() {
+		_ambush = new Ambush(this, 300000, 15, 25, 10000, 4);
+		getCommand("am").setExecutor(_ambush);
+		logger.info("[Scenarios] Ambush feature is enabled");
+	}
+
 	
 	public void initFileLogger(String name) {
 		// init le logger pour mettre ca dans un fichier
@@ -113,7 +112,7 @@ public class ScenarioPlugin extends JavaPlugin {
 			logger.info("[Scenarios] Could not create the log file " + name);
 		}	
 	}
-	
+	/*
 	private void createArena() {
 		MonsterFuryConfiguration config = new MonsterFuryConfiguration();
 		config.ScenarioZoneCoords = "-28,168,-10,186,55,61";
@@ -149,27 +148,9 @@ public class ScenarioPlugin extends JavaPlugin {
 		ScenarioService.getInstance().addScenario(arena);
 		
 	}
+	*/
 	
-	private void createFrontier() {
-		
-		// a chaque 50m du spawn point, 100% plus fort, 33% plus de dommage
-		//_frontier = new Frontier(getServer().getWorld("world"), 400, 3);
-		_frontier = Frontier.getInstance();
-		getServer().getPluginManager().registerEvents(_frontier, this);
-		getCommand("fr").setExecutor(_frontier);
-		
-		if (_frontier != null) {
-			logger.info("[Scenarios] Frontier feature is enabled");
-		}
-	}
-	
-	private void createAmbush() {
-		// tirage au sort chaque 5 minutes, 1/15 de probabilité, radius de 25m, 10 sec avant spawn, 4 monstres
-		_ambush = new Ambush(this, 300000, 15, 25, 10000, 4);
-		getCommand("am").setExecutor(_ambush);
-		logger.info("[Scenarios] Ambush feature is enabled");
-	}
-	
+	/*
 	private void createObsidianMission() {
 		
 		_obsidianMission = new ObsidianMission(_zoneServer);
@@ -250,7 +231,7 @@ public class ScenarioPlugin extends JavaPlugin {
 		_moonTemple.setEntityWaves(waves);
 		ScenarioService.getInstance().addScenario(_moonTemple);	
 		
-		/*
+		
 		if (_moonTemple == null) {
 			InfestationConfiguration config = new InfestationConfiguration();
 			config.InfestedZone = "277,-388,296,-369,0,128";
@@ -310,7 +291,7 @@ public class ScenarioPlugin extends JavaPlugin {
 		if (_moonTemple != null) {
 			logger.info("[Scenarios] Moon Temple created!");
 		}
-		*/
+		
 	}
 	
 	private void createCastleSiege() {
@@ -440,6 +421,7 @@ public class ScenarioPlugin extends JavaPlugin {
 			_hauntedOutpost = null;
 		}
 	}
+	*/
 }
 
 // configuration de la maison a zoune 2 enderman

@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import net.minecraft.server.v1_4_6.EntityCreature;
+import net.minecraft.server.v1_6_R2.EntityCreature;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -107,7 +108,12 @@ public class ScenarioService {
 	
 	public Entity spawnCreature(World w, Location l, EntityType t, double modifier, boolean burn) {
 		LivingEntity creature = (LivingEntity)this.spawnCreature(w, l, t);
-		int maxHealth = creature.getMaxHealth() + (int)(modifier * creature.getMaxHealth());
+		
+		// refactoring for v1.6.2
+		Damageable damageable = (Damageable)creature;
+		int maxHealth = (int)damageable.getMaxHealth() + (int)(modifier * damageable.getMaxHealth());
+		
+		
 		EntityReflection.setEntityPropertyValue(creature, EntityReflection.HEALTH, maxHealth);
 		_customMonster.updateFireproofMonster(creature, burn);
 		_customMonster.updateDamageModifierMonster(creature, modifier);

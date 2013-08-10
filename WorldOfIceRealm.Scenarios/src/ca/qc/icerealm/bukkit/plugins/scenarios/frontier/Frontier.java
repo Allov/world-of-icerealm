@@ -2,7 +2,7 @@ package ca.qc.icerealm.bukkit.plugins.scenarios.frontier;
 
 import java.util.logging.Logger;
 
-import net.minecraft.server.v1_4_6.EntityCreature;
+import net.minecraft.server.v1_6_R2.EntityCreature;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -10,6 +10,7 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.event.EventHandler;
@@ -80,7 +81,8 @@ public class Frontier implements Listener, CommandExecutor {
 			if (modifier > 0.0) {
 				
 				// boost le health
-				int maxHealth = event.getEntity().getMaxHealth() + (int)(modifier * event.getEntity().getMaxHealth());
+				Damageable entityDamage = event.getEntity();
+				double maxHealth = entityDamage.getMaxHealth() + (int)(modifier * entityDamage.getMaxHealth());
 				try {
 					EntityReflection.setEntityPropertyValue(event.getEntity(), EntityReflection.HEALTH, maxHealth);
 					ScenarioService.getInstance().updateDamageModifier(event.getEntity(), modifier);

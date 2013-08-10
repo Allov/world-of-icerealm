@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.logging.Logger;
-import net.minecraft.server.v1_4_6.EntityFireball;
+import net.minecraft.server.v1_6_R2.EntityFireball;
 import org.bukkit.ChatColor;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;

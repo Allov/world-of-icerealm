@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -148,7 +149,9 @@ public class BreakBlockSession implements ZoneObserver, CoolDown {
 			}
 			
 			if (!_blockBroken) {
-				monster.setHealth(monster.getMaxHealth());
+				Damageable mDamage = (Damageable)monster;
+				
+				monster.setHealth(mDamage.getMaxHealth());
 				//_logger.info("" + monster.getHealth());	
 			}
 			else {
